@@ -1,0 +1,982 @@
+<title>Sîra 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Reem+Kufi:wght@500;600;700&family=Amiri:wght@400;700&display=swap">
+<style>
+/* Layout : carte 3D plein écran, interface en cartes flottantes (barre haute, indicateurs, fiche à droite, parcours + listes en bas) */
+:root{
+  --sky:#E6ECEA; --ink:#1B2923; --muted:#66756D; --surface:rgba(255,255,255,.92); --surface2:#F3F6F2;
+  --line:#E1E7E1; --accent:#0E6B53; --accent-soft:#DDF0E8; --gold:#B5822A; --gold-soft:#F7EDD8;
+  --shadow:rgba(30,50,40,.22);
+  --c-vie:#B5822A; --c-rev:#0E7A5A; --c-epr:#8A4E7B; --c-hij:#2D78AE; --c-exp:#B5523B; --c-tra:#4F5BA6; --c-cul:#17807F;
+  --f-ui:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-ar:"Reem Kufi","Amiri","Noto Naskh Arabic",serif;
+  --f-text:"Amiri","Noto Naskh Arabic",serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --sky:#0C1524; --ink:#E7EEE9; --muted:#97A69E; --surface:rgba(17,26,30,.88); --surface2:#1A262A;
+  --line:#26343A; --accent:#43C297; --accent-soft:rgba(67,194,151,.16); --gold:#E3B65C; --gold-soft:rgba(227,182,92,.15);
+  --shadow:rgba(0,0,0,.55);
+  --c-vie:#E3B65C; --c-rev:#43C297; --c-epr:#CF8FBF; --c-hij:#6FB2E3; --c-exp:#E58B73; --c-tra:#97A2EC; --c-cul:#4CC9C4;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --sky:#0C1524; --ink:#E7EEE9; --muted:#97A69E; --surface:rgba(17,26,30,.88); --surface2:#1A262A;
+  --line:#26343A; --accent:#43C297; --accent-soft:rgba(67,194,151,.16); --gold:#E3B65C; --gold-soft:rgba(227,182,92,.15);
+  --shadow:rgba(0,0,0,.55);
+  --c-vie:#E3B65C; --c-rev:#43C297; --c-epr:#CF8FBF; --c-hij:#6FB2E3; --c-exp:#E58B73; --c-tra:#97A2EC; --c-cul:#4CC9C4;
+  color-scheme:dark}
+html,body{height:100%}
+body{background:var(--sky);color:var(--ink);font-family:var(--f-ui);overflow:hidden}
+#app{position:relative;height:100%;overflow:hidden}
+#scene{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+#scene.drag{cursor:grabbing}
+#scene.hover{cursor:pointer}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+svg{width:18px;height:18px;flex:none}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 34px -16px var(--shadow);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.ar{font-family:var(--f-ar);direction:rtl}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:600;color:var(--cc,var(--accent));background:color-mix(in srgb,var(--cc,var(--accent)) 14%,transparent);white-space:nowrap}
+.cat-vie{--cc:var(--c-vie)}.cat-rev{--cc:var(--c-rev)}.cat-epr{--cc:var(--c-epr)}.cat-hij{--cc:var(--c-hij)}.cat-exp{--cc:var(--c-exp)}.cat-tra{--cc:var(--c-tra)}.cat-cul{--cc:var(--c-cul)}
+
+/* ---------- top bar ---------- */
+.topbar{position:absolute;top:14px;left:16px;right:16px;display:flex;align-items:center;gap:14px;padding:8px 10px 8px 14px;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;min-width:max-content}
+.logo{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#000));color:#fff;box-shadow:0 6px 14px -6px var(--accent)}
+.logo svg{width:22px;height:22px}
+.brand b{display:block;font-size:19px;font-weight:800;letter-spacing:-.02em}
+.brand small{display:block;font-family:var(--f-ar);font-size:13px;color:var(--gold);line-height:1}
+.search{position:relative;flex:1;max-width:520px;display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:0 10px 0 12px;height:42px;color:var(--muted)}
+.search input{flex:1;min-width:0;border:0;background:none;outline:none;font:inherit;font-size:14px;color:var(--ink)}
+.search input::placeholder{color:var(--muted)}
+kbd{font:600 11px var(--f-ui);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--muted)}
+.results{position:absolute;left:0;right:0;top:48px;padding:6px;max-height:360px;overflow:auto;z-index:20}
+.res{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:8px 10px;border-radius:10px}
+.res:hover,.res.on{background:var(--accent-soft)}
+.res .t{flex:1;min-width:0}
+.res .t b{display:block;font-size:13.5px;color:var(--ink)}
+.res .t small{font-size:12px;color:var(--muted)}
+.res .ar{font-size:14px;color:var(--muted)}
+.empty{padding:10px;font-size:13px;color:var(--muted)}
+.spacer{flex:1}
+.site{position:relative;display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:12px;padding:5px 12px 5px 6px;min-width:0}
+.sitebadge{font-size:11px;font-weight:800;color:#fff;background:var(--accent);border-radius:8px;padding:6px 7px;letter-spacing:.04em}
+.site b{display:block;font-size:14px}
+.site small{display:block;font-size:12px;color:var(--muted);white-space:nowrap}
+.site select{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.site .chev{color:var(--muted);transform:rotate(90deg)}
+.era{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--accent);border-radius:12px;padding:9px 13px;font-weight:700;font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.era .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+.iconbtn{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;border:1px solid var(--line);color:var(--ink);background:var(--surface)}
+.iconbtn:hover{background:var(--surface2)}
+.srcbtn{display:flex;align-items:center;gap:9px;padding:6px 12px 6px 6px;border-left:1px solid var(--line);margin-left:2px}
+.srcbtn .bk{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--gold-soft);color:var(--gold)}
+.srcbtn b{display:block;font-size:13.5px;text-align:left}
+.srcbtn small{display:block;font-size:12px;color:var(--muted);text-align:left}
+
+/* ---------- KPI ---------- */
+.kpis{position:absolute;top:96px;left:16px;display:flex;gap:12px;z-index:3}
+.kpi{display:flex;align-items:center;gap:14px;padding:14px 20px 14px 14px;min-width:220px}
+.kpi .ki{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.kpi .ki svg{width:24px;height:24px}
+.kpi:nth-child(2) .ki{background:var(--gold-soft);color:var(--gold)}
+.kpi small{display:block;font-size:13px;color:var(--ink);font-weight:500}
+.kpi .v{display:flex;align-items:baseline;gap:8px;font-size:25px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.25}
+.kpi .v em{font-style:normal;font-size:12px;font-weight:700;color:var(--accent)}
+.kpi .s{font-size:12px;color:var(--muted)}
+
+/* ---------- map controls ---------- */
+.mapctl{position:absolute;top:96px;right:calc(16px + var(--dw,372px) + 12px);display:flex;flex-direction:column;padding:6px;gap:2px;z-index:3;transition:right .3s}
+body.noDetail .mapctl{--dw:0px}
+.mapctl button{width:38px;height:38px;border-radius:10px;display:grid;place-items:center}
+.mapctl button:hover{background:var(--surface2)}
+.mapctl hr{border:0;border-top:1px solid var(--line);margin:4px 6px}
+
+/* ---------- detail ---------- */
+.detail{position:absolute;top:96px;right:16px;width:372px;max-height:calc(100% - 96px - 236px);overflow:auto;padding:16px 18px 14px;z-index:4;scrollbar-width:thin}
+.dhead{display:flex;gap:12px;align-items:flex-start}
+.dicon{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:#fff;background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--cc) 60%,#fff),var(--cc));flex:none;box-shadow:0 8px 16px -8px var(--cc)}
+.dicon svg{width:24px;height:24px}
+.dtitle{flex:1;min-width:0}
+.eyebrow{display:block;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--cc)}
+.dtitle h2{margin:2px 0 2px;font-size:19px;line-height:1.2;font-weight:800;letter-spacing:-.01em;text-wrap:balance}
+.dsub{font-size:12.5px;color:var(--muted)}
+.dbtns{display:flex;gap:6px}
+.dbtns button{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center}
+.dbtns button:hover{background:var(--surface2)}
+.dbtns svg{width:15px;height:15px}
+.dar{font-family:var(--f-ar);direction:rtl;font-size:22px;color:var(--gold);margin:10px 0 2px;line-height:1.3}
+.dstatus{display:flex;align-items:center;gap:10px;padding:12px 0 10px;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
+.rows{margin:0;padding:4px 0}
+.rows div{display:flex;justify-content:space-between;gap:16px;padding:7px 0;font-size:13px;border-bottom:1px dashed var(--line)}
+.rows div:last-child{border-bottom:0}
+.rows dt{color:var(--muted);flex:none}
+.rows dd{margin:0;font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.summary{font-size:13.5px;line-height:1.6;margin:10px 0 12px;color:var(--ink)}
+.quran{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted);margin-bottom:12px}
+.quran .chip{--cc:var(--accent)}
+.umda{border:1px solid color-mix(in srgb,var(--gold) 40%,var(--line));background:var(--gold-soft);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.umda .uh{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.umda .uh svg{width:15px;height:15px}
+.umda .uh span{margin-left:auto;font-weight:600;letter-spacing:0;text-transform:none;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.umda .uar{font-family:var(--f-text);direction:rtl;font-size:19px;line-height:1.75;margin:8px 0 4px;color:var(--ink)}
+.umda .ufr{font-size:12.5px;line-height:1.55;color:var(--ink);margin:0}
+.umda .unr{font-size:11.5px;color:var(--muted);margin-top:6px}
+.also{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px;align-items:center;font-size:12px;color:var(--muted)}
+.also button{border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
+.also button:hover{background:var(--surface2)}
+.fine{font-size:11px;color:var(--muted);line-height:1.5;margin:6px 0 0}
+
+/* ---------- timeline ---------- */
+.timeline{position:absolute;left:16px;bottom:16px;right:calc(16px + var(--lw) + 12px);padding:14px 18px 12px;z-index:3;--lw:min(470px,34vw)}
+.thead,.lhead{display:flex;align-items:center;gap:10px}
+.thead b{font-size:16px;font-weight:800}
+.thead .ti{color:var(--accent)}
+.tmeta{margin-left:auto;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tbody{display:flex;align-items:center;gap:16px;margin-top:8px}
+.stepper{list-style:none;margin:0;padding:0;display:flex;flex:1;min-width:0}
+.step{flex:1;position:relative;text-align:center;min-width:0}
+.step button{display:flex;flex-direction:column;align-items:center;gap:5px;width:100%;padding:4px 2px}
+.step .node{position:relative;z-index:1;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);color:var(--muted);border:1px solid var(--line)}
+.step .node svg{width:15px;height:15px}
+.step::before{content:"";position:absolute;top:19px;left:-50%;right:50%;height:3px;background:var(--line);border-radius:2px}
+.step:first-child::before{display:none}
+.step.done::before,.step.cur::before{background:var(--accent)}
+.step.done .node{background:var(--accent);color:#fff;border-color:transparent}
+.step.cur .node{background:var(--accent);color:#fff;border-color:transparent;box-shadow:0 0 0 5px var(--accent-soft),0 0 0 6px color-mix(in srgb,var(--accent) 30%,transparent)}
+.step .lb{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.step .yr{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.nextcard{display:flex;align-items:center;gap:12px;text-align:left;border:1px solid var(--line);background:var(--surface2);border-radius:14px;padding:10px 12px;width:270px;flex:none}
+.nextcard:hover{border-color:var(--accent)}
+.nextcard .nc{flex:1;min-width:0}
+.nextcard small{display:block;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.nextcard b{display:block;font-size:14px;margin:2px 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nextcard .ns{font-size:11.5px;color:var(--muted);margin-top:4px}
+.nextcard .ni{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--cc);background:color-mix(in srgb,var(--cc) 14%,transparent)}
+.scrub{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.scrub>button{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;border:1px solid var(--line)}
+.scrub>button:hover{background:var(--surface2)}
+.scrub #play{width:auto;padding:0 12px;gap:6px;display:flex;align-items:center;font-size:12.5px;font-weight:700;background:var(--accent);color:#fff;border-color:transparent}
+.scrub #play svg{width:14px;height:14px}
+.track{flex:1;display:flex;align-items:center;gap:3px;min-width:0;margin-left:8px}
+.track button{flex:1;height:22px;display:grid;place-items:center;min-width:0;padding:0}
+.track button i{display:block;width:100%;height:6px;border-radius:3px;background:color-mix(in srgb,var(--cc) 28%,var(--line))}
+.track button.past i{background:color-mix(in srgb,var(--cc) 70%,transparent)}
+.track button.on i{height:14px;background:var(--cc);box-shadow:0 0 0 3px color-mix(in srgb,var(--cc) 25%,transparent)}
+.track button:hover i{background:var(--cc)}
+
+/* ---------- lists ---------- */
+.lists{position:absolute;right:16px;bottom:16px;width:min(470px,34vw);height:212px;display:flex;flex-direction:column;padding:12px 14px 6px;z-index:3}
+.lhead .li{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+.tabs{display:flex;gap:2px;background:var(--surface2);border-radius:11px;padding:3px}
+.tabs button{padding:6px 11px;border-radius:8px;font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap}
+.tabs button span{font-weight:600;color:var(--accent);margin-left:3px}
+.tabs button.on{background:var(--surface);color:var(--ink);box-shadow:0 2px 6px -3px var(--shadow)}
+.lmeta{margin-left:auto;font-size:12.5px;color:var(--muted);white-space:nowrap}
+.lbody{flex:1;overflow:auto;margin-top:8px;scrollbar-width:thin}
+.row{display:grid;grid-template-columns:62px 1fr auto 16px;gap:10px;align-items:center;width:100%;text-align:left;padding:7px 6px;border-radius:10px;border-bottom:1px solid var(--line)}
+.row:hover{background:var(--surface2)}
+.row.on{background:var(--accent-soft)}
+.row .c1 b{display:block;font-size:13px}
+.row .c1 small{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.row .c2{min-width:0;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600}
+.row .c2 .d{width:7px;height:7px;border-radius:50%;background:var(--cc,var(--accent));flex:none}
+.row .c2 span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .c2 .ar{font-weight:500;color:var(--muted);font-size:13px}
+.row>svg{width:14px;height:14px;color:var(--muted)}
+
+/* ---------- labels ---------- */
+#labels{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden}
+.lbl{position:absolute;left:0;top:0;pointer-events:auto;display:flex;align-items:center;gap:6px;white-space:nowrap;padding:5px 10px;border-radius:9px;background:var(--surface);border:1px solid var(--line);box-shadow:0 6px 16px -8px var(--shadow);font-size:12px;font-weight:700;color:var(--ink);transition:opacity .25s;cursor:pointer;will-change:transform}
+.lbl .ar{font-size:12px;font-weight:500;color:var(--muted)}
+.lbl.minor{font-size:11px;padding:3px 8px}
+.lbl.on{background:var(--accent);color:#fff;border-color:transparent;font-size:12.5px;padding:6px 11px}
+.lbl.on .ar{color:rgba(255,255,255,.8)}
+.lbl.on .ev{font-weight:500;opacity:.9;border-left:1px solid rgba(255,255,255,.35);padding-left:7px}
+.lbl.off{opacity:0;pointer-events:none}
+.lbl.edge{background:var(--gold-soft);border-color:color-mix(in srgb,var(--gold) 40%,var(--line));color:var(--gold)}
+.scale{position:absolute;left:16px;bottom:calc(16px + var(--tlh,196px) + 10px);font-size:11px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px 9px;z-index:3}
+
+.mtabs{display:none}
+@media (max-width:1240px){.kpi:nth-child(3){display:none}.srcbtn{display:none}}
+@media (max-width:1060px){.era{display:none}.nextcard{width:220px}.kpi{min-width:190px}}
+@media (max-width:900px){
+  .topbar{flex-wrap:wrap;gap:8px;padding:8px}
+  .search{order:5;flex-basis:100%;max-width:none;height:40px}
+  .search kbd{display:none}
+  .brand b{font-size:17px}
+  .site{padding:4px 10px 4px 5px}
+  .site small{display:none}
+  .kpis{top:126px;left:16px;right:16px;overflow-x:auto;scrollbar-width:none;gap:8px}
+  .kpi{min-width:150px;padding:9px 12px 9px 9px;gap:9px;flex:none}
+  .kpi:nth-child(3){display:flex}
+  .kpi .ki{width:36px;height:36px;border-radius:10px}
+  .kpi .ki svg{width:18px;height:18px}
+  .kpi .v{font-size:18px}
+  .kpi small{font-size:11.5px}
+  .mapctl{top:196px;right:16px!important;padding:4px}
+  .mapctl button{width:34px;height:34px}
+  .detail,.timeline,.lists{left:16px;right:16px;width:auto;bottom:76px;top:auto;max-height:38%;height:auto}
+  .lists{height:38%}
+  .timeline{overflow:auto}
+  .tbody{flex-direction:column;align-items:stretch}
+  .nextcard{width:auto}
+  .step .lb{font-size:11px}
+  body:not([data-m="detail"]) .detail,body:not([data-m="time"]) .timeline,body:not([data-m="list"]) .lists{display:none}
+  body.noDetail[data-m="detail"] .detail{display:block}
+  .scale{display:none}
+  .mtabs{display:flex;position:absolute;left:16px;right:16px;bottom:16px;height:50px;padding:5px;gap:4px;z-index:6}
+  .mtabs button{flex:1;border-radius:12px;font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
+  .mtabs button.on{background:var(--accent);color:#fff}
+  .mtabs svg{width:16px;height:16px}
+}
+@media (max-width:480px){.site b{font-size:13px}.lmeta{display:none}.tabs button{padding:6px 8px;font-size:12px}}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div id="app">
+  <canvas id="scene" aria-label="Carte 3D du Hijaz : La Mecque, Médine et les lieux de la Sîra"></canvas>
+  <div id="labels"></div>
+
+  <header class="topbar card">
+    <div class="brand">
+      <span class="logo" id="logo"></span>
+      <div><b>Sîra 3D</b><small>السيرة النبوية</small></div>
+    </div>
+    <label class="search" for="q">
+      <span data-ic="search"></span>
+      <input id="q" type="search" placeholder="Rechercher un lieu, un événement, un compagnon…" autocomplete="off">
+      <kbd>/</kbd>
+      <div class="results card" id="results" hidden></div>
+    </label>
+    <div class="spacer"></div>
+    <div class="site">
+      <span class="sitebadge" id="siteBadge">HJZ</span>
+      <div><b id="siteName">Hijaz</b><small id="siteSub">Vue générale</small></div>
+      <span class="chev" data-ic="chev"></span>
+      <select id="view" aria-label="Changer de vue"></select>
+    </div>
+    <div class="era"><span class="dot"></span><span id="eraText">1 H</span></div>
+    <button class="iconbtn" id="themeBtn" aria-label="Basculer jour / nuit"></button>
+    <button class="srcbtn" id="srcBtn" aria-label="Voir les hadiths liés d'al-'Umda">
+      <span class="bk" data-ic="book"></span>
+      <span><b>al-'Umda fî al-Ahkâm</b><small>8 hadiths liés · al-Maqdisî</small></span>
+    </button>
+  </header>
+
+  <section class="kpis" aria-label="Indicateurs">
+    <div class="kpi card"><span class="ki" data-ic="user"></span><div><small>Âge du Prophète ﷺ</small><div class="v" id="kAge">53 ans</div><div class="s">années lunaires (approx.)</div></div></div>
+    <div class="kpi card"><span class="ki" data-ic="calendar"></span><div><small>Année</small><div class="v" id="kYear">1 H</div><div class="s" id="kYearS">622 apr. J.-C.</div></div></div>
+    <div class="kpi card"><span class="ki" data-ic="layers"></span><div><small>Période</small><div class="v" id="kPer">Médinoise</div><div class="s" id="kPerS">an 1 sur 10</div></div></div>
+  </section>
+
+  <div class="mapctl card" aria-label="Contrôles de la carte">
+    <button id="zIn" aria-label="Zoomer" data-ic="plus"></button>
+    <button id="zOut" aria-label="Dézoomer" data-ic="minus"></button>
+    <hr>
+    <button id="rL" aria-label="Pivoter à gauche" data-ic="rotL"></button>
+    <button id="rR" aria-label="Pivoter à droite" data-ic="rotR"></button>
+    <button id="home" aria-label="Vue d'ensemble" data-ic="home"></button>
+  </div>
+
+  <aside class="detail card" id="detail" aria-live="polite">
+    <div class="dhead">
+      <div class="dicon" id="dIcon"></div>
+      <div class="dtitle"><span class="eyebrow" id="dCat"></span><h2 id="dTitle"></h2><span class="dsub" id="dSub"></span></div>
+      <div class="dbtns"><button id="dFocus" aria-label="Recentrer la carte" data-ic="target"></button><button id="dClose" aria-label="Fermer la fiche" data-ic="close"></button></div>
+    </div>
+    <div class="dar" id="dAr" lang="ar"></div>
+    <div class="dstatus"><span class="chip" id="dChip"></span><span id="dPlace"></span></div>
+    <dl class="rows" id="dRows"></dl>
+    <p class="summary" id="dSummary"></p>
+    <div class="quran" id="dQuran"></div>
+    <div id="dUmda"></div>
+    <div class="also" id="dAlso"></div>
+    <p class="fine">Dates et effectifs : valeurs couramment retenues par les biographes (Ibn Ishâq, Ibn Sa'd…), dont certaines font l'objet de divergences.</p>
+  </aside>
+
+  <div class="scale" id="scale">Carte stylisée · distances non à l'échelle</div>
+
+  <section class="timeline card" id="timeline">
+    <div class="thead"><span class="ti" data-ic="route"></span><b>Parcours prophétique</b><span class="tmeta" id="tMeta"></span></div>
+    <div class="tbody">
+      <ol class="stepper" id="stepper"></ol>
+      <button class="nextcard" id="nextCard"></button>
+    </div>
+    <div class="scrub">
+      <button id="prev" aria-label="Événement précédent" data-ic="chevL"></button>
+      <button id="play" aria-label="Lancer la visite guidée"></button>
+      <button id="next" aria-label="Événement suivant" data-ic="chev"></button>
+      <div class="track" id="track" aria-label="Chronologie des événements"></div>
+    </div>
+  </section>
+
+  <section class="lists card" id="lists">
+    <div class="lhead">
+      <span class="li" data-ic="list"></span>
+      <div class="tabs" role="tablist">
+        <button data-tab="ev" class="on" role="tab">Événements <span id="nEv"></span></button>
+        <button data-tab="loc" role="tab">Lieux <span id="nLoc"></span></button>
+        <button data-tab="had" role="tab">al-'Umda <span id="nHad"></span></button>
+      </div>
+      <span class="lmeta">Hijaz</span>
+    </div>
+    <div class="lbody" id="lbody"></div>
+  </section>
+
+  <nav class="mtabs card" aria-label="Panneaux">
+    <button data-m="detail" class="on"><span data-ic="pin"></span>Fiche</button>
+    <button data-m="time"><span data-ic="route"></span>Parcours</button>
+    <button data-m="list"><span data-ic="list"></span>Liste</button>
+  </nav>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s);
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ================= ICONS ================= */
+const P={
+ search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+ plus:'<path d="M12 5v14M5 12h14"/>', minus:'<path d="M5 12h14"/>',
+ rotL:'<path d="M4 12a8 8 0 1 0 2.3-5.6"/><path d="M4 4v4h4"/>',
+ rotR:'<path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4"/>',
+ home:'<path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/>',
+ close:'<path d="M6 6l12 12M18 6 6 18"/>',
+ target:'<circle cx="12" cy="12" r="6"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>',
+ chev:'<path d="m9 6 6 6-6 6"/>', chevL:'<path d="m15 6-6 6 6 6"/>',
+ play:'<path d="M8 5v14l11-7z" fill="currentColor"/>', pause:'<path d="M8 5v14M16 5v14"/>',
+ sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+ moon:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+ book:'<path d="M4 19V5a2 2 0 0 1 2-2h14v14H6a2 2 0 0 0-2 2zm0 0a2 2 0 0 0 2 2h14"/>',
+ star:'<path d="M12 2l2.6 4.2L19 5l-1.2 4.4L22 12l-4.2 2.6L19 19l-4.4-1.2L12 22l-2.6-4.2L5 19l1.2-4.4L2 12l4.2-2.6L5 5l4.4 1.2z"/>',
+ hourglass:'<path d="M6 3h12M6 21h12M7 3v3l5 6 5-6V3M7 21v-3l5-6 5 6v3"/>',
+ route:'<circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="6" r="2.5"/><path d="M8.5 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.5"/>',
+ flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+ scroll:'<path d="M8 3h11v14a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-1h11v1a3 3 0 0 0 3 3"/><path d="M8 3a3 3 0 0 0-3 3v10M11 8h5M11 12h5"/>',
+ cube:'<path d="M12 3 20 7v10l-8 4-8-4V7z"/><path d="M4 7l8 4 8-4M12 11v10"/>',
+ pin:'<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+ calendar:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+ user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ layers:'<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>',
+ list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>'
+};
+const ic=n=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+document.querySelectorAll('[data-ic]').forEach(e=>e.innerHTML=ic(e.dataset.ic));
+$('#logo').innerHTML=ic('star');
+
+/* ================= DATA ================= */
+// Lieux : coordonnées d'une carte stylisée (x = est, z = sud). edge = hors carte.
+const LOC={
+ makkah:{fr:'La Mecque',ar:'مكة',x:10,z:70,major:1,code:'MKK'},
+ hira:{fr:"Grotte de Hirâ'",ar:'غار حراء',x:20,z:60},
+ thawr:{fr:'Grotte de Thawr',ar:'غار ثور',x:7,z:87},
+ aqaba:{fr:"al-'Aqaba (Minâ)",ar:'العقبة',x:24,z:70},
+ arafat:{fr:"'Arafa",ar:'عرفة',x:33,z:76},
+ hudaybiya:{fr:'al-Hudaybiya',ar:'الحديبية',x:-14,z:60,code:'HDB'},
+ hunayn:{fr:'Hunayn',ar:'حنين',x:44,z:72},
+ taif:{fr:"Tâ'if",ar:'الطائف',x:64,z:84,major:1,code:'TIF'},
+ badr:{fr:'Badr',ar:'بدر',x:-38,z:-8,major:1,code:'BDR'},
+ madinah:{fr:'Médine',ar:'المدينة',x:0,z:-60,major:1,code:'MDN'},
+ quba:{fr:"Qubâ'",ar:'قباء',x:-3,z:-48},
+ uhud:{fr:'Mont Uhud',ar:'أحد',x:2,z:-80},
+ khandaq:{fr:'Le Fossé',ar:'الخندق',x:-5,z:-71},
+ nadir:{fr:'Banû an-Nadîr',ar:'بنو النضير',x:12,z:-49},
+ khaybar:{fr:'Khaybar',ar:'خيبر',x:38,z:-105,major:1,code:'KHB'},
+ tabuk:{fr:'Tabûk',ar:'تبوك',x:-4,z:-131,edge:'≈ 530 km au nord de Médine',dir:'N'},
+ quds:{fr:'al-Quds',ar:'القدس',x:-36,z:-131,edge:'≈ 1 240 km de La Mecque',dir:'N'},
+ habasha:{fr:'Abyssinie',ar:'الحبشة',x:-104,z:74,edge:'au-delà de la mer Rouge',dir:'W'}
+};
+const CAT={
+ vie:{fr:'Vie',icon:'star'}, rev:{fr:'Révélation',icon:'book'}, epr:{fr:'Épreuve',icon:'hourglass'},
+ hij:{fr:'Hijra',icon:'route'}, exp:{fr:'Expédition',icon:'flag'}, tra:{fr:'Traité',icon:'scroll'}, cul:{fr:'Pèlerinage',icon:'cube'}
+};
+// Hadiths d'al-'Umda (PDF joint) rattachés à des événements. p = page imprimée, pdf = page du fichier.
+const UMDA={
+ u1:{n:1,p:13,pdf:3,ch:'Livre de la purification',narr:"'Umar ibn al-Khattâb",title:'Les actes selon les intentions',
+  ar:'إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ … فَمَنْ كَانَتْ هِجْرَتُهُ إِلَى اللَّهِ وَرَسُولِهِ فَهِجْرَتُهُ إِلَى اللَّهِ وَرَسُولِهِ',
+  fr:"Les actes ne valent que par les intentions. Celui dont l'émigration est pour Allah et Son Messager, son émigration est pour Allah et Son Messager.",ev:[10]},
+ u7:{n:407,p:239,pdf:229,ch:'Livre du jihâd',narr:"'Abd Allâh ibn 'Umar",title:"Ibn 'Umar à Uhud et au Fossé",
+  ar:'عُرِضْتُ عَلَى النَّبِيِّ ﷺ يَوْمَ أُحُدٍ وَأَنَا ابْنُ أَرْبَعَ عَشْرَةَ سَنَةً فَلَمْ يُجِزْنِي',
+  fr:"Présenté au Prophète ﷺ le jour d'Uhud, à 14 ans, il ne fut pas autorisé à combattre ; présenté le jour du Fossé, à 15 ans, il le fut.",ev:[13,15]},
+ u6:{n:405,p:238,pdf:228,ch:'Livre du jihâd',narr:"'Umar ibn al-Khattâb",title:'Les biens des Banû an-Nadîr',
+  ar:'كَانَتْ أَمْوَالُ بَنِي النَّضِيرِ مِمَّا أَفَاءَ اللَّهُ عَلَى رَسُولِهِ',
+  fr:"Les biens des Banû an-Nadîr furent un fay', obtenu sans charge de cavalerie. Il ﷺ en tirait la subsistance annuelle de sa famille et consacrait le reste aux montures et aux armes.",ev:[14]},
+ u2:{n:214,p:126,pdf:116,ch:'Hajj · Sacralité de La Mecque',narr:"Abû Shurayh al-Khuzâ'î",title:'La sacralité de La Mecque',
+  ar:'إِنَّ مَكَّةَ حَرَّمَهَا اللَّهُ وَلَمْ يُحَرِّمْهَا النَّاسُ',
+  fr:"Le lendemain de la conquête, il ﷺ rappelle que La Mecque a été rendue sacrée par Allah et non par les hommes ; le combat n'y fut permis qu'une heure d'un jour.",ev:[18]},
+ u3:{n:217,p:130,pdf:120,ch:'Hajj · Entrée à La Mecque',narr:'Anas ibn Mâlik',title:'L\'entrée à La Mecque',
+  ar:'دَخَلَ مَكَّةَ عَامَ الفَتْحِ وَعَلَى رَأْسِهِ المِغْفَرُ',
+  fr:"Il ﷺ entra à La Mecque l'année de la conquête, un casque de mailles (mighfar) sur la tête.",ev:[18]},
+ u5:{n:399,p:236,pdf:226,ch:'Livre du jihâd',narr:'Abû Qatâda al-Ansârî',title:'Les dépouilles à Hunayn',
+  ar:'خَرَجْنَا مَعَ رَسُولِ اللَّهِ ﷺ إِلَى حُنَيْنٍ',
+  fr:"« Nous sommes sortis avec le Messager d'Allah ﷺ vers Hunayn… » Il y établit que celui qui tue un combattant, preuve à l'appui, reçoit ses dépouilles.",ev:[19]},
+ u8:{n:226,p:133,pdf:123,ch:"Hajj · at-Tamattu'",narr:"'Abd Allâh ibn 'Umar",title:"Le pèlerinage d'adieu",
+  ar:'تَمَتَّعَ رَسُولُ اللَّهِ ﷺ فِي حَجَّةِ الوَدَاعِ بِالعُمْرَةِ إِلَى الحَجِّ',
+  fr:"Lors du pèlerinage d'adieu, il ﷺ joignit la 'umra au hajj et conduisit ses bêtes d'offrande depuis Dhû al-Hulayfa.",ev:[21]},
+ u9:{n:235,p:141,pdf:131,ch:"Hajj · Changer le hajj en 'umra",narr:"Jâbir ibn 'Abd Allâh",title:'« Si j\'avais su d\'avance… »',
+  ar:'لَوِ اسْتَقْبَلْتُ مِنْ أَمْرِي مَا اسْتَدْبَرْتُ مَا أَهْدَيْتُ',
+  fr:"Seuls lui ﷺ et Talha avaient des bêtes d'offrande. Il dit : « Si j'avais su d'avance ce que je sais maintenant, je n'aurais pas amené d'offrande. »",ev:[21]}
+};
+const MAIN_ROAD=['madinah',[-18,-30],[-26,20],[-10,52]];
+const EVENTS=[
+ {id:'naissance',cat:'vie',fr:'Naissance du Prophète ﷺ',ar:'المولد النبوي',loc:'makkah',date:"Rabî' al-Awwal, Année de l'Éléphant",ce:'≈ 570',age:0,per:['Avant la prophétie',''],
+  f:[['Père',"'Abd Allâh, décédé avant sa naissance"],['Mère','Âmina bint Wahb'],['Nourrice','Halîma as-Sa\'diyya']],
+  s:"Né à La Mecque dans le clan des Banû Hâshim, de la tribu de Quraysh, l'année où Abraha tenta d'attaquer la Ka'ba avec ses éléphants. Il passe ses premières années dans le désert, chez les Banû Sa'd, auprès de sa nourrice Halîma.",q:'al-Fîl (105)'},
+ {id:'kaba',cat:'vie',fr:"Reconstruction de la Ka'ba",ar:'بناء الكعبة',loc:'makkah',date:'35 ans avant l\'Hégire (env.)',ce:'≈ 605',age:35,per:['Avant la prophétie',''],
+  f:[['Rôle','Arbitre du différend sur la Pierre noire'],['Surnom','al-Amîn, le digne de confiance']],
+  s:"Quraysh rebâtit la Ka'ba et les clans se disputent l'honneur de replacer la Pierre noire. Il ﷺ la pose sur un manteau, fait soulever chaque coin par un chef de clan, puis la remet en place de sa propre main."},
+ {id:'revelation',cat:'rev',fr:'Première révélation',ar:'بدء الوحي',loc:'hira',date:'Ramadan, an 1 de la prophétie',ce:'610',age:40,per:['Mecquoise','an 1 de la prophétie'],
+  f:[['Ange','Jibrîl'],['Premiers versets',"« Iqra' » (Lis !)"],['Soutien','Khadîja, première croyante']],
+  s:"Pendant ses retraites dans la grotte de Hirâ', sur le Jabal an-Nûr, l'ange Jibrîl lui apparaît et lui ordonne : « Lis ! ». Il rentre bouleversé auprès de Khadîja, qui le rassure et devient la première à croire en lui.",q:"al-'Alaq 96:1-5"},
+ {id:'predication',cat:'rev',fr:'Appel public',ar:'الجهر بالدعوة',loc:'makkah',date:'an 4 de la prophétie',ce:'≈ 613',age:43,per:['Mecquoise','an 4 de la prophétie'],
+  f:[['Lieu','Mont as-Safâ'],['Auparavant','≈ 3 ans de prédication discrète']],
+  s:"Après environ trois années d'appel discret, il monte sur le mont as-Safâ et appelle les clans de Quraysh à l'unicité d'Allah. Commence alors une opposition de plus en plus dure contre les croyants.",q:"ash-Shu'arâ' 26:214"},
+ {id:'habasha',cat:'hij',fr:'Émigration en Abyssinie',ar:'الهجرة إلى الحبشة',loc:'habasha',date:'Rajab, an 5 de la prophétie',ce:'≈ 615',age:45,per:['Mecquoise','an 5 de la prophétie'],
+  f:[['Souverain','an-Najâshî (le Négus)'],['Porte-parole',"Ja'far ibn Abî Tâlib"],['Second départ','plus de 80 émigrés']],
+  s:"Face aux persécutions, des croyants traversent la mer Rouge pour trouver refuge auprès du Négus, roi chrétien réputé juste. Devant lui, Ja'far ibn Abî Tâlib récite le début de la sourate Maryam.",q:'Maryam (19)',route:['makkah',[-20,64],[-62,68],'habasha']},
+ {id:'boycott',cat:'epr',fr:"Boycott de Shi'b Abî Tâlib",ar:'حصار الشعب',loc:'makkah',date:'an 7 à 10 de la prophétie',ce:'≈ 616 – 619',age:46,per:['Mecquoise','an 7 de la prophétie'],
+  f:[['Durée','≈ 3 ans'],['Visés','Banû Hâshim et Banû al-Muttalib']],
+  s:"Quraysh suspend dans la Ka'ba un pacte interdisant tout commerce et tout mariage avec les Banû Hâshim. Le Prophète ﷺ et les siens vivent reclus dans le vallon d'Abû Tâlib, dans la faim, jusqu'à la rupture du pacte."},
+ {id:'tristesse',cat:'epr',fr:"L'année de la tristesse",ar:'عام الحزن',loc:'makkah',date:'an 10 de la prophétie',ce:'≈ 619',age:49,per:['Mecquoise','an 10 de la prophétie'],
+  f:[['Décès','Abû Tâlib, son oncle protecteur'],['Décès ','Khadîja, son épouse']],
+  s:"En peu de temps, il perd son oncle Abû Tâlib, qui le protégeait, et son épouse Khadîja, son premier soutien. La pression de Quraysh redouble."},
+ {id:'taif',cat:'epr',fr:"Voyage à Tâ'if",ar:'رحلة الطائف',loc:'taif',date:'Shawwâl, an 10 de la prophétie',ce:'≈ 619',age:50,per:['Mecquoise','an 10 de la prophétie'],
+  f:[['Compagnon','Zayd ibn Hâritha'],['Accueil','Rejet et jets de pierres']],
+  s:"Il part chercher un soutien auprès de la tribu de Thaqîf. Repoussé et poursuivi à coups de pierres, il s'abrite dans un verger, où il invoque Allah et rencontre 'Addâs, un serviteur chrétien qui croit en lui.",route:['makkah',[28,72],'hunayn',[56,80],'taif']},
+ {id:'isra',cat:'rev',fr:"al-Isrâ' wal-Mi'râj",ar:'الإسراء والمعراج',loc:'makkah',date:'Avant la Hijra (date discutée)',ce:'≈ 621',age:51,per:['Mecquoise','fin de la période'],
+  f:[['Trajet','La Mecque → al-Quds, puis ascension'],['Prescription','Les cinq prières quotidiennes']],
+  s:"En une nuit, il ﷺ est transporté de la Mosquée sacrée à la mosquée al-Aqsâ, puis élevé à travers les cieux. Les cinq prières quotidiennes sont prescrites lors de ce voyage.",q:"al-Isrâ' 17:1",route:['makkah',[-14,-30],'quds'],arc:1},
+ {id:'aqaba',cat:'hij',fr:"Serments d'al-'Aqaba",ar:'بيعة العقبة',loc:'aqaba',date:'Dhû al-Hijja, an 12 et 13',ce:'621 – 622',age:52,per:['Mecquoise','an 12 et 13 de la prophétie'],
+  f:[['1er serment','12 hommes de Yathrib'],['2nd serment','73 hommes et 2 femmes'],['Envoyé',"Mus'ab ibn 'Umayr"]],
+  s:"Pendant la saison du pèlerinage, des habitants de Yathrib, des Aws et des Khazraj, le rencontrent de nuit à al-'Aqaba, près de Minâ. Ils lui prêtent allégeance et s'engagent à le protéger : la voie de la Hijra s'ouvre.",route:['makkah','aqaba']},
+ {id:'hijra',cat:'hij',fr:'La Hijra',ar:'الهجرة النبوية',loc:'quba',date:"Rabî' al-Awwal, an 1 H",ce:'622',age:53,per:['Médinoise','an 1 sur 10'],
+  f:[['Compagnon','Abû Bakr as-Siddîq'],['Refuge','3 nuits dans la grotte de Thawr'],['Guide',"'Abd Allâh ibn Urayqit"],['Arrivée',"Qubâ', puis Médine"]],
+  s:"Il quitte La Mecque de nuit avec Abû Bakr et se cache trois nuits dans la grotte de Thawr, au sud, avant de remonter par la route côtière. Accueilli à Qubâ', il y fonde une mosquée puis entre à Yathrib, qui devient Médine.",q:'at-Tawba 9:40',umda:['u1'],
+  route:['makkah','thawr',[-10,92],[-40,76],[-50,40],[-50,5],[-44,-24],[-24,-42],'quba','madinah']},
+ {id:'masjid',cat:'hij',fr:'La mosquée et la fraternité',ar:'المسجد والمؤاخاة',loc:'madinah',date:'an 1 H',ce:'622 – 623',age:53,per:['Médinoise','an 1 sur 10'],
+  f:[['Construction','Briques crues, troncs de palmiers'],['Fraternisation','Muhâjirûn et Ansâr'],['Organisation','Pacte de Médine']],
+  s:"Il ﷺ participe lui-même à la construction de sa mosquée, en briques crues, troncs et palmes. Il unit chaque émigré mecquois (Muhâjir) à un Ansârî de Médine par un lien de fraternité."},
+ {id:'badr',cat:'exp',fr:'Bataille de Badr',ar:'غزوة بدر',loc:'badr',date:'17 Ramadan 2 H',ce:'624',age:54,per:['Médinoise','an 2 sur 10'],
+  f:[['Musulmans','≈ 313'],['Quraysh','≈ 950 à 1 000'],['Issue','Victoire décisive'],['Martyrs','14']],
+  s:"Parti intercepter une caravane de Quraysh, le petit groupe de croyants se retrouve face à l'armée mecquoise, trois fois plus nombreuse, près des puits de Badr. Allah leur accorde la victoire : c'est le « Jour du Discernement ».",q:'al-Anfâl (8)',route:['madinah',[-14,-40],'badr']},
+ {id:'uhud',cat:'exp',fr:"Bataille d'Uhud",ar:'غزوة أحد',loc:'uhud',date:'Shawwâl 3 H',ce:'625',age:55,per:['Médinoise','an 3 sur 10'],
+  f:[['Musulmans','≈ 700'],['Quraysh','≈ 3 000'],['Archers',"50, sur le mont 'Aynayn"],['Martyrs','≈ 70, dont Hamza']],
+  s:"Au pied du mont Uhud, les musulmans prennent d'abord l'avantage. Mais la plupart des archers quittent leur colline ; la cavalerie de Khâlid ibn al-Walîd, alors dans le camp adverse, contourne et retourne la situation. Hamza tombe en martyr.",q:"Âl 'Imrân (3)",umda:['u7'],route:['madinah','uhud']},
+ {id:'nadir',cat:'exp',fr:'Départ des Banû an-Nadîr',ar:'إجلاء بني النضير',loc:'nadir',date:"Rabî' al-Awwal 4 H",ce:'625',age:56,per:['Médinoise','an 4 sur 10'],
+  f:[['Motif','Complot contre le Prophète ﷺ'],['Issue','Départ de la tribu, sans bataille']],
+  s:"Après la découverte d'un complot visant la vie du Prophète ﷺ, la tribu juive des Banû an-Nadîr, liée par pacte, est assiégée puis quitte Médine. Ses biens, obtenus sans combat, deviennent du fay'.",q:'al-Hashr (59)',umda:['u6'],route:['madinah','nadir']},
+ {id:'khandaq',cat:'exp',fr:'Bataille du Fossé',ar:'غزوة الخندق',loc:'khandaq',date:'Shawwâl 5 H',ce:'627',age:57,per:['Médinoise','an 5 sur 10'],
+  f:[['Musulmans','≈ 3 000'],['Coalition (al-Ahzâb)','≈ 10 000'],['Idée du fossé','Salmân al-Fârisî'],['Fin','Vent glacial, retrait des coalisés']],
+  s:"Une coalition de tribus marche sur Médine. Sur le conseil de Salmân al-Fârisî, les musulmans creusent un fossé au nord de la ville. Après un long siège, un vent glacial disperse les assaillants.",q:'al-Ahzâb 33:9-27',umda:['u7']},
+ {id:'hudaybiya',cat:'tra',fr:"Traité d'al-Hudaybiya",ar:'صلح الحديبية',loc:'hudaybiya',date:"Dhû al-Qa'da 6 H",ce:'628',age:58,per:['Médinoise','an 6 sur 10'],
+  f:[['Pèlerins','≈ 1 400'],['Serment',"Bay'at ar-Ridwân, sous l'arbre"],['Trêve','10 ans']],
+  s:"Venus pour la 'umra, les musulmans sont arrêtés aux abords du territoire sacré. Après le serment sous l'arbre, une trêve est conclue avec Quraysh. Ses clauses semblent défavorables, mais le Coran la nomme « une victoire éclatante ».",q:'al-Fath (48)',route:MAIN_ROAD.concat(['hudaybiya'])},
+ {id:'khaybar',cat:'exp',fr:'Conquête de Khaybar',ar:'غزوة خيبر',loc:'khaybar',date:'Muharram 7 H',ce:'628',age:58,per:['Médinoise','an 7 sur 10'],
+  f:[['Défenses','Fortins sur les hauteurs'],['Étendard',"Confié à 'Alî ibn Abî Tâlib"],['Issue','Accord sur les palmeraies']],
+  s:"L'armée marche sur l'oasis fortifiée de Khaybar, au nord de Médine. Les fortins tombent un à un ; l'étendard est remis à 'Alî. Les habitants restent cultiver les palmeraies contre la moitié de la récolte.",route:['madinah',[20,-84],'khaybar']},
+ {id:'fath',cat:'exp',fr:'Conquête de La Mecque',ar:'فتح مكة',loc:'makkah',date:'Ramadan 8 H',ce:'630',age:60,per:['Médinoise','an 8 sur 10'],
+  f:[['Armée','≈ 10 000'],['Combats','Presque aucun'],['Ka\'ba','Purifiée de ses idoles'],['Annonce','Pardon accordé aux Mecquois']],
+  s:"Quraysh ayant rompu la trêve, il ﷺ entre à La Mecque presque sans combat. Il purifie la Ka'ba de ses idoles, Bilâl lance l'appel à la prière depuis son toit, et il pardonne à ceux qui l'avaient combattu.",q:'an-Nasr (110)',umda:['u2','u3'],route:MAIN_ROAD.concat(['makkah'])},
+ {id:'hunayn',cat:'exp',fr:"Hunayn et siège de Tâ'if",ar:'غزوة حنين',loc:'hunayn',date:'Shawwâl 8 H',ce:'630',age:60,per:['Médinoise','an 8 sur 10'],
+  f:[['Musulmans','≈ 12 000'],['Adversaires','Hawâzin et Thaqîf'],['Issue','Victoire après un repli']],
+  s:"Surpris par une embuscade dans la vallée de Hunayn, les rangs musulmans reculent, tandis que le Prophète ﷺ tient bon. Ils se regroupent et l'emportent ; l'armée assiège ensuite Tâ'if.",q:'at-Tawba 9:25-26',umda:['u5'],route:['makkah',[28,72],'hunayn',[56,80],'taif']},
+ {id:'tabuk',cat:'exp',fr:'Expédition de Tabûk',ar:'غزوة تبوك',loc:'tabuk',date:'Rajab 9 H',ce:'630',age:61,per:['Médinoise','an 9 sur 10'],
+  f:[['Armée','≈ 30 000'],['Contexte','Chaleur et disette'],['Issue','Aucun combat ; accords avec les tribus du nord']],
+  s:"Dans la chaleur et la pénurie, il conduit sa plus grande armée vers le nord, face à la menace byzantine. Aucun affrontement n'a lieu ; plusieurs tribus frontalières concluent des accords.",q:'at-Tawba (9)',route:['madinah',[-4,-96],'tabuk']},
+ {id:'hajj',cat:'cul',fr:"Pèlerinage d'adieu",ar:'حجة الوداع',loc:'arafat',date:'Dhû al-Hijja 10 H',ce:'632',age:62,per:['Médinoise','an 10 sur 10'],
+  f:[['Pèlerins','Plus de 100 000 selon les récits'],['Sermon',"Au mont de 'Arafa"],['Révélation','« Aujourd\'hui, J\'ai parachevé votre religion »']],
+  s:"Son unique pèlerinage après la Hijra. À 'Arafa, il prononce un sermon sur la sacralité de la vie, des biens et de l'honneur. Le verset annonçant l'achèvement de la religion y est révélé.",q:"al-Mâ'ida 5:3",umda:['u8','u9'],route:MAIN_ROAD.concat(['makkah','aqaba','arafat'])},
+ {id:'wafat',cat:'vie',fr:'Décès du Prophète ﷺ',ar:'الوفاة النبوية',loc:'madinah',date:"Rabî' al-Awwal 11 H",ce:'632',age:63,per:['Médinoise','an 11'],
+  f:[['Lieu',"Chambre de 'Â'isha, à Médine"],['Successeur','Abû Bakr as-Siddîq']],
+  s:"Après quelques jours de maladie, il ﷺ s'éteint à Médine, dans la chambre de 'Â'isha, où il est enterré. Abû Bakr rappelle aux croyants qu'Allah est Vivant et ne meurt pas.",q:"Âl 'Imrân 3:144"}
+];
+const HIJRA_I=10, KHANDAQ_I=15;
+const MILESTONES=[[0,'Naissance','≈ 570'],[2,'Révélation','610'],[10,'Hijra','622 · 1 H'],[12,'Badr','624 · 2 H'],[18,'Conquête','630 · 8 H'],[22,'Wafât','632 · 11 H']];
+function hijriLabel(e){ const m=e.date.match(/(\d+) H/); return m? m[1]+' H' : e.ce; }
+
+/* ================= THREE SETUP ================= */
+const canvas=$('#scene');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(30,1,1,3000);
+scene.fog=new THREE.Fog(0xE6ECEA,300,700);
+
+const hemi=new THREE.HemisphereLight(0xF3F6F8,0xD8C29B,0.78); scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xFFF2DC,0.95); sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048); sun.shadow.camera.near=1; sun.shadow.camera.far=500; sun.shadow.bias=-0.0006; sun.shadow.normalBias=0.3;
+scene.add(sun); scene.add(sun.target);
+const amb=new THREE.AmbientLight(0xffffff,0.12); scene.add(amb);
+const SUN_OFF=new THREE.Vector3(70,120,45);
+
+/* ---------- terrain ---------- */
+function sstep(a,b,x){const t=Math.min(1,Math.max(0,(x-a)/(b-a)));return t*t*(3-2*t);}
+let seed=7; const R=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646;};
+const coast=z=>-62+5*Math.sin(z*0.045)+3*Math.sin(z*0.13);
+function plateau(x,z){ return 8.5*sstep(47,59,x+4*Math.sin(z*0.08))*sstep(-25,5,z)*(1-sstep(118,138,z)); }
+// [x,z,rayon,hauteur,étirement x,étirement z]
+const MOUNTS=[
+ [-1,60,9,9],[20,60,5.5,12],[-4,79,8,8],[7,87,5.5,10],[26,85,8,8],[13,51,8,7],[31,63,7,7],[33,76,2.6,2.2],
+ [40,64,7,8],[48,80,7,9],
+ [2,-82,10,10,2.2,0.8],[-1.5,-73.5,2.2,1.4],[-14,-65,4,4.5],
+ [33,-99,6,5],[44,-111,6,6],[46,-98,5,4],
+ [-29,-1,7,4.5],[-46,-17,6,3.5],
+ [-20,52,7,5],[-6,46,8,6]
+];
+const AVOID=[[10,70,16],[0,-60,22],[-38,-8,14],[38,-105,10],[64,84,10],[-14,60,10],[-3,-48,8],[33,76,6],[24,70,6],[44,72,5],[12,-49,6]];
+const LINES=[
+ [[10,70],[7,86],[-10,92],[-40,76],[-50,40],[-50,5],[-44,-24],[-24,-42],[-3,-48]],
+ [[0,-60],[-18,-30],[-26,20],[-10,52],[10,70]],
+ [[0,-60],[-14,-40],[-38,-8]],[[0,-60],[20,-84],[38,-105]],[[10,70],[28,72],[44,72],[56,80],[64,84]]
+];
+function segD(px,pz,a,b){const dx=b[0]-a[0],dz=b[1]-a[1];let t=((px-a[0])*dx+(pz-a[1])*dz)/(dx*dx+dz*dz);t=Math.max(0,Math.min(1,t));return Math.hypot(px-a[0]-t*dx,pz-a[1]-t*dz);}
+function nearLines(x,z,d){return LINES.some(L=>{for(let i=0;i<L.length-1;i++) if(segD(x,z,L[i],L[i+1])<d) return true; return false;});}
+for(let k=0,n=0;k<900&&n<58;k++){
+  const x=-30+R()*130, z=-132+R()*262;
+  if(AVOID.some(a=>Math.hypot(x-a[0],z-a[1])<a[2]+6)) continue;
+  if(nearLines(x,z,8)) continue;
+  MOUNTS.push([x,z,5+R()*9,2.5+R()*7.5,0.7+R()*0.8,0.7+R()*0.8]); n++;
+}
+const PLAT_T=plateau(64,84);
+const FLATS=[[10,70,8,0.6],[0,-60,13,0.6],[-3,-48,4,0.6],[-38,-8,7,0.5],[38,-105,6,0.8],[64,84,7,PLAT_T+0.6],[-14,60,5,0.5],[12,-49,3.5,0.6]];
+function rawH(x,z){
+  let h=0.35+0.6*(Math.sin(x*0.13+Math.sin(z*0.07)*1.7)*0.5+0.5)*(Math.sin(z*0.11+x*0.04)*0.5+0.5)+0.1*Math.sin(x*0.6+z*0.4);
+  for(let i=0;i<MOUNTS.length;i++){const m=MOUNTS[i];const dx=(x-m[0])/(m[4]||1),dz=(z-m[1])/(m[5]||1);const d2=dx*dx+dz*dz,r=m[2];if(d2>=r*r)continue;
+    const t=1-Math.sqrt(d2)/r;const n=0.8+0.35*Math.sin(x*0.9+z*0.7)*Math.cos(z*1.1-x*0.4);h+=m[3]*t*t*(3-2*t)*n;}
+  return h+plateau(x,z)*(0.92+0.08*Math.sin(x*0.5)*Math.sin(z*0.6));
+}
+function H(x,z){
+  let h=rawH(x,z);
+  for(const f of FLATS){const d=Math.hypot(x-f[0],z-f[1]);if(d<f[2]){const k=1-sstep(f[2]*0.45,f[2],d);h+=(f[3]-h)*k;}}
+  const c=coast(z); const land=sstep(c,c+14,x); h=0.3*(1-land)+h*land;
+  if(x<c) h=Math.max(-5,0.3-(c-x)*0.25);
+  return h;
+}
+const HARRA=[[16,-62,13],[-16,-55,9],[28,-92,16]];
+const OASIS=[[2,-52,13],[-3,-47,6],[40,-104,11],[64,86,9],[-38,-6,4]];
+const COL={sand:'#EAD5AC',sand2:'#DDBE8A',rock:'#C39A6B',rock2:'#99704F',harra:'#6B5A51',green:'#93AE64',wet:'#D8C49C',sea:'#86C7C9',uhud:'#B6704F',plat:'#B7A47E'};
+for(const k in COL) COL[k]=new THREE.Color(COL[k]);
+const W=300,D=330,CX=-5,CZ=-7;
+const tgeo=new THREE.PlaneGeometry(W,D,200,220); tgeo.rotateX(-Math.PI/2);
+{
+  const pos=tgeo.attributes.position, col=new Float32Array(pos.count*3), c=new THREE.Color();
+  for(let i=0;i<pos.count;i++){
+    const x=pos.getX(i)+CX, z=pos.getZ(i)+CZ, h=H(x,z); pos.setXYZ(i,x,h,z);
+    const n=(Math.sin(x*0.31+z*0.17)+Math.sin(z*0.23-x*0.11))*0.25+0.5;
+    c.copy(COL.sand).lerp(COL.sand2,n*0.75);
+    const pl=plateau(x,z), rel=h-pl*0.95;
+    c.lerp(COL.plat,sstep(3,8,pl)*0.55);
+    c.lerp(COL.rock,sstep(1.6,5.5,rel)); c.lerp(COL.rock2,sstep(6,11,rel));
+    for(const a of HARRA){const d=Math.hypot(x-a[0],z-a[1]);c.lerp(COL.harra,(1-sstep(a[2]*0.4,a[2],d))*(0.62+0.3*n));}
+    {const dx=(x-2)/2.2,dz=(z+82)/0.8;const d=Math.sqrt(dx*dx+dz*dz);c.lerp(COL.uhud,(1-sstep(5,10,d))*0.75);}
+    for(const a of OASIS){const d=Math.hypot(x-a[0],z-a[1]);const k=(1-sstep(a[2]*0.5,a[2],d))*Math.min(1,0.55+0.45*Math.abs(Math.sin(x*1.3)*Math.sin(z*1.1)));c.lerp(COL.green,k*0.65);}
+    if(h<0.9&&x<coast(z)+7) c.lerp(COL.wet,0.6);
+    if(h<0) c.lerp(COL.sea,Math.min(1,-h/2.5));
+    col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;
+  }
+  tgeo.setAttribute('color',new THREE.BufferAttribute(col,3)); tgeo.computeVertexNormals();
+}
+const terrainMat=new THREE.MeshStandardMaterial({vertexColors:true,flatShading:true,roughness:1,metalness:0});
+const terrain=new THREE.Mesh(tgeo,terrainMat); terrain.receiveShadow=true; terrain.castShadow=true; scene.add(terrain);
+const waterMat=new THREE.MeshStandardMaterial({color:0x56B4C9,transparent:true,opacity:0.86,roughness:0.25,metalness:0.1});
+const water=new THREE.Mesh(new THREE.PlaneGeometry(900,900),waterMat); water.rotation.x=-Math.PI/2; water.position.set(-60,0.02,0); water.receiveShadow=true; scene.add(water);
+
+/* ---------- helpers ---------- */
+const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:0.9,metalness:0},o||{}));
+function add(mesh,x,y,z,parent){mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;(parent||scene).add(mesh);return mesh;}
+function merge(geos){
+  const arr=geos.map(g=>g.index?g.toNonIndexed():g);let n=0;arr.forEach(g=>n+=g.attributes.position.count);
+  const pos=new Float32Array(n*3),nor=new Float32Array(n*3);let o=0;
+  arr.forEach(g=>{pos.set(g.attributes.position.array,o*3);nor.set(g.attributes.normal.array,o*3);o+=g.attributes.position.count;});
+  const r=new THREE.BufferGeometry();r.setAttribute('position',new THREE.BufferAttribute(pos,3));r.setAttribute('normal',new THREE.BufferAttribute(nor,3));return r;
+}
+const dummy=new THREE.Object3D();
+function instanced(geo,mat,list,colorFn){
+  const im=new THREE.InstancedMesh(geo,mat,list.length);im.castShadow=true;im.receiveShadow=true;
+  const c=new THREE.Color();
+  list.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.rotation.set(p.rx||0,p.ry||0,p.rz||0);dummy.scale.set(p.sx||1,p.sy||1,p.sz||1);dummy.updateMatrix();im.setMatrixAt(i,dummy.matrix);
+    if(colorFn){colorFn(c,i,p);im.setColorAt(i,c);}});
+  scene.add(im);return im;
+}
+function scatter(cx,cz,r0,r1,n,test){const out=[];let g=0;while(out.length<n&&g<n*40){g++;const a=R()*Math.PI*2,r=r0+Math.sqrt(R())*(r1-r0);const x=cx+Math.cos(a)*r,z=cz+Math.sin(a)*r;if(test&&!test(x,z))continue;out.push([x,z]);}return out;}
+
+/* ---------- houses ---------- */
+const houses=[];
+function town(cx,cz,r0,r1,n,test){scatter(cx,cz,r0,r1,n,(x,z)=>H(x,z)<2.4&&(!test||test(x,z))).forEach(([x,z])=>{const w=0.9+R()*0.9,d=0.9+R()*0.9,h=0.7+R()*0.9;houses.push({x,z,y:H(x,z)+h/2-0.05,sx:w,sy:h,sz:d,ry:(R()-0.5)*0.4});});}
+town(10,70,3.6,10,170);
+town(0,-60,5.5,13,150,(x,z)=>!(Math.abs(x)<5&&Math.abs(z+60)<4.5));
+town(-3,-48,1.5,4.5,18);
+town(38,-105,2,7,40);
+town(64,84,1,4.6,60);
+town(12,-49,0.5,3.2,16);
+const HOUSE_COLS=['#F1E9DA','#E7D7BC','#D9C29C','#CDAE85','#EEE3CF'].map(c=>new THREE.Color(c));
+instanced(new THREE.BoxGeometry(1,1,1),M(0xffffff),houses,(c,i)=>c.copy(HOUSE_COLS[i%HOUSE_COLS.length]));
+
+/* ---------- vegetation ---------- */
+const trunkGeo=new THREE.CylinderGeometry(0.1,0.16,2.6,6);trunkGeo.translate(0,1.3,0);
+const fronds=[];for(let k=0;k<7;k++){const g=new THREE.BoxGeometry(0.34,0.05,1.7);g.translate(0,0,0.85);g.rotateX(0.5);g.rotateY(k*Math.PI*2/7);g.translate(0,2.6,0);fronds.push(g);}
+const frondGeo=merge(fronds);
+const palms=[];
+function grove(cx,cz,r0,r1,n,test){scatter(cx,cz,r0,r1,n,(x,z)=>H(x,z)<2&&H(x,z)>0.3&&(!test||test(x,z))).forEach(([x,z])=>{const s=0.75+R()*0.5;palms.push({x,z,y:H(x,z)-0.05,ry:R()*6.28,rx:(R()-0.5)*0.18,rz:(R()-0.5)*0.18,sx:s,sy:s,sz:s});});}
+grove(2,-54,9,20,300,(x,z)=>z>-66&&!(Math.abs(x)<5&&Math.abs(z+60)<5));
+grove(-3,-47,2,7,40); grove(40,-104,3,13,170); grove(-38,-6,2,6,14); grove(12,-48,3,6,30);
+instanced(trunkGeo,M(0x8B6A45),palms);
+instanced(frondGeo,M(0x5F8F3C,{side:THREE.DoubleSide}),palms);
+// acacias des oueds
+const acTr=new THREE.CylinderGeometry(0.1,0.14,1.2,5);acTr.translate(0,0.6,0);
+const acTop=new THREE.IcosahedronGeometry(1,0);acTop.scale(1.4,0.42,1.4);acTop.translate(0,1.4,0);
+const acacias=[];
+for(let k=0;k<1200&&acacias.length<150;k++){const x=-58+R()*150,z=-130+R()*255;const h=H(x,z);if(h<0.35||h>2.2||x<coast(z)+3)continue;if(AVOID.some(a=>Math.hypot(x-a[0],z-a[1])<a[2]*0.6))continue;const s=0.6+R()*0.6;acacias.push({x,z,y:h-0.05,ry:R()*6,sx:s,sy:s,sz:s});}
+acacias.push({x:-14,z:60.5,y:H(-14,60.5)-0.05,ry:0,sx:2.4,sy:2.4,sz:2.4}); // l'arbre d'al-Hudaybiya
+instanced(acTr,M(0x7A5A3C),acacias); instanced(acTop,M(0x748F48,{flatShading:true}),acacias);
+// vergers de Tâ'if
+const bushes=[];for(let r=0;r<7;r++)for(let k=0;k<9;k++){const x=58+k*1.4+(r%2)*0.6,z=88+r*1.5;if(Math.hypot(x-64,z-84)<6)continue;bushes.push({x,z,y:H(x,z)+0.35,sx:0.7,sy:0.6,sz:0.7});}
+for(let r=0;r<5;r++)for(let k=0;k<8;k++){const x=67+k*1.4,z=76+r*1.5;if(Math.hypot(x-64,z-84)<6)continue;bushes.push({x,z,y:H(x,z)+0.35,sx:0.7,sy:0.6,sz:0.7});}
+instanced(new THREE.IcosahedronGeometry(0.6,0),M(0x6E9A45,{flatShading:true}),bushes);
+
+/* ---------- landmarks ---------- */
+const ERA=[];
+const nightLights=[];
+// Ka'ba
+{const y=H(10,70);
+ const mataf=add(new THREE.Mesh(new THREE.CylinderGeometry(3.2,3.2,0.12,48),M(0xEFE8DA)),10,y+0.04,70);mataf.castShadow=false;
+ add(new THREE.Mesh(new THREE.BoxGeometry(1.5,1.8,1.3),M(0x1B1B1D,{roughness:0.7})),10,y+1,70);
+ add(new THREE.Mesh(new THREE.BoxGeometry(1.53,0.17,1.33),M(0xC9A043,{metalness:0.5,roughness:0.4})),10,y+1.45,70);
+ add(new THREE.Mesh(new THREE.BoxGeometry(0.32,0.6,0.04),M(0xC9A043,{metalness:0.5,roughness:0.4})),10.35,y+0.6,70.66);
+}
+// Mosquée du Prophète ﷺ (enclos en briques crues, partie couverte en palmes)
+const masjid=new THREE.Group();scene.add(masjid);
+{const y=H(0,-60),mud=M(0xB98C5F),roof=M(0x7F6143);
+ add(new THREE.Mesh(new THREE.BoxGeometry(7,0.1,6.4),M(0xE2CDA6)),0,y+0.05,-60,masjid);
+ add(new THREE.Mesh(new THREE.BoxGeometry(7,1,0.3),mud),0,y+0.5,-63.1,masjid);
+ add(new THREE.Mesh(new THREE.BoxGeometry(7,1,0.3),mud),0,y+0.5,-56.9,masjid);
+ add(new THREE.Mesh(new THREE.BoxGeometry(0.3,1,6.4),mud),-3.4,y+0.5,-60,masjid);
+ add(new THREE.Mesh(new THREE.BoxGeometry(0.3,1,2.4),mud),3.4,y+0.5,-62,masjid);
+ add(new THREE.Mesh(new THREE.BoxGeometry(0.3,1,2.4),mud),3.4,y+0.5,-58,masjid);
+ add(new THREE.Mesh(new THREE.BoxGeometry(6.8,0.14,1.9),roof),0,y+1.15,-62,masjid);
+ add(new THREE.Mesh(new THREE.BoxGeometry(6.8,0.14,1.3),roof),0,y+1.15,-57.6,masjid);
+ for(let k=0;k<5;k++){add(new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,1.1,5),roof),-2.6+k*1.3,y+0.55,-61.3,masjid);}
+ for(let k=0;k<4;k++){add(new THREE.Mesh(new THREE.BoxGeometry(1.1,0.9,1.2),M(0xC9A27A)),4.3,y+0.45,-62.6+k*1.4,masjid);} // hujurât
+}
+ERA.push({o:masjid,t:i=>i>=HIJRA_I});
+const quba=new THREE.Group();scene.add(quba);
+{const y=H(-3,-48),mud=M(0xB98C5F);
+ [[0,-1.4,3,0.25],[0,1.4,3,0.25]].forEach(a=>add(new THREE.Mesh(new THREE.BoxGeometry(a[2],0.8,a[3]),mud),-3+a[0],y+0.4,-48+a[1],quba));
+ [[-1.4,0],[1.4,0]].forEach(a=>add(new THREE.Mesh(new THREE.BoxGeometry(0.25,0.8,3),mud),-3+a[0],y+0.4,-48+a[1],quba));
+}
+ERA.push({o:quba,t:i=>i>=HIJRA_I});
+// Fossé (al-Khandaq)
+const trench=new THREE.Group();scene.add(trench);
+{const pts=[[-17,-69],[-11,-70.5],[-5,-71],[1,-71.3],[8,-71]];const dark=M(0x4E3B2D),dirt=M(0xC9A37A);
+ for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1],L=Math.hypot(b[0]-a[0],b[1]-a[1]),mx=(a[0]+b[0])/2,mz=(a[1]+b[1])/2,ang=Math.atan2(b[1]-a[1],b[0]-a[0]);
+  const t=add(new THREE.Mesh(new THREE.BoxGeometry(L+0.3,0.12,0.9),dark),mx,H(mx,mz)+0.05,mz,trench);t.rotation.y=-ang;t.castShadow=false;
+  const m=add(new THREE.Mesh(new THREE.BoxGeometry(L+0.3,0.35,0.6),dirt),mx-Math.sin(ang)*-1.1,H(mx,mz)+0.15,mz+Math.cos(ang)*1.1,trench);m.rotation.y=-ang;}
+}
+ERA.push({o:trench,t:i=>i>=KHANDAQ_I});
+// Tentes
+const tentGeo=new THREE.ConeGeometry(0.75,0.9,4);tentGeo.rotateY(Math.PI/4);tentGeo.translate(0,0.45,0);
+function camp(cx,cz,r,n,color){const g=new THREE.Group();scene.add(g);const mat=M(color);scatter(cx,cz,0.5,r,n).forEach(([x,z])=>{const t=new THREE.Mesh(tentGeo,mat);t.position.set(x,H(x,z)-0.02,z);t.rotation.y=R();t.castShadow=true;g.add(t);});return g;}
+ERA.push({o:camp(-33,-4,3.5,12,0xF4EEE2),t:i=>i===12});
+ERA.push({o:camp(-43,-13,4.5,24,0x7C4B3C),t:i=>i===12});
+ERA.push({o:camp(-14,60,4,22,0xF4EEE2),t:i=>i===16});
+ERA.push({o:camp(-12,64,4.5,30,0xF4EEE2),t:i=>i===18||i===21});
+// Puits de Badr
+for(let k=0;k<3;k++){const x=-37+k*1.6,z=-8.5+k*0.7;add(new THREE.Mesh(new THREE.CylinderGeometry(0.45,0.5,0.4,12,1,true),M(0x9B8466,{side:THREE.DoubleSide})),x,H(x,z)+0.18,z);}
+// Fortins de Khaybar
+[[34,-101],[41,-108],[45,-100],[36,-111]].forEach(([x,z])=>{const y=H(x,z),st=M(0xA88B6A);
+  add(new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.4,3,10),st),x,y+1.4,z);
+  for(let k=0;k<8;k++){const a=k/8*Math.PI*2;add(new THREE.Mesh(new THREE.BoxGeometry(0.4,0.4,0.4),st),x+Math.cos(a)*1.05,y+3.05,z+Math.sin(a)*1.05);}
+  add(new THREE.Mesh(new THREE.BoxGeometry(2.6,1.2,2.6),st),x+1.4,y+0.5,z+0.6);});
+// Rempart de Tâ'if
+{const y=H(64,84),st=M(0xB79C78);for(let k=0;k<30;k++){if(k===7||k===22)continue;const a=k/30*Math.PI*2;const s=add(new THREE.Mesh(new THREE.BoxGeometry(1.25,1.3,0.4),st),64+Math.cos(a)*5.4,y+0.55,84+Math.sin(a)*5.4);s.rotation.y=-a+Math.PI/2;}}
+// Mont de la Miséricorde ('Arafa)
+add(new THREE.Mesh(new THREE.CylinderGeometry(0.16,0.2,1.8,8),M(0xF5F2EA)),33,H(33,76)+0.9,76);
+// Flèches hors carte
+function arrow(x,z,rot){const s=new THREE.Shape();s.moveTo(0,-3);s.lineTo(2.4,0);s.lineTo(0.9,0);s.lineTo(0.9,3);s.lineTo(-0.9,3);s.lineTo(-0.9,0);s.lineTo(-2.4,0);s.lineTo(0,-3);
+  const g=new THREE.ExtrudeGeometry(s,{depth:0.4,bevelEnabled:false});g.rotateX(Math.PI/2);const m=add(new THREE.Mesh(g,M(0xD4A243,{metalness:0.3,roughness:0.5})),x,Math.max(H(x,z),0)+0.8,z);m.rotation.y=rot;return m;}
+arrow(LOC.tabuk.x,LOC.tabuk.z+6,0); arrow(LOC.quds.x,LOC.quds.z+6,0); arrow(LOC.habasha.x+8,LOC.habasha.z,Math.PI/2);
+// lumières de nuit
+[[10,70],[0,-60],[64,84],[38,-105]].forEach(([x,z])=>{const l=new THREE.PointLight(0xFFB565,0,40,2);l.position.set(x,H(x,z)+5,z);scene.add(l);nightLights.push(l);});
+
+/* ---------- pins ---------- */
+const pinHeadGeo=new THREE.SphereGeometry(1.15,24,16), pinTipGeo=new THREE.ConeGeometry(0.78,1.9,24);pinTipGeo.rotateX(Math.PI);pinTipGeo.translate(0,-1.25,0);
+const pinDiscGeo=new THREE.CircleGeometry(0.48,24);
+const PINS={}, pickables=[];
+const pinMat=M(0x0E6B53,{roughness:0.35,metalness:0.1}), pinMatOn=M(0xC9962F,{roughness:0.3,metalness:0.2}), pinMatEdge=M(0xD4A243,{roughness:0.35});
+const discMat=new THREE.MeshBasicMaterial({color:0xffffff});
+for(const k in LOC){const L=LOC[k];const g=new THREE.Group();const base=L.edge?L.edge&&Math.max(H(L.x,L.z),0):H(L.x,L.z);
+  const head=new THREE.Mesh(pinHeadGeo,L.edge?pinMatEdge:pinMat),tip=new THREE.Mesh(pinTipGeo,head.material),disc=new THREE.Mesh(pinDiscGeo,discMat);
+  head.castShadow=tip.castShadow=true;g.add(head,tip,disc);g.position.set(L.x,base,L.z);scene.add(g);
+  head.userData.key=tip.userData.key=k;pickables.push(head,tip);PINS[k]={g,head,tip,disc,base};}
+const pulse=new THREE.Mesh(new THREE.RingGeometry(1.2,1.6,48),new THREE.MeshBasicMaterial({color:0xC9962F,transparent:true,depthWrite:false,side:THREE.DoubleSide}));pulse.rotation.x=-Math.PI/2;scene.add(pulse);
+
+/* ---------- route & caravan ---------- */
+const stripe=document.createElement('canvas');stripe.width=128;stripe.height=16;{const x=stripe.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,74,16);}
+const stripeTex=new THREE.CanvasTexture(stripe);stripeTex.wrapS=THREE.RepeatWrapping;
+const routeMat=new THREE.MeshBasicMaterial({map:stripeTex,transparent:true,depthWrite:false,color:0xC9962F});
+const glowMat=new THREE.MeshBasicMaterial({transparent:true,opacity:0.18,depthWrite:false,color:0xC9962F});
+let routeGroup=null, routeCurve=null, routeLen=1, routeArc=false;
+function camelMesh(){const g=new THREE.Group(),m=M(0xB98D57),d=M(0x8C6640);
+  const p=(geo,mat,x,y,z,rx)=>{const o=new THREE.Mesh(geo,mat);o.position.set(x,y,z);if(rx)o.rotation.x=rx;o.castShadow=true;g.add(o);};
+  p(new THREE.BoxGeometry(0.8,0.85,1.9),m,0,1.55,0);p(new THREE.BoxGeometry(0.7,0.55,0.8),m,0,2.15,-0.05);
+  p(new THREE.BoxGeometry(0.32,1.1,0.32),m,0,2.05,1.05,0.55);p(new THREE.BoxGeometry(0.34,0.32,0.7),m,0,2.55,1.5);
+  [[-0.27,-0.7],[0.27,-0.7],[-0.27,0.7],[0.27,0.7]].forEach(([x,z])=>p(new THREE.BoxGeometry(0.2,1.2,0.2),d,x,0.6,z));
+  p(new THREE.BoxGeometry(0.86,0.12,1.0),M(0x2E6C8F),0,1.98,-0.05);return g;}
+const caravan=[camelMesh(),camelMesh(),camelMesh()];caravan.forEach(c=>{c.visible=false;scene.add(c);});
+const orb=new THREE.Mesh(new THREE.SphereGeometry(1.1,24,16),new THREE.MeshBasicMaterial({color:0xFFE3A0}));orb.visible=false;scene.add(orb);
+const orbHalo=new THREE.Mesh(new THREE.SphereGeometry(2.6,24,16),new THREE.MeshBasicMaterial({color:0xFFD27A,transparent:true,opacity:0.25,depthWrite:false}));orb.add(orbHalo);
+const ptsOf=ev=>ev.route.map(p=>typeof p==='string'?[LOC[p].x,LOC[p].z]:p);
+function buildRoute(ev){
+  if(routeGroup){scene.remove(routeGroup);routeGroup.traverse(o=>o.geometry&&o.geometry.dispose());routeGroup=null;}
+  routeCurve=null;caravan.forEach(c=>c.visible=false);orb.visible=false;
+  if(!ev.route)return;
+  const p2=ptsOf(ev);const c2=new THREE.CatmullRomCurve3(p2.map(p=>new THREE.Vector3(p[0],0,p[1])),false,'catmullrom',0.3);
+  const len=c2.getLength(),N=Math.max(60,Math.round(len*1.4)),pts=[];
+  for(let k=0;k<=N;k++){const v=c2.getPointAt(k/N);const g=Math.max(H(v.x,v.z),0.05);v.y=ev.arc?g+1+Math.sin(Math.PI*k/N)*len*0.22:g+0.7;pts.push(v);}
+  const curve=new THREE.CatmullRomCurve3(pts),rad=0.42+len*0.0022;
+  routeGroup=new THREE.Group();
+  routeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(curve,N*2,rad,8,false),routeMat));
+  routeGroup.add(new THREE.Mesh(new THREE.TubeGeometry(curve,N,rad*2.8,8,false),glowMat));
+  stripeTex.repeat.set(len/4,1);scene.add(routeGroup);
+  routeCurve=curve;routeLen=len;routeArc=!!ev.arc;
+  if(ev.arc)orb.visible=true;else caravan.forEach(c=>c.visible=true);
+}
+
+/* ---------- labels ---------- */
+const labelsEl=$('#labels'), LBL={};
+for(const k in LOC){const L=LOC[k],d=document.createElement('div');d.className='lbl'+(L.major?'':' minor')+(L.edge?' edge':'');
+  d.innerHTML=`<span class="nm">${L.fr}</span><span class="ar">${L.ar}</span>${L.edge?`<span class="ev">${L.edge}</span>`:''}<span class="ev" hidden></span>`;
+  d.addEventListener('click',()=>selectLoc(k));labelsEl.appendChild(d);LBL[k]=d;}
+
+/* ================= CAMERA ================= */
+const cam={target:new THREE.Vector3(0,0,-5),r:420,theta:-0.3,phi:0.88};
+let flight=null;
+function applyCam(){const sp=Math.sin(cam.phi);camera.position.set(cam.target.x+cam.r*sp*Math.sin(cam.theta),cam.target.y+cam.r*Math.cos(cam.phi),cam.target.z+cam.r*sp*Math.cos(cam.theta));camera.lookAt(cam.target);}
+function flyTo(t,r,theta,phi,dur){
+  let dt=(theta??cam.theta)-cam.theta;dt=Math.atan2(Math.sin(dt),Math.cos(dt));
+  flight={t0:performance.now(),dur:REDUCE?0:(dur??1500),a:{t:cam.target.clone(),r:cam.r,th:cam.theta,ph:cam.phi},b:{t:t.clone(),r,th:cam.theta+dt,ph:phi??cam.phi}};
+}
+function frameEvent(ev,dur){
+  const L=LOC[ev.loc];
+  if(ev.route&&!ev.arc&&ev.route.length>2||L.edge||ev.arc){
+    const pts=ptsOf(ev);let x0=1e9,x1=-1e9,z0=1e9,z1=-1e9;pts.forEach(([x,z])=>{x0=Math.min(x0,x);x1=Math.max(x1,x);z0=Math.min(z0,z);z1=Math.max(z1,z);});
+    const ext=Math.max(x1-x0,(z1-z0)*0.85);flyTo(new THREE.Vector3((x0+x1)/2,0,(z0+z1)/2),Math.min(460,Math.max(110,ext*1.5+60)*FIT),-0.3,0.74,dur);
+  } else {
+    const close={khandaq:70,uhud:80,madinah:62,makkah:62,hira:70,nadir:70,arafat:80,aqaba:70}[ev.loc]||85;
+    flyTo(new THREE.Vector3(L.x,H(L.x,L.z),L.z+2),close*Math.sqrt(FIT),-0.45,0.95,dur);
+  }
+}
+function home(){flyTo(new THREE.Vector3(-2,0,-6),Math.min(460,360*FIT),-0.3,0.8);}
+
+/* ---------- pointer controls ---------- */
+const ptrs=new Map();let down=null,pinch=0,touring=false;
+canvas.addEventListener('contextmenu',e=>e.preventDefault());
+canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});down={x:e.clientX,y:e.clientY,t:performance.now(),b:e.button,shift:e.shiftKey};flight=null;stopTour();canvas.classList.add('drag');
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch=Math.hypot(a.x-b.x,a.y-b.y);}});
+canvas.addEventListener('pointermove',e=>{
+  if(!ptrs.has(e.pointerId)){hoverPick(e);return;}
+  const p=ptrs.get(e.pointerId),dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;
+  if(ptrs.size===2){const [a,b]=[...ptrs.values()];const d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch){cam.r=Math.min(460,Math.max(30,cam.r*pinch/d));}pinch=d;return;}
+  if(down&&(down.b===2||down.shift)){const k=cam.r*0.0016,ct=Math.cos(cam.theta),st=Math.sin(cam.theta);
+    cam.target.x+=(-dx*ct-dy*st)*k;cam.target.z+=(dx*st-dy*ct)*k;cam.target.x=Math.max(-110,Math.min(100,cam.target.x));cam.target.z=Math.max(-135,Math.min(120,cam.target.z));}
+  else{cam.theta-=dx*0.005;cam.phi=Math.max(0.3,Math.min(1.25,cam.phi-dy*0.004));}
+});
+function endPtr(e){ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=0;canvas.classList.remove('drag');
+  if(down&&ptrs.size===0){const moved=Math.hypot(e.clientX-down.x,e.clientY-down.y);if(moved<6&&performance.now()-down.t<500){const k=pick(e);if(k)selectLoc(k);}down=null;}}
+canvas.addEventListener('pointerup',endPtr);canvas.addEventListener('pointercancel',endPtr);
+canvas.addEventListener('wheel',e=>{e.preventDefault();flight=null;cam.r=Math.min(460,Math.max(30,cam.r*(1+Math.sign(e.deltaY)*Math.min(0.25,Math.abs(e.deltaY)*0.0012))));},{passive:false});
+const ray=new THREE.Raycaster(),ndc=new THREE.Vector2();
+function pick(e){const r=canvas.getBoundingClientRect();ndc.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(ndc,camera);const h=ray.intersectObjects(pickables,false)[0];return h&&h.object.userData.key;}
+function hoverPick(e){canvas.classList.toggle('hover',!!pick(e));}
+
+$('#zIn').onclick=()=>{flight=null;cam.r=Math.max(30,cam.r*0.75);};
+$('#zOut').onclick=()=>{flight=null;cam.r=Math.min(460,cam.r*1.33);};
+$('#rL').onclick=()=>flyTo(cam.target,cam.r,cam.theta-Math.PI/4,cam.phi,600);
+$('#rR').onclick=()=>flyTo(cam.target,cam.r,cam.theta+Math.PI/4,cam.phi,600);
+$('#home').onclick=home;
+
+/* ================= THEME ================= */
+const DAY={sky:0xE6ECEA,hs:0xF3F6F8,hg:0xD8C29B,hi:0.78,sun:0xFFF2DC,si:0.95,amb:0.12,ter:0xffffff,water:0x56B4C9,night:0},
+      NIGHT={sky:0x0C1524,hs:0x6478A8,hg:0x2A2A34,hi:0.6,sun:0xB4C6FF,si:0.5,amb:0.08,ter:0xAEB6D0,water:0x1E4E69,night:1.6};
+function isDark(){const t=document.documentElement.dataset.theme;if(t)return t==='dark';return matchMedia('(prefers-color-scheme: dark)').matches;}
+function applyTheme(){const d=isDark(),S=d?NIGHT:DAY;
+  scene.background=new THREE.Color(S.sky);scene.fog.color.setHex(S.sky);hemi.color.setHex(S.hs);hemi.groundColor.setHex(S.hg);hemi.intensity=S.hi;
+  sun.color.setHex(S.sun);sun.intensity=S.si;amb.intensity=S.amb;terrainMat.color.setHex(S.ter);waterMat.color.setHex(S.water);nightLights.forEach(l=>l.intensity=S.night);
+  $('#themeBtn').innerHTML=ic(d?'sun':'moon');$('#themeBtn').setAttribute('aria-label',d?'Passer en mode jour':'Passer en mode nuit');
+  if(cur>=0)colorRoute(EVENTS[cur]);}
+$('#themeBtn').onclick=()=>{document.documentElement.dataset.theme=isDark()?'light':'dark';applyTheme();};
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
+new MutationObserver(applyTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+function catColor(cat){return getComputedStyle(document.documentElement).getPropertyValue('--c-'+cat).trim()||'#C9962F';}
+function colorRoute(ev){const c=new THREE.Color(catColor(ev.cat));routeMat.color.copy(c);glowMat.color.copy(c);}
+
+/* ================= UI ================= */
+let cur=-1, tab='ev';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function placeName(ev){return LOC[ev.loc].fr;}
+function umdaHTML(id){const u=UMDA[id];return `<div class="umda" id="umda-${id}"><div class="uh">${ic('book')}Dans le PDF · al-'Umda<span>n° ${u.n} · p. ${u.p} (PDF p. ${u.pdf})</span></div>
+  <div class="uar" lang="ar">${u.ar}</div><p class="ufr">${esc(u.fr)}</p><div class="unr">Rapporté par ${esc(u.narr)} · ${esc(u.ch)}</div></div>`;}
+
+function select(i,opts){
+  opts=opts||{};i=(i+EVENTS.length)%EVENTS.length;cur=i;const ev=EVENTS[i],L=LOC[ev.loc];
+  document.body.classList.remove('noDetail');
+  const det=$('#detail');det.className='detail card cat-'+ev.cat;
+  $('#dIcon').innerHTML=ic(CAT[ev.cat].icon);
+  $('#dCat').textContent=CAT[ev.cat].fr+' · '+(L.fr);
+  $('#dTitle').textContent=ev.fr;
+  $('#dSub').textContent=`#${String(i+1).padStart(2,'0')} · ${ev.date}`;
+  $('#dAr').textContent=ev.ar;
+  $('#dChip').textContent=CAT[ev.cat].fr;
+  $('#dPlace').textContent=`${L.fr} · ${ev.ce}${/H$/.test(hijriLabel(ev))?'':''}`;
+  const rows=[['Date',ev.date],['Année',ev.ce+' apr. J.-C.'],['Lieu',L.fr],['Âge du Prophète ﷺ',ev.age===0?'Naissance':ev.age+' ans']].concat(ev.f);
+  $('#dRows').innerHTML=rows.map(r=>`<div><dt>${esc(r[0].trim())}</dt><dd>${esc(r[1])}</dd></div>`).join('');
+  $('#dSummary').textContent=ev.s;
+  $('#dQuran').innerHTML=ev.q?`<span class="chip">${ic('book')} Coran</span>Sourate ${esc(ev.q)}`:'';
+  $('#dUmda').innerHTML=(ev.umda||[]).map(umdaHTML).join('');
+  const others=EVENTS.map((e,k)=>[e,k]).filter(([e,k])=>e.loc===ev.loc&&k!==i);
+  $('#dAlso').innerHTML=others.length?`Aussi ici :`+others.map(([e,k])=>`<button data-i="${k}">${esc(e.fr)}</button>`).join(''):'';
+  $('#dAlso').querySelectorAll('button').forEach(b=>b.onclick=()=>select(+b.dataset.i));
+  det.scrollTop=0;
+  if(opts.umda){const el=document.getElementById('umda-'+opts.umda);if(el)det.scrollTop=el.offsetTop-80;}
+  // KPI
+  $('#kAge').innerHTML=ev.age===0?'Naissance':`${ev.age} ans`;
+  const hl=hijriLabel(ev);const post=/ H$/.test(hl);
+  $('#kYear').textContent=post?hl:ev.ce;$('#kYearS').textContent=post?ev.ce+' apr. J.-C.':'apr. J.-C. · avant l\'Hégire';
+  $('#kPer').textContent=ev.per[0];$('#kPerS').textContent=ev.per[1]||'—';
+  $('#eraText').textContent=post?'An '+hl:ev.ce;
+  // header site
+  $('#siteBadge').textContent=L.code||'HJZ';$('#siteName').textContent=L.fr;
+  const nHere=EVENTS.filter(e=>e.loc===ev.loc).length;$('#siteSub').textContent=nHere+(nHere>1?' événements ici':' événement ici');
+  $('#view').value=L.code?ev.loc:'';
+  renderTimeline();renderList();
+  // scene
+  updateEra(i);buildRoute(ev);colorRoute(ev);
+  for(const k in PINS){PINS[k].head.material=PINS[k].tip.material=(k===ev.loc?pinMatOn:(LOC[k].edge?pinMatEdge:pinMat));}
+  for(const k in LBL){const on=k===ev.loc;LBL[k].classList.toggle('on',on);const evs=LBL[k].querySelector('.ev[hidden],.ev.cur');
+    const sp=LBL[k].querySelectorAll('.ev');const last=sp[sp.length-1];last.hidden=!on;last.classList.toggle('cur',on);if(on)last.textContent=ev.fr;}
+  const P0=PINS[ev.loc];pulse.position.set(LOC[ev.loc].x,P0.base+0.15,LOC[ev.loc].z);
+  if(!opts.noFly)frameEvent(ev,opts.dur);
+}
+function selectLoc(k){const list=EVENTS.map((e,i)=>[e,i]).filter(([e])=>e.loc===k||(e.route||[]).slice(-1)[0]===k);
+  if(!list.length)return;const after=list.find(([,i])=>i>cur&&EVENTS[i].loc===k)||list.find(([e])=>e.loc===k)||list[0];select(after[1]);setM('detail');}
+function updateEra(i){ERA.forEach(e=>e.o.visible=e.t(i));}
+
+function renderTimeline(){
+  const ev=EVENTS[cur];
+  $('#tMeta').textContent=`Événement ${cur+1} / ${EVENTS.length} · ${ev.ce}`;
+  let curM=0;MILESTONES.forEach((m,k)=>{if(m[0]<=cur)curM=k;});
+  $('#stepper').innerHTML=MILESTONES.map((m,k)=>`<li class="step ${k<curM?'done':k===curM?'cur':''}"><button data-i="${m[0]}"><span class="node">${ic(CAT[EVENTS[m[0]].cat].icon)}</span><span class="lb">${m[1]}</span><span class="yr">${m[2]}</span></button></li>`).join('');
+  $('#stepper').querySelectorAll('button').forEach(b=>b.onclick=()=>select(+b.dataset.i));
+  const n=EVENTS[(cur+1)%EVENTS.length],ni=(cur+1)%EVENTS.length;
+  const nc=$('#nextCard');nc.className='nextcard cat-'+n.cat;
+  nc.innerHTML=`<span class="ni">${ic(CAT[n.cat].icon)}</span><span class="nc"><small>${ni===0?'Recommencer':'Événement suivant'}</small><b>${esc(n.fr)}</b><span class="chip">${CAT[n.cat].fr}</span><div class="ns">${esc(LOC[n.loc].fr)} · ${esc(n.ce)}</div></span>${ic('chev')}`;
+  nc.onclick=()=>select(ni);
+  $('#track').innerHTML=EVENTS.map((e,k)=>`<button class="cat-${e.cat} ${k<cur?'past':''} ${k===cur?'on':''}" data-i="${k}" title="${esc(e.fr)} · ${esc(e.ce)}" aria-label="${esc(e.fr)}"><i></i></button>`).join('');
+  $('#track').querySelectorAll('button').forEach(b=>b.onclick=()=>select(+b.dataset.i));
+}
+const locKeys=Object.keys(LOC).filter(k=>EVENTS.some(e=>e.loc===k));
+$('#nEv').textContent=EVENTS.length;$('#nLoc').textContent=locKeys.length;$('#nHad').textContent=Object.keys(UMDA).length;
+function renderList(){
+  const body=$('#lbody');let h='';
+  if(tab==='ev')h=EVENTS.map((e,k)=>`<button class="row cat-${e.cat} ${k===cur?'on':''}" data-i="${k}"><span class="c1"><b>#${String(k+1).padStart(2,'0')}</b><small>${esc(e.ce)}</small></span><span class="c2"><i class="d"></i><span>${esc(e.fr)}</span><span class="ar">${e.ar}</span></span><span class="chip">${CAT[e.cat].fr}</span>${ic('chev')}</button>`).join('');
+  if(tab==='loc')h=locKeys.map(k=>{const L=LOC[k],n=EVENTS.filter(e=>e.loc===k).length,on=EVENTS[cur].loc===k;return `<button class="row ${on?'on':''}" data-l="${k}"><span class="c1"><b>${L.code||(L.edge?'Hors carte':'Lieu')}</b><small>${L.edge?'↗':'Hijaz'}</small></span><span class="c2"><i class="d"></i><span>${esc(L.fr)}</span><span class="ar">${L.ar}</span></span><span class="chip">${n} évén.</span>${ic('chev')}</button>`;}).join('');
+  if(tab==='had')h=Object.keys(UMDA).map(id=>{const u=UMDA[id],e=EVENTS[u.ev[0]],on=u.ev.includes(cur);return `<button class="row cat-${e.cat} ${on?'on':''}" data-u="${id}"><span class="c1"><b>n° ${u.n}</b><small>p. ${u.p}</small></span><span class="c2"><i class="d"></i><span>${esc(u.title)}</span></span><span class="chip">${esc(u.ev.map(i=>EVENTS[i].fr.replace(/^(Bataille d[eu']?|La |Conquête de |Pèlerinage d')\s?/,'')).join(' · '))}</span>${ic('chev')}</button>`;}).join('');
+  body.innerHTML=h;
+  body.querySelectorAll('[data-i]').forEach(b=>b.onclick=()=>{select(+b.dataset.i);setM('detail');});
+  body.querySelectorAll('[data-l]').forEach(b=>b.onclick=()=>selectLoc(b.dataset.l));
+  body.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{const u=UMDA[b.dataset.u];select(u.ev[0],{umda:b.dataset.u});setM('detail');});
+  const on=body.querySelector('.on');if(on){const top=on.offsetTop-body.offsetTop;if(top<body.scrollTop||top>body.scrollTop+body.clientHeight-40)body.scrollTop=top-8;}
+}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x===b));renderList();});
+$('#srcBtn').onclick=()=>{document.querySelector('.tabs [data-tab="had"]').click();setM('list');};
+$('#prev').onclick=()=>{stopTour();select(cur-1);};
+$('#next').onclick=()=>{stopTour();select(cur+1);};
+$('#dClose').onclick=()=>document.body.classList.add('noDetail');
+$('#dFocus').onclick=()=>frameEvent(EVENTS[cur]);
+// visite guidée
+let tourT=0;
+function setPlay(){$('#play').innerHTML=touring?ic('pause')+'Pause':ic('play')+'Visite guidée';$('#play').setAttribute('aria-label',touring?'Mettre la visite en pause':'Lancer la visite guidée');}
+function stopTour(){if(touring){touring=false;setPlay();}}
+$('#play').onclick=()=>{touring=!touring;tourT=performance.now();if(touring)select(cur+1);setPlay();};
+setPlay();
+// vues
+const VIEWS=[['','Vue générale du Hijaz'],['makkah','La Mecque'],['madinah','Médine'],['badr','Badr'],['taif',"Tâ'if"],['khaybar','Khaybar'],['hudaybiya','al-Hudaybiya']];
+$('#view').innerHTML=VIEWS.map(v=>`<option value="${v[0]}">${v[1]}</option>`).join('');
+$('#view').onchange=e=>{const k=e.target.value;stopTour();if(!k){home();$('#siteBadge').textContent='HJZ';$('#siteName').textContent='Hijaz';$('#siteSub').textContent='Vue générale';return;}selectLoc(k);};
+// mobile
+function setM(m){document.body.dataset.m=m;document.querySelectorAll('.mtabs button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));}
+document.querySelectorAll('.mtabs button').forEach(b=>b.onclick=()=>{document.body.classList.remove('noDetail');setM(b.dataset.m);});
+setM('detail');
+// recherche
+const norm=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/['’`ʿʾ]/g,'').toLowerCase();
+const q=$('#q'),res=$('#results');let hits=[],hi=0;
+function search(){const v=norm(q.value.trim());if(!v){res.hidden=true;return;}
+  hits=[];EVENTS.forEach((e,i)=>{const hay=norm([e.fr,e.ar,e.s,e.date,e.ce,LOC[e.loc].fr,e.f.map(f=>f.join(' ')).join(' ')].join(' '));if(hay.includes(v)||e.ar.includes(q.value.trim()))hits.push({t:'e',i});});
+  locKeys.forEach(k=>{const L=LOC[k];if(norm(L.fr).includes(v)||L.ar.includes(q.value.trim()))hits.push({t:'l',k});});
+  hits=hits.slice(0,9);hi=0;
+  res.innerHTML=hits.length?hits.map((h,j)=>h.t==='e'?`<button class="res ${j===0?'on':''}" data-j="${j}">${ic(CAT[EVENTS[h.i].cat].icon)}<span class="t"><b>${esc(EVENTS[h.i].fr)}</b><small>${esc(LOC[EVENTS[h.i].loc].fr)} · ${esc(EVENTS[h.i].ce)}</small></span><span class="ar">${EVENTS[h.i].ar}</span></button>`
+   :`<button class="res ${j===0?'on':''}" data-j="${j}">${ic('pin')}<span class="t"><b>${esc(LOC[h.k].fr)}</b><small>Lieu</small></span><span class="ar">${LOC[h.k].ar}</span></button>`).join(''):`<div class="empty">Aucun résultat pour « ${esc(q.value)} ». Essayez Badr, Hijra, Khadîja…</div>`;
+  res.hidden=false;res.querySelectorAll('.res').forEach(b=>b.onmousedown=ev=>{ev.preventDefault();go(+b.dataset.j);});}
+function go(j){const h=hits[j];if(!h)return;stopTour();if(h.t==='e'){select(h.i);setM('detail');}else selectLoc(h.k);q.value='';res.hidden=true;q.blur();}
+q.addEventListener('input',search);
+q.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();go(hi);}else if(e.key==='Escape'){q.value='';res.hidden=true;q.blur();}
+  else if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();hi=Math.max(0,Math.min(hits.length-1,hi+(e.key==='ArrowDown'?1:-1)));res.querySelectorAll('.res').forEach((b,j)=>b.classList.toggle('on',j===hi));}});
+q.addEventListener('blur',()=>setTimeout(()=>res.hidden=true,120));
+addEventListener('keydown',e=>{if(e.target===q)return;if(e.key==='/'){e.preventDefault();q.focus();}else if(e.key==='ArrowRight'){stopTour();select(cur+1);}else if(e.key==='ArrowLeft'){stopTour();select(cur-1);}else if(e.key==='Escape')document.body.classList.add('noDetail');});
+
+/* ================= LOOP ================= */
+function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;
+  document.documentElement.style.setProperty('--tlh',$('#timeline').offsetHeight+'px');viewKey='';updateView();}
+// Centre optique : la caméra vise le milieu de la zone de carte laissée libre par les panneaux.
+let viewKey='',FIT=1;
+function updateView(){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;
+  const mob=w<=900,det=!document.body.classList.contains('noDetail');
+  let l,r,t,b;
+  if(mob){l=0;r=w;t=200;b=h-76-h*0.38;}
+  else{l=16;r=det?w-16-372-24:w-16;t=96+($('.kpis').offsetHeight||86)+8;b=h-16-$('#timeline').offsetHeight-12;}
+  if(b-t<120){t=Math.max(0,b-120);}
+  const key=[w,h,l,r,t,b].join();if(key===viewKey)return;viewKey=key;
+  const cx=(l+r)/2,cy=(t+b)/2;
+  camera.setViewOffset(w,h,w/2-cx,h/2-cy,w,h);camera.updateProjectionMatrix();
+  FIT=Math.min(2.2,Math.max(1,Math.max(w/(r-l),h/(b-t))*0.92));}
+addEventListener('resize',resize);
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const v3=new THREE.Vector3(),fwd=new THREE.Vector3();let last=performance.now(),cu=0;
+function loop(now){
+  const dt=Math.min(0.05,(now-last)/1000);last=now;
+  if(flight){const t=flight.dur?Math.min(1,(now-flight.t0)/flight.dur):1,k=ease(t),a=flight.a,b=flight.b;
+    cam.target.lerpVectors(a.t,b.t,k);cam.r=a.r+(b.r-a.r)*k;cam.theta=a.th+(b.th-a.th)*k;cam.phi=a.ph+(b.ph-a.ph)*k;if(t>=1)flight=null;}
+  updateView();applyCam();
+  sun.position.copy(cam.target).add(SUN_OFF);sun.target.position.copy(cam.target);sun.target.updateMatrixWorld();
+  const s=Math.min(190,Math.max(45,cam.r*0.6)),sc=sun.shadow.camera;if(Math.abs(sc.right-s)>2){sc.left=-s;sc.right=s;sc.top=s;sc.bottom=-s;sc.updateProjectionMatrix();}
+  scene.fog.near=cam.r*0.9;scene.fog.far=cam.r*2.4;
+  const ps=Math.min(3.2,Math.max(0.55,cam.r/110));
+  for(const k in PINS){const p=PINS[k],sel=EVENTS[cur]&&EVENTS[cur].loc===k,sz=ps*(sel?1.35:1);
+    p.g.scale.setScalar(sz);p.g.position.y=p.base+3.2*sz+(REDUCE?0:Math.sin(now/600+p.base)*0.3*sz);p.disc.quaternion.copy(camera.quaternion);p.disc.position.set(0,0,0);
+    p.disc.position.copy(fwd.set(0,0,1).applyQuaternion(camera.quaternion).multiplyScalar(1.16));}
+  const pt=REDUCE?0.5:(now%1800)/1800;pulse.scale.setScalar((1+pt*3.5)*ps);pulse.material.opacity=0.7*(1-pt);
+  if(routeCurve){stripeTex.offset.x-=dt*(REDUCE?0:0.8);
+    if(!REDUCE)cu=(cu+dt*Math.max(9,routeLen/14)/routeLen)%1;else cu=0.5;
+    if(routeArc){orb.position.copy(routeCurve.getPointAt(cu));orb.scale.setScalar(ps*0.9);}
+    else{const cs=Math.min(3.4,Math.max(1,cam.r/70));caravan.forEach((c,j)=>{const u=((cu-j*3.2*cs/routeLen)%1+1)%1;const p=routeCurve.getPointAt(u),p2=routeCurve.getPointAt(Math.min(1,u+0.004));
+      c.position.set(p.x,Math.max(H(p.x,p.z),0.1),p.z);c.scale.setScalar(cs);if(p2.distanceTo(p)>1e-4)c.lookAt(p2.x,c.position.y,p2.z);c.visible=u<0.995;});}}
+  renderer.render(scene,camera);
+  // labels
+  const w=canvas.clientWidth,h=canvas.clientHeight,routeLocs=EVENTS[cur]&&EVENTS[cur].route?EVENTS[cur].route.filter(x=>typeof x==='string'):[];
+  for(const k in LBL){const p=PINS[k],L=LOC[k],el=LBL[k];v3.set(L.x,p.g.position.y+1.4*p.g.scale.x,L.z).project(camera);
+    const sel=EVENTS[cur]&&EVENTS[cur].loc===k;const show=v3.z<1&&(L.major||sel||routeLocs.includes(k)||cam.r<150||(L.edge&&cam.r<330));
+    el.classList.toggle('off',!show);if(show)el.style.transform=`translate(${(v3.x*.5+.5)*w}px,${(-v3.y*.5+.5)*h}px) translate(-50%,-100%)`;el.style.zIndex=sel?5:1;}
+  if(touring&&now-tourT>7500){tourT=now;select(cur+1);}
+  requestAnimationFrame(loop);
+}
+resize();applyTheme();applyCam();
+select(HIJRA_I,{noFly:true});
+cam.r=440;cam.theta=-0.1;cam.phi=0.75;
+setTimeout(()=>frameEvent(EVENTS[HIJRA_I],2400),250);
+requestAnimationFrame(loop);
+})();
+</script>
