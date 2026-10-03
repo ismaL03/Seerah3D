@@ -13,7 +13,20 @@ Le problème à résoudre : en cours, les élèves ont du mal à se représenter
 
 Inspiration visuelle : une interface de gestion d'entrepôt (« WareTrack ») vue sur X — diorama 3D isométrique lumineux, textures douces, cartes d'interface flottantes (indicateurs en haut, fiche détaillée à droite, frise de progression en bas, listes à onglets, contrôles de carte verticaux, étiquettes « pilule » au-dessus des lieux).
 
-## État actuel : le prototype
+## État actuel : V1 en cours (depuis le 3 octobre 2026)
+
+La V1 est à la racine du dépôt (`index.html`, `src/`, `styles/`, `data/`, `tools/`). Le `README.md` décrit l'organisation des fichiers et des fiches. Points à connaître :
+- **Statique, sans build**, prévu pour GitHub Pages. Three.js **0.186.1** est chargé par importmap depuis jsDelivr (version figée). Code en modules ES, noms en français.
+- **Relief réel** : `tools/relief.py` produit `data/relief/hijaz.*` à partir de Copernicus DEM GLO-90 (20″, environ 600 m), plus deux **encarts** `makkah` et `madinah` (20″/6, environ 100 m). Leurs bords sont calés sur la grille du Hijaz : un trou dans la carte générale accueille l'encart sans fissure, et les altitudes se fondent sur 2 km. Le relief est exagéré ×6, le relief fin des encarts ×3 environ. La mer porte une profondeur stylisée.
+- **Couleurs du sol** : la luminosité de Sentinel-2 (2024) choisit la teinte dans la palette du prototype (sable, roche, harrât sombres) ; les oasis historiques sont verdies à la main (`OASIS` dans `src/decor.js`). Un bouton passe à l'image satellite brute (« aujourd'hui »).
+- **Unités de la scène** : 1 = 1 km. Les bâtiments et les arbres ont une taille iconique agrandie. Ils sont posés grâce à `R.metres()`, qui interpole exactement comme les triangles affichés.
+- **Données** : `data/evenements.json` (les 23 événements du prototype, tous `à vérifier`, source *ar-Rahîq* avec `page: null`, divergences signalées), `data/lieux.json` (vraies coordonnées, `certitude`, `niveau` de zoom 1/2/3, `hors_carte` avec ancre pour Tabûk, al-Quds et l'Abyssinie), `data/hadiths.json`, `data/sources.json`.
+- **Contrôle** : `python3 tools/valider.py` vérifie champs, renvois, ﷺ après « Prophète », pages obligatoires si `validé`, positions dans la carte. Une action GitHub le lance quand `data/` change.
+- **Tests visuels** : en session cloud, jsDelivr est bloqué. Servir le dépôt (`python3 -m http.server`) et, dans Playwright, rediriger `cdn.jsdelivr.net/npm/three@0.186.1/**` vers un `node_modules/three` local.
+
+Prochaines étapes envisagées : compléter la chronologie (ghazawât et sarâyâ) d'après *ar-Rahîq* une fois l'édition connue, mode *Atlas* (fiche par lieu), mode cours (leçons), puis module *Hajj & 'Umra* (encart du Haram, limites, mawâqît).
+
+## Le prototype
 
 `prototype/sira-3d.html` — un seul fichier HTML, Three.js r128 (cdnjs), sans build. Il a servi à valider le rendu. Contenu :
 - carte **stylisée** du Hijaz (relief procédural, positions approximatives, pas à l'échelle) ;
@@ -91,13 +104,13 @@ Hadiths d'al-'Umda reliés à des événements de la Sîra (déjà intégrés au
 
 Le **Livre du Hajj** d'al-'Umda (pages imprimées ≈ 121 à 148) est directement exploitable pour le mode Hajj & 'Umra : mawâqît (p. 121), ce que porte le muhrim (123), fidya (125), sacralité de La Mecque (126), ce qu'il est permis de tuer (129), entrée à La Mecque (130), tamattu' (133), hady (137), ghusl du muhrim (139), changer le hajj en 'umra (141), gibier (146).
 
-## Décisions encore ouvertes
+## Décisions prises (3 octobre 2026)
 
-À poser au porteur du projet au début de la prochaine session :
-1. **Par quel module commencer ?** Recommandation : *Hajj & 'Umra* (périmètre fini, très utile en cours, al-'Umda déjà exploitable) — ou *Sîra complète*, ou les deux.
-2. **Ouvrage de référence pour la Sîra** : *ar-Rahîq al-Makhtûm* (recommandé), le PDF « سيرة خاتم النبيين » prévu à l'origine, ou Ibn Hishâm + *Zâd al-Ma'âd*.
-3. **Fiqh du Hajj/'Umra** : pratique du Prophète ﷺ (hadith de Jâbir) + rite mâlikite (le porteur enseigne le fiqh mâlikite), pratique seule, ou comparaison des quatre écoles.
-4. **Hébergement** : GitHub Pages sur ce dépôt public (gratuit, recommandé), avec éventuellement un nom de domaine (~10–15 €/an) — ou lien Claude partagé.
+Réponses du porteur du projet aux quatre questions ouvertes :
+1. **Module de départ : la Sîra complète** (chronologie, périodes mecquoise et médinoise, ghazawât et sarâyâ). Le mode *Hajj & 'Umra* vient ensuite.
+2. **Ouvrage de référence pour la Sîra : *ar-Rahîq al-Makhtûm*** (al-Mubârakfûrî). Les numéros de page restent à compléter d'après l'édition du porteur. Ne jamais inventer une page : laisser `page: null` tant qu'elle n'est pas vérifiée.
+3. **Fiqh du Hajj et de la 'Umra : ce que pratiquent principalement les agences de 'Umra/Hajj aujourd'hui** (pratique courante, et non comparaison des écoles ni rite mâlikite seul). Comme chaque fiche doit citer une source écrite avec la page, il faudra choisir avec le porteur un guide de référence écrit qui décrit cette pratique.
+4. **Hébergement : GitHub Pages** sur ce dépôt public.
 
 ## Pistes techniques
 

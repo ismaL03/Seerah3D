@@ -1,0 +1,89 @@
+{
+  "zone": "hijaz",
+  "nom": "Hijaz",
+  "emprise": {
+    "ouest": 37.0,
+    "sud": 20.6,
+    "est": 41.0,
+    "nord": 26.4
+  },
+  "largeur": 720,
+  "hauteur": 1044,
+  "resolution_arcsec": 20,
+  "format": "Int16 little-endian, mètres, lignes du nord au sud",
+  "altitude_min": 1,
+  "altitude_max": 2599,
+  "mer": "profondeur stylisée (distance à la côte), pas une bathymétrie réelle",
+  "genere_le": "2026-10-03",
+  "encart": false,
+  "grille_hijaz": null,
+  "encarts": [
+    "makkah",
+    "madinah"
+  ],
+  "sources": [
+    {
+      "nom": "Copernicus DEM GLO-90",
+      "attribution": "Copernicus DEM GLO-90 — © DLR e.V. 2010-2014 et © Airbus Defence and Space GmbH 2014-2018, fourni dans le cadre de COPERNICUS par l'Union européenne et l'ESA"
+    },
+    {
+      "nom": "Sentinel-2 L2A",
+      "attribution": "Contient des données Copernicus Sentinel modifiées (2024)"
+    }
+  ],
+  "satellite": {
+    "fichier": "hijaz-satellite.jpg",
+    "largeur": 1440,
+    "hauteur": 2088,
+    "scenes": [
+      "S2A_37QBC_20240119_0_L2A",
+      "S2A_37QBD_20240119_0_L2A",
+      "S2B_37QBE_20240213_0_L2A",
+      "S2B_37QBE_20240223_0_L2A",
+      "S2A_37QBF_20241224_0_L2A",
+      "S2B_37QBF_20240223_0_L2A",
+      "S2A_37QBG_20240122_0_L2A",
+      "S2B_37QBG_20240107_0_L2A",
+      "S2B_37QCC_20240104_0_L2A",
+      "S2A_37QCD_20240119_0_L2A",
+      "S2A_37QCE_20240119_0_L2A",
+      "S2A_37QCG_20240119_0_L2A",
+      "S2B_37QDC_20240101_0_L2A",
+      "S2B_37QDC_20240203_0_L2A",
+      "S2A_37QDD_20240119_0_L2A",
+      "S2B_37QDD_20240121_0_L2A",
+      "S2A_37QDD_20240106_0_L2A",
+      "S2A_37QDE_20240119_0_L2A",
+      "S2B_37QDE_20240223_0_L2A",
+      "S2A_37QDE_20240218_0_L2A",
+      "S2A_37QDF_20240119_0_L2A",
+      "S2B_37QDG_20240104_0_L2A",
+      "S2B_37QEC_20240121_0_L2A",
+      "S2B_37QED_20240121_0_L2A",
+      "S2B_37QEE_20240101_0_L2A",
+      "S2B_37QEF_20240101_0_L2A",
+      "S2B_37QEG_20240121_0_L2A",
+      "S2B_37QEG_20240101_0_L2A",
+      "S2B_37QFC_20240121_0_L2A",
+      "S2B_37QFD_20240121_0_L2A",
+      "S2B_37QFE_20240121_0_L2A",
+      "S2B_37QFF_20240121_0_L2A",
+      "S2B_37QFG_20240121_0_L2A",
+      "S2A_37RBH_20240122_0_L2A",
+      "S2A_37RBJ_20240122_0_L2A",
+      "S2B_37RCH_20240104_0_L2A",
+      "S2B_37RCJ_20240104_0_L2A",
+      "S2B_37RCK_20240104_0_L2A",
+      "S2A_37RDH_20240129_0_L2A",
+      "S2B_37RDJ_20240124_0_L2A",
+      "S2B_37RDK_20240104_0_L2A",
+      "S2B_37REH_20240101_0_L2A",
+      "S2B_37REJ_20240124_0_L2A",
+      "S2A_37REJ_20240129_0_L2A",
+      "S2B_37REK_20240104_0_L2A",
+      "S2B_37RFH_20240131_0_L2A",
+      "S2B_37RFJ_20240121_0_L2A",
+      "S2B_37RFK_20240131_0_L2A"
+    ]
+  }
+}

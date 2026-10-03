@@ -1,0 +1,45 @@
+{
+  "zone": "makkah",
+  "nom": "La Mecque et ses environs",
+  "emprise": {
+    "ouest": 39.69166666666667,
+    "sud": 21.29722222222222,
+    "est": 40.06944444444444,
+    "nord": 21.530555555555555
+  },
+  "largeur": 408,
+  "hauteur": 252,
+  "resolution_arcsec": 3.3333333333333335,
+  "format": "Int16 little-endian, mètres, lignes du nord au sud",
+  "altitude_min": 156,
+  "altitude_max": 936,
+  "mer": null,
+  "genere_le": "2026-10-03",
+  "encart": true,
+  "grille_hijaz": {
+    "c0": 484,
+    "c1": 552,
+    "r0": 876,
+    "r1": 918
+  },
+  "encarts": [],
+  "sources": [
+    {
+      "nom": "Copernicus DEM GLO-90",
+      "attribution": "Copernicus DEM GLO-90 — © DLR e.V. 2010-2014 et © Airbus Defence and Space GmbH 2014-2018, fourni dans le cadre de COPERNICUS par l'Union européenne et l'ESA"
+    },
+    {
+      "nom": "Sentinel-2 L2A",
+      "attribution": "Contient des données Copernicus Sentinel modifiées (2024)"
+    }
+  ],
+  "satellite": {
+    "fichier": "makkah-satellite.jpg",
+    "largeur": 408,
+    "hauteur": 252,
+    "scenes": [
+      "S2B_37QED_20240121_0_L2A",
+      "S2B_37QFD_20240121_0_L2A"
+    ]
+  }
+}

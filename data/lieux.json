@@ -1,0 +1,161 @@
+{
+  "_lisez_moi": "Un lieu par fiche. lat/lon en degrés décimaux (WGS84). certitude : certaine / probable / discutée. statut : à vérifier / validé. niveau : 1 = visible sur tout le Hijaz, 2 = à l'échelle régionale, 3 = à l'échelle de la ville. Un lieu hors du cadre de la carte porte \"hors_carte\" avec une ancre (point affiché au bord) et une indication de distance.",
+  "lieux": [
+    {
+      "id": "makkah", "nom": "La Mecque", "nom_ar": "مكة المكرمة", "code": "MKK",
+      "type": "ville", "niveau": 1,
+      "lat": 21.4225, "lon": 39.8262,
+      "certitude": "certaine", "note_localisation": "Point placé sur la Ka'ba.",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "hira", "nom": "Grotte de Hirâ'", "nom_ar": "غار حراء", "ville": "makkah",
+      "type": "montagne", "niveau": 3,
+      "lat": 21.4576, "lon": 39.8593,
+      "certitude": "certaine", "note_localisation": "Sur le Jabal an-Nûr, au nord-est de la Ka'ba.",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "thawr", "nom": "Grotte de Thawr", "nom_ar": "غار ثور", "ville": "makkah",
+      "type": "montagne", "niveau": 3,
+      "lat": 21.3773, "lon": 39.8496,
+      "certitude": "certaine", "note_localisation": "Le mont Thawr, au sud de La Mecque, est bien identifié ; la grotte montrée aujourd'hui l'est par la tradition.",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "aqaba", "nom": "al-'Aqaba (Minâ)", "nom_ar": "العقبة", "ville": "makkah",
+      "type": "site", "niveau": 3,
+      "lat": 21.4237, "lon": 39.8733,
+      "certitude": "probable", "note_localisation": "Près de la Jamrat al-'Aqaba ; la mosquée al-Bay'a commémore le lieu des serments.",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "arafat", "nom": "'Arafa", "nom_ar": "عرفة", "ville": "makkah",
+      "type": "site", "niveau": 3,
+      "lat": 21.3549, "lon": 39.9841,
+      "certitude": "certaine", "note_localisation": "Point placé sur le Jabal ar-Rahma.",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "hudaybiya", "nom": "al-Hudaybiya", "nom_ar": "الحديبية", "code": "HDB",
+      "type": "site", "niveau": 2,
+      "lat": 21.4430, "lon": 39.6180,
+      "certitude": "probable", "note_localisation": "Identifiée à ash-Shumaysî, à l'ouest de La Mecque, en bordure du territoire sacré.",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "hunayn", "nom": "Hunayn", "nom_ar": "حنين",
+      "type": "site", "niveau": 2,
+      "lat": 21.5200, "lon": 40.0200,
+      "certitude": "discutée", "note_localisation": "Vallée entre La Mecque et Tâ'if ; souvent rapprochée du wâdî ash-Sharâ'i'. Point approximatif.",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "taif", "nom": "Tâ'if", "nom_ar": "الطائف", "code": "TIF",
+      "type": "ville", "niveau": 1,
+      "lat": 21.2703, "lon": 40.4158,
+      "certitude": "certaine",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "badr", "nom": "Badr", "nom_ar": "بدر", "code": "BDR",
+      "type": "site", "niveau": 1,
+      "lat": 23.7330, "lon": 38.7670,
+      "certitude": "certaine", "note_localisation": "Bourg actuel de Badr ; le champ de bataille est à proximité.",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "madinah", "nom": "Médine", "nom_ar": "المدينة المنورة", "code": "MDN",
+      "type": "ville", "niveau": 1,
+      "lat": 24.4672, "lon": 39.6112,
+      "certitude": "certaine", "note_localisation": "Point placé sur la Mosquée du Prophète ﷺ.",
+      "sources": [{ "ouvrage": "biladi", "page": null }, { "ouvrage": "samhudi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "quba", "nom": "Qubâ'", "nom_ar": "قباء", "ville": "madinah",
+      "type": "site", "niveau": 3,
+      "lat": 24.4393, "lon": 39.6173,
+      "certitude": "certaine", "note_localisation": "Point placé sur la mosquée de Qubâ'.",
+      "sources": [{ "ouvrage": "samhudi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "uhud", "nom": "Mont Uhud", "nom_ar": "جبل أحد", "ville": "madinah",
+      "type": "montagne", "niveau": 3,
+      "lat": 24.5022, "lon": 39.6118,
+      "certitude": "certaine", "note_localisation": "Point placé au pied du mont, près du cimetière des martyrs et du mont des archers ('Aynayn).",
+      "sources": [{ "ouvrage": "samhudi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "khandaq", "nom": "Le Fossé", "nom_ar": "الخندق", "ville": "madinah",
+      "type": "site", "niveau": 3,
+      "lat": 24.4790, "lon": 39.5970,
+      "certitude": "probable", "note_localisation": "Point placé près du mont Sal' (mosquée al-Fath). Le tracé exact du fossé, au nord de la ville, est reconstitué.",
+      "sources": [{ "ouvrage": "samhudi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "nadir", "nom": "Banû an-Nadîr", "nom_ar": "بنو النضير", "ville": "madinah",
+      "type": "site", "niveau": 3,
+      "lat": 24.4450, "lon": 39.6350,
+      "certitude": "probable", "note_localisation": "Quartier des Banû an-Nadîr dans la haute Médine (al-'Âliya), au sud-est. Point approximatif.",
+      "sources": [{ "ouvrage": "samhudi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "khaybar", "nom": "Khaybar", "nom_ar": "خيبر", "code": "KHB",
+      "type": "oasis", "niveau": 1,
+      "lat": 25.6966, "lon": 39.2919,
+      "certitude": "certaine", "note_localisation": "Ancienne oasis et ses fortins.",
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "tabuk", "nom": "Tabûk", "nom_ar": "تبوك",
+      "type": "ville", "niveau": 1,
+      "lat": 28.3835, "lon": 36.5662,
+      "certitude": "certaine",
+      "hors_carte": { "ancre": [26.30, 38.30], "indication": "≈ 530 km au nord de Médine" },
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "quds", "nom": "al-Quds", "nom_ar": "القدس",
+      "type": "ville", "niveau": 1,
+      "lat": 31.7761, "lon": 35.2358,
+      "certitude": "certaine", "note_localisation": "Point placé sur al-Masjid al-Aqsâ.",
+      "hors_carte": { "ancre": [26.30, 37.45], "indication": "≈ 1 230 km de La Mecque" },
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "habasha", "nom": "Abyssinie", "nom_ar": "الحبشة",
+      "type": "region", "niveau": 1,
+      "lat": 14.1211, "lon": 38.7243,
+      "certitude": "probable", "note_localisation": "Royaume d'Aksoum, au-delà de la mer Rouge. La cour du Négus est généralement située à Aksoum ; le point d'arrivée des émigrés reste discuté.",
+      "hors_carte": { "ancre": [20.75, 37.35], "indication": "au-delà de la mer Rouge" },
+      "sources": [{ "ouvrage": "biladi", "page": null }],
+      "statut": "à vérifier"
+    }
+  ],
+  "etapes": {
+    "_lisez_moi": "Points de passage nommés, utilisés dans les trajets (pas de fiche propre pour l'instant). Positions approximatives.",
+    "dhul-hulayfa": { "nom": "Dhû al-Hulayfa", "nom_ar": "ذو الحليفة", "lat": 24.4136, "lon": 39.5431 },
+    "juhfa": { "nom": "al-Juhfa", "nom_ar": "الجحفة", "lat": 22.7030, "lon": 39.1410 },
+    "usfan": { "nom": "'Usfân", "nom_ar": "عسفان", "lat": 21.9300, "lon": 39.3600 },
+    "marr": { "nom": "Marr az-Zahrân", "nom_ar": "مر الظهران", "lat": 21.6200, "lon": 39.6900 },
+    "mina": { "nom": "Minâ", "nom_ar": "منى", "lat": 21.4130, "lon": 39.8930 },
+    "shuayba": { "nom": "ash-Shu'ayba", "nom_ar": "الشعيبة", "lat": 20.8500, "lon": 39.4300 }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "_lisez_moi": "Hadiths d'al-'Umda fî al-Ahkâm reliés à des événements. page = page imprimée ; page_pdf = page du fichier (page imprimée - 10). Les traductions françaises sont des brouillons à faire valider.",
+  "hadiths": [
+    {
+      "id": "u1", "ouvrage": "umda", "numero": 1, "page": 13, "page_pdf": 3,
+      "livre": "Livre de la purification", "rapporteur": "'Umar ibn al-Khattâb",
+      "titre": "Les actes selon les intentions",
+      "ar": "إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ … فَمَنْ كَانَتْ هِجْرَتُهُ إِلَى اللَّهِ وَرَسُولِهِ فَهِجْرَتُهُ إِلَى اللَّهِ وَرَسُولِهِ",
+      "fr": "Les actes ne valent que par les intentions. Celui dont l'émigration est pour Allah et Son Messager, son émigration est pour Allah et Son Messager.",
+      "evenements": ["hijra"], "statut": "à vérifier"
+    },
+    {
+      "id": "u2", "ouvrage": "umda", "numero": 214, "page": 126, "page_pdf": 116,
+      "livre": "Hajj · Sacralité de La Mecque", "rapporteur": "Abû Shurayh al-Khuzâ'î",
+      "titre": "La sacralité de La Mecque",
+      "ar": "إِنَّ مَكَّةَ حَرَّمَهَا اللَّهُ وَلَمْ يُحَرِّمْهَا النَّاسُ",
+      "fr": "Le lendemain de la conquête, il ﷺ rappelle que La Mecque a été rendue sacrée par Allah et non par les hommes ; le combat n'y fut permis qu'une heure d'un jour.",
+      "evenements": ["fath"], "statut": "à vérifier"
+    },
+    {
+      "id": "u3", "ouvrage": "umda", "numero": 217, "page": 130, "page_pdf": 120,
+      "livre": "Hajj · Entrée à La Mecque", "rapporteur": "Anas ibn Mâlik",
+      "titre": "L'entrée à La Mecque",
+      "ar": "دَخَلَ مَكَّةَ عَامَ الفَتْحِ وَعَلَى رَأْسِهِ المِغْفَرُ",
+      "fr": "Il ﷺ entra à La Mecque l'année de la conquête, un casque de mailles (mighfar) sur la tête.",
+      "evenements": ["fath"], "statut": "à vérifier"
+    },
+    {
+      "id": "u8", "ouvrage": "umda", "numero": 226, "page": 133, "page_pdf": 123,
+      "livre": "Hajj · at-Tamattu'", "rapporteur": "'Abd Allâh ibn 'Umar",
+      "titre": "Le pèlerinage d'adieu",
+      "ar": "تَمَتَّعَ رَسُولُ اللَّهِ ﷺ فِي حَجَّةِ الوَدَاعِ بِالعُمْرَةِ إِلَى الحَجِّ",
+      "fr": "Lors du pèlerinage d'adieu, il ﷺ joignit la 'umra au hajj et conduisit ses bêtes d'offrande depuis Dhû al-Hulayfa.",
+      "evenements": ["hajj"], "statut": "à vérifier"
+    },
+    {
+      "id": "u9", "ouvrage": "umda", "numero": 235, "page": 141, "page_pdf": 131,
+      "livre": "Hajj · Changer le hajj en 'umra", "rapporteur": "Jâbir ibn 'Abd Allâh",
+      "titre": "« Si j'avais su d'avance… »",
+      "ar": "لَوِ اسْتَقْبَلْتُ مِنْ أَمْرِي مَا اسْتَدْبَرْتُ مَا أَهْدَيْتُ",
+      "fr": "Seuls lui ﷺ et Talha avaient des bêtes d'offrande. Il dit : « Si j'avais su d'avance ce que je sais maintenant, je n'aurais pas amené d'offrande. »",
+      "evenements": ["hajj"], "statut": "à vérifier"
+    },
+    {
+      "id": "u5", "ouvrage": "umda", "numero": 399, "page": 236, "page_pdf": 226,
+      "livre": "Livre du jihâd", "rapporteur": "Abû Qatâda al-Ansârî",
+      "titre": "Les dépouilles à Hunayn",
+      "ar": "خَرَجْنَا مَعَ رَسُولِ اللَّهِ ﷺ إِلَى حُنَيْنٍ",
+      "fr": "« Nous sommes sortis avec le Messager d'Allah ﷺ vers Hunayn… » Il y établit que celui qui tue un combattant, preuve à l'appui, reçoit ses dépouilles.",
+      "evenements": ["hunayn"], "statut": "à vérifier"
+    },
+    {
+      "id": "u6", "ouvrage": "umda", "numero": 405, "page": 238, "page_pdf": 228,
+      "livre": "Livre du jihâd", "rapporteur": "'Umar ibn al-Khattâb",
+      "titre": "Les biens des Banû an-Nadîr",
+      "ar": "كَانَتْ أَمْوَالُ بَنِي النَّضِيرِ مِمَّا أَفَاءَ اللَّهُ عَلَى رَسُولِهِ",
+      "fr": "Les biens des Banû an-Nadîr furent un fay', obtenu sans charge de cavalerie. Il ﷺ en tirait la subsistance annuelle de sa famille et consacrait le reste aux montures et aux armes.",
+      "evenements": ["nadir"], "statut": "à vérifier"
+    },
+    {
+      "id": "u7", "ouvrage": "umda", "numero": 407, "page": 239, "page_pdf": 229,
+      "livre": "Livre du jihâd", "rapporteur": "'Abd Allâh ibn 'Umar",
+      "titre": "Ibn 'Umar à Uhud et au Fossé",
+      "ar": "عُرِضْتُ عَلَى النَّبِيِّ ﷺ يَوْمَ أُحُدٍ وَأَنَا ابْنُ أَرْبَعَ عَشْرَةَ سَنَةً فَلَمْ يُجِزْنِي",
+      "fr": "Présenté au Prophète ﷺ le jour d'Uhud, à 14 ans, il ne fut pas autorisé à combattre ; présenté le jour du Fossé, à 15 ans, il le fut.",
+      "evenements": ["uhud", "khandaq"], "statut": "à vérifier"
+    }
+  ]
+}

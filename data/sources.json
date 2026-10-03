@@ -1,0 +1,102 @@
+{
+  "_lisez_moi": "Ouvrages cités par les fiches. Une fiche cite un ouvrage par sa clé (ex. \"rahiq\") et donne la page dans SON édition. Ne jamais inventer une page : laisser null tant qu'elle n'est pas vérifiée.",
+  "ouvrages": {
+    "rahiq": {
+      "titre": "ar-Rahîq al-Makhtûm",
+      "titre_ar": "الرحيق المختوم",
+      "auteur": "Safiyy ar-Rahmân al-Mubârakfûrî",
+      "traduction": "Le Nectar cacheté",
+      "edition": null,
+      "role": "Ouvrage de référence de la Sîra (décision du 3 octobre 2026)",
+      "note": "Édition à préciser par le porteur du projet ; les pages des fiches s'y rapportent."
+    },
+    "umda": {
+      "titre": "al-'Umda fî al-Ahkâm",
+      "titre_ar": "العمدة في الأحكام",
+      "auteur": "'Abd al-Ghanî al-Maqdisî",
+      "edition": "Série Mutûn Tâlib al-'Ilm, 238 p.",
+      "note": "Page imprimée = page du PDF + 10."
+    },
+    "ibn-hisham": {
+      "titre": "as-Sîra an-Nabawiyya",
+      "titre_ar": "السيرة النبوية",
+      "auteur": "Ibn Hishâm",
+      "edition": null
+    },
+    "ibn-sad": {
+      "titre": "at-Tabaqât al-Kubrâ",
+      "titre_ar": "الطبقات الكبرى",
+      "auteur": "Ibn Sa'd",
+      "edition": null
+    },
+    "zad": {
+      "titre": "Zâd al-Ma'âd",
+      "titre_ar": "زاد المعاد",
+      "auteur": "Ibn al-Qayyim",
+      "edition": null
+    },
+    "umari": {
+      "titre": "as-Sîra an-Nabawiyya as-Sahîha",
+      "titre_ar": "السيرة النبوية الصحيحة",
+      "auteur": "Akram Diyâ' al-'Umarî",
+      "edition": null
+    },
+    "bukhari": {
+      "titre": "Sahîh al-Bukhârî",
+      "titre_ar": "صحيح البخاري",
+      "auteur": "al-Bukhârî",
+      "edition": null
+    },
+    "muslim": {
+      "titre": "Sahîh Muslim",
+      "titre_ar": "صحيح مسلم",
+      "auteur": "Muslim ibn al-Hajjâj",
+      "edition": null
+    },
+    "biladi": {
+      "titre": "Mu'jam al-Ma'âlim al-Jughrâfiyya fî as-Sîra an-Nabawiyya",
+      "titre_ar": "معجم المعالم الجغرافية في السيرة النبوية",
+      "auteur": "'Âtiq ibn Ghayth al-Bilâdî",
+      "edition": null,
+      "role": "Référence pour la localisation des lieux"
+    },
+    "maghluth-sira": {
+      "titre": "al-Atlas at-Târîkhî li-Sîrat ar-Rasûl ﷺ",
+      "titre_ar": "الأطلس التاريخي لسيرة الرسول ﷺ",
+      "auteur": "Sâmî al-Maghlûth",
+      "edition": null,
+      "note": "Sert de référence ; ses cartes ne sont pas copiées mais redessinées."
+    },
+    "abu-khalil": {
+      "titre": "Atlas as-Sîra an-Nabawiyya",
+      "titre_ar": "أطلس السيرة النبوية",
+      "auteur": "Shawqî Abû Khalîl",
+      "edition": null,
+      "note": "Sert de référence ; ses cartes ne sont pas copiées mais redessinées."
+    },
+    "azraqi": {
+      "titre": "Akhbâr Makka",
+      "titre_ar": "أخبار مكة",
+      "auteur": "al-Azraqî",
+      "edition": null
+    },
+    "samhudi": {
+      "titre": "Wafâ' al-Wafâ",
+      "titre_ar": "وفاء الوفا",
+      "auteur": "as-Samhûdî",
+      "edition": null
+    }
+  },
+  "donnees_carte": [
+    {
+      "nom": "Copernicus DEM GLO-90",
+      "usage": "Relief",
+      "attribution": "© DLR e.V. 2010-2014 et © Airbus Defence and Space GmbH 2014-2018, fourni dans le cadre de COPERNICUS par l'Union européenne et l'ESA"
+    },
+    {
+      "nom": "Sentinel-2 L2A",
+      "usage": "Couleurs du sol (image de 2024)",
+      "attribution": "Contient des données Copernicus Sentinel modifiées (2024)"
+    }
+  ]
+}

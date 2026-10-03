@@ -7,3 +7,6 @@ dist/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Tuiles téléchargées par tools/relief.py
+tools/cache/

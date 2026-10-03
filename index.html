@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sîra 3D</title>
+<meta name="description" content="Carte 3D interactive de la Sîra : lieux, événements et trajets sur le relief réel du Hijaz.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Reem+Kufi:wght@500;600;700&family=Amiri:wght@400;700&display=swap">
+<link rel="stylesheet" href="styles/app.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+} }
+</script>
+<script type="module" src="src/main.js"></script>
+</head>
+<body>
+<div id="app">
+  <canvas id="scene" aria-label="Carte 3D du Hijaz : La Mecque, Médine et les lieux de la Sîra"></canvas>
+  <div id="labels"></div>
+
+  <header class="topbar card">
+    <div class="brand">
+      <span class="logo" data-ic="star"></span>
+      <div><b>Sîra 3D</b><small lang="ar">السيرة النبوية</small></div>
+    </div>
+    <label class="search" for="q">
+      <span data-ic="search"></span>
+      <input id="q" type="search" placeholder="Rechercher un lieu, un événement…" autocomplete="off">
+      <kbd>/</kbd>
+      <div class="results card" id="results" hidden></div>
+    </label>
+    <div class="spacer"></div>
+    <div class="site">
+      <span class="sitebadge" id="siteBadge">HJZ</span>
+      <div><b id="siteName">Hijaz</b><small id="siteSub">Vue générale</small></div>
+      <span class="chev" data-ic="chev"></span>
+      <select id="view" aria-label="Changer de vue"></select>
+    </div>
+    <div class="era"><span class="dot"></span><span id="eraText">1 H</span></div>
+    <button class="iconbtn" id="themeBtn" aria-label="Basculer jour / nuit"></button>
+    <button class="srcbtn" id="srcBtn" aria-label="Voir les sources et l'état de validation">
+      <span class="bk" data-ic="book"></span>
+      <span><b>Fiches en brouillon</b><small id="srcSub">à vérifier</small></span>
+    </button>
+  </header>
+
+  <section class="kpis" aria-label="Indicateurs">
+    <div class="kpi card"><span class="ki" data-ic="user"></span><div><small>Âge du Prophète ﷺ</small><div class="v" id="kAge">53 ans</div><div class="s">années lunaires (approx.)</div></div></div>
+    <div class="kpi card"><span class="ki" data-ic="calendar"></span><div><small>Année</small><div class="v" id="kYear">1 H</div><div class="s" id="kYearS">622 apr. J.-C.</div></div></div>
+    <div class="kpi card"><span class="ki" data-ic="layers"></span><div><small>Période</small><div class="v" id="kPer">Médinoise</div><div class="s" id="kPerS">an 1 sur 10</div></div></div>
+  </section>
+
+  <div class="mapctl card" aria-label="Contrôles de la carte">
+    <button id="zIn" aria-label="Zoomer" data-ic="plus"></button>
+    <button id="zOut" aria-label="Dézoomer" data-ic="minus"></button>
+    <hr>
+    <button id="rL" aria-label="Pivoter à gauche" data-ic="rotL"></button>
+    <button id="rR" aria-label="Pivoter à droite" data-ic="rotR"></button>
+    <button id="home" aria-label="Vue d'ensemble du Hijaz" data-ic="home"></button>
+    <hr>
+    <button id="satBtn" aria-label="Image satellite (aujourd'hui)" aria-pressed="false" data-ic="globe"></button>
+  </div>
+
+  <aside class="detail card" id="detail" aria-live="polite">
+    <div class="dhead">
+      <div class="dicon" id="dIcon"></div>
+      <div class="dtitle"><span class="eyebrow" id="dCat"></span><h2 id="dTitle"></h2><span class="dsub" id="dSub"></span></div>
+      <div class="dbtns">
+        <button id="dLink" aria-label="Copier le lien de cette fiche" data-ic="link"></button>
+        <button id="dFocus" aria-label="Zoomer sur le lieu" data-ic="target"></button>
+        <button id="dClose" aria-label="Fermer la fiche" data-ic="close"></button>
+      </div>
+    </div>
+    <div class="dar" id="dAr" lang="ar"></div>
+    <div class="dstatus"><span class="chip" id="dChip"></span><span class="statut" id="dStatut"></span><span id="dPlace"></span></div>
+    <dl class="rows" id="dRows"></dl>
+    <p class="summary" id="dSummary"></p>
+    <div class="quran" id="dQuran"></div>
+    <div id="dDiv"></div>
+    <div id="dUmda"></div>
+    <div id="dLieu"></div>
+    <div id="dSrc"></div>
+    <div class="also" id="dAlso"></div>
+  </aside>
+
+  <div class="scale" id="scale">Relief réel exagéré ×6 · positions réelles</div>
+
+  <section class="timeline card" id="timeline">
+    <div class="thead"><span class="ti" data-ic="route"></span><b>Parcours prophétique</b><span class="tmeta" id="tMeta"></span></div>
+    <div class="tbody">
+      <ol class="stepper" id="stepper"></ol>
+      <button class="nextcard" id="nextCard"></button>
+    </div>
+    <div class="scrub">
+      <button id="prev" aria-label="Événement précédent" data-ic="chevL"></button>
+      <button id="play" aria-label="Lancer la visite guidée"></button>
+      <button id="next" aria-label="Événement suivant" data-ic="chev"></button>
+      <div class="track" id="track" aria-label="Chronologie des événements"></div>
+    </div>
+  </section>
+
+  <section class="lists card" id="lists">
+    <div class="lhead">
+      <span class="li" data-ic="list"></span>
+      <div class="tabs" role="tablist">
+        <button data-tab="ev" class="on" role="tab">Événements <span id="nEv"></span></button>
+        <button data-tab="loc" role="tab">Lieux <span id="nLoc"></span></button>
+        <button data-tab="had" role="tab">Hadiths <span id="nHad"></span></button>
+        <button data-tab="src" role="tab">Sources</button>
+      </div>
+    </div>
+    <div class="lbody" id="lbody"></div>
+  </section>
+
+  <nav class="mtabs card" aria-label="Panneaux">
+    <button data-m="detail" class="on"><span data-ic="pin"></span>Fiche</button>
+    <button data-m="time"><span data-ic="route"></span>Parcours</button>
+    <button data-m="list"><span data-ic="list"></span>Liste</button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <div class="chargement" id="chargement">
+    <div class="card">
+      <span class="logo" data-ic="star"></span>
+      <b>Sîra 3D</b>
+      <p id="chargementTexte">Chargement du relief du Hijaz…</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
