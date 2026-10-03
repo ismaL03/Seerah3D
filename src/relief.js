@@ -4,6 +4,8 @@
 // La Mecque et de Médine ; leurs bords sont calés sur la grille du Hijaz et leurs altitudes
 // s'y fondent sur une bande de 2 km, pour un raccord sans fissure.
 
+import { lirePNG16 } from './png.js';
+
 export const EXAGERATION = 6;
 const FONDU = 2;      // km
 const DETAIL = 0.5;   // part du relief fin des encarts conservée (sinon ×6 le rend « alpin »)
@@ -12,9 +14,11 @@ const lisse = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a)
 
 async function charger(dossier, zone, projection) {
   const meta = await (await fetch(`${dossier}/${zone}.json`)).json();
-  const tampon = await (await fetch(`${dossier}/${zone}.bin`)).arrayBuffer();
-  // Fichier en little-endian : c'est l'ordre natif de tous les navigateurs courants.
-  return new Relief(meta, new Int16Array(tampon), projection);
+  const png = await lirePNG16(await (await fetch(`${dossier}/${zone}.png`)).arrayBuffer());
+  if (png.largeur !== meta.largeur || png.hauteur !== meta.hauteur) throw new Error(`Relief ${zone} : dimensions inattendues`);
+  const alt = new Int16Array(png.valeurs.length);
+  for (let k = 0; k < alt.length; k++) alt[k] = png.valeurs[k] - meta.decalage;
+  return new Relief(meta, alt, projection);
 }
 
 export async function chargerReliefs(dossier) {

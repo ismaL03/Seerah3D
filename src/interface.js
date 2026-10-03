@@ -25,6 +25,8 @@ export function creerInterface(D) {
 
   const couleur = (cat) => getComputedStyle(document.documentElement).getPropertyValue('--c-' + cat).trim() || '#C9962F';
   const annee = (e) => (e.annee_hegire ? `${e.annee_hegire} H` : e.annee_ap_jc);
+  // Lien direct dans l'adresse ; ignoré là où la page est isolée (aperçu intégré).
+  const lien = (h) => { try { history.replaceState(null, '', h); } catch { /* adresse non modifiable */ } };
 
   function toast(texte) {
     const t = $('#toast'); t.textContent = texte; t.hidden = false;
@@ -90,7 +92,7 @@ export function creerInterface(D) {
     $('#siteSub').textContent = n + (n > 1 ? ' événements ici' : ' événement ici');
     $('#view').value = VUES.some((v) => v[0] === ev.lieu) ? ev.lieu : '';
     frise(); liste();
-    if (!opts.sansLien) history.replaceState(null, '', '#evenement/' + ev.id);
+    if (!opts.sansLien) lien('#evenement/' + ev.id);
     carte.selectionner(ev, i, couleur(ev.categorie));
     if (!opts.sansVol) carte.cadrer(ev, opts.duree);
   }
@@ -100,7 +102,7 @@ export function creerInterface(D) {
     if (!liste.length) return false;
     const suivant = liste.find(([e, i]) => i > cur && e.lieu === id) || liste.find(([e]) => e.lieu === id) || liste[0];
     choisir(suivant[1], { sansLien: true });
-    history.replaceState(null, '', '#lieu/' + id);
+    lien('#lieu/' + id);
     mobile('detail');
     return true;
   }
@@ -205,6 +207,7 @@ export function creerInterface(D) {
   }
   $('#themeBtn').onclick = () => { document.documentElement.dataset.theme = sombre() ? 'light' : 'dark'; appliquerTheme(); };
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', appliquerTheme);
+  new MutationObserver(appliquerTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // ---------- mobile ----------
   function mobile(m) {

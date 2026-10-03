@@ -2,8 +2,8 @@
 """Fabrique le relief réel d'une zone de la carte (par défaut : le Hijaz).
 
 Produit, dans data/relief/ :
-  <zone>.bin             altitudes en mètres, Int16 little-endian, lignes du nord au sud,
-                         colonnes d'ouest en est ; la mer porte une profondeur stylisée (négative)
+  <zone>.png             altitudes : PNG en niveaux de gris 16 bits, valeur = altitude (m) + 1000,
+                         lignes du nord au sud ; la mer porte une profondeur stylisée (négative)
   <zone>.json            emprise, dimensions, sources et attributions
   <zone>-satellite.jpg   image Sentinel-2 (couleurs vraies) calée sur la même emprise,
                          utilisée pour styliser le sol (sable, roche, harrât)
@@ -82,6 +82,7 @@ S2_MOIS = (1, 2, 12, 11, 3, 10)  # hiver d'abord : air plus clair qu'en été
 
 ATTRIBUTION_DEM = ("Copernicus DEM GLO-90 — © DLR e.V. 2010-2014 et © Airbus Defence and Space GmbH "
                    "2014-2018, fourni dans le cadre de COPERNICUS par l'Union européenne et l'ESA")
+DECALAGE = 1000  # valeur du PNG = altitude + DECALAGE (la mer est négative)
 ATTRIBUTION_S2 = "Contient des données Copernicus Sentinel modifiées ({annee})"
 
 
@@ -349,7 +350,8 @@ def produire(zone_id, zone, sans_satellite):
     log(f"Relief {zone['nom']} (Copernicus DEM GLO-90)…")
     alt, mer = relief(zone)
     _, largeur, hauteur, pas = grille(zone)
-    (SORTIE / f"{zone_id}.bin").write_bytes(alt.tobytes())
+    from PIL import Image
+    Image.fromarray((alt.astype(np.int32) + DECALAGE).astype(np.uint16)).save(SORTIE / f"{zone_id}.png", optimize=True)
 
     meta = {
         "zone": zone_id,
@@ -358,7 +360,8 @@ def produire(zone_id, zone, sans_satellite):
         "largeur": largeur,
         "hauteur": hauteur,
         "resolution_arcsec": zone["resolution_arcsec"],
-        "format": "Int16 little-endian, mètres, lignes du nord au sud",
+        "format": "PNG gris 16 bits, lignes du nord au sud ; altitude (m) = valeur - decalage",
+        "decalage": DECALAGE,
         "altitude_min": int(alt[~mer].min()),
         "altitude_max": int(alt.max()),
         "mer": "profondeur stylisée (distance à la côte), pas une bathymétrie réelle" if mer.any() else None,
@@ -373,7 +376,6 @@ def produire(zone_id, zone, sans_satellite):
         img, utilisees = satellite(zone_id, zone, mer)
         if zone.get("encart"):
             img = accorder(img, zone)
-        from PIL import Image
         Image.fromarray(np.moveaxis(img, 0, -1)).save(SORTIE / f"{zone_id}-satellite.jpg", quality=84, optimize=True)
         meta["satellite"] = {
             "fichier": f"{zone_id}-satellite.jpg",
