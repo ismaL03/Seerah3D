@@ -7,12 +7,12 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { creerTerrain } from './terrain.js';
 import { creerDecor, OASIS } from './decor.js';
 import { creerBataille } from './bataille.js';
-import { chameau, cheval, bateau, etendard } from './montures.js';
+import { chameau, cheval, bateau, etendard, agiter } from './montures.js';
 import { pointsTrajet, positionLieu } from './donnees.js';
 
 const R_MIN = 0.08, R_MAX = 1400;
-// Distance de vue au-delà de laquelle un lieu de niveau 2 ou 3 est masqué.
-const PORTEE = { 1: Infinity, 2: 320, 3: 90 };
+// Distance de vue au-delà de laquelle un lieu de niveau 2, 3 ou 4 (monument dans une ville) est masqué.
+const PORTEE = { 1: Infinity, 2: 320, 3: 90, 4: 14 };
 // Composition des convois, selon le type de trajet.
 const CONVOIS = { caravane: ['c', 'cc', 'c', 'cc'], armee: ['h', 'ce', 'h', 'c', 'h', 'cc'], mer: ['c', 'cc', 'c'], nuit: [] };
 
@@ -34,7 +34,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   soleil.shadow.mapSize.set(mobile ? 1024 : 2048, mobile ? 1024 : 2048);
   const amb = new THREE.AmbientLight(0xffffff, 0.35);
   scene.add(hemi, soleil, soleil.target, amb);
-  const DIR_SOLEIL = new THREE.Vector3(0.45, 0.78, 0.3).normalize();
+  const DIR_SOLEIL = new THREE.Vector3(0.52, 0.6, 0.36).normalize(); // lumière assez rasante pour lire le relief
 
   const terrain = await creerTerrain(R, { renderer, pas: mobile ? 2 : 1, oasis: OASIS });
   scene.add(terrain.groupe);
@@ -94,7 +94,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   function membre(code, k) {
     if (code === 'h') return cheval(k);
     if (code === 'cc') return chameau(true);
-    if (code === 'ce') { const c = chameau(false), e = etendard(0x0E7A5A); e.position.set(0, 2, -0.5); c.add(e); return c; }
+    if (code === 'ce') { const c = chameau(false), e = etendard(0x0E7A5A); e.position.set(0, 2, -0.5); c.add(e); c.userData.etendard = e; return c; }
     return chameau(false);
   }
 
@@ -170,6 +170,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   function volVers(cible, r, theta, phi, duree) {
     if (libre.actif) return; // en vol libre, c'est l'utilisateur qui pilote
     let dt = (theta ?? cam.theta) - cam.theta; dt = Math.atan2(Math.sin(dt), Math.cos(dt));
+    zoom.r = null; elan.x = elan.z = elan.theta = 0; inclinaisonAuto = true;
     transit = { t0: performance.now(), duree: reduit ? 0 : (duree ?? 1600), a: { c: cam.cible.clone(), r: cam.r, th: cam.theta, ph: cam.phi }, b: { c: cible.clone(), r, th: cam.theta + dt, ph: phi ?? cam.phi } };
   }
   const pos = (id) => { const p = PINS[id]; return new THREE.Vector3(p.x, p.base, p.z); };
@@ -202,7 +203,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     volVers(c, Math.max(rMin, distancePour(c, theta, phi, points, r0)), theta, phi, duree);
   }
   const pointsSol = (ev) => pointsTrajet(D, ev.trajet).map(([la, lo]) => { const [x, z] = R.xz(la, lo); return new THREE.Vector3(x, R.sol(x, z), z); });
-  const PRES = { 1: 3.2, 2: 4.5, 3: 2.4 }; // distance de vue rapprochée selon le niveau du lieu
+  const PRES = { 1: 3.2, 2: 4.5, 3: 2.4, 4: 0.9 }; // distance de vue rapprochée selon le niveau du lieu
   function cadrer(ev, duree) {
     majVue();
     const L = D.LIEUX[ev.lieu];
@@ -219,7 +220,11 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     const pts = [[b.x0, b.z0], [b.x1, b.z0], [b.x0, b.z1], [b.x1, b.z1]].map(([x, z]) => new THREE.Vector3(x, 0, z));
     cadrerPoints(pts, -0.5, 0.78, 100);
   }
-  function vueLieu(id) { majVue(); volVers(pos(id), (PRES[D.LIEUX[id].niveau] || 3) * 0.8, cam.theta, 1.12); }
+  function vueLieu(id, r) {
+    majVue();
+    r = r || (PRES[D.LIEUX[id].niveau] || 3) * 0.8;
+    volVers(pos(id), r, cam.theta, Math.min(phiAuto(r), 1.12));
+  }
 
   // Point du sol sous un pixel de l'écran (marche le long du rayon, puis affine).
   const rayon = new THREE.Raycaster(), ndc = new THREE.Vector2();
@@ -308,17 +313,47 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   }
 
   // ---------- commandes à la souris et au doigt ----------
-  const pointeurs = new Map(); let appui = null, geste = null;
+  // Glisser : le point du sol saisi reste sous le pointeur (avec un élan au lâcher).
+  // Clic droit (ou Maj) : tourner et incliner. Molette : zoom progressif vers le point visé ;
+  // en s'approchant, la vue s'incline d'elle-même (carte vue d'en haut de loin, relief de près).
+  const pointeurs = new Map(); let appui = null, geste = null, prise = null, inclinaisonAuto = true;
+  const elan = { x: 0, z: 0, theta: 0 }, zoom = { r: null, point: null }, clavier = new Set();
+  const plan = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+  const phiAuto = (r) => 1.2 - 0.5 * Math.min(1, Math.max(0, Math.log(r / 1.5) / Math.log(500 / 1.5)));
+  function deplacer(dx, dz) {
+    cam.cible.x = Math.max(b.x0, Math.min(b.x1, cam.cible.x + dx));
+    cam.cible.z = Math.max(b.z0, Math.min(b.z1, cam.cible.z + dz));
+    cam.cible.y = R.sol(cam.cible.x, cam.cible.z);
+  }
+  function surPlan(clientX, clientY, y) {
+    appliquerCamera(); camera.updateMatrixWorld();
+    const rc = canvas.getBoundingClientRect();
+    ndc.set((clientX - rc.left) / rc.width * 2 - 1, -(clientY - rc.top) / rc.height * 2 + 1);
+    rayon.setFromCamera(ndc, camera);
+    plan.constant = -y;
+    return rayon.ray.intersectPlane(plan, new THREE.Vector3());
+  }
+  function zoomer(f, point) {
+    zoom.r = Math.min(R_MAX, Math.max(R_MIN, (zoom.r ?? cam.r) * f));
+    zoom.point = point || null;
+  }
   canvas.addEventListener('contextmenu', (e) => e.preventDefault());
   canvas.addEventListener('pointerdown', (e) => {
     canvas.setPointerCapture(e.pointerId);
     pointeurs.set(e.pointerId, { x: e.clientX, y: e.clientY });
     appui = { x: e.clientX, y: e.clientY, t: performance.now(), b: e.button, mod: e.shiftKey || e.ctrlKey || e.altKey };
-    transit = null; if (libre.actif) libre.glisse = null;
+    transit = null; zoom.r = null; elan.x = elan.z = elan.theta = 0;
+    if (libre.actif) libre.glisse = null;
     surInteraction(); canvas.classList.add('drag');
+    prise = null;
+    if (!libre.actif && pointeurs.size === 1 && e.button === 0 && !appui.mod) {
+      const p = solSous(e.clientX, e.clientY);
+      if (p) prise = { point: p, t: e.timeStamp };
+    }
     if (pointeurs.size === 2) {
+      prise = null;
       const [p, q] = [...pointeurs.values()];
-      geste = { d: Math.hypot(p.x - q.x, p.y - q.y), a: Math.atan2(q.y - p.y, q.x - p.x), y: (p.y + q.y) / 2 };
+      geste = { d: Math.hypot(p.x - q.x, p.y - q.y), a: Math.atan2(q.y - p.y, q.x - p.x), y: (p.y + q.y) / 2, point: solSous((p.x + q.x) / 2, (p.y + q.y) / 2) };
     }
   });
   canvas.addEventListener('pointermove', (e) => {
@@ -329,54 +364,97 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
       libre.lacet -= dx * 0.004; libre.tangage = Math.max(-1.45, Math.min(1.2, libre.tangage - dy * 0.004));
       return;
     }
-    if (pointeurs.size === 2 && geste) { // pincer pour zoomer, tourner à deux doigts, glisser vers le haut pour incliner
+    if (pointeurs.size === 2 && geste) { // pincer pour zoomer (vers le milieu des doigts), tourner, incliner
       const [a, c] = [...pointeurs.values()], d = Math.hypot(a.x - c.x, a.y - c.y), ang = Math.atan2(c.y - a.y, c.x - a.x), my = (a.y + c.y) / 2;
-      cam.r = Math.min(R_MAX, Math.max(R_MIN, cam.r * geste.d / d));
+      const r = Math.min(R_MAX, Math.max(R_MIN, cam.r * geste.d / d));
+      if (geste.point) cam.cible.lerp(geste.point, 1 - r / cam.r);
+      cam.r = r;
       cam.theta -= ang - geste.a;
-      cam.phi = Math.max(0.2, Math.min(phiMax(), cam.phi - (my - geste.y) * 0.004));
-      geste = { d, a: ang, y: my };
+      if (Math.abs(my - geste.y) > 0.5) { cam.phi = Math.max(0.2, Math.min(phiMax(), cam.phi - (my - geste.y) * 0.004)); inclinaisonAuto = false; }
+      geste = { ...geste, d, a: ang, y: my };
       return;
     }
     if (appui && (appui.b === 2 || appui.mod)) { // clic droit (ou Maj) : tourner et incliner
-      cam.theta -= dx * 0.005;
-      cam.phi = Math.max(0.2, Math.min(phiMax(), cam.phi - dy * 0.004));
-    } else { // glisser : déplacer la carte
-      const rc = canvas.getBoundingClientRect(), k = 2 * cam.r * Math.tan(camera.fov * Math.PI / 360) / rc.height;
-      const ct = Math.cos(cam.theta), st = Math.sin(cam.theta), inc = 1 / Math.max(0.35, Math.cos(cam.phi));
-      cam.cible.x = Math.max(b.x0, Math.min(b.x1, cam.cible.x - (dx * ct + dy * st * inc) * k));
-      cam.cible.z = Math.max(b.z0, Math.min(b.z1, cam.cible.z - (-dx * st + dy * ct * inc) * k));
-      cam.cible.y = R.sol(cam.cible.x, cam.cible.z);
+      cam.theta -= dx * 0.005; elan.theta = -dx * 0.005 * 60;
+      if (dy) { cam.phi = Math.max(0.2, Math.min(phiMax(), cam.phi - dy * 0.004)); inclinaisonAuto = false; }
+    } else if (prise) { // le point saisi reste sous le pointeur
+      const q = surPlan(e.clientX, e.clientY, prise.point.y);
+      if (q) {
+        const ddx = prise.point.x - q.x, ddz = prise.point.z - q.z, dt = Math.max(8, e.timeStamp - prise.t) / 1000;
+        deplacer(ddx, ddz);
+        elan.x = elan.x * 0.3 + (ddx / dt) * 0.7; elan.z = elan.z * 0.3 + (ddz / dt) * 0.7;
+        prise.t = e.timeStamp;
+      }
     }
   });
   function fin(e) {
     pointeurs.delete(e.pointerId);
     if (pointeurs.size < 2) geste = null;
     canvas.classList.remove('drag');
+    if (prise && e.timeStamp - prise.t > 80) elan.x = elan.z = 0; // geste arrêté avant de lâcher : pas d'élan
+    prise = null;
     if (appui && pointeurs.size === 0) {
       const bouge = Math.hypot(e.clientX - appui.x, e.clientY - appui.y);
-      if (bouge < 6 && performance.now() - appui.t < 500 && !libre.actif) { const id = viser(e); if (id) surLieu(id); }
+      if (bouge < 6) { elan.x = elan.z = elan.theta = 0; if (performance.now() - appui.t < 500 && !libre.actif) { const id = viser(e); if (id) surLieu(id); } }
       appui = null;
     }
   }
   canvas.addEventListener('pointerup', fin);
   canvas.addEventListener('pointercancel', fin);
-  // Molette : zoom vers le point visé par la souris
   canvas.addEventListener('wheel', (e) => {
-    e.preventDefault(); transit = null;
-    const f = 1 + Math.sign(e.deltaY) * Math.min(0.3, Math.abs(e.deltaY) * 0.0015);
+    e.preventDefault(); transit = null; elan.x = elan.z = elan.theta = 0;
+    surInteraction();
+    const f = Math.exp(Math.sign(e.deltaY) * Math.min(0.35, Math.abs(e.deltaY) * 0.0016));
     if (libre.actif) { const h = libre.pos.y - R.sol(libre.pos.x, libre.pos.z), avant = new THREE.Vector3(-Math.sin(libre.lacet), Math.sin(libre.tangage), -Math.cos(libre.lacet)); libre.pos.addScaledVector(avant, -(f - 1) * 4 * (h + 0.2)); return; }
-    const p = f < 1 ? solSous(e.clientX, e.clientY) : null;
-    const r = Math.min(R_MAX, Math.max(R_MIN, cam.r * f));
-    if (p) cam.cible.lerp(p, 1 - r / cam.r);
-    cam.r = r;
+    zoomer(f, solSous(e.clientX, e.clientY));
   }, { passive: false });
-  // Double-clic : s'y rendre
+  // Double-clic : plonger vers le point
   canvas.addEventListener('dblclick', (e) => {
     const p = solSous(e.clientX, e.clientY); if (!p) return;
     surInteraction();
-    if (libre.actif) libre.glisse = { t0: performance.now(), a: libre.pos.clone(), b: new THREE.Vector3(p.x, p.y + Math.max(0.15, (libre.pos.y - p.y) * 0.4), p.z), duree: 1400 };
-    else volVers(p, Math.max(R_MIN * 3, cam.r * 0.4), cam.theta, Math.min(phiMax(), cam.phi + 0.1), 1200);
+    if (libre.actif) { libre.glisse = { t0: performance.now(), a: libre.pos.clone(), b: new THREE.Vector3(p.x, p.y + Math.max(0.15, (libre.pos.y - p.y) * 0.4), p.z), duree: 1400 }; return; }
+    inclinaisonAuto = true;
+    zoomer(0.35, p);
   });
+  // Clavier (hors vol libre) : flèches pour se déplacer, Maj + flèches pour tourner et incliner, + et − pour zoomer
+  const TOUCHES_ORBITE = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Equal', 'Minus', 'NumpadAdd', 'NumpadSubtract', 'ShiftLeft', 'ShiftRight'];
+  addEventListener('keydown', (e) => {
+    if (libre.actif || ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (TOUCHES_ORBITE.includes(e.code)) { clavier.add(e.code); if (!e.code.startsWith('Shift')) { e.preventDefault(); transit = null; surInteraction(); } }
+  });
+  addEventListener('keyup', (e) => clavier.delete(e.code));
+  addEventListener('blur', () => clavier.clear());
+  function piloterOrbite(dt) {
+    // zoom progressif
+    if (zoom.r != null) {
+      const r1 = cam.r + (zoom.r - cam.r) * (1 - Math.exp(-dt * 10));
+      if (zoom.point) { cam.cible.lerp(zoom.point, 1 - r1 / cam.r); deplacer(0, 0); }
+      cam.r = r1;
+      if (inclinaisonAuto) cam.phi += (phiAuto(cam.r) - cam.phi) * (1 - Math.exp(-dt * 5));
+      if (Math.abs(zoom.r - cam.r) < zoom.r * 0.003) zoom.r = null;
+    }
+    // élan après un glisser
+    if (!pointeurs.size && (elan.x || elan.z || elan.theta)) {
+      deplacer(elan.x * dt, elan.z * dt); cam.theta += elan.theta * dt;
+      const k = Math.exp(-dt * 4.5);
+      elan.x *= k; elan.z *= k; elan.theta *= k;
+      if (Math.hypot(elan.x, elan.z) < cam.r * 0.002 && Math.abs(elan.theta) < 0.002) elan.x = elan.z = elan.theta = 0;
+    }
+    // clavier
+    if (clavier.size) {
+      const has = (c) => clavier.has(c), maj = has('ShiftLeft') || has('ShiftRight');
+      const av = (has('ArrowUp') ? 1 : 0) - (has('ArrowDown') ? 1 : 0), dr = (has('ArrowRight') ? 1 : 0) - (has('ArrowLeft') ? 1 : 0);
+      if (maj) {
+        cam.theta -= dr * 1.4 * dt;
+        if (av) { cam.phi = Math.max(0.2, Math.min(phiMax(), cam.phi + av * 0.9 * dt)); inclinaisonAuto = false; }
+      } else if (av || dr) {
+        const v = cam.r * 0.8 * dt, ct = Math.cos(cam.theta), st = Math.sin(cam.theta);
+        deplacer((-st * av + ct * dr) * v, (-ct * av - st * dr) * v);
+      }
+      const z = (has('Equal') || has('NumpadAdd') ? 1 : 0) - (has('Minus') || has('NumpadSubtract') ? 1 : 0);
+      if (z) zoomer(Math.exp(-z * 1.6 * dt), null);
+    }
+  }
   function viser(e) {
     const rc = canvas.getBoundingClientRect();
     ndc.set((e.clientX - rc.left) / rc.width * 2 - 1, -(e.clientY - rc.top) / rc.height * 2 + 1);
@@ -386,7 +464,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   }
 
   // ---------- thème ----------
-  const JOUR = { ciel: 0xE6ECEA, hs: 0xF3F6F8, hg: 0xD8C29B, hi: 2.4, sol: 0xFFF2DC, si: 3.0, amb: 0.35, ter: 0xffffff, paroi: 0xB79770, eau: 0x4FAFC6 };
+  const JOUR = { ciel: 0xE6ECEA, hs: 0xF3F6F8, hg: 0xD8C29B, hi: 1.9, sol: 0xFFF2DC, si: 3.4, amb: 0.3, ter: 0xffffff, paroi: 0xB79770, eau: 0x4FAFC6 };
   const NUIT = { ciel: 0x0C1524, hs: 0x6478A8, hg: 0x2A2A34, hi: 1.9, sol: 0xB4C6FF, si: 1.5, amb: 0.25, ter: 0xAEB6D0, paroi: 0x4A4552, eau: 0x1E4E69 };
   function theme(sombre, couleurCategorie) {
     const S = sombre ? NUIT : JOUR;
@@ -400,24 +478,36 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   function colorerTrajet(couleur) { const c = new THREE.Color(couleur); matTrajet.color.copy(c); matHalo.color.copy(c); }
 
   // ---------- sélection ----------
-  let courant = null, lieuxTrajet = [];
+  // « marque » : le lieu mis en avant (celui de l'événement courant, ou celui dont la fiche est ouverte).
+  let marque = null, lieuxTrajet = [];
+  function surligner(id, titre) {
+    marque = id;
+    for (const k in PINS) {
+      const p = PINS[k];
+      p.tete.material = p.pointe.material = k === id ? matPinOn : (p.l.hors_carte ? matPinBord : matPin);
+    }
+    for (const k in LBL) {
+      const on = k === id, el = LBL[k], cur = el.querySelector('.ev.cur');
+      el.classList.toggle('on', on); cur.hidden = !on || !titre; if (on && titre) cur.textContent = titre;
+      el._w = 0; // à remesurer
+    }
+    const p = PINS[id];
+    onde.position.set(p.x, p.base + 0.002, p.z);
+  }
   function selectionner(ev, index, couleur) {
-    courant = ev;
     decor.ere.forEach((e) => (e.o.visible = e.visible(index)));
     construireTrajet(ev);
     colorerTrajet(couleur);
     lieuxTrajet = ev.trajet ? ev.trajet.etapes.filter((x) => typeof x === 'string' && D.LIEUX[x]) : [];
-    for (const id in PINS) {
-      const p = PINS[id];
-      p.tete.material = p.pointe.material = id === ev.lieu ? matPinOn : (p.l.hors_carte ? matPinBord : matPin);
-    }
-    for (const id in LBL) {
-      const on = id === ev.lieu, el = LBL[id], cur = el.querySelector('.ev.cur');
-      el.classList.toggle('on', on); cur.hidden = !on; if (on) cur.textContent = ev.titre;
-      el._w = 0; // à remesurer
-    }
-    const p = PINS[ev.lieu];
-    onde.position.set(p.x, p.base + 0.002, p.z);
+    surligner(ev.lieu, ev.titre);
+  }
+  // Fiche d'un lieu : on retire le trajet et la bataille, on met le lieu en avant et on s'en approche.
+  function montrerLieu(id, r) {
+    bataille.masquer();
+    construireTrajet({});
+    lieuxTrajet = [];
+    surligner(id, null);
+    vueLieu(id, r);
   }
 
   // ---------- centre optique : la vue vise le milieu de la zone laissée libre par les panneaux ----------
@@ -438,7 +528,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   }
 
   function ordreEtiquettes() {
-    const rang = (id) => (courant && courant.lieu === id ? 0 : PINS[id].l.niveau === 1 ? 1 : lieuxTrajet.includes(id) ? 2 : 2 + PINS[id].l.niveau);
+    const rang = (id) => (marque === id ? 0 : PINS[id].l.niveau === 1 ? 1 : lieuxTrajet.includes(id) ? 2 : 2 + PINS[id].l.niveau);
     return Object.keys(LBL).sort((a, c) => rang(a) - rang(c));
   }
 
@@ -463,14 +553,12 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
         cam.theta = a.th + (c.th - a.th) * k; cam.phi = a.ph + (c.ph - a.ph) * k;
         if (t >= 1) transit = null;
       }
+      if (!transit) piloterOrbite(dt);
       cam.phi = Math.min(cam.phi, phiMax());
       appliquerCamera();
     }
     // distance de vue équivalente (orbite : rayon ; vol : hauteur au-dessus du sol)
     const vue = libre.actif ? Math.max(0.3, infoVol.h * 2.5) : cam.r;
-    // facettes « maquette » vues de loin, relief lissé de près
-    const facettes = vue > 110;
-    for (const m of terrain.materiaux) if (m.flatShading !== facettes) { m.flatShading = facettes; m.needsUpdate = true; }
     // soleil et ombres centrés sur la vue
     const centre = libre.actif ? v3.set(libre.pos.x, R.sol(libre.pos.x, libre.pos.z), libre.pos.z) : cam.cible;
     const D_SOL = vue * 1.5 + 2;
@@ -486,7 +574,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     decor.majBlocs(camera.position);
     // épingles : taille constante à l'écran
     for (const id in PINS) {
-      const p = PINS[id], sel = courant && courant.lieu === id, visible = sel || lieuxTrajet.includes(id) || vue < PORTEE[p.l.niveau];
+      const p = PINS[id], sel = marque === id, visible = sel || lieuxTrajet.includes(id) || vue < PORTEE[p.l.niveau];
       p.g.visible = visible;
       if (!visible) continue;
       const dist = camera.position.distanceTo(v3.set(p.x, p.base, p.z));
@@ -517,6 +605,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
           m.o.visible = !mer && uj < 0.995;
           m.o.position.set(p.x, R.sol(p.x, p.z), p.z); m.o.scale.setScalar(cs);
           if (p2.distanceTo(p) > 1e-5) m.o.lookAt(p2.x, m.o.position.y, p2.z);
+          if (!reduit && m.o.userData.etendard && m.o.visible) agiter(m.o.userData.etendard, now / 1000);
         }
         for (const f of trajet.flotte) {
           const uj = ((u - f.rang * 2.5 * cs / trajet.longueur) % 1 + 1) % 1;
@@ -548,7 +637,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
       }
       el.classList.toggle('off', !montre);
       if (montre) el.style.transform = `translate(${x}px,${y}px) translate(-50%,-100%)`;
-      el.style.zIndex = courant && courant.lieu === id ? 5 : 1;
+      el.style.zIndex = marque === id ? 5 : 1;
     }
     // état de la vue, pour la boussole et la mini-carte
     const ici = libre.actif ? libre.pos : cam.cible, [lat, lon] = R.latlon(ici.x, ici.z);
@@ -561,10 +650,11 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   requestAnimationFrame(boucle);
 
   return {
-    selectionner, cadrer, accueil, vueLieu, theme,
+    selectionner, cadrer, accueil, vueLieu, montrerLieu, theme,
+    altitude: (lat, lon) => R.metres(...R.xz(lat, lon)),
     zoomLieu: (id) => vueLieu(id),
     satellite: (on) => terrain.habillage(on),
-    zoom: (f) => { transit = null; cam.r = Math.min(R_MAX, Math.max(R_MIN, cam.r * f)); },
+    zoom: (f) => { transit = null; zoomer(f, null); },
     nord: () => { if (libre.actif) libre.lacet = 0; else volVers(cam.cible, cam.r, 0, cam.phi, 700); },
     placer: (r, theta, phi) => { cam.r = r; cam.theta = theta; cam.phi = phi; },
     rafraichirVue: () => { cleVue = ''; },
@@ -580,7 +670,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     bataille(B, phase) {
       if (!B) { bataille.masquer(); return; }
       const pts = bataille.montrer(B, phase);
-      cadrerPoints(pts, B.vue ? B.vue[0] : -0.35, B.vue ? B.vue[1] : 0.95, 0.5, 1500);
+      cadrerPoints(pts, B.vue ? B.vue[0] : -0.35, B.vue ? B.vue[1] : 0.95, 0.7, 1500);
     },
   };
 }

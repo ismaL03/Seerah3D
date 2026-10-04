@@ -1,27 +1,27 @@
 {
-  "zone": "makkah",
-  "nom": "La Mecque et ses environs",
+  "zone": "badr",
+  "nom": "Badr",
   "emprise": {
-    "ouest": 39.69166666666667,
-    "sud": 21.29722222222222,
-    "est": 40.06944444444444,
-    "nord": 21.530555555555555
+    "ouest": 38.69166666666667,
+    "sud": 23.674999999999997,
+    "est": 38.84722222222222,
+    "nord": 23.80833333333333
   },
-  "largeur": 408,
-  "hauteur": 252,
+  "largeur": 168,
+  "hauteur": 144,
   "resolution_arcsec": 3.3333333333333335,
   "format": "PNG gris 16 bits, lignes du nord au sud ; altitude (m) = valeur - decalage",
   "decalage": 1000,
-  "altitude_min": 156,
-  "altitude_max": 936,
+  "altitude_min": 43,
+  "altitude_max": 546,
   "mer": null,
   "genere_le": "2026-10-04",
   "encart": true,
   "grille_hijaz": {
-    "c0": 484,
-    "c1": 552,
-    "r0": 876,
-    "r1": 918
+    "c0": 304,
+    "c1": 332,
+    "r0": 466,
+    "r1": 490
   },
   "encarts": [],
   "sources": [
@@ -35,12 +35,11 @@
     }
   ],
   "satellite": {
-    "fichier": "makkah-satellite.jpg",
-    "largeur": 408,
-    "hauteur": 252,
+    "fichier": "badr-satellite.jpg",
+    "largeur": 168,
+    "hauteur": 144,
     "scenes": [
-      "S2B_37QED_20240121_0_L2A",
-      "S2B_37QFD_20240121_0_L2A"
+      "S2B_37QDG_20240104_0_L2A"
     ]
   }
 }

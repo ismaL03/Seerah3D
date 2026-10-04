@@ -168,7 +168,7 @@ export function creerDecor(R, D) {
 
   // ---------- Mosquée du Prophète ﷺ (briques crues, toiture de palmes) ----------
   {
-    const [x, z] = ici('madinah'), g = pose(x, z, 0.009), boue = M(0xB98C5F), toit = M(0x7F6143);
+    const [x, z] = ici('madinah'), g = pose(x, z, 0.011), boue = M(0xB98C5F), toit = M(0x7F6143);
     ajoute(new THREE.Mesh(new THREE.BoxGeometry(7, 0.1, 6.4), M(0xE2CDA6)), 0, 0.05, 0, g);
     [[0, -3.1], [0, 3.1]].forEach(([a, b]) => ajoute(new THREE.Mesh(new THREE.BoxGeometry(7, 1, 0.3), boue), a, 0.5, b, g));
     ajoute(new THREE.Mesh(new THREE.BoxGeometry(0.3, 1, 6.4), boue), -3.4, 0.5, 0, g);
@@ -177,9 +177,16 @@ export function creerDecor(R, D) {
     ajoute(new THREE.Mesh(new THREE.BoxGeometry(6.8, 0.14, 1.9), toit), 0, 1.15, -2, g);
     ajoute(new THREE.Mesh(new THREE.BoxGeometry(6.8, 0.14, 1.3), toit), 0, 1.15, 2.4, g);
     for (let k = 0; k < 5; k++) ajoute(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.1, 5), toit), -2.6 + k * 1.3, 0.55, -1.3, g);
-    for (let k = 0; k < 4; k++) ajoute(new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.9, 1.2), M(0xC9A27A)), 4.3, 0.45, -2.6 + k * 1.4, g); // hujurât
+    // al-Hujurât : les chambres des épouses, accolées au mur est, toits de palmes, portes sur la mosquée
+    const brique = M(0xD2B48C), palmes = M(0x6E5538);
+    for (let k = 0; k < 5; k++) {
+      const zz = -2.6 + k * 1.3;
+      ajoute(new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.8, 1.15), brique), 4.2, 0.4, zz, g);
+      ajoute(new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.1, 1.25), palmes), 4.2, 0.85, zz, g);
+      ajoute(new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.5, 0.35), palmes), 3.58, 0.25, zz, g); // porte (rideau)
+    }
     ere.push({ o: g, visible: (k) => k >= i('hijra') });
-    reserver(x, z, 0.07);
+    reserver(x, z, 0.08);
   }
 
   // ---------- Mosquée de Qubâ' ----------
@@ -265,6 +272,89 @@ export function creerDecor(R, D) {
     const [x, z] = ici('arafat');
     ajoute(new THREE.Mesh(new THREE.CylinderGeometry(0.0025, 0.003, 0.03, 8), M(0xF5F2EA)), x, R.y(x, z) + 0.015, z);
   }
+
+  // ---------- Lieux importants de Médine et de La Mecque (taille iconique) ----------
+  const site = (id) => { const L = D.LIEUX[id]; return L ? P(L.lat, L.lon) : null; };
+  const pierre = M(0xA48E72), stele = M(0xCFC3AE), toile = [M(0xC9893A), M(0x3F5E8C), M(0x9E3B2E), M(0xE4D3A8)].map((m) => { m.side = THREE.DoubleSide; return m; });
+  function batisse(id, modele, taille, couleur, ry = 0) { // une maison remarquable (modèle à couleurs par sommet)
+    const xz = site(id); if (!xz) return null;
+    const m = new THREE.Mesh(MODELES[modele](), M(couleur, { vertexColors: true }));
+    m.scale.setScalar(taille); m.rotation.y = ry;
+    ajoute(m, xz[0], R.y(...xz) - 0.001, xz[1]);
+    reserver(xz[0], xz[1], taille * 0.8);
+    return m;
+  }
+  function cimetiere(id, w, d, n, murs = true) {
+    const xz = site(id); if (!xz) return;
+    const [cx, cz] = xz, g = new THREE.Group(); groupe.add(g);
+    if (murs) [[0, -d / 2, w, 0.003], [0, d / 2, w, 0.003], [-w / 2, 0, 0.003, d], [w / 2, 0, 0.003, d]].forEach(([a, b, ww, dd]) =>
+      ajoute(new THREE.Mesh(new THREE.BoxGeometry(ww, 0.005, dd), pierre), cx + a, R.y(cx + a, cz + b) + 0.0025, cz + b, g));
+    for (let k = 0; k < n; k++) {
+      const x = cx + (alea() - 0.5) * w * 0.9, z = cz + (alea() - 0.5) * d * 0.9;
+      const t = ajoute(new THREE.Mesh(new THREE.BoxGeometry(0.0016, 0.0022, 0.0035), stele), x, R.y(x, z) + 0.001, z, g);
+      t.rotation.y = 0.3; t.castShadow = false;
+    }
+    reserver(cx, cz, Math.max(w, d) * 0.6);
+  }
+  function enclos(id, cote, quand) { // petite mosquée en briques crues, comme celle de Qubâ'
+    const xz = site(id); if (!xz) return;
+    const g = pose(xz[0], xz[1], cote / 3), boue = M(0xB98C5F);
+    [[0, -1.4], [0, 1.4]].forEach(([a, b]) => ajoute(new THREE.Mesh(new THREE.BoxGeometry(3, 0.8, 0.25), boue), a, 0.4, b, g));
+    [-1.4, 1.4].forEach((a) => ajoute(new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.8, 3), boue), a, 0.4, 0, g));
+    ajoute(new THREE.Mesh(new THREE.BoxGeometry(3, 0.1, 1.1), M(0x7F6143)), 0, 0.85, -0.85, g);
+    if (quand) ere.push({ o: g, visible: quand });
+    reserver(xz[0], xz[1], cote * 0.7);
+  }
+  // Médine
+  cimetiere('baqi', 0.12, 0.09, 140);
+  batisse('ayyub', 'etage', 0.034, 0xD2B08A, 0.4);
+  enclos('qiblatayn', 0.03, (k) => k >= i('hijra'));
+  enclos('jumua', 0.026, (k) => k >= i('hijra'));
+  { // le marché : deux rangées d'étals sous auvents de toile
+    const xz = site('souq');
+    if (xz) {
+      for (let k = 0; k < 16; k++) {
+        const x = xz[0] + (k % 8 - 3.5) * 0.012, z = xz[1] + (k < 8 ? -0.009 : 0.009), y = R.y(x, z);
+        ajoute(new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.004, 0.006), M(0xC9A27A)), x, y + 0.002, z);
+        const a = ajoute(new THREE.Mesh(new THREE.PlaneGeometry(0.01, 0.008), toile[k % toile.length]), x, y + 0.0065, z + (k < 8 ? 0.004 : -0.004));
+        a.rotation.x = -Math.PI / 2 + (k < 8 ? 0.35 : -0.35);
+      }
+      reserver(xz[0], xz[1], 0.06);
+    }
+  }
+  { // la Saqîfa : préau sur poteaux, toit de palmes
+    const xz = site('saqifa');
+    if (xz) {
+      const g = pose(xz[0], xz[1], 0.006), bois = M(0x7F6143);
+      [[-1.5, -1], [0, -1], [1.5, -1], [-1.5, 1], [0, 1], [1.5, 1]].forEach(([a, b]) => ajoute(new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.2, 5), bois), a, 0.6, b, g));
+      ajoute(new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.15, 2.6), M(0x8E7650)), 0, 1.25, 0, g);
+      reserver(xz[0], xz[1], 0.02);
+    }
+  }
+  // La Mecque
+  for (const id of ['safa', 'marwa']) { // collines rocheuses, plus marquées que ne le montre le relief à 100 m
+    const xz = site(id); if (!xz) continue;
+    const roc = new THREE.Mesh(new THREE.IcosahedronGeometry(0.014, 1), M(0x9C8468, { flatShading: true }));
+    roc.scale.set(1, 0.55, 0.8); ajoute(roc, xz[0], R.y(...xz) + 0.002, xz[1]);
+    reserver(xz[0], xz[1], 0.016);
+  }
+  { // le parcours entre as-Safâ et al-Marwa
+    const a = site('safa'), c = site('marwa');
+    if (a && c) {
+      const L = Math.hypot(c[0] - a[0], c[1] - a[1]), n = 12;
+      for (let k = 0; k <= n; k++) {
+        const x = a[0] + (c[0] - a[0]) * k / n, z = a[1] + (c[1] - a[1]) * k / n;
+        const t = ajoute(new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.0008, L / n + 0.002), M(0xE6D8B8)), x, R.y(x, z) + 0.0005, z);
+        t.rotation.y = Math.atan2(c[0] - a[0], c[1] - a[1]); t.castShadow = false;
+        reserver(x, z, 0.008);
+      }
+    }
+  }
+  batisse('arqam', 'cour', 0.03, 0xE0CFAF, 0.2);
+  batisse('mawlid', 'basse', 0.03, 0xE8DCC4, 0.5);
+  batisse('khadija', 'cour', 0.034, 0xDCC8A4, -0.3);
+  batisse('nadwa', 'cour', 0.046, 0xD6C09A, 0.1);
+  cimetiere('hajun', 0.09, 0.07, 90, false);
 
   // ---------- Villes ----------
   const m = D.LIEUX.makkah;

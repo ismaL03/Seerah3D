@@ -48,10 +48,26 @@ export function bateau() {
   return g;
 }
 
+// Étendard : la toile est accrochée à la hampe (bord gauche en x = 0) pour pouvoir flotter.
 export function etendard(couleur) {
   const g = new THREE.Group();
   piece(g, new THREE.CylinderGeometry(0.03, 0.03, 3, 5), BOIS, 0, 1.5, 0);
-  const f = piece(g, new THREE.PlaneGeometry(1.1, 0.7), mat(couleur, { side: THREE.DoubleSide }), 0.56, 2.6, 0);
-  f.castShadow = true;
+  const toile = new THREE.PlaneGeometry(1.1, 0.7, 8, 1); toile.translate(0.56, 0, 0);
+  const f = piece(g, toile, mat(couleur, { side: THREE.DoubleSide }), 0, 2.6, 0);
+  f.userData.repos = Float32Array.from(toile.attributes.position.array);
+  g.userData.toile = f; g.userData.phase = Math.random() * 6;
   return g;
+}
+
+// Fait flotter un étendard : ondulation qui part de la hampe, plus ample vers le bout de la toile.
+export function agiter(e, t, force = 1) {
+  const f = e.userData.toile; if (!f) return;
+  const pos = f.geometry.attributes.position, r = f.userData.repos, ph = e.userData.phase;
+  for (let k = 0; k < pos.count; k++) {
+    const x = r[k * 3];
+    pos.array[k * 3 + 2] = Math.sin(x * 5 - t * 6 * force + ph) * 0.13 * x * force;
+  }
+  pos.needsUpdate = true;
+  f.geometry.computeVertexNormals();
+  f.rotation.y = Math.sin(t * 0.9 + ph) * 0.35;
 }

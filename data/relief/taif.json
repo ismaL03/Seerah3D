@@ -1,27 +1,27 @@
 {
-  "zone": "makkah",
-  "nom": "La Mecque et ses environs",
+  "zone": "taif",
+  "nom": "Tâ'if",
   "emprise": {
-    "ouest": 39.69166666666667,
-    "sud": 21.29722222222222,
-    "est": 40.06944444444444,
-    "nord": 21.530555555555555
+    "ouest": 40.33611111111111,
+    "sud": 21.19722222222222,
+    "est": 40.480555555555554,
+    "nord": 21.341666666666665
   },
-  "largeur": 408,
-  "hauteur": 252,
+  "largeur": 156,
+  "hauteur": 156,
   "resolution_arcsec": 3.3333333333333335,
   "format": "PNG gris 16 bits, lignes du nord au sud ; altitude (m) = valeur - decalage",
   "decalage": 1000,
-  "altitude_min": 156,
-  "altitude_max": 936,
+  "altitude_min": 1552,
+  "altitude_max": 2074,
   "mer": null,
   "genere_le": "2026-10-04",
   "encart": true,
   "grille_hijaz": {
-    "c0": 484,
-    "c1": 552,
-    "r0": 876,
-    "r1": 918
+    "c0": 600,
+    "c1": 626,
+    "r0": 910,
+    "r1": 936
   },
   "encarts": [],
   "sources": [
@@ -35,11 +35,10 @@
     }
   ],
   "satellite": {
-    "fichier": "makkah-satellite.jpg",
-    "largeur": 408,
-    "hauteur": 252,
+    "fichier": "taif-satellite.jpg",
+    "largeur": 156,
+    "hauteur": 156,
     "scenes": [
-      "S2B_37QED_20240121_0_L2A",
       "S2B_37QFD_20240121_0_L2A"
     ]
   }

@@ -76,6 +76,23 @@ kbd{font:600 10.5px var(--f-ui);border:1px solid var(--fil);border-radius:6px;pa
 .res .ar{font-family:var(--f-ar);font-size:14px;color:var(--doux)}
 .vide{padding:10px;font-size:13px;color:var(--doux)}
 .outils{display:flex;align-items:center;gap:2px;height:46px;padding:0 6px}
+/* « Aller à » : menu des villes et des lieux importants */
+.aller-zone{position:relative}
+.aller-btn{display:flex;align-items:center;gap:7px;height:46px;padding:0 12px 0 13px;font-size:13.5px;font-weight:700;color:var(--encre)}
+.aller-btn span{display:grid}
+.aller-btn .ico{color:var(--accent)}
+.aller-btn .fl svg{width:14px;height:14px;color:var(--doux);transition:transform .2s}
+.aller-btn[aria-expanded="true"] .fl svg{transform:rotate(180deg)}
+.aller{position:absolute;top:52px;right:0;width:340px;max-height:min(520px,70vh);overflow:auto;padding:10px 12px 12px;background:var(--verre-fort);z-index:8}
+.aller .ensemble{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:10px;font-weight:700;font-size:13px}
+.aller .ensemble:hover{background:var(--accent-doux)}
+.aller .ensemble svg{width:16px;height:16px;color:var(--accent)}
+.groupe{font-size:10.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--doux);padding:12px 8px 6px}
+.puces{display:flex;flex-wrap:wrap;gap:6px}
+.puces button{border:1px solid var(--fil);border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;background:var(--verre)}
+.puces button:hover{background:var(--accent);color:#fff;border-color:transparent}
+@media (prefers-reduced-motion: no-preference){.aller:not([hidden]) .puces button{animation:apparait .3s calc(var(--k) * 25ms) both}}
+@keyframes apparait{from{opacity:0;transform:translateY(4px)}}
 .outils button{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:var(--doux)}
 .outils button:hover{background:var(--accent-doux);color:var(--encre)}
 .outils button[aria-pressed="true"]{background:var(--accent);color:#fff}
@@ -154,6 +171,21 @@ details.hadith summary small{margin-left:auto;font-weight:600;color:var(--doux);
 .hadith .unr{font-size:11.5px;color:var(--doux);margin-top:6px}
 .aussi{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 18px 14px;font-size:12px;color:var(--doux)}
 .aussi:empty{display:none}
+/* fiche d'un lieu : liste des événements */
+.liens button{display:grid;grid-template-columns:10px 1fr auto;align-items:center;gap:8px;width:100%;text-align:left;padding:5px 2px;border-radius:8px}
+.liens button:hover{background:var(--accent-doux)}
+.liens i{width:8px;height:8px;border-radius:50%;background:var(--cc,var(--accent))}
+.liens b{font-size:13px}
+.liens small{color:var(--doux);font-size:11.5px;font-variant-numeric:tabular-nums}
+.bloc .puces button{font-size:12px;padding:4px 10px}
+.fiche-lieu .surtitre{color:var(--accent)}
+/* aide à la navigation */
+.aide-nav{position:absolute;left:50%;bottom:100px;transform:translateX(-50%);z-index:9;width:min(460px,calc(100% - 2 * var(--marge)));padding:14px 16px 12px;background:var(--verre-fort)}
+.aide-nav>b{display:block;font-size:14px;font-weight:800;margin-bottom:8px}
+.aide-nav dl{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0 0 12px;font-size:12.5px}
+.aide-nav dt{font-weight:700;color:var(--accent);white-space:nowrap}
+.aide-nav dd{margin:0;color:var(--doux)}
+.aide-nav .principal{display:block;margin-left:auto;height:32px;padding:0 16px;border-radius:10px;background:var(--accent);color:#fff;font-weight:700;font-size:12.5px}
 .aussi button{border:1px solid var(--fil);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:600}
 .aussi button:hover{background:var(--accent-doux)}
 .recit-pli{position:absolute;top:72px;cursor:pointer;right:var(--marge);display:flex;align-items:center;gap:6px;height:38px;padding:0 14px 0 8px;font-size:13px;font-weight:700;z-index:5;max-width:300px}
@@ -169,6 +201,10 @@ details.hadith summary small{margin-left:auto;font-weight:600;color:var(--doux);
 .phase-nav{display:flex;gap:8px;margin-bottom:12px}
 .phase-nav button{flex:1;height:34px;border-radius:10px;border:1px solid var(--fil);font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;gap:6px}
 .phase-nav button.principal{background:var(--accent);color:#fff;border-color:transparent}
+.phase-nav button[data-nav="-1"]{flex:0 0 38px}
+.phase-nav button:disabled{opacity:.4;cursor:default}
+.phase-nav button[data-lecture].on{background:var(--accent-doux);color:var(--accent);border-color:transparent}
+.phase-nav svg{width:15px;height:15px}
 
 /* ---------- ruban chronologique (avec les commandes de carte) ---------- */
 .ruban{position:absolute;left:var(--marge);right:var(--marge);bottom:calc(var(--marge) + env(safe-area-inset-bottom,0px));height:66px;display:flex;align-items:center;gap:14px;padding:0 10px;z-index:5}
@@ -256,6 +292,11 @@ body.vol .barre .contexte,body.vol .barre .recherche{opacity:0;pointer-events:no
   .outils{height:42px;padding:0 4px}
   .outils button{width:32px;height:32px}
   #rechBtn{display:grid}
+  .aller-btn{height:42px;padding:0 10px}
+  .aller-btn .txt,.aller-btn .fl{display:none}
+  #immersifBtn,.outils .sep{display:none}
+  .aller{position:fixed;top:62px;left:var(--marge);right:var(--marge);width:auto}
+  .aide-nav{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .recherche{position:absolute;top:50px;left:0;right:0;width:auto;display:none}
   .recherche:focus-within{width:auto}
   body.recherche-ouverte .recherche{display:flex}

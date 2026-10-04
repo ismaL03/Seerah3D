@@ -88,8 +88,8 @@ def main():
         lieux[l.get("id")] = l
         if l.get("certitude") not in CERTITUDES:
             err(ou, f"certitude « {l.get('certitude')} » invalide (attendu : {', '.join(sorted(CERTITUDES))})")
-        if l.get("niveau") not in (1, 2, 3):
-            err(ou, "niveau attendu : 1, 2 ou 3")
+        if l.get("niveau") not in (1, 2, 3, 4):
+            err(ou, "niveau attendu : 1, 2, 3 ou 4")
         if "hors_carte" in l:
             if not dans_carte(*l["hors_carte"]["ancre"]):
                 err(ou, "l'ancre d'un lieu hors carte doit être dans le cadre de la carte")
@@ -165,6 +165,13 @@ def main():
                     err(ou, f"étape {k} : unité « {u_id} » inconnue")
                 elif not dans_carte(pos[0], pos[1]):
                     err(ou, f"étape {k} : position de « {u_id} » hors de la carte")
+            presents = set(P.get("positions", {}))
+            for paire in P.get("combats", []):
+                if len(paire) != 2 or any(x not in presents for x in paire):
+                    err(ou, f"étape {k} : combat {paire} entre unités absentes de l'étape")
+            for t in P.get("tirs", []):
+                if t.get("de") not in presents or t.get("vers") not in presents:
+                    err(ou, f"étape {k} : tir {t} entre unités absentes de l'étape")
             for f in P.get("fleches", []):
                 if f.get("camp") not in B.get("camps", {}):
                     err(ou, f"étape {k} : flèche d'un camp inconnu")

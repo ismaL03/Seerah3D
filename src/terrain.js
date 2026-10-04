@@ -1,86 +1,91 @@
-// Terrain : maillage du relief réel, socle de maquette, mer, et deux habillages
-// (« stylisé » calculé d'après l'image satellite, ou « satellite » brut).
+// Terrain : maillage du relief réel, socle de maquette, mer.
+// Habillage « carte » : la couleur vient du relief lui-même (teintes d'altitude, roche sur les
+// pentes, courbes de niveau), plus deux zones tirées de l'image satellite et nettoyées : les champs
+// de lave (harrât) et les oasis. Habillage « satellite » : l'image Sentinel-2 brute (aujourd'hui).
 import * as THREE from 'three';
 
 const SOCLE = -7; // fond de la maquette (unités de scène)
 
-// Palette du sol, du plus sombre (basalte des harrât) au plus clair (sable).
-const RAMPE = [
-  [0.00, '#3E3632'], [0.16, '#5C4E46'], [0.32, '#8A6A4F'], [0.48, '#B28C64'],
-  [0.64, '#D1B083'], [0.80, '#E5CEA2'], [1.00, '#F1E3C3'],
-].map(([t, c]) => [t, hexRgb(c)]);
-const MER = [[0, '#A4DCD4'], [40, '#6DB8C0'], [250, '#3A7E9C'], [800, '#1F4F6B']].map(([d, c]) => [d, hexRgb(c)]);
-const VERT = hexRgb('#7F9F55'), HAUTS = hexRgb('#A89A80'), RIVAGE = hexRgb('#EADFC2');
+// Teintes d'altitude (mètres) : sable clair des plaines côtières jusqu'au brun des hauts plateaux.
+const PALIERS = [0, 120, 350, 650, 950, 1300, 1800, 2400];
+const TEINTES = ['#F2E7C9', '#EAD9AF', '#DFC896', '#D3B47E', '#C5A06C', '#B38D61', '#9F7C5A', '#8C6E57'];
+const COULEURS = { roche: '#A47E5C', rocheSombre: '#7A5F4B', basalte: '#514843', vert: '#86A35A', rivage: '#F4EBD2', merHaut: '#9FDCD3', merFond: '#2A5F7A' };
 
 function hexRgb(h) { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
 const lisse = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
-function rampe(stops, t, out) {
-  let i = 1;
-  while (i < stops.length - 1 && t > stops[i][0]) i++;
-  const [ta, ca] = stops[i - 1], [tb, cb] = stops[i];
-  const k = Math.min(1, Math.max(0, (t - ta) / (tb - ta)));
-  out[0] = ca[0] + (cb[0] - ca[0]) * k; out[1] = ca[1] + (cb[1] - ca[1]) * k; out[2] = ca[2] + (cb[2] - ca[2]) * k;
-}
-function bruit(x, y) { // bruit de valeur simple, déterministe
-  const h = (a, b) => { const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s); };
-  const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi;
-  const u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
-  return (h(xi, yi) * (1 - u) + h(xi + 1, yi) * u) * (1 - v) + (h(xi, yi + 1) * (1 - u) + h(xi + 1, yi + 1) * u) * v;
-}
 
 async function chargerImage(url) {
   const blob = await (await fetch(url)).blob();
   return createImageBitmap(blob);
 }
 
-// Habillage stylisé : la luminosité du satellite choisit la teinte dans la palette,
-// le relief ajoute rivages et hauts plateaux, les oasis historiques sont verdies.
-function styliser(R, image, oasis, bornesLum) {
+// Flou en boîte séparable sur un tableau de flottants.
+function flou(v, w, h, r) {
+  const t = new Float32Array(v.length);
+  for (let y = 0; y < h; y++) { let s = 0; for (let x = -r; x <= r; x++) s += v[y * w + Math.min(w - 1, Math.max(0, x))];
+    for (let x = 0; x < w; x++) { t[y * w + x] = s / (2 * r + 1); s += v[y * w + Math.min(w - 1, x + r + 1)] - v[y * w + Math.max(0, x - r)]; } }
+  for (let x = 0; x < w; x++) { let s = 0; for (let y = -r; y <= r; y++) s += t[Math.min(h - 1, Math.max(0, y)) * w + x];
+    for (let y = 0; y < h; y++) { v[y * w + x] = s / (2 * r + 1); s += t[Math.min(h - 1, y + r + 1) * w + x] - t[Math.max(0, y - r) * w + x]; } }
+  return v;
+}
+
+// Masque des zones : rouge = champs de lave (zones sombres et peu pentues de l'image satellite,
+// lissées puis seuillées pour des contours francs), vert = oasis historiques.
+function masqueZones(R, image, oasis) {
   const w = image.width, h = image.height, f = w / R.W;
   const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
   const ctx = cv.getContext('2d', { willReadFrequently: true });
   ctx.drawImage(image, 0, 0);
-  const src = ctx.getImageData(0, 0, w, h), d = src.data;
-  // Bornes de luminosité sur la terre ferme (centiles 3 % et 97 %) ; les encarts reprennent celles du Hijaz.
-  let lo, hi;
-  if (bornesLum) ({ lo, hi } = bornesLum);
-  else {
-    const hist = new Uint32Array(256); let n = 0;
-    for (let py = 0; py < h; py += 3) for (let px = 0; px < w; px += 3) {
-      if (R.metresPixel((px + 0.5) / f - 0.5, (py + 0.5) / f - 0.5) <= 0) continue;
-      const k = (py * w + px) * 4; hist[Math.round(0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2])]++; n++;
-    }
-    const centile = (p) => { let s = 0; for (let i = 0; i < 256; i++) { s += hist[i]; if (s >= n * p) return i; } return 255; };
-    lo = centile(0.03); hi = centile(0.97);
+  const img = ctx.getImageData(0, 0, w, h), d = img.data;
+  const alt = (px, py) => R.metresPixel((px + 0.5) / f - 0.5, (py + 0.5) / f - 0.5);
+  const hist = new Uint32Array(256); let n = 0;
+  for (let py = 0; py < h; py += 3) for (let px = 0; px < w; px += 3) {
+    if (alt(px, py) <= 0) continue;
+    const k = (py * w + px) * 4; hist[Math.round(0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2])]++; n++;
   }
-  // Oasis en coordonnées pixel.
-  const zones = oasis.map((o) => ({ px: (o.lon - R.ouest) / R.pas * f, py: (R.nord - o.lat) / R.pas * f, r: o.rayon / (R.pas * R.kz) * f }))
-    .filter((z) => z.px > -z.r && z.px < w + z.r && z.py > -z.r && z.py < h + z.r);
-  const c = [0, 0, 0];
-  for (let py = 0; py < h; py++) {
-    for (let px = 0; px < w; px++) {
-      const k = (py * w + px) * 4;
-      const m = R.metresPixel((px + 0.5) / f - 0.5, (py + 0.5) / f - 0.5);
-      if (m <= 0) {
-        rampe(MER, -m, c);
-      } else {
-        const L = 0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2];
-        rampe(RAMPE, (L - lo) / (hi - lo), c);
-        const hauts = lisse(1400, 2300, m) * 0.28;
-        if (hauts > 0) for (let i = 0; i < 3; i++) c[i] += (HAUTS[i] - c[i]) * hauts;
-        if (m < 8) for (let i = 0; i < 3; i++) c[i] += (RIVAGE[i] - c[i]) * 0.35;
-        for (const z of zones) {
-          const dist = Math.hypot(px - z.px, py - z.py);
-          if (dist > z.r) continue;
-          const g = (1 - lisse(z.r * 0.35, z.r, dist)) * (0.45 + 0.4 * bruit(px * 0.35, py * 0.35));
-          for (let i = 0; i < 3; i++) c[i] += (VERT[i] - c[i]) * g;
-        }
-      }
-      d[k] = c[0]; d[k + 1] = c[1]; d[k + 2] = c[2]; d[k + 3] = 255;
-    }
+  const centile = (p) => { let s = 0; for (let i = 0; i < 256; i++) { s += hist[i]; if (s >= n * p) return i; } return 255; };
+  const lo = centile(0.03), hi = centile(0.97);
+  const kmPx = R.pas * R.kz / f, lave = new Float32Array(w * h);
+  for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+    const m = alt(px, py); if (m <= 0) continue;
+    const k = (py * w + px) * 4, L = (0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2] - lo) / (hi - lo);
+    const pente = Math.hypot(alt(px + 1, py) - alt(px - 1, py), alt(px, py + 1) - alt(px, py - 1)) / (2 * kmPx);
+    lave[py * w + px] = (1 - lisse(0.16, 0.30, L)) * (1 - lisse(90, 220, pente));
   }
-  ctx.putImageData(src, 0, 0);
-  return { cv, lo, hi };
+  flou(flou(lave, w, h, 3), w, h, 3);
+  const zones = oasis.map((o) => ({ px: (o.lon - R.ouest) / R.pas * f, py: (R.nord - o.lat) / R.pas * f, r: o.rayon / (R.pas * R.kz) * f }));
+  for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
+    const k = (py * w + px) * 4;
+    let v = 0;
+    for (const z of zones) { const dd = Math.hypot(px - z.px, py - z.py); if (dd < z.r) v = Math.max(v, (1 - lisse(z.r * 0.55, z.r, dd)) * 0.85); }
+    d[k] = Math.round(lisse(0.33, 0.6, lave[py * w + px]) * 255); d[k + 1] = Math.round(v * 255); d[k + 2] = 0; d[k + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  return cv;
+}
+
+// Même calcul de couleur qu'au shader, en petit, pour la mini-carte (avec un estompage du relief).
+function apercuCarte(R, masque, l = 150, h = 236) {
+  const cv = document.createElement('canvas'); cv.width = l; cv.height = h;
+  const ctx = cv.getContext('2d'), img = ctx.createImageData(l, h);
+  const mq = masque.getContext('2d').getImageData(0, 0, masque.width, masque.height).data;
+  const T = TEINTES.map(hexRgb), C = Object.fromEntries(Object.entries(COULEURS).map(([k, v]) => [k, hexRgb(v)]));
+  const mix = (a, b, t) => a.map((x, i) => x + (b[i] - x) * t);
+  for (let y = 0; y < h; y++) for (let x = 0; x < l; x++) {
+    const c = (x + 0.5) / l * R.W - 0.5, r = (y + 0.5) / h * R.H - 0.5, m = R.metresPixel(c, r);
+    let col;
+    if (m <= 0) col = mix(C.merHaut, C.merFond, lisse(0, 600, -m));
+    else {
+      col = T[0]; for (let i = 1; i < T.length; i++) col = mix(col, T[i], lisse(PALIERS[i - 1], PALIERS[i], m));
+      const mi = (Math.floor((y + 0.5) / h * masque.height) * masque.width + Math.floor((x + 0.5) / l * masque.width)) * 4;
+      col = mix(col, C.basalte, mq[mi] / 255); col = mix(col, C.vert, mq[mi + 1] / 255);
+      const ombre = 0.82 + Math.max(-0.3, Math.min(0.3, (R.metresPixel(c - 2, r - 2) - R.metresPixel(c + 2, r + 2)) / 900));
+      col = col.map((v) => v * ombre);
+    }
+    const k = (y * l + x) * 4; img.data[k] = col[0]; img.data[k + 1] = col[1]; img.data[k + 2] = col[2]; img.data[k + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  return cv;
 }
 
 // Pixels d'une image (canvas ou bitmap).
@@ -219,21 +224,64 @@ export async function creerTerrain(RR, { renderer, pas = 1, oasis = [] }) {
   R.pasMaillage = pas;
   RR.encarts.forEach((E) => E.fondre(R));
   const image = await chargerImage(`data/relief/${R.meta.satellite.fichier}`);
-  const style = styliser(R, image, oasis);
+  const masque = masqueZones(R, image, oasis);
+  const texMasque = new THREE.CanvasTexture(masque);
+  texMasque.flipY = false; // ligne 0 du masque = bord nord, comme z croissant vers le sud
   const grain = texturGrain();
+  const b = R.bornes;
+  const lin = (hex) => new THREE.Color(hex); // converti en linéaire pour le shader
+  const uniformes = {
+    masque: { value: texMasque }, grain: { value: grain }, exag: { value: R.exag },
+    emprise: { value: new THREE.Vector4(b.x0, b.z0, b.x1, b.z1) },
+    paliers: { value: PALIERS }, teintes: { value: TEINTES.map(lin) },
+    ...Object.fromEntries(Object.entries(COULEURS).map(([k, v]) => ['c_' + k, { value: lin(v) }])),
+  };
   const materiaux = [], habillages = [];
-  function poser(geos, texStyle, texSat) {
-    const mat = new THREE.MeshStandardMaterial({ map: texStyle, flatShading: true, roughness: 1, metalness: 0 });
+  function poser(geos, texSat) {
+    const mat = new THREE.MeshStandardMaterial({ flatShading: true, roughness: 1, metalness: 0 });
+    mat.defines = { STYLE: '' };
     mat.onBeforeCompile = (sh) => {
-      sh.uniforms.grain = { value: grain };
-      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vMonde;')
-        .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvMonde = (modelMatrix * vec4(transformed, 1.0)).xyz;');
-      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vMonde;\nuniform sampler2D grain;')
+      Object.assign(sh.uniforms, uniformes);
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nvarying vec3 vMonde;\nvarying vec3 vNormMonde;')
+        .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvMonde = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvNormMonde = normalize(mat3(modelMatrix) * objectNormal);');
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', `#include <common>
+          varying vec3 vMonde; varying vec3 vNormMonde;
+          uniform sampler2D masque; uniform sampler2D grain; uniform vec4 emprise; uniform float exag;
+          uniform float paliers[8]; uniform vec3 teintes[8];
+          uniform vec3 c_roche, c_rocheSombre, c_basalte, c_vert, c_rivage, c_merHaut, c_merFond;
+          // trait d'une courbe de niveau, d'épaisseur constante à l'écran, effacé quand les courbes se serrent
+          float courbe(float v, float epaisseur) {
+            float l = fwidth(v);
+            return (1.0 - smoothstep(0.0, l * epaisseur, abs(fract(v - 0.5) - 0.5))) * (1.0 - smoothstep(0.14, 0.32, l));
+          }`)
         .replace('#include <map_fragment>', `#include <map_fragment>
+          #ifdef STYLE
+          {
+            float m = vMonde.y / exag; // altitude (m), négative en mer
+            vec3 c;
+            if (m <= 0.5) {
+              c = mix(c_merHaut, c_merFond, smoothstep(0.0, 600.0, -m));
+            } else {
+              c = teintes[0];
+              for (int i = 1; i < 8; i++) c = mix(c, teintes[i], smoothstep(paliers[i - 1], paliers[i], m));
+              float pente = 1.0 - normalize(vNormMonde).y;
+              c = mix(c, c_roche, smoothstep(0.12, 0.32, pente) * 0.75);
+              c = mix(c, c_rocheSombre, smoothstep(0.32, 0.55, pente) * 0.8);
+              vec4 z = texture2D(masque, (vMonde.xz - emprise.xy) / (emprise.zw - emprise.xy));
+              c = mix(c, c_basalte, z.r * 0.92);
+              c = mix(c, c_vert, z.g);
+              c = mix(c, c_rivage, 1.0 - smoothstep(2.0, 14.0, m));
+              c *= 1.0 - 0.2 * courbe(m / 100.0, 1.5) - 0.32 * courbe(m / 500.0, 2.2);
+            }
+            diffuseColor.rgb *= c;
+          }
+          #endif
           float dGrain = length(vMonde - cameraPosition);
           if (dGrain < 9.0) {
             float g = texture2D(grain, vMonde.xz * 9.0).r * 0.6 + texture2D(grain, vMonde.xz * 41.0).r * 0.4;
-            diffuseColor.rgb *= mix(1.0, 0.72 + g * 0.5, 1.0 - smoothstep(1.5, 9.0, dGrain));
+            diffuseColor.rgb *= mix(1.0, 0.86 + g * 0.28, 1.0 - smoothstep(1.5, 9.0, dGrain));
           }`);
     };
     for (const geo of geos) {
@@ -242,16 +290,19 @@ export async function creerTerrain(RR, { renderer, pas = 1, oasis = [] }) {
       groupe.add(sol);
     }
     materiaux.push(mat);
-    habillages.push((satellite) => { mat.map = satellite ? texSat : texStyle; mat.needsUpdate = true; });
+    habillages.push((satellite) => {
+      mat.map = satellite ? texSat : null;
+      mat.defines = satellite ? {} : { STYLE: '' };
+      mat.needsUpdate = true;
+    });
   }
-  poser(tuiles(R, pas, RR.encarts.map((E) => E.meta.grille_hijaz)), texture(style.cv, renderer), texture(image, renderer));
+  poser(tuiles(R, pas, RR.encarts.map((E) => E.meta.grille_hijaz)), texture(image, renderer));
 
-  // Encarts détaillés, textures fondues dans celles du Hijaz près des bords.
-  const styleHijaz = pixels(style.cv), satHijaz = pixels(image);
+  // Encarts détaillés ; en vue satellite, leur image est fondue dans celle du Hijaz près des bords.
+  const satHijaz = pixels(image);
   for (const E of RR.encarts) {
     const img = await chargerImage(`data/relief/${E.meta.satellite.fichier}`);
-    const st = styliser(E, img, oasis, style);
-    poser(tuiles(E, 1, [], 64), texture(fondreTexture(E, R, st.cv, styleHijaz), renderer), texture(fondreTexture(E, R, img, satHijaz), renderer));
+    poser(tuiles(E, 1, [], 64), texture(fondreTexture(E, R, img, satHijaz), renderer));
   }
 
   const matParoi = new THREE.MeshStandardMaterial({ color: 0xB79770, roughness: 1, side: THREE.DoubleSide });
@@ -259,17 +310,17 @@ export async function creerTerrain(RR, { renderer, pas = 1, oasis = [] }) {
   paroi.receiveShadow = true;
   groupe.add(paroi);
 
-  // Mer : volume d'eau transparent au-dessus des fonds stylisés.
-  const b = R.bornes, e = 0.05;
+  // Mer : volume d'eau transparent au-dessus des fonds.
+  const e = 0.05;
   const eauGeo = new THREE.BoxGeometry(b.x1 - b.x0 - 2 * e, -SOCLE - 0.3, b.z1 - b.z0 - 2 * e);
   eauGeo.translate((b.x0 + b.x1) / 2, (SOCLE + 0.3) / 2 - 0.004, (b.z0 + b.z1) / 2);
-  const matEau = new THREE.MeshStandardMaterial({ color: 0x4FAFC6, transparent: true, opacity: 0.72, roughness: 0.2, metalness: 0.05, depthWrite: false });
+  const matEau = new THREE.MeshStandardMaterial({ color: 0x4FAFC6, transparent: true, opacity: 0.6, roughness: 0.2, metalness: 0.05, depthWrite: false });
   const eau = new THREE.Mesh(eauGeo, matEau);
   eau.renderOrder = 2;
   groupe.add(eau);
 
   return {
-    groupe, materiaux, matParoi, matEau, apercu: style.cv,
+    groupe, materiaux, matParoi, matEau, apercu: apercuCarte(R, masque),
     habillage(satellite) { habillages.forEach((f) => f(satellite)); },
   };
 }

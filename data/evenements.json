@@ -21,7 +21,7 @@
     {
       "id": "naissance", "categorie": "vie",
       "titre": "Naissance du Prophète ﷺ", "titre_ar": "المولد النبوي",
-      "lieu": "makkah",
+      "lieu": "mawlid",
       "date": "Rabî' al-Awwal, année de l'Éléphant", "annee_hegire": null, "annee_ap_jc": "≈ 570", "age": 0,
       "periode": "avant", "periode_detail": "",
       "faits": [["Père", "'Abd Allâh, décédé avant sa naissance"], ["Mère", "Âmina bint Wahb"], ["Nourrice", "Halîma as-Sa'diyya"]],
@@ -64,7 +64,7 @@
     {
       "id": "predication", "categorie": "revelation",
       "titre": "Appel public", "titre_ar": "الجهر بالدعوة",
-      "lieu": "makkah",
+      "lieu": "safa",
       "date": "an 4 de la prophétie", "annee_hegire": null, "annee_ap_jc": "≈ 613", "age": 43,
       "periode": "mecquoise", "periode_detail": "an 4 de la prophétie",
       "faits": [["Lieu", "Mont as-Safâ"], ["Auparavant", "≈ 3 ans de prédication discrète"]],
@@ -93,7 +93,7 @@
     {
       "id": "boycott", "categorie": "epreuve",
       "titre": "Boycott de Shi'b Abî Tâlib", "titre_ar": "حصار الشعب",
-      "lieu": "makkah",
+      "lieu": "shib",
       "date": "an 7 à 10 de la prophétie", "annee_hegire": null, "annee_ap_jc": "≈ 616 – 619", "age": 46,
       "periode": "mecquoise", "periode_detail": "an 7 de la prophétie",
       "faits": [["Durée", "≈ 3 ans"], ["Visés", "Banû Hâshim et Banû al-Muttalib"]],
@@ -352,7 +352,7 @@
     {
       "id": "wafat", "categorie": "vie",
       "titre": "Décès du Prophète ﷺ", "titre_ar": "الوفاة النبوية",
-      "lieu": "madinah",
+      "lieu": "hujurat",
       "date": "Rabî' al-Awwal 11 H", "annee_hegire": 11, "annee_ap_jc": "632", "age": 63,
       "periode": "medinoise", "periode_detail": "an 11",
       "faits": [["Lieu", "Chambre de 'Â'isha, à Médine"], ["Successeur", "Abû Bakr as-Siddîq"]],

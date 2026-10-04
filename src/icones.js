@@ -35,7 +35,8 @@ const P = {
   map: '<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/>',
   swords: '<path d="m14.5 17.5 6-6V4h-7.5l-6 6"/><path d="m13 19 6-6M16 16l4 4M3 21l4.5-4.5"/><path d="M9.5 6.5 4 4v7.5l6 6"/>',
   chevD: '<path d="m6 9 6 6 6-6"/>', chevU: '<path d="m18 15-6-6-6 6"/>',
-  minimize: '<path d="M5 12h14"/>'
+  minimize: '<path d="M5 12h14"/>',
+  help: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/>'
 };
 
 export const ic = (n) =>

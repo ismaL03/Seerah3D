@@ -95,7 +95,7 @@
     },
     {
       "nom": "Sentinel-2 L2A",
-      "usage": "Couleurs du sol (image de 2024)",
+      "usage": "Champs de lave et vue satellite (image de 2024)",
       "attribution": "Contient des données Copernicus Sentinel modifiées (2024)"
     }
   ]

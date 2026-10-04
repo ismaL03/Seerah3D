@@ -14,13 +14,20 @@ const ERES = [
   { nom: 'Période mecquoise', de: 610, a: 622, part: 0.32 },
   { nom: 'Période médinoise', de: 622, a: 633, part: 0.48 },
 ];
+const TYPES = { ville: 'Ville', site: 'Site', montagne: 'Relief', oasis: 'Oasis', region: 'Région' };
+// Menu « Aller à » : [lieu, distance de vue en km (facultative), libellé (facultatif)].
+const DESTINATIONS = [
+  { titre: 'Hijaz', lieux: [['makkah', 9, 'La Mecque'], ['madinah', 10, 'Médine'], ['badr', 6], ['khaybar', 8], ['taif', 7], ['hudaybiya', 5], ['hunayn', 6]] },
+  { titre: 'La Mecque', lieux: [['makkah', 0.6, "La Ka'ba"], ['safa', 0.7, 'as-Safâ et al-Marwa'], ['shib', 1.2], ['hajun', 1.4], ['hira', 2.5], ['thawr', 3], ['aqaba', 3, 'Minâ'], ['arafat', 3.5]] },
+  { titre: 'Médine', lieux: [['madinah', 0.7, 'Mosquée du Prophète ﷺ'], ['baqi', 1], ['quba', 1.4], ['qiblatayn', 1.4], ['uhud', 3], ['khandaq', 2.5], ['aqiq', 6]] },
+];
+const AIDE_VUE = 'sira3d.aide-vue';
 
 export function creerInterface(D) {
   const { EVENEMENTS: EV, LIEUX, HADITHS, CATEGORIES: CAT, OUVRAGES, BATAILLES } = D;
-  let carte = null, cur = -1, onglet = 'ev', volet = 'recit', visite = null, phase = 0, suiteBataille = null;
+  let carte = null, cur = -1, onglet = 'ev', volet = 'recit', visite = null, phase = 0, suiteBataille = null, lieuOuvert = null, lecture = null;
   let recitReduit = innerWidth <= 760; // sur téléphone, la carte d'abord : la fiche s'ouvre d'un geste
   const evDuLieu = (id) => EV.map((e, i) => [e, i]).filter(([e]) => e.lieu === id || (e.trajet && e.trajet.etapes.includes(id)));
-  const lieuxAvecEv = Object.keys(LIEUX).filter((k) => evDuLieu(k).length);
   const aVerifier = EV.filter((e) => e.statut !== 'validé').length;
   const couleur = (cat) => getComputedStyle(document.documentElement).getPropertyValue('--c-' + cat).trim() || '#C9962F';
   const annee = (e) => (e.annee_hegire ? `${e.annee_hegire} H` : e.annee_ap_jc);
@@ -28,7 +35,7 @@ export function creerInterface(D) {
 
   remplirIcones();
   $('#nEv').textContent = EV.length;
-  $('#nLoc').textContent = lieuxAvecEv.length;
+  $('#nLoc').textContent = Object.keys(LIEUX).length;
   $('#nHad').textContent = Object.keys(HADITHS).length;
   $('#etatBtn').title = `${aVerifier} fiche${aVerifier > 1 ? 's' : ''} sur ${EV.length} à vérifier : voir les sources`;
 
@@ -76,7 +83,8 @@ export function creerInterface(D) {
       <p>${esc(P.texte)}</p>
       <div class="legende">${Object.values(B.camps).map((c) => `<span><i style="background:${esc(c.couleur)}"></i>${esc(c.nom)}</span>`).join('')}</div>
       <div class="phase-nav">
-        <button data-nav="-1" ${phase === 0 ? 'disabled' : ''}>${ic('chevL')}Étape précédente</button>
+        <button data-nav="-1" ${phase === 0 ? 'disabled' : ''} aria-label="Étape précédente">${ic('chevL')}</button>
+        <button data-lecture class="${lecture ? 'on' : ''}">${lecture ? ic('pause') + 'Pause' : ic('play') + 'Dérouler'}</button>
         <button data-nav="1" class="principal">${phase === B.phases.length - 1 ? 'Recommencer' : 'Étape suivante'}${ic('chev')}</button>
       </div>
       <div class="bloc"><h3>${ic('alert')}Schéma à vérifier</h3><p class="note">${esc(B.note)}</p><ul>${B.sources.map(sourceHTML).join('')}</ul></div>`;
@@ -84,12 +92,28 @@ export function creerInterface(D) {
     $$('.volet[data-p="bataille"] [data-nav]').forEach((b) => (b.onclick = () => {
       const n = B.phases.length; montrerPhase(+b.dataset.nav > 0 && phase === n - 1 ? 0 : Math.max(0, Math.min(n - 1, phase + +b.dataset.nav)));
     }));
+    $('.volet[data-p="bataille"] [data-lecture]').onclick = () => derouler(!lecture);
   }
-  function montrerPhase(k) {
+  function montrerPhase(k, auto = false) {
     const ev = EV[cur], B = BATAILLES[ev.id]; if (!B) return;
     clearTimeout(suiteBataille); arreterVisite();
+    if (!auto) { clearTimeout(lecture); lecture = null; }
     phase = k; remplirBataille(ev, B); ouvrirVolet('bataille');
     carte.bataille(B, phase);
+  }
+  // Lecture automatique des étapes d'une bataille (une étape toutes les 8 s).
+  function derouler(on) {
+    clearTimeout(lecture); lecture = null;
+    const ev = EV[cur], B = BATAILLES[ev.id]; if (!B) return;
+    if (on) {
+      const suite = () => {
+        if (phase >= B.phases.length - 1) { lecture = null; remplirBataille(EV[cur], B); return; }
+        lecture = setTimeout(suite, 8000);
+        montrerPhase(phase + 1, true);
+      };
+      lecture = setTimeout(suite, 8000);
+      montrerPhase(phase === B.phases.length - 1 ? 0 : phase, true);
+    } else remplirBataille(ev, B);
   }
   function ouvrirVolet(p) {
     volet = p;
@@ -106,9 +130,11 @@ export function creerInterface(D) {
   function choisir(i, opts = {}) {
     i = (i + EV.length) % EV.length; cur = i;
     const ev = EV[i], L = LIEUX[ev.lieu], c = CAT[ev.categorie], B = BATAILLES[ev.id];
-    clearTimeout(suiteBataille);
+    clearTimeout(suiteBataille); clearTimeout(lecture); lecture = null;
+    lieuOuvert = null;
     ouvrirRecit(!recitReduit);
     $('#recit').className = 'recit verre ui cat-' + ev.categorie;
+    $('#ongletRecit').textContent = 'Récit';
     $('#dCat').textContent = `${c.nom} · ${L.nom}`;
     $('#dTitre').textContent = ev.titre;
     $('#dAr').textContent = ev.titre_ar;
@@ -137,12 +163,48 @@ export function creerInterface(D) {
     if (B) suiteBataille = setTimeout(() => montrerPhase(0), opts.sansVol ? 300 : (ev.trajet ? 3800 : 1200));
   }
 
-  function choisirLieu(id) {
-    const liste = evDuLieu(id);
-    if (!liste.length) return false;
-    const suivant = liste.find(([e, i]) => i > cur && e.lieu === id) || liste.find(([e]) => e.lieu === id) || liste[0];
-    choisir(suivant[1], { sansLien: true });
-    lien('#lieu/' + id);
+  // ---------- fiche d'un lieu (clic sur une épingle, index, « Aller à », lien #lieu/…) ----------
+  const coord = (v, pos, neg) => `${Math.abs(v).toFixed(4).replace('.', ',')}° ${v >= 0 ? pos : neg}`;
+  function ficheLieu(id, opts = {}) {
+    const L = LIEUX[id]; if (!L) return false;
+    lieuOuvert = id;
+    clearTimeout(suiteBataille); clearTimeout(lecture); lecture = null;
+    ouvrirRecit(!recitReduit);
+    $('#recit').className = 'recit verre ui fiche-lieu';
+    $('#dCat').textContent = `${TYPES[L.type] || 'Lieu'} · ${L.ville ? LIEUX[L.ville].nom : L.hors_carte ? 'hors de la carte' : 'Hijaz'}`;
+    $('#dTitre').textContent = L.nom;
+    $('#dAr').textContent = L.nom_ar;
+    $('#dDate').innerHTML = `<span class="certitude ${CERTITUDE[L.certitude] || ''}">localisation ${esc(L.certitude)}</span>`;
+    $('#dStatut').innerHTML = statutHTML(L.statut);
+    $('#pliTitre').textContent = L.nom;
+    $('#ongletRecit').textContent = 'Présentation';
+    $('#ongletBataille').hidden = true;
+    $('#nDiv').textContent = '';
+    // lieux voisins : de la même ville (ou de cette ville), les plus proches d'abord
+    const loin = (l) => Math.hypot(l.lat - L.lat, (l.lon - L.lon) * Math.cos(L.lat * Math.PI / 180));
+    const evs = evDuLieu(id), voisins = Object.values(LIEUX).filter((l) => l.id !== id && ((L.ville && (l.ville === L.ville || l.id === L.ville)) || l.ville === id))
+      .sort((a, c) => loin(a) - loin(c)).slice(0, 8);
+    $('.volet[data-p="recit"]').innerHTML = `${L.note_localisation ? `<p>${esc(L.note_localisation)}</p>` : ''}
+      ${L.hors_carte ? `<p class="note">${esc(L.hors_carte.indication)} : la flèche au bord de la carte indique sa direction.</p>` : ''}
+      <div class="bloc"><h3>${ic('calendar')}Événements ici</h3>${evs.length
+        ? `<ul class="liens">${evs.map(([e, i]) => `<li><button class="cat-${e.categorie}" data-i="${i}"><i></i><b>${esc(e.titre)}</b><small>${esc(annee(e))}${e.lieu !== id ? ' · étape du trajet' : ''}</small></button></li>`).join('')}</ul>`
+        : '<p class="note">Aucun événement de la chronologie n\'y est encore rattaché.</p>'}</div>
+      ${voisins.length ? `<div class="bloc"><h3>${ic('pin')}${L.ville ? 'À proximité' : 'Dans cette ville'}</h3><div class="puces">${voisins.map((l) => `<button data-l="${l.id}">${esc(l.nom)}</button>`).join('')}</div></div>` : ''}`;
+    const alt = L.hors_carte ? null : Math.round(carte.altitude(L.lat, L.lon) / 10) * 10;
+    const lignes = [['Type', TYPES[L.type] || 'Lieu'], ['Ville', L.ville ? LIEUX[L.ville].nom : '—'], ['Latitude', coord(L.lat, 'N', 'S')], ['Longitude', coord(L.lon, 'E', 'O')]];
+    if (alt != null) lignes.push(['Altitude du sol', `≈ ${alt.toLocaleString('fr-FR')} m`]);
+    $('.volet[data-p="reperes"]').innerHTML = `<dl class="faits">${lignes.map((r) => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join('')}</dl>
+      <div class="bloc"><h3>${ic('pin')}Localisation</h3><span class="certitude ${CERTITUDE[L.certitude] || ''}">${esc(L.certitude)}</span>
+      <p class="note">Altitude d'aujourd'hui (relief Copernicus), arrondie. Le relief de la carte est exagéré six fois pour rester lisible.</p></div>`;
+    $('.volet[data-p="sources"]').innerHTML = `<div class="bloc"><h3>${ic('book')}Sources</h3><ul>${(L.sources || []).map(sourceHTML).join('')}</ul>
+      ${L.statut !== 'validé' ? '<p class="note">Fiche rédigée d\'après ces sources, en attente de validation par un enseignant.</p>' : ''}</div>`;
+    ouvrirVolet(volet === 'bataille' ? 'recit' : volet);
+    $('#dAussi').innerHTML = '';
+    $$('.volet[data-p="recit"] [data-i]').forEach((b) => (b.onclick = () => { arreterVisite(); choisir(+b.dataset.i); }));
+    $$('.volet[data-p="recit"] [data-l]').forEach((b) => (b.onclick = () => ficheLieu(b.dataset.l)));
+    if (onglet === 'loc' && !$('#tiroir').hidden) liste();
+    if (!opts.sansLien) lien('#lieu/' + id);
+    if (!opts.sansVol) carte.montrerLieu(id, opts.r);
     return true;
   }
 
@@ -154,7 +216,7 @@ export function creerInterface(D) {
   }
   $('#dReduire').onclick = () => { recitReduit = true; ouvrirRecit(false); };
   $('#recitPli').onclick = () => { recitReduit = false; ouvrirRecit(true); };
-  $('#dFocus').onclick = () => { arreterVisite(); clearTimeout(suiteBataille); carte.bataille(null); carte.zoomLieu(EV[cur].lieu); };
+  $('#dFocus').onclick = () => { arreterVisite(); clearTimeout(suiteBataille); carte.bataille(null); carte.zoomLieu(lieuOuvert || EV[cur].lieu); };
   $('#dLink').onclick = async () => {
     try { await navigator.clipboard.writeText(location.href); toast('Lien copié : ' + location.hash); }
     catch { toast('Lien de la fiche : ' + location.hash); }
@@ -205,10 +267,13 @@ export function creerInterface(D) {
   function liste() {
     const corps = $('#lbody'); let h = '';
     if (onglet === 'ev') h = EV.map((e, k) => `<button class="row cat-${e.categorie} ${k === cur ? 'on' : ''}" data-i="${k}"><span class="c1"><b>${esc(annee(e))}</b><small>${esc(e.annee_ap_jc)}</small></span><span class="c2"><b>${esc(e.titre)}</b><span class="ar" lang="ar">${esc(e.titre_ar)}</span></span><span class="pastille">${esc(CAT[e.categorie].nom)}</span></button>`).join('');
-    if (onglet === 'loc') h = lieuxAvecEv.map((k) => {
-      const L = LIEUX[k], n = evDuLieu(k).length, on = EV[cur].lieu === k;
-      return `<button class="row ${on ? 'on' : ''}" data-l="${k}"><span class="c1"><b>${esc(L.code || (L.hors_carte ? 'Hors carte' : 'Lieu'))}</b></span><span class="c2"><b>${esc(L.nom)}</b><span class="ar" lang="ar">${esc(L.nom_ar)}</span></span><span class="certitude ${CERTITUDE[L.certitude]}">${esc(L.certitude)} · ${n}</span></button>`;
-    }).join('');
+    if (onglet === 'loc') {
+      const groupes = [['Hijaz', (L) => !L.ville && !L.hors_carte], ['La Mecque et ses environs', (L) => L.ville === 'makkah'], ['Médine et ses environs', (L) => L.ville === 'madinah'], ['Hors de la carte', (L) => L.hors_carte]];
+      h = groupes.map(([titre, f]) => `<div class="groupe">${titre}</div>` + Object.values(LIEUX).filter(f).map((L) => {
+        const n = evDuLieu(L.id).length, on = lieuOuvert ? lieuOuvert === L.id : EV[cur].lieu === L.id;
+        return `<button class="row ${on ? 'on' : ''}" data-l="${L.id}"><span class="c1"><b>${esc(L.code || TYPES[L.type] || 'Lieu')}</b></span><span class="c2"><b>${esc(L.nom)}</b><span class="ar" lang="ar">${esc(L.nom_ar)}</span></span><span class="certitude ${CERTITUDE[L.certitude]}" title="${n} événement${n > 1 ? 's' : ''}">${esc(L.certitude)}${n ? ' · ' + n : ''}</span></button>`;
+      }).join('')).join('');
+    }
     if (onglet === 'had') h = Object.values(HADITHS).map((u) => {
       const e = EV[D.INDEX[u.evenements[0]]], on = u.evenements.includes(EV[cur].id);
       return `<button class="row cat-${e.categorie} ${on ? 'on' : ''}" data-u="${u.id}"><span class="c1"><b>n° ${u.numero}</b><small>p. ${u.page}</small></span><span class="c2"><b>${esc(u.titre)}</b><span class="ar">${esc(u.evenements.map((id) => EV[D.INDEX[id]].titre).join(' · '))}</span></span><span></span></button>`;
@@ -227,7 +292,7 @@ export function creerInterface(D) {
     }
     corps.innerHTML = h;
     corps.querySelectorAll('[data-i]').forEach((b) => (b.onclick = () => { arreterVisite(); choisir(+b.dataset.i); fermerSurMobile(); }));
-    corps.querySelectorAll('[data-l]').forEach((b) => (b.onclick = () => { arreterVisite(); choisirLieu(b.dataset.l); fermerSurMobile(); }));
+    corps.querySelectorAll('[data-l]').forEach((b) => (b.onclick = () => { arreterVisite(); ficheLieu(b.dataset.l); fermerSurMobile(); }));
     corps.querySelectorAll('[data-u]').forEach((b) => (b.onclick = () => { arreterVisite(); const u = HADITHS[b.dataset.u]; choisir(D.INDEX[u.evenements[0]], { hadith: u.id }); fermerSurMobile(); }));
     const on = corps.querySelector('.on');
     if (on) on.scrollIntoView({ block: 'nearest' });
@@ -359,11 +424,12 @@ export function creerInterface(D) {
       const texte = norm([e.titre, e.resume, e.date, e.annee_ap_jc, LIEUX[e.lieu].nom, e.faits.map((f) => f.join(' ')).join(' ')].join(' '));
       if (texte.includes(v) || e.titre_ar.includes(brut)) resultats.push({ t: 'e', i });
     });
-    lieuxAvecEv.forEach((k) => { const L = LIEUX[k]; if (norm(L.nom).includes(v) || L.nom_ar.includes(brut)) resultats.push({ t: 'l', k }); });
+    Object.values(LIEUX).forEach((L) => { if (norm(L.nom).includes(v) || L.nom_ar.includes(brut)) resultats.push({ t: 'l', k: L.id }); });
+    resultats.sort((a, c) => (a.t === 'l' && norm(LIEUX[a.k].nom).startsWith(v) ? 0 : 1) - (c.t === 'l' && norm(LIEUX[c.k].nom).startsWith(v) ? 0 : 1));
     resultats = resultats.slice(0, 9); sel = 0;
     res.innerHTML = resultats.length ? resultats.map((r, j) => r.t === 'e'
       ? `<button class="res ${j === 0 ? 'on' : ''}" data-j="${j}">${ic(CAT[EV[r.i].categorie].icone)}<span class="t"><b>${esc(EV[r.i].titre)}</b><small>${esc(LIEUX[EV[r.i].lieu].nom)} · ${esc(EV[r.i].annee_ap_jc)}</small></span><span class="ar" lang="ar">${esc(EV[r.i].titre_ar)}</span></button>`
-      : `<button class="res ${j === 0 ? 'on' : ''}" data-j="${j}">${ic('pin')}<span class="t"><b>${esc(LIEUX[r.k].nom)}</b><small>Lieu</small></span><span class="ar" lang="ar">${esc(LIEUX[r.k].nom_ar)}</span></button>`).join('')
+      : `<button class="res ${j === 0 ? 'on' : ''}" data-j="${j}">${ic('pin')}<span class="t"><b>${esc(LIEUX[r.k].nom)}</b><small>${esc(TYPES[LIEUX[r.k].type] || 'Lieu')}${LIEUX[r.k].ville ? ' · ' + esc(LIEUX[LIEUX[r.k].ville].nom) : ''}</small></span><span class="ar" lang="ar">${esc(LIEUX[r.k].nom_ar)}</span></button>`).join('')
       : `<div class="vide">Aucun résultat pour « ${esc(brut)} ». Essayez Badr, Hijra, Khadîja…</div>`;
     res.hidden = false;
     res.querySelectorAll('.res').forEach((b) => (b.onmousedown = (e) => { e.preventDefault(); aller(+b.dataset.j); }));
@@ -371,7 +437,7 @@ export function creerInterface(D) {
   function aller(j) {
     const r = resultats[j]; if (!r) return;
     arreterVisite();
-    if (r.t === 'e') choisir(r.i); else choisirLieu(r.k);
+    if (r.t === 'e') choisir(r.i); else ficheLieu(r.k);
     q.value = ''; res.hidden = true; q.blur(); document.body.classList.remove('recherche-ouverte');
   }
   q.addEventListener('input', chercher);
@@ -392,6 +458,8 @@ export function creerInterface(D) {
     const enVol = document.body.classList.contains('vol');
     if (e.key === 'Escape') {
       if (enVol) vol(false);
+      else if (!$('#aller').hidden) allerA(false);
+      else if (!$('#aide').hidden) aide(false);
       else if (!$('#tiroir').hidden) ouvrirTiroir(false);
       else if (document.body.classList.contains('immersif')) immersif(false);
       else { recitReduit = !document.body.classList.contains('recit-ferme'); ouvrirRecit(!recitReduit); }
@@ -399,17 +467,52 @@ export function creerInterface(D) {
     }
     if (enVol) return; // les touches pilotent l'appareil
     if (e.key === '/') { e.preventDefault(); if (innerWidth <= 760) document.body.classList.add('recherche-ouverte'); q.focus(); }
-    else if (e.key === 'ArrowRight') { arreterVisite(); choisir(cur + 1); }
-    else if (e.key === 'ArrowLeft') { arreterVisite(); choisir(cur - 1); }
+    else if (e.key === 'PageDown') { e.preventDefault(); arreterVisite(); choisir(cur + 1); }
+    else if (e.key === 'PageUp') { e.preventDefault(); arreterVisite(); choisir(cur - 1); }
+    else if (e.key === '?') aide(true);
     else if (e.key === 'h' || e.key === 'H') immersif(!document.body.classList.contains('immersif'));
     else if (e.key === 'v' || e.key === 'V') vol(true);
   });
+
+  // ---------- « Aller à » : villes et lieux importants ----------
+  $('#aller').innerHTML = `<button class="ensemble" data-accueil>${ic('home')}Vue d'ensemble du Hijaz</button>` + DESTINATIONS.map((g) => `<div class="groupe">${g.titre}</div><div class="puces">${
+    g.lieux.map(([id, r, nom], k) => `<button data-id="${id}" data-r="${r || ''}" style="--k:${k}">${esc(nom || LIEUX[id].nom)}</button>`).join('')}</div>`).join('');
+  function allerA(ouvert) {
+    $('#aller').hidden = !ouvert;
+    $('#allerBtn').setAttribute('aria-expanded', ouvert);
+  }
+  $('#allerBtn').onclick = (e) => { e.stopPropagation(); allerA($('#aller').hidden); };
+  $('#aller').onclick = (e) => {
+    const b = e.target.closest('button'); if (!b) return;
+    arreterVisite(); clearTimeout(suiteBataille); allerA(false);
+    if (b.dataset.accueil != null) { carte.accueil(); return; }
+    ficheLieu(b.dataset.id, { r: +b.dataset.r || undefined });
+    if (b.dataset.id === 'madinah' || b.dataset.id === 'makkah') $('#dTitre').textContent = b.textContent; // la Ka'ba, la Mosquée…
+  };
+  addEventListener('pointerdown', (e) => { if (!$('#aller').hidden && !e.target.closest('#aller, #allerBtn')) allerA(false); });
+
+  // ---------- aide à la navigation (montrée une fois, puis sur demande) ----------
+  const tactile = matchMedia('(pointer: coarse)').matches;
+  $('#aideListe').innerHTML = (tactile ? [
+    ['Un doigt', 'déplacer la carte'], ['Deux doigts', 'zoomer, tourner, incliner'], ['Double tape', "s'approcher"],
+    ['Toucher une épingle', 'fiche du lieu'], ['Aller à', 'villes et lieux importants'],
+  ] : [
+    ['Glisser', 'déplacer la carte'], ['Molette', 'zoomer vers le pointeur'], ['Clic droit + glisser', 'tourner, incliner'],
+    ['Double-clic', "s'approcher"], ['Clic sur une épingle', 'fiche du lieu'], ['Aller à', 'villes et lieux importants'],
+    ['← ↑ → ↓  + −', 'se déplacer, zoomer'], ['Page ↑ ↓', 'événement précédent, suivant'], ['V · H', 'vol libre · masquer l\'interface'],
+  ]).map(([k, t]) => `<dt>${esc(k)}</dt><dd>${esc(t)}</dd>`).join('');
+  function aide(ouvert) {
+    $('#aide').hidden = !ouvert;
+    if (!ouvert) try { localStorage.setItem(AIDE_VUE, '1'); } catch { /* stockage indisponible */ }
+  }
+  $('#aideBtn').onclick = () => aide($('#aide').hidden);
+  $('#aideOk').onclick = () => aide(false);
 
   // ---------- liens directs : #evenement/badr, #lieu/uhud ----------
   function lireLien() {
     const [type, id] = decodeURIComponent(location.hash.slice(1)).split('/');
     if (type === 'evenement' && id in D.INDEX) { choisir(D.INDEX[id], { sansLien: true }); return true; }
-    if (type === 'lieu' && LIEUX[id]) return choisirLieu(id);
+    if (type === 'lieu' && LIEUX[id]) return ficheLieu(id, { sansLien: true });
     return false;
   }
   addEventListener('hashchange', () => { arreterVisite(); lireLien(); });
@@ -435,12 +538,15 @@ export function creerInterface(D) {
     zoneLibre,
     surImage,
     arreterVisite: () => { arreterVisite(); clearTimeout(suiteBataille); },
-    choisirLieu: (id) => { arreterVisite(); choisirLieu(id); },
+    choisirLieu: (id) => { arreterVisite(); ficheLieu(id); },
     demarrer(c) {
       carte = c;
       fondMini = carte.apercu();
       if (innerWidth <= 760) miniVisible(false);
       appliquerTheme();
+      let vue = false;
+      try { vue = localStorage.getItem(AIDE_VUE) === '1'; } catch { /* stockage indisponible */ }
+      if (!vue) setTimeout(() => aide(true), 3200);
       if (lireLien()) return;
       // Ouverture : vue d'ensemble, puis la Hijra.
       const i = D.INDEX.hijra;

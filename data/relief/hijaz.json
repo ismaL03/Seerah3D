@@ -15,12 +15,16 @@
   "altitude_min": 1,
   "altitude_max": 2599,
   "mer": "profondeur stylisée (distance à la côte), pas une bathymétrie réelle",
-  "genere_le": "2026-10-03",
+  "genere_le": "2026-10-04",
   "encart": false,
   "grille_hijaz": null,
   "encarts": [
     "makkah",
-    "madinah"
+    "madinah",
+    "badr",
+    "khaybar",
+    "taif",
+    "hudaybiya"
   ],
   "sources": [
     {

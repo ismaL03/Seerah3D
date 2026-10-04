@@ -71,6 +71,11 @@ ZONES = {
         "apercu": 2,
         "encart": True,
     },
+    # Autres lieux de bataille ou de traité, pour un relief net de près.
+    "badr": {"nom": "Badr", "emprise": (38.70, 23.68, 38.84, 23.80), "resolution_arcsec": 20 / 6, "satellite_facteur": 1, "apercu": 2, "encart": True},
+    "khaybar": {"nom": "Khaybar", "emprise": (39.20, 25.62, 39.38, 25.78), "resolution_arcsec": 20 / 6, "satellite_facteur": 1, "apercu": 2, "encart": True},
+    "taif": {"nom": "Tâ'if", "emprise": (40.34, 21.20, 40.48, 21.34), "resolution_arcsec": 20 / 6, "satellite_facteur": 1, "apercu": 2, "encart": True},
+    "hudaybiya": {"nom": "al-Hudaybiya", "emprise": (39.56, 21.40, 39.675, 21.48), "resolution_arcsec": 20 / 6, "satellite_facteur": 1, "apercu": 2, "encart": True},
 }
 
 DEM_URL = ("https://copernicus-dem-90m.s3.amazonaws.com/"

@@ -36,6 +36,10 @@
       <span id="ctxPeriode">Médinoise</span>
     </div>
     <div class="espace"></div>
+    <div class="aller-zone">
+      <button class="verre aller-btn" id="allerBtn" aria-expanded="false" aria-controls="aller"><span class="ico" data-ic="pin"></span><span class="txt">Aller à</span><span class="fl" data-ic="chevD"></span></button>
+      <div class="aller verre" id="aller" hidden></div>
+    </div>
     <label class="verre recherche" for="q">
       <span data-ic="search"></span>
       <input id="q" type="search" placeholder="Rechercher un lieu, un événement…" autocomplete="off">
@@ -50,6 +54,7 @@
       <span class="sep"></span>
       <button id="volBtn" data-ic="plane" aria-label="Vol libre" aria-pressed="false"></button>
       <button id="immersifBtn" data-ic="expand" aria-label="Mode immersif (touche H)"></button>
+      <button id="aideBtn" data-ic="help" aria-label="Aide : se déplacer sur la carte"></button>
     </nav>
   </header>
 
@@ -81,7 +86,7 @@
       <div class="meta"><span id="dDate"></span><span id="dStatut"></span></div>
     </header>
     <nav class="segments onglets" role="tablist">
-      <button data-p="recit" class="on" role="tab">Récit</button>
+      <button data-p="recit" class="on" role="tab" id="ongletRecit">Récit</button>
       <button data-p="bataille" role="tab" id="ongletBataille" hidden>Déroulement</button>
       <button data-p="reperes" role="tab">Repères</button>
       <button data-p="sources" role="tab">Sources <span id="nDiv"></span></button>
@@ -141,6 +146,13 @@
 
   <button class="verre sortie" id="sortieImmersif" hidden><span data-ic="shrink"></span>Afficher l'interface</button>
   <div class="toast" id="toast" role="status" hidden></div>
+
+  <!-- Aide à la navigation -->
+  <div class="aide-nav verre ui" id="aide" role="dialog" aria-labelledby="aideTitre" hidden>
+    <b id="aideTitre">Se déplacer sur la carte</b>
+    <dl id="aideListe"></dl>
+    <button class="principal" id="aideOk">Compris</button>
+  </div>
 
   <div class="chargement" id="chargement">
     <div class="verre">

@@ -1,27 +1,27 @@
 {
-  "zone": "makkah",
-  "nom": "La Mecque et ses environs",
+  "zone": "khaybar",
+  "nom": "Khaybar",
   "emprise": {
-    "ouest": 39.69166666666667,
-    "sud": 21.29722222222222,
-    "est": 40.06944444444444,
-    "nord": 21.530555555555555
+    "ouest": 39.19166666666667,
+    "sud": 25.619444444444444,
+    "est": 39.38055555555555,
+    "nord": 25.78611111111111
   },
-  "largeur": 408,
-  "hauteur": 252,
+  "largeur": 204,
+  "hauteur": 180,
   "resolution_arcsec": 3.3333333333333335,
   "format": "PNG gris 16 bits, lignes du nord au sud ; altitude (m) = valeur - decalage",
   "decalage": 1000,
-  "altitude_min": 156,
-  "altitude_max": 936,
+  "altitude_min": 640,
+  "altitude_max": 1033,
   "mer": null,
   "genere_le": "2026-10-04",
   "encart": true,
   "grille_hijaz": {
-    "c0": 484,
-    "c1": 552,
-    "r0": 876,
-    "r1": 918
+    "c0": 394,
+    "c1": 428,
+    "r0": 110,
+    "r1": 140
   },
   "encarts": [],
   "sources": [
@@ -35,12 +35,11 @@
     }
   ],
   "satellite": {
-    "fichier": "makkah-satellite.jpg",
-    "largeur": 408,
-    "hauteur": 252,
+    "fichier": "khaybar-satellite.jpg",
+    "largeur": 204,
+    "hauteur": 180,
     "scenes": [
-      "S2B_37QED_20240121_0_L2A",
-      "S2B_37QFD_20240121_0_L2A"
+      "S2B_37REJ_20240124_0_L2A"
     ]
   }
 }
