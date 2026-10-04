@@ -1,0 +1,1360 @@
+{
+ "_lisez_moi": "Mission à la première personne. Coordonnées en mètres : x vers l'est, z vers le sud ; cap en degrés (0 = nord). Brouillon à vérifier.",
+ "id": "guide",
+ "titre": "Le guide de la Hijra",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "bukhari",
+   "page": null,
+   "passage": "Le guide loué pour la Hijra (hadith de 'Â'isha) ; la prime de Quraysh (récit de Surâqa)"
+  },
+  {
+   "ouvrage": "rahiq",
+   "page": null,
+   "passage": "La Hijra"
+  }
+ ],
+ "role": {
+  "nom": "'Abd Allâh ibn Urayqit",
+  "nom_ar": "عبد الله بن أريقط",
+  "texte": "Guide du désert de la tribu des Banû ad-Dîl, vous connaissez chaque puits et chaque piste. Vous n'êtes pas musulman, mais Abû Bakr vous a confié deux chamelles et un secret : à vous de vous montrer digne de cette confiance.",
+  "regle": "Vous jouez un personnage réel, sans jamais le voir. Le Prophète ﷺ et Abû Bakr ne sont jamais montrés : les chamelles portent des selles vides. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "crieur": {
+   "nom": "Un crieur de Quraysh",
+   "qualite": "La Mecque"
+  },
+  "passants": {
+   "nom": "Un Mecquois",
+   "qualite": "passant"
+  },
+  "chercheur1": {
+   "nom": "Un chercheur de Quraysh",
+   "qualite": "à la poursuite des émigrés"
+  },
+  "chercheur2": {
+   "nom": "Un chercheur de Quraysh",
+   "qualite": "à la poursuite des émigrés"
+  },
+  "chercheur3": {
+   "nom": "Un chercheur de Quraysh",
+   "qualite": "à la poursuite des émigrés"
+  },
+  "guetteur": {
+   "nom": "Un chercheur de Quraysh",
+   "qualite": "à la poursuite des émigrés"
+  },
+  "cavalier_chef": {
+   "nom": "Un homme de Quraysh",
+   "qualite": "sur la grande route"
+  },
+  "chamelles": {
+   "nom": "Les chamelles",
+   "qualite": ""
+  }
+ },
+ "dialogues": {
+  "passants": [
+   "Cent chamelles ! Avec ça, on est riche pour la vie. Tout le monde cherche, même les bergers.",
+   "On dit qu'ils sont partis vers le nord, vers Yathrib. D'autres disent vers le Yémen…",
+   "Les hommes de Quraysh ont fouillé jusqu'aux montagnes. Sans résultat."
+  ]
+ },
+ "scenes": {
+  "lisiere": {
+   "titre": "La Mecque",
+   "taille": 360,
+   "limites": [
+    -140,
+    -140,
+    140,
+    140
+   ],
+   "ambiance": "soir",
+   "depart": {
+    "x": 12,
+    "z": 40,
+    "cap": 0
+   },
+   "elements": [
+    {
+     "type": "montagne",
+     "x": -180,
+     "z": -60,
+     "r": 90,
+     "h": 100
+    },
+    {
+     "type": "montagne",
+     "x": 190,
+     "z": -40,
+     "r": 90,
+     "h": 90
+    },
+    {
+     "type": "montagne",
+     "x": 0,
+     "z": 240,
+     "r": 110,
+     "h": 80,
+     "c": "#A3825F"
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       -140
+      ],
+      [
+       0,
+       0
+      ],
+      [
+       10,
+       140
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "tente",
+     "id": "tente_guide",
+     "nom": "Votre tente",
+     "x": 18,
+     "z": 30,
+     "w": 4,
+     "d": 5,
+     "h": 2.4,
+     "r": -90,
+     "c": "#BFA67C"
+    },
+    {
+     "type": "feu",
+     "x": 13,
+     "z": 33,
+     "force": 5
+    },
+    {
+     "type": "etal",
+     "x": -12,
+     "z": -36,
+     "r": 10
+    },
+    {
+     "type": "etal",
+     "x": 14,
+     "z": -40,
+     "r": -20,
+     "c": "#4E6B3A"
+    },
+    {
+     "type": "acacia",
+     "x": 40,
+     "z": 60
+    },
+    {
+     "type": "acacia",
+     "x": -40,
+     "z": 50
+    },
+    {
+     "type": "zone",
+     "id": "marche",
+     "x": 0,
+     "z": -38,
+     "r": 8
+    },
+    {
+     "type": "maison",
+     "x": -57.6,
+     "z": -86.5,
+     "w": 6.1,
+     "d": 6.8,
+     "h": 3.8,
+     "r": 0
+    },
+    {
+     "type": "maison",
+     "x": 23.2,
+     "z": -57.3,
+     "w": 6.4,
+     "d": 6.7,
+     "h": 3.2,
+     "r": 270
+    },
+    {
+     "type": "maison",
+     "x": 9.0,
+     "z": -86.0,
+     "w": 6.2,
+     "d": 7.6,
+     "h": 3.3,
+     "r": 90
+    },
+    {
+     "type": "maison",
+     "x": 81.0,
+     "z": -88.1,
+     "w": 7.2,
+     "d": 7.0,
+     "h": 3.1,
+     "r": 0
+    },
+    {
+     "type": "maison",
+     "x": -43.7,
+     "z": -127.5,
+     "w": 7.6,
+     "d": 6.4,
+     "h": 3.9,
+     "r": 270
+    },
+    {
+     "type": "maison",
+     "x": 47.1,
+     "z": -56.3,
+     "w": 6.2,
+     "d": 7.4,
+     "h": 3.5,
+     "r": 90
+    },
+    {
+     "type": "maison",
+     "x": 83.4,
+     "z": -122.2,
+     "w": 5.4,
+     "d": 5.7,
+     "h": 4.2,
+     "r": 270
+    },
+    {
+     "type": "maison",
+     "x": 61.4,
+     "z": -61.6,
+     "w": 6.3,
+     "d": 7.5,
+     "h": 3.7,
+     "r": 270
+    },
+    {
+     "type": "maison",
+     "x": 18.5,
+     "z": -57.7,
+     "w": 7.0,
+     "d": 7.8,
+     "h": 4.0,
+     "r": 90
+    },
+    {
+     "type": "maison",
+     "x": 43.7,
+     "z": -103.9,
+     "w": 6.6,
+     "d": 6.7,
+     "h": 3.1,
+     "r": 90
+    },
+    {
+     "type": "maison",
+     "x": 29.3,
+     "z": -51.0,
+     "w": 5.8,
+     "d": 5.4,
+     "h": 3.6,
+     "r": 270
+    },
+    {
+     "type": "maison",
+     "x": -90.5,
+     "z": -66.0,
+     "w": 6.2,
+     "d": 5.5,
+     "h": 3.4,
+     "r": 270
+    },
+    {
+     "type": "maison",
+     "x": 82.0,
+     "z": -126.5,
+     "w": 6.8,
+     "d": 5.1,
+     "h": 3.9,
+     "r": 180
+    },
+    {
+     "type": "maison",
+     "x": 11.2,
+     "z": -56.2,
+     "w": 5.8,
+     "d": 5.7,
+     "h": 3.0,
+     "r": 0
+    },
+    {
+     "type": "maison",
+     "x": -93.1,
+     "z": -82.0,
+     "w": 5.1,
+     "d": 5.6,
+     "h": 3.5,
+     "r": 180
+    },
+    {
+     "type": "maison",
+     "x": -75.6,
+     "z": -126.6,
+     "w": 7.6,
+     "d": 5.9,
+     "h": 4.2,
+     "r": 270
+    },
+    {
+     "type": "maison",
+     "x": -27.1,
+     "z": -60.4,
+     "w": 6.2,
+     "d": 7.6,
+     "h": 3.8,
+     "r": 0
+    },
+    {
+     "type": "maison",
+     "x": 26.4,
+     "z": -54.8,
+     "w": 6.5,
+     "d": 6.3,
+     "h": 3.9,
+     "r": 90
+    },
+    {
+     "type": "maison",
+     "x": 96.0,
+     "z": -95.0,
+     "w": 5.8,
+     "d": 5.9,
+     "h": 3.4,
+     "r": 270
+    },
+    {
+     "type": "maison",
+     "x": 107.2,
+     "z": -104.8,
+     "w": 6.1,
+     "d": 6.8,
+     "h": 3.2,
+     "r": 180
+    },
+    {
+     "type": "maison",
+     "x": -25.4,
+     "z": -75.7,
+     "w": 6.1,
+     "d": 7.1,
+     "h": 3.9,
+     "r": 0
+    },
+    {
+     "type": "maison",
+     "x": 19.7,
+     "z": -53.6,
+     "w": 5.1,
+     "d": 6.1,
+     "h": 3.8,
+     "r": 180
+    },
+    {
+     "type": "maison",
+     "x": 20.4,
+     "z": -104.4,
+     "w": 6.1,
+     "d": 5.9,
+     "h": 3.4,
+     "r": 180
+    },
+    {
+     "type": "maison",
+     "x": -43.9,
+     "z": -99.8,
+     "w": 7.3,
+     "d": 5.1,
+     "h": 3.7,
+     "r": 90
+    },
+    {
+     "type": "maison",
+     "x": -41.8,
+     "z": -112.2,
+     "w": 7.4,
+     "d": 5.7,
+     "h": 3.2,
+     "r": 270
+    },
+    {
+     "type": "maison",
+     "x": 32.9,
+     "z": -122.2,
+     "w": 6.8,
+     "d": 7.8,
+     "h": 3.8,
+     "r": 90
+    }
+   ],
+   "pnj": [
+    {
+     "id": "crieur",
+     "nom": "Un crieur de Quraysh",
+     "x": -4,
+     "z": -30,
+     "cap": 180,
+     "habit": "#5B2333",
+     "invite": "Parler au crieur"
+    }
+   ],
+   "troupeaux": [
+    {
+     "id": "chamelles",
+     "modele": "chameau",
+     "x": 24,
+     "z": 36,
+     "r": 2,
+     "n": 2,
+     "errer": false
+    }
+   ],
+   "foules": [
+    {
+     "id": "passants",
+     "x": 0,
+     "z": -45,
+     "r": 12,
+     "n": 8,
+     "invite": "Parler"
+    }
+   ]
+  },
+  "thawr": {
+   "titre": "Le mont Thawr",
+   "taille": 420,
+   "limites": [
+    -120,
+    -110,
+    120,
+    110
+   ],
+   "ambiance": "nuit",
+   "depart": {
+    "x": 4,
+    "z": 92,
+    "cap": 0
+   },
+   "elements": [
+    {
+     "type": "colline",
+     "x": 0,
+     "z": -125,
+     "r": 55,
+     "h": 42
+    },
+    {
+     "type": "colline",
+     "x": -80,
+     "z": -20,
+     "r": 40,
+     "h": 22
+    },
+    {
+     "type": "colline",
+     "x": 85,
+     "z": -10,
+     "r": 45,
+     "h": 24
+    },
+    {
+     "type": "montagne",
+     "x": -60,
+     "z": -200,
+     "r": 80,
+     "h": 110
+    },
+    {
+     "type": "montagne",
+     "x": 90,
+     "z": -190,
+     "r": 80,
+     "h": 95
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       90
+      ],
+      [
+       6,
+       20
+      ],
+      [
+       -4,
+       -40
+      ],
+      [
+       0,
+       -64
+      ]
+     ],
+     "l": 2.5
+    },
+    {
+     "type": "zone",
+     "id": "pied_thawr",
+     "x": 0,
+     "z": -66,
+     "r": 6
+    },
+    {
+     "type": "cairn",
+     "x": 2,
+     "z": -70
+    },
+    {
+     "type": "rocher",
+     "x": -6.8,
+     "z": 51.5,
+     "s": 1.7
+    },
+    {
+     "type": "rocher",
+     "x": -18.0,
+     "z": 25.2,
+     "s": 2.8
+    },
+    {
+     "type": "rocher",
+     "x": -5.4,
+     "z": -29.2,
+     "s": 1.6
+    },
+    {
+     "type": "rocher",
+     "x": 33.7,
+     "z": 49.3,
+     "s": 1.7
+    },
+    {
+     "type": "rocher",
+     "x": -24.4,
+     "z": 45.3,
+     "s": 2.4
+    },
+    {
+     "type": "rocher",
+     "x": 33.7,
+     "z": -13.8,
+     "s": 1.6
+    },
+    {
+     "type": "rocher",
+     "x": -22.9,
+     "z": 43.6,
+     "s": 1.8
+    },
+    {
+     "type": "rocher",
+     "x": -16.9,
+     "z": -4.6,
+     "s": 2.1
+    },
+    {
+     "type": "rocher",
+     "x": -10.0,
+     "z": 59.8,
+     "s": 1.6
+    },
+    {
+     "type": "rocher",
+     "x": -54.5,
+     "z": 62.7,
+     "s": 2.8
+    },
+    {
+     "type": "rocher",
+     "x": 53.6,
+     "z": -2.4,
+     "s": 2.9
+    },
+    {
+     "type": "rocher",
+     "x": 47.0,
+     "z": -29.6,
+     "s": 2.6
+    },
+    {
+     "type": "rocher",
+     "x": 37.0,
+     "z": 26.9,
+     "s": 2.2
+    },
+    {
+     "type": "rocher",
+     "x": -23.2,
+     "z": -14.3,
+     "s": 1.8
+    },
+    {
+     "type": "rocher",
+     "x": -47.5,
+     "z": 17.4,
+     "s": 1.9
+    },
+    {
+     "type": "rocher",
+     "x": 34.1,
+     "z": -52.2,
+     "s": 2.8
+    },
+    {
+     "type": "rocher",
+     "x": 21.3,
+     "z": 60.3,
+     "s": 2.8
+    },
+    {
+     "type": "rocher",
+     "x": 44.0,
+     "z": 15.9,
+     "s": 1.4
+    },
+    {
+     "type": "rocher",
+     "x": 27.0,
+     "z": -36.0,
+     "s": 1.9
+    },
+    {
+     "type": "rocher",
+     "x": 17.9,
+     "z": 9.2,
+     "s": 2.1
+    },
+    {
+     "type": "rocher",
+     "x": 48.3,
+     "z": 20.4,
+     "s": 1.9
+    },
+    {
+     "type": "rocher",
+     "x": -27.2,
+     "z": 52.3,
+     "s": 2.2
+    },
+    {
+     "type": "rocher",
+     "x": 31.1,
+     "z": -13.0,
+     "s": 1.7
+    },
+    {
+     "type": "rocher",
+     "x": -36.2,
+     "z": 43.3,
+     "s": 2.9
+    },
+    {
+     "type": "rochers",
+     "x": -30,
+     "z": 10,
+     "r": 12,
+     "n": 12,
+     "s": 1.2
+    },
+    {
+     "type": "rochers",
+     "x": 30,
+     "z": -30,
+     "r": 12,
+     "n": 12,
+     "s": 1.2
+    }
+   ],
+   "pnj": [
+    {
+     "id": "chercheur1",
+     "nom": "Un chercheur de Quraysh",
+     "x": -40,
+     "z": 30,
+     "cap": 0,
+     "habit": "#4A3A30",
+     "accessoire": "lanterne",
+     "chemin": [
+      [
+       -40,
+       30
+      ],
+      [
+       20,
+       30
+      ]
+     ],
+     "boucle": true,
+     "vitesse": 1.1,
+     "pause": 2.5,
+     "garde": {
+      "portee": 15,
+      "angle": 80,
+      "delai": 0.6
+     }
+    },
+    {
+     "id": "chercheur2",
+     "nom": "Un chercheur de Quraysh",
+     "x": 30,
+     "z": -20,
+     "cap": 0,
+     "habit": "#2F3A2E",
+     "accessoire": "lanterne",
+     "chemin": [
+      [
+       30,
+       -20
+      ],
+      [
+       -25,
+       -10
+      ]
+     ],
+     "boucle": true,
+     "vitesse": 1.1,
+     "pause": 2.5,
+     "garde": {
+      "portee": 15,
+      "angle": 80,
+      "delai": 0.6
+     }
+    },
+    {
+     "id": "chercheur3",
+     "nom": "Un chercheur de Quraysh",
+     "x": -10,
+     "z": -45,
+     "cap": 0,
+     "habit": "#3A3F4A",
+     "accessoire": "lanterne",
+     "chemin": [
+      [
+       -10,
+       -45
+      ],
+      [
+       40,
+       -48
+      ]
+     ],
+     "boucle": true,
+     "vitesse": 1.1,
+     "pause": 2.5,
+     "garde": {
+      "portee": 15,
+      "angle": 80,
+      "delai": 0.6
+     }
+    },
+    {
+     "id": "guetteur",
+     "nom": "Un chercheur de Quraysh",
+     "x": -48,
+     "z": -52,
+     "cap": 120,
+     "habit": "#2F3A2E",
+     "accessoire": "lanterne",
+     "garde": {
+      "portee": 18,
+      "angle": 70,
+      "delai": 0.6
+     }
+    }
+   ],
+   "troupeaux": [
+    {
+     "id": "chamelles",
+     "modele": "chameau",
+     "x": 6,
+     "z": 97,
+     "r": 2,
+     "n": 2,
+     "errer": false
+    }
+   ]
+  },
+  "cote": {
+   "titre": "La route de la côte",
+   "taille": 520,
+   "limites": [
+    -120,
+    -160,
+    130,
+    165
+   ],
+   "ambiance": "jour",
+   "depart": {
+    "x": 10,
+    "z": 152,
+    "cap": 0
+   },
+   "elements": [
+    {
+     "type": "mer",
+     "x1": -600,
+     "z1": -400,
+     "x2": -125,
+     "z2": 400,
+     "pente": 14
+    },
+    {
+     "type": "colline",
+     "x": 110,
+     "z": 40,
+     "r": 50,
+     "h": 26
+    },
+    {
+     "type": "colline",
+     "x": 120,
+     "z": -90,
+     "r": 55,
+     "h": 30
+    },
+    {
+     "type": "montagne",
+     "x": 230,
+     "z": -20,
+     "r": 100,
+     "h": 110
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       10,
+       150
+      ],
+      [
+       60,
+       100
+      ],
+      [
+       62,
+       0
+      ],
+      [
+       60,
+       -150
+      ]
+     ],
+     "l": 5
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       10,
+       150
+      ],
+      [
+       -40,
+       100
+      ],
+      [
+       -80,
+       40
+      ],
+      [
+       -84,
+       -40
+      ],
+      [
+       -70,
+       -110
+      ],
+      [
+       -60,
+       -132
+      ]
+     ],
+     "l": 2.5
+    },
+    {
+     "type": "ravin",
+     "id": "ravin",
+     "de": [
+      -55,
+      8
+     ],
+     "a": [
+      30,
+      -12
+     ],
+     "largeur": 9,
+     "profondeur": 10
+    },
+    {
+     "type": "rochers",
+     "x": -20,
+     "z": 4,
+     "r": 10,
+     "n": 10,
+     "s": 1.2
+    },
+    {
+     "type": "puits",
+     "id": "puits",
+     "nom": "Le puits",
+     "x": -60,
+     "z": -136
+    },
+    {
+     "type": "acacia",
+     "x": -50,
+     "z": -120
+    },
+    {
+     "type": "acacia",
+     "x": -90,
+     "z": 60
+    },
+    {
+     "type": "acacia",
+     "x": 20,
+     "z": 80
+    },
+    {
+     "type": "zone",
+     "id": "puits_zone",
+     "x": -60,
+     "z": -128,
+     "r": 7
+    },
+    {
+     "type": "zone",
+     "id": "grande_route",
+     "x1": 45,
+     "z1": -150,
+     "x2": 80,
+     "z2": 90
+    },
+    {
+     "type": "cairn",
+     "x": 52,
+     "z": 96
+    },
+    {
+     "type": "cairn",
+     "x": -36,
+     "z": 104
+    }
+   ],
+   "pnj": [
+    {
+     "id": "cavalier_chef",
+     "nom": "Un homme de Quraysh",
+     "x": 64,
+     "z": -60,
+     "cap": 180,
+     "habit": "#5B2333",
+     "visible": false
+    },
+    {
+     "id": "cheval1",
+     "modele": "cheval",
+     "x": 66,
+     "z": -66,
+     "cap": 180,
+     "visible": false
+    },
+    {
+     "id": "cheval2",
+     "modele": "cheval",
+     "x": 60,
+     "z": -64,
+     "cap": 180,
+     "visible": false,
+     "robe": 2
+    }
+   ],
+   "foules": [
+    {
+     "id": "cavaliers",
+     "x": 62,
+     "z": -70,
+     "r": 3,
+     "n": 3,
+     "visible": false,
+     "errer": false,
+     "habits": [
+      "#3A3F4A",
+      "#4A3A30"
+     ]
+    }
+   ],
+   "troupeaux": [
+    {
+     "id": "chamelles",
+     "modele": "chameau",
+     "charge": true,
+     "x": 12,
+     "z": 157,
+     "r": 2,
+     "n": 3,
+     "errer": false
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "lisiere",
+   "titre": "La Mecque",
+   "sous": "Fin Safar, an 14 de la mission (622)"
+  },
+  {
+   "type": "recit",
+   "texte": "Vous êtes 'Abd Allâh ibn Urayqit, guide du désert : nul ne connaît mieux les pistes. Abû Bakr vous a loué vos services et confié deux chamelles. Le rendez-vous est fixé : dans trois nuits, à la grotte du mont Thawr. Vous n'êtes pas musulman, mais on vous a fait confiance."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "crieur",
+     "vers": "joueur",
+     "vitesse": 1.6
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "crieur",
+   "texte": "Écoutez, gens de La Mecque ! Quraysh offre cent chamelles à qui ramènera Muhammad ﷺ, et autant pour Abû Bakr, morts ou vifs ! Toi, le guide, tu connais toutes les pistes…"
+  },
+  {
+   "type": "choix",
+   "question": "Cent chamelles : une fortune pour un guide. Que faites-vous ?",
+   "options": [
+    {
+     "texte": "Tenir parole : attendre la troisième nuit, puis mener les deux chamelles à Thawr, comme convenu.",
+     "juste": true
+    },
+    {
+     "texte": "Suivre le crieur jusqu'au marché, et lui dire ce que vous savez du rendez-vous de Thawr.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "crieur",
+         "vers": [
+          [
+           -2,
+           -34
+          ]
+         ],
+         "vitesse": 1.6,
+         "attendre": false
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Suivez le crieur jusqu'au marché.",
+       "cible": "zone:marche",
+       "quand": {
+        "zone": "marche"
+       }
+      },
+      {
+       "type": "parole",
+       "qui": "crieur",
+       "texte": "Alors ? Parle ! Où se cachent-ils ? Les cent chamelles sont à toi."
+      },
+      {
+       "type": "recit",
+       "texte": "Au moment de parler, vous pensez aux deux chamelles qu'on vous a confiées, à la parole donnée… et au nom qu'on vous donnera désormais : celui qui a vendu ceux qui lui faisaient confiance."
+      }
+     ],
+     "titre": "La parole vendue",
+     "consequence": "Et si le guide avait trahi pour cent chamelles : son nom serait resté celui d'un traître. Selon al-Bukhârî, ils lui avaient fait confiance alors qu'il n'était pas musulman, et il tint parole.",
+     "indice": "Une parole donnée ne se vend pas, même pour cent chamelles."
+    },
+    {
+     "texte": "Partir sur-le-champ vers Thawr avec les chamelles, sans attendre que la troisième nuit soit venue.",
+     "suite": [
+      {
+       "type": "scene",
+       "scene": "thawr",
+       "titre": "Le mont Thawr",
+       "sous": "Le jour même",
+       "ambiance": "jour"
+      },
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "suivre": "chamelles",
+         "ecart": 2.6
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Menez les chamelles jusqu'au pied du sentier de Thawr.",
+       "cible": "zone:pied_thawr",
+       "quand": {
+        "zone": "pied_thawr"
+       },
+       "echecs": [
+        {
+         "repere": "chercheur",
+         "titre": "Trop tôt",
+         "consequence": "Et si le guide était venu trop tôt : en plein jour, les hommes de Quraysh fouillaient encore les montagnes, et l'on aurait suivi les chamelles jusqu'à la grotte. Le rendez-vous de la troisième nuit laissait aux recherches le temps de s'essouffler.",
+         "indice": "Le rendez-vous était fixé après trois nuits : il fallait attendre."
+        },
+        {
+         "repere": "guetteur",
+         "titre": "Trop tôt",
+         "consequence": "Et si le guide était venu trop tôt : en plein jour, les hommes de Quraysh fouillaient encore les montagnes, et l'on aurait suivi les chamelles jusqu'à la grotte. Le rendez-vous de la troisième nuit laissait aux recherches le temps de s'essouffler.",
+         "indice": "Le rendez-vous était fixé après trois nuits : il fallait attendre."
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "chercheur1",
+       "texte": "Deux chamelles qui montent vers Thawr en plein jour ? Suivons-les !"
+      }
+     ],
+     "titre": "Trop tôt",
+     "consequence": "Et si le guide était venu trop tôt : en plein jour, les hommes de Quraysh fouillaient encore les montagnes, et l'on aurait suivi les chamelles jusqu'à la grotte. Le rendez-vous de la troisième nuit laissait aux recherches le temps de s'essouffler.",
+     "indice": "Le rendez-vous était fixé après trois nuits : il fallait attendre."
+    }
+   ]
+  },
+  {
+   "type": "scene",
+   "scene": "thawr",
+   "titre": "Le mont Thawr",
+   "sous": "Trois nuits plus tard"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "suivre": "chamelles",
+     "ecart": 2.6
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "La nuit est noire. Les hommes de Quraysh battent encore la vallée avec leurs lanternes. Le sentier de la grotte part du pied de la montagne, droit devant."
+  },
+  {
+   "type": "objectif",
+   "epreuve": true,
+   "texte": "Menez les deux chamelles jusqu'au pied du sentier de Thawr, sans être vu des chercheurs et de leurs lanternes.",
+   "cible": "zone:pied_thawr",
+   "quand": {
+    "zone": "pied_thawr"
+   },
+   "echecs": [
+    {
+     "repere": "chercheur1",
+     "titre": "Repéré",
+     "indice": "Abritez-vous derrière les gros rochers et attendez que les lanternes se détournent. Ne courez pas : on vous entendrait de plus loin.",
+     "consequence": "Et si le guide avait été repéré : on l'aurait suivi jusqu'à la grotte. Les récits rapportent au contraire que les poursuivants ne trouvèrent jamais la trace des voyageurs.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "chercheur1",
+         "vers": "joueur",
+         "vitesse": 3
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "chercheur1",
+       "texte": "Qui va là ? Où mènes-tu ces chamelles, en pleine nuit ?"
+      }
+     ]
+    },
+    {
+     "repere": "chercheur2",
+     "titre": "Repéré",
+     "indice": "Abritez-vous derrière les gros rochers et attendez que les lanternes se détournent. Ne courez pas : on vous entendrait de plus loin.",
+     "consequence": "Et si le guide avait été repéré : on l'aurait suivi jusqu'à la grotte. Les récits rapportent au contraire que les poursuivants ne trouvèrent jamais la trace des voyageurs.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "chercheur2",
+         "vers": "joueur",
+         "vitesse": 3
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "chercheur2",
+       "texte": "Qui va là ? Où mènes-tu ces chamelles, en pleine nuit ?"
+      }
+     ]
+    },
+    {
+     "repere": "chercheur3",
+     "titre": "Repéré",
+     "indice": "Abritez-vous derrière les gros rochers et attendez que les lanternes se détournent. Ne courez pas : on vous entendrait de plus loin.",
+     "consequence": "Et si le guide avait été repéré : on l'aurait suivi jusqu'à la grotte. Les récits rapportent au contraire que les poursuivants ne trouvèrent jamais la trace des voyageurs.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "chercheur3",
+         "vers": "joueur",
+         "vitesse": 3
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "chercheur3",
+       "texte": "Qui va là ? Où mènes-tu ces chamelles, en pleine nuit ?"
+      }
+     ]
+    },
+    {
+     "repere": "guetteur",
+     "titre": "Repéré",
+     "indice": "Abritez-vous derrière les gros rochers et attendez que les lanternes se détournent. Ne courez pas : on vous entendrait de plus loin.",
+     "consequence": "Et si le guide avait été repéré : on l'aurait suivi jusqu'à la grotte. Les récits rapportent au contraire que les poursuivants ne trouvèrent jamais la trace des voyageurs.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "guetteur",
+         "vers": "joueur",
+         "vitesse": 3
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "guetteur",
+       "texte": "Qui va là ? Où mènes-tu ces chamelles, en pleine nuit ?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "fondu": true,
+     "texte": "Un peu plus tard…"
+    },
+    {
+     "pause": 900
+    },
+    {
+     "fondu": false
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Deux voyageurs descendent du sentier dans l'obscurité et prennent place sur les chamelles (ils restent hors champ). Un troisième, 'Âmir ibn Fuhayra, les accompagne. Vous prenez la tête : direction la côte, loin de la route habituelle."
+  },
+  {
+   "type": "scene",
+   "scene": "cote",
+   "titre": "La route de la côte",
+   "sous": "Quelques jours plus tard"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "suivre": "chamelles",
+     "ecart": 2.8
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Ici, la piste se divise : à l'est, la grande route de Yathrib, rapide mais surveillée ; à l'ouest, la piste de la côte, longue et déserte. Le puits où vous ferez halte est au nord."
+  },
+  {
+   "type": "objectif",
+   "epreuve": true,
+   "texte": "Conduisez la petite caravane jusqu'au puits, au nord. Évitez la grande route et ses cavaliers.",
+   "cible": "zone:puits_zone",
+   "quand": {
+    "zone": "puits_zone"
+   },
+   "reussite": "Le puits, enfin",
+   "echecs": [
+    {
+     "zone": "grande_route",
+     "titre": "La grande route",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "montrer": [
+          "cavaliers",
+          "cavalier_chef",
+          "cheval1",
+          "cheval2"
+         ]
+        },
+        {
+         "aller": "cavalier_chef",
+         "vers": "joueur",
+         "vitesse": 3.5
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "cavalier_chef",
+       "texte": "Halte ! D'où viens-tu, guide ? Qui sont ces voyageurs ?"
+      }
+     ],
+     "consequence": "Et si le guide avait pris la grande route : Quraysh y avait lancé ses hommes. Selon al-Bukhârî, il prit au contraire la route des côtes, rarement fréquentée.",
+     "indice": "La piste de la côte, à l'ouest, est plus longue mais déserte."
+    },
+    {
+     "chute": "ravin",
+     "titre": "Le raccourci du ravin",
+     "consequence": "Et si le guide avait coupé par le ravin : sa chute aurait immobilisé la caravane une journée entière, à découvert. Un bon guide ne cherche pas le chemin le plus court, mais le plus sûr.",
+     "indice": "La piste de la côte contourne le ravin par l'ouest."
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Huit jours de route environ, par des pistes que seul un guide expérimenté connaissait. Selon ar-Rahîq, les voyageurs arrivent à Qubâ', aux portes de Yathrib, le lundi 8 Rabî' al-Awwal ; d'autres disent le 12."
+  }
+ ],
+ "fin": "Vers Yathrib"
+}

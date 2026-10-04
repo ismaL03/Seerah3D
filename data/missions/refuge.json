@@ -1,0 +1,1886 @@
+{
+ "_lisez_moi": "Mission à la première personne. Coordonnées en mètres : x vers l'est, z vers le sud ; cap en degrés (0 = nord). Brouillon à vérifier.",
+ "id": "refuge",
+ "titre": "Le jour de la sécurité",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "muslim",
+   "page": null,
+   "passage": "Livre du jihâd : la conquête de La Mecque (hadith d'Abû Hurayra)"
+  },
+  {
+   "ouvrage": "bukhari",
+   "page": null,
+   "passage": "Livre des expéditions : les idoles autour de la Ka'ba (hadith d'Ibn Mas'ûd)"
+  },
+  {
+   "ouvrage": "ibn-hisham",
+   "page": null,
+   "passage": "La conquête de La Mecque : al-Khandama"
+  }
+ ],
+ "role": {
+  "nom": "Un habitant de La Mecque",
+  "nom_ar": "رجل من أهل مكة",
+  "texte": "Vous êtes un Mecquois ordinaire, ni chef ni soldat. Ce matin, une armée de dix mille hommes entre dans votre ville. Il va falloir garder la tête froide, et protéger ceux qui comptent sur vous.",
+  "regle": "Le Prophète ﷺ, Bilâl et les Compagnons ne sont jamais montrés. Les personnes croisées sont des silhouettes sans visage. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "crieur": {
+   "nom": "Un crieur",
+   "qualite": "dans les rues de La Mecque"
+  },
+  "voisine": {
+   "nom": "Votre voisine",
+   "qualite": ""
+  },
+  "affoles": {
+   "nom": "Un Mecquois",
+   "qualite": "dans la rue"
+  },
+  "armes": {
+   "nom": "Un homme armé",
+   "qualite": "à al-Khandama"
+  }
+ },
+ "dialogues": {
+  "affoles": [
+   "Dix mille hommes ! On dit qu'ils entrent par quatre côtés à la fois.",
+   "Abû Sufyân est revenu de leur camp : il dit qu'il ne faut pas combattre, que ceux qui restent chez eux seront épargnés.",
+   "Moi, je ferme ma porte et je n'en sors plus."
+  ],
+  "armes": [
+   "Nous ne laisserons pas entrer cette armée sans combattre !"
+  ]
+ },
+ "scenes": {
+  "makka": {
+   "titre": "La Mecque",
+   "taille": 420,
+   "limites": [
+    -150,
+    -150,
+    150,
+    150
+   ],
+   "ambiance": "aube",
+   "depart": {
+    "x": -38,
+    "z": 44,
+    "cap": 300
+   },
+   "elements": [
+    {
+     "type": "kaba",
+     "id": "kaba",
+     "x": 0,
+     "z": 0,
+     "h": 9,
+     "reconstruite": true,
+     "r": -135
+    },
+    {
+     "type": "puits",
+     "id": "zamzam",
+     "x": 18,
+     "z": 2
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       -160
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       160
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       -160,
+       0
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       160,
+       0
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "montagne",
+     "x": 205,
+     "z": -95,
+     "r": 85,
+     "h": 105
+    },
+    {
+     "type": "montagne",
+     "x": 175,
+     "z": 165,
+     "r": 70,
+     "h": 60,
+     "c": "#A3825F"
+    },
+    {
+     "type": "montagne",
+     "x": -215,
+     "z": -20,
+     "r": 95,
+     "h": 115
+    },
+    {
+     "type": "montagne",
+     "x": -40,
+     "z": -245,
+     "r": 110,
+     "h": 85,
+     "c": "#9E7E5E"
+    },
+    {
+     "type": "montagne",
+     "x": -70,
+     "z": 235,
+     "r": 100,
+     "h": 70,
+     "c": "#A3825F"
+    },
+    {
+     "type": "acacia",
+     "x": -60,
+     "z": 70
+    },
+    {
+     "type": "acacia",
+     "x": 95,
+     "z": 60
+    },
+    {
+     "type": "acacia",
+     "x": -90,
+     "z": -60
+    },
+    {
+     "type": "jarre",
+     "x": 21,
+     "z": 4
+    },
+    {
+     "type": "jarre",
+     "x": 21.6,
+     "z": 5.2
+    },
+    {
+     "type": "idoles",
+     "id": "idoles",
+     "x": 0,
+     "z": 0,
+     "r": 11.5,
+     "n": 40
+    },
+    {
+     "type": "maison",
+     "id": "dar_abisufyan",
+     "nom": "Maison d'Abû Sufyân",
+     "x": -36,
+     "z": -46,
+     "w": 11,
+     "d": 9,
+     "h": 4.2,
+     "r": 30,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "id": "maison_voisine",
+     "nom": "Maison de votre voisine",
+     "x": -46,
+     "z": 30,
+     "w": 7,
+     "d": 6,
+     "h": 3.4,
+     "r": 0,
+     "porte": "s"
+    },
+    {
+     "type": "zone",
+     "id": "porte_voisine",
+     "x": -46,
+     "z": 35,
+     "r": 2.8
+    },
+    {
+     "type": "colline",
+     "x": 10,
+     "z": 122,
+     "r": 24,
+     "h": 13
+    },
+    {
+     "type": "zone",
+     "id": "khandama",
+     "x": 10,
+     "z": 116,
+     "r": 8
+    },
+    {
+     "type": "zone",
+     "id": "montagne",
+     "x": -120,
+     "z": 10,
+     "r": 10
+    },
+    {
+     "type": "zone",
+     "id": "haram",
+     "x": 0,
+     "z": 22,
+     "r": 8
+    },
+    {
+     "type": "maison",
+     "x": 11.3,
+     "z": -27.8,
+     "w": 5.9,
+     "d": 6.5,
+     "h": 3.5,
+     "r": 22
+    },
+    {
+     "type": "maison",
+     "x": 19.0,
+     "z": -23.2,
+     "w": 7.9,
+     "d": 5.3,
+     "h": 3.6,
+     "r": 39
+    },
+    {
+     "type": "maison",
+     "x": 26.1,
+     "z": -14.7,
+     "w": 6.0,
+     "d": 8.0,
+     "h": 3.5,
+     "r": 61
+    },
+    {
+     "type": "maison",
+     "x": 29.8,
+     "z": 3.3,
+     "w": 6.3,
+     "d": 5.5,
+     "h": 3.6,
+     "r": 96
+    },
+    {
+     "type": "maison",
+     "x": 27.3,
+     "z": 12.5,
+     "w": 7.4,
+     "d": 6.7,
+     "h": 3.3,
+     "r": 115
+    },
+    {
+     "type": "maison",
+     "x": 21.3,
+     "z": 21.1,
+     "w": 5.9,
+     "d": 6.5,
+     "h": 3.3,
+     "r": 135
+    },
+    {
+     "type": "maison",
+     "x": 14.0,
+     "z": 26.5,
+     "w": 7.4,
+     "d": 6.5,
+     "h": 4.1,
+     "r": 152
+    },
+    {
+     "type": "maison",
+     "x": -14.7,
+     "z": 26.2,
+     "w": 7.3,
+     "d": 5.3,
+     "h": 4.3,
+     "r": 209
+    },
+    {
+     "type": "maison",
+     "x": -22.8,
+     "z": 19.5,
+     "w": 5.4,
+     "d": 5.5,
+     "h": 3.5,
+     "r": 229,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -27.4,
+     "z": 12.3,
+     "w": 6.2,
+     "d": 6.2,
+     "h": 3.9,
+     "r": 246
+    },
+    {
+     "type": "maison",
+     "x": -29.0,
+     "z": -7.6,
+     "w": 6.0,
+     "d": 7.6,
+     "h": 4.0,
+     "r": 285
+    },
+    {
+     "type": "maison",
+     "x": -25.4,
+     "z": -16.0,
+     "w": 7.2,
+     "d": 7.9,
+     "h": 3.3,
+     "r": 302
+    },
+    {
+     "type": "maison",
+     "x": -18.4,
+     "z": -23.7,
+     "w": 7.9,
+     "d": 5.1,
+     "h": 4.3,
+     "r": 322
+    },
+    {
+     "type": "maison",
+     "x": -8.6,
+     "z": -28.7,
+     "w": 5.4,
+     "d": 5.5,
+     "h": 4.3,
+     "r": 343
+    },
+    {
+     "type": "maison",
+     "x": 13.6,
+     "z": -41.9,
+     "w": 6.9,
+     "d": 7.6,
+     "h": 4.3,
+     "r": 18
+    },
+    {
+     "type": "maison",
+     "x": 22.7,
+     "z": -37.7,
+     "w": 5.0,
+     "d": 5.5,
+     "h": 3.6,
+     "r": 31
+    },
+    {
+     "type": "maison",
+     "x": 29.3,
+     "z": -32.8,
+     "w": 5.1,
+     "d": 5.6,
+     "h": 3.7,
+     "r": 42,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 34.9,
+     "z": -26.7,
+     "w": 5.3,
+     "d": 5.5,
+     "h": 3.0,
+     "r": 53
+    },
+    {
+     "type": "maison",
+     "x": 39.4,
+     "z": -19.5,
+     "w": 7.6,
+     "d": 5.6,
+     "h": 3.9,
+     "r": 64
+    },
+    {
+     "type": "maison",
+     "x": 42.8,
+     "z": 10.3,
+     "w": 6.9,
+     "d": 7.4,
+     "h": 3.8,
+     "r": 104
+    },
+    {
+     "type": "maison",
+     "x": 39.3,
+     "z": 19.7,
+     "w": 7.1,
+     "d": 7.4,
+     "h": 3.1,
+     "r": 117
+    },
+    {
+     "type": "maison",
+     "x": 33.7,
+     "z": 28.3,
+     "w": 5.9,
+     "d": 7.7,
+     "h": 3.4,
+     "r": 130
+    },
+    {
+     "type": "maison",
+     "x": 27.2,
+     "z": 34.6,
+     "w": 6.3,
+     "d": 6.1,
+     "h": 3.7,
+     "r": 142
+    },
+    {
+     "type": "maison",
+     "x": 19.2,
+     "z": 39.6,
+     "w": 7.0,
+     "d": 6.2,
+     "h": 3.2,
+     "r": 154
+    },
+    {
+     "type": "maison",
+     "x": 9.6,
+     "z": 42.9,
+     "w": 6.4,
+     "d": 6.9,
+     "h": 4.4,
+     "r": 167
+    },
+    {
+     "type": "maison",
+     "x": -10.9,
+     "z": 42.6,
+     "w": 6.3,
+     "d": 5.7,
+     "h": 3.3,
+     "r": 194
+    },
+    {
+     "type": "maison",
+     "x": -19.8,
+     "z": 39.3,
+     "w": 5.5,
+     "d": 6.9,
+     "h": 3.9,
+     "r": 207,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -27.1,
+     "z": 34.6,
+     "w": 5.1,
+     "d": 6.9,
+     "h": 3.1,
+     "r": 218
+    },
+    {
+     "type": "maison",
+     "x": -33.1,
+     "z": 28.9,
+     "w": 7.9,
+     "d": 6.4,
+     "h": 3.4,
+     "r": 229,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -39.3,
+     "z": 19.7,
+     "w": 5.9,
+     "d": 6.0,
+     "h": 3.2,
+     "r": 243
+    },
+    {
+     "type": "maison",
+     "x": -42.5,
+     "z": 11.2,
+     "w": 6.8,
+     "d": 7.2,
+     "h": 3.1,
+     "r": 255
+    },
+    {
+     "type": "maison",
+     "x": -43.0,
+     "z": -9.5,
+     "w": 6.1,
+     "d": 7.5,
+     "h": 3.3,
+     "r": 283
+    },
+    {
+     "type": "maison",
+     "x": -40.0,
+     "z": -18.3,
+     "w": 6.9,
+     "d": 5.8,
+     "h": 3.5,
+     "r": 295
+    },
+    {
+     "type": "maison",
+     "x": -34.8,
+     "z": -27.0,
+     "w": 5.9,
+     "d": 7.0,
+     "h": 4.0,
+     "r": 308
+    },
+    {
+     "type": "maison",
+     "x": -28.5,
+     "z": -33.5,
+     "w": 7.9,
+     "d": 5.2,
+     "h": 3.4,
+     "r": 320
+    },
+    {
+     "type": "maison",
+     "x": -19.2,
+     "z": -39.6,
+     "w": 7.4,
+     "d": 7.3,
+     "h": 3.3,
+     "r": 334,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -9.2,
+     "z": -43.0,
+     "w": 5.8,
+     "d": 7.7,
+     "h": 4.1,
+     "r": 348
+    },
+    {
+     "type": "maison",
+     "x": 10.8,
+     "z": -57.0,
+     "w": 7.1,
+     "d": 7.4,
+     "h": 4.0,
+     "r": 11
+    },
+    {
+     "type": "maison",
+     "x": 20.7,
+     "z": -54.2,
+     "w": 7.0,
+     "d": 6.1,
+     "h": 4.3,
+     "r": 21,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 29.8,
+     "z": -49.7,
+     "w": 7.1,
+     "d": 6.0,
+     "h": 4.3,
+     "r": 31
+    },
+    {
+     "type": "maison",
+     "x": 38.1,
+     "z": -43.7,
+     "w": 5.5,
+     "d": 5.0,
+     "h": 3.3,
+     "r": 41
+    },
+    {
+     "type": "maison",
+     "x": 44.3,
+     "z": -37.5,
+     "w": 7.3,
+     "d": 7.1,
+     "h": 3.3,
+     "r": 50
+    },
+    {
+     "type": "maison",
+     "x": 50.3,
+     "z": -28.9,
+     "w": 6.3,
+     "d": 6.6,
+     "h": 3.9,
+     "r": 60,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 54.3,
+     "z": -20.3,
+     "w": 7.5,
+     "d": 5.7,
+     "h": 4.0,
+     "r": 70
+    },
+    {
+     "type": "maison",
+     "x": 57.5,
+     "z": 7.9,
+     "w": 7.6,
+     "d": 7.5,
+     "h": 4.0,
+     "r": 98
+    },
+    {
+     "type": "maison",
+     "x": 55.0,
+     "z": 18.4,
+     "w": 6.9,
+     "d": 6.4,
+     "h": 3.4,
+     "r": 109
+    },
+    {
+     "type": "maison",
+     "x": 51.0,
+     "z": 27.7,
+     "w": 7.0,
+     "d": 7.7,
+     "h": 3.6,
+     "r": 119,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 45.3,
+     "z": 36.2,
+     "w": 5.8,
+     "d": 7.2,
+     "h": 4.0,
+     "r": 129
+    },
+    {
+     "type": "maison",
+     "x": 39.2,
+     "z": 42.8,
+     "w": 6.2,
+     "d": 6.7,
+     "h": 3.1,
+     "r": 138,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 31.8,
+     "z": 48.5,
+     "w": 7.4,
+     "d": 5.3,
+     "h": 3.9,
+     "r": 147
+    },
+    {
+     "type": "maison",
+     "x": 22.4,
+     "z": 53.5,
+     "w": 5.5,
+     "d": 7.4,
+     "h": 4.2,
+     "r": 157
+    },
+    {
+     "type": "maison",
+     "x": 14.1,
+     "z": 56.2,
+     "w": 5.5,
+     "d": 6.4,
+     "h": 3.2,
+     "r": 166
+    },
+    {
+     "type": "maison",
+     "x": -22.0,
+     "z": 53.7,
+     "w": 7.1,
+     "d": 7.3,
+     "h": 4.1,
+     "r": 202
+    },
+    {
+     "type": "maison",
+     "x": -31.1,
+     "z": 49.0,
+     "w": 7.0,
+     "d": 5.9,
+     "h": 3.1,
+     "r": 212
+    },
+    {
+     "type": "maison",
+     "x": -39.2,
+     "z": 42.8,
+     "w": 7.2,
+     "d": 7.2,
+     "h": 3.9,
+     "r": 223,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -55.6,
+     "z": 16.5,
+     "w": 5.8,
+     "d": 6.6,
+     "h": 4.2,
+     "r": 253
+    },
+    {
+     "type": "maison",
+     "x": -54.9,
+     "z": -18.6,
+     "w": 5.6,
+     "d": 6.0,
+     "h": 3.4,
+     "r": 289
+    },
+    {
+     "type": "maison",
+     "x": -51.5,
+     "z": -26.7,
+     "w": 5.6,
+     "d": 6.2,
+     "h": 3.3,
+     "r": 297
+    },
+    {
+     "type": "maison",
+     "x": -46.8,
+     "z": -34.2,
+     "w": 5.4,
+     "d": 6.7,
+     "h": 4.0,
+     "r": 306
+    },
+    {
+     "type": "maison",
+     "x": -24.4,
+     "z": -52.6,
+     "w": 5.3,
+     "d": 7.8,
+     "h": 4.1,
+     "r": 335
+    },
+    {
+     "type": "maison",
+     "x": -16.5,
+     "z": -55.6,
+     "w": 5.6,
+     "d": 6.5,
+     "h": 3.4,
+     "r": 344
+    },
+    {
+     "type": "maison",
+     "x": 13.7,
+     "z": -70.7,
+     "w": 5.7,
+     "d": 7.7,
+     "h": 3.2,
+     "r": 11,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 22.2,
+     "z": -68.5,
+     "w": 6.1,
+     "d": 5.7,
+     "h": 4.2,
+     "r": 18,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 30.8,
+     "z": -65.1,
+     "w": 7.8,
+     "d": 6.8,
+     "h": 4.0,
+     "r": 25
+    },
+    {
+     "type": "maison",
+     "x": 40.4,
+     "z": -59.6,
+     "w": 6.5,
+     "d": 5.7,
+     "h": 4.1,
+     "r": 34
+    },
+    {
+     "type": "maison",
+     "x": 48.1,
+     "z": -53.6,
+     "w": 5.8,
+     "d": 5.9,
+     "h": 3.0,
+     "r": 42,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 54.3,
+     "z": -47.2,
+     "w": 6.8,
+     "d": 8.0,
+     "h": 4.3,
+     "r": 49
+    },
+    {
+     "type": "maison",
+     "x": 60.3,
+     "z": -39.3,
+     "w": 6.0,
+     "d": 6.9,
+     "h": 3.7,
+     "r": 57
+    },
+    {
+     "type": "maison",
+     "x": 64.9,
+     "z": -31.2,
+     "w": 5.6,
+     "d": 6.1,
+     "h": 4.3,
+     "r": 64
+    },
+    {
+     "type": "maison",
+     "x": 68.2,
+     "z": -23.1,
+     "w": 7.1,
+     "d": 6.3,
+     "h": 3.7,
+     "r": 71
+    },
+    {
+     "type": "maison",
+     "x": 71.4,
+     "z": 9.0,
+     "w": 6.0,
+     "d": 6.0,
+     "h": 3.5,
+     "r": 97
+    },
+    {
+     "type": "maison",
+     "x": 69.7,
+     "z": 18.0,
+     "w": 5.5,
+     "d": 7.6,
+     "h": 4.0,
+     "r": 105
+    },
+    {
+     "type": "maison",
+     "x": 67.0,
+     "z": 26.3,
+     "w": 6.5,
+     "d": 7.5,
+     "h": 3.0,
+     "r": 111
+    },
+    {
+     "type": "maison",
+     "x": 62.9,
+     "z": 35.0,
+     "w": 6.1,
+     "d": 5.7,
+     "h": 3.0,
+     "r": 119
+    },
+    {
+     "type": "maison",
+     "x": 57.9,
+     "z": 42.8,
+     "w": 5.1,
+     "d": 7.5,
+     "h": 3.3,
+     "r": 126
+    },
+    {
+     "type": "maison",
+     "x": 52.6,
+     "z": 49.2,
+     "w": 6.8,
+     "d": 8.0,
+     "h": 3.1,
+     "r": 133
+    },
+    {
+     "type": "maison",
+     "x": 45.2,
+     "z": 56.0,
+     "w": 8.0,
+     "d": 5.1,
+     "h": 3.4,
+     "r": 141
+    },
+    {
+     "type": "maison",
+     "x": 36.0,
+     "z": 62.3,
+     "w": 6.4,
+     "d": 7.0,
+     "h": 3.5,
+     "r": 150
+    },
+    {
+     "type": "maison",
+     "x": 27.4,
+     "z": 66.6,
+     "w": 6.0,
+     "d": 6.1,
+     "h": 4.0,
+     "r": 158
+    },
+    {
+     "type": "maison",
+     "x": 18.7,
+     "z": 69.5,
+     "w": 6.7,
+     "d": 5.8,
+     "h": 4.4,
+     "r": 165
+    },
+    {
+     "type": "maison",
+     "x": -19.9,
+     "z": 69.2,
+     "w": 7.9,
+     "d": 7.8,
+     "h": 3.6,
+     "r": 196
+    },
+    {
+     "type": "maison",
+     "x": -30.3,
+     "z": 65.3,
+     "w": 6.4,
+     "d": 5.8,
+     "h": 4.2,
+     "r": 205
+    },
+    {
+     "type": "maison",
+     "x": -38.7,
+     "z": 60.7,
+     "w": 6.0,
+     "d": 5.4,
+     "h": 4.0,
+     "r": 213,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -46.1,
+     "z": 55.3,
+     "w": 7.3,
+     "d": 5.1,
+     "h": 4.2,
+     "r": 220,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -53.7,
+     "z": 48.0,
+     "w": 5.1,
+     "d": 7.7,
+     "h": 3.9,
+     "r": 228
+    },
+    {
+     "type": "maison",
+     "x": -58.9,
+     "z": 41.5,
+     "w": 5.7,
+     "d": 7.2,
+     "h": 3.2,
+     "r": 235
+    },
+    {
+     "type": "maison",
+     "x": -63.5,
+     "z": 33.9,
+     "w": 7.3,
+     "d": 7.3,
+     "h": 4.4,
+     "r": 242
+    },
+    {
+     "type": "maison",
+     "x": -67.8,
+     "z": 24.3,
+     "w": 7.7,
+     "d": 5.0,
+     "h": 3.5,
+     "r": 250,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -70.4,
+     "z": -15.3,
+     "w": 7.0,
+     "d": 5.9,
+     "h": 3.6,
+     "r": 282,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -67.5,
+     "z": -25.1,
+     "w": 7.5,
+     "d": 5.5,
+     "h": 3.3,
+     "r": 290
+    },
+    {
+     "type": "maison",
+     "x": -63.0,
+     "z": -34.8,
+     "w": 5.4,
+     "d": 6.2,
+     "h": 4.3,
+     "r": 299
+    },
+    {
+     "type": "maison",
+     "x": -58.5,
+     "z": -42.0,
+     "w": 5.0,
+     "d": 6.5,
+     "h": 4.0,
+     "r": 306
+    },
+    {
+     "type": "maison",
+     "x": -53.3,
+     "z": -48.4,
+     "w": 7.0,
+     "d": 8.0,
+     "h": 4.1,
+     "r": 312
+    },
+    {
+     "type": "maison",
+     "x": -45.9,
+     "z": -55.5,
+     "w": 7.3,
+     "d": 7.8,
+     "h": 4.3,
+     "r": 320
+    },
+    {
+     "type": "maison",
+     "x": -37.3,
+     "z": -61.6,
+     "w": 7.8,
+     "d": 6.6,
+     "h": 4.1,
+     "r": 329
+    },
+    {
+     "type": "maison",
+     "x": -27.6,
+     "z": -66.5,
+     "w": 5.5,
+     "d": 6.6,
+     "h": 3.0,
+     "r": 337
+    },
+    {
+     "type": "maison",
+     "x": -19.4,
+     "z": -69.3,
+     "w": 5.6,
+     "d": 5.2,
+     "h": 3.8,
+     "r": 344
+    },
+    {
+     "type": "maison",
+     "x": 23.1,
+     "z": -82.8,
+     "w": 7.3,
+     "d": 5.8,
+     "h": 4.4,
+     "r": 16
+    },
+    {
+     "type": "maison",
+     "x": 32.9,
+     "z": -79.4,
+     "w": 6.3,
+     "d": 6.3,
+     "h": 3.5,
+     "r": 23,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 41.5,
+     "z": -75.3,
+     "w": 7.1,
+     "d": 7.1,
+     "h": 3.6,
+     "r": 29
+    },
+    {
+     "type": "maison",
+     "x": 50.2,
+     "z": -69.9,
+     "w": 6.9,
+     "d": 5.1,
+     "h": 3.7,
+     "r": 36
+    },
+    {
+     "type": "maison",
+     "x": 58.0,
+     "z": -63.5,
+     "w": 5.6,
+     "d": 7.4,
+     "h": 4.2,
+     "r": 42
+    },
+    {
+     "type": "maison",
+     "x": 64.2,
+     "z": -57.2,
+     "w": 7.3,
+     "d": 5.4,
+     "h": 4.2,
+     "r": 48
+    },
+    {
+     "type": "maison",
+     "x": 70.7,
+     "z": -49.0,
+     "w": 7.7,
+     "d": 7.9,
+     "h": 3.6,
+     "r": 55
+    },
+    {
+     "type": "maison",
+     "x": 76.3,
+     "z": -39.7,
+     "w": 7.6,
+     "d": 6.8,
+     "h": 4.0,
+     "r": 62
+    },
+    {
+     "type": "maison",
+     "x": 80.7,
+     "z": -29.8,
+     "w": 6.1,
+     "d": 6.2,
+     "h": 3.4,
+     "r": 70,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 85.6,
+     "z": 8.7,
+     "w": 5.9,
+     "d": 6.9,
+     "h": 3.7,
+     "r": 96
+    },
+    {
+     "type": "maison",
+     "x": 84.2,
+     "z": 17.7,
+     "w": 5.8,
+     "d": 5.2,
+     "h": 3.9,
+     "r": 102
+    },
+    {
+     "type": "maison",
+     "x": 81.9,
+     "z": 26.4,
+     "w": 5.2,
+     "d": 5.7,
+     "h": 3.5,
+     "r": 108
+    },
+    {
+     "type": "maison",
+     "x": 78.9,
+     "z": 34.3,
+     "w": 6.1,
+     "d": 5.6,
+     "h": 4.0,
+     "r": 113
+    },
+    {
+     "type": "maison",
+     "x": 74.7,
+     "z": 42.6,
+     "w": 7.0,
+     "d": 7.2,
+     "h": 3.4,
+     "r": 120
+    },
+    {
+     "type": "maison",
+     "x": 69.1,
+     "z": 51.1,
+     "w": 5.8,
+     "d": 7.1,
+     "h": 3.1,
+     "r": 126
+    },
+    {
+     "type": "maison",
+     "x": 63.4,
+     "z": 58.1,
+     "w": 5.4,
+     "d": 5.7,
+     "h": 3.5,
+     "r": 133
+    },
+    {
+     "type": "maison",
+     "x": 57.3,
+     "z": 64.2,
+     "w": 7.2,
+     "d": 6.9,
+     "h": 3.4,
+     "r": 138
+    },
+    {
+     "type": "maison",
+     "x": 49.1,
+     "z": 70.6,
+     "w": 5.1,
+     "d": 5.6,
+     "h": 4.3,
+     "r": 145,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 42.1,
+     "z": 75.0,
+     "w": 5.6,
+     "d": 5.0,
+     "h": 3.6,
+     "r": 151
+    },
+    {
+     "type": "maison",
+     "x": 34.2,
+     "z": 78.9,
+     "w": 7.8,
+     "d": 5.6,
+     "h": 3.9,
+     "r": 157,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 23.9,
+     "z": 82.6,
+     "w": 5.5,
+     "d": 5.6,
+     "h": 3.5,
+     "r": 164
+    },
+    {
+     "type": "maison",
+     "x": -23.7,
+     "z": 82.7,
+     "w": 6.9,
+     "d": 5.6,
+     "h": 3.3,
+     "r": 196
+    },
+    {
+     "type": "maison",
+     "x": -33.2,
+     "z": 79.3,
+     "w": 5.1,
+     "d": 5.8,
+     "h": 3.3,
+     "r": 203
+    },
+    {
+     "type": "maison",
+     "x": -40.7,
+     "z": 75.7,
+     "w": 6.8,
+     "d": 5.8,
+     "h": 3.6,
+     "r": 208
+    },
+    {
+     "type": "maison",
+     "x": -49.2,
+     "z": 70.5,
+     "w": 5.8,
+     "d": 6.5,
+     "h": 3.3,
+     "r": 215
+    },
+    {
+     "type": "maison",
+     "x": -56.3,
+     "z": 65.0,
+     "w": 6.2,
+     "d": 6.2,
+     "h": 3.3,
+     "r": 221
+    },
+    {
+     "type": "maison",
+     "x": -63.1,
+     "z": 58.5,
+     "w": 6.3,
+     "d": 6.5,
+     "h": 3.9,
+     "r": 227
+    },
+    {
+     "type": "maison",
+     "x": -69.1,
+     "z": 51.2,
+     "w": 6.3,
+     "d": 7.4,
+     "h": 3.2,
+     "r": 233
+    },
+    {
+     "type": "maison",
+     "x": -74.3,
+     "z": 43.2,
+     "w": 7.0,
+     "d": 7.0,
+     "h": 3.4,
+     "r": 240
+    },
+    {
+     "type": "maison",
+     "x": -78.9,
+     "z": 34.1,
+     "w": 7.4,
+     "d": 5.2,
+     "h": 4.3,
+     "r": 247
+    },
+    {
+     "type": "maison",
+     "x": -82.5,
+     "z": 24.2,
+     "w": 5.7,
+     "d": 5.6,
+     "h": 4.1,
+     "r": 254
+    },
+    {
+     "type": "maison",
+     "x": -83.4,
+     "z": -20.8,
+     "w": 7.0,
+     "d": 6.0,
+     "h": 4.0,
+     "r": 284
+    },
+    {
+     "type": "maison",
+     "x": -80.4,
+     "z": -30.5,
+     "w": 5.3,
+     "d": 5.2,
+     "h": 4.4,
+     "r": 291
+    },
+    {
+     "type": "maison",
+     "x": -77.0,
+     "z": -38.3,
+     "w": 6.6,
+     "d": 6.6,
+     "h": 4.2,
+     "r": 296
+    },
+    {
+     "type": "maison",
+     "x": -72.2,
+     "z": -46.8,
+     "w": 5.5,
+     "d": 7.3,
+     "h": 3.8,
+     "r": 303
+    },
+    {
+     "type": "maison",
+     "x": -67.1,
+     "z": -53.8,
+     "w": 5.3,
+     "d": 7.4,
+     "h": 3.9,
+     "r": 309
+    },
+    {
+     "type": "maison",
+     "x": -61.5,
+     "z": -60.1,
+     "w": 6.3,
+     "d": 8.0,
+     "h": 3.2,
+     "r": 314
+    },
+    {
+     "type": "maison",
+     "x": -54.4,
+     "z": -66.6,
+     "w": 7.3,
+     "d": 7.3,
+     "h": 4.3,
+     "r": 321
+    },
+    {
+     "type": "maison",
+     "x": -45.9,
+     "z": -72.7,
+     "w": 6.6,
+     "d": 7.7,
+     "h": 4.1,
+     "r": 328
+    },
+    {
+     "type": "maison",
+     "x": -37.3,
+     "z": -77.5,
+     "w": 6.4,
+     "d": 6.0,
+     "h": 4.1,
+     "r": 334
+    },
+    {
+     "type": "maison",
+     "x": -28.5,
+     "z": -81.2,
+     "w": 5.2,
+     "d": 7.5,
+     "h": 3.3,
+     "r": 341
+    },
+    {
+     "type": "maison",
+     "x": -20.5,
+     "z": -83.5,
+     "w": 6.0,
+     "d": 6.7,
+     "h": 3.9,
+     "r": 346
+    }
+   ],
+   "pnj": [
+    {
+     "id": "crieur",
+     "nom": "Un crieur",
+     "x": 0,
+     "z": -30,
+     "cap": 180,
+     "habit": "#E8E2D2",
+     "coiffe": "#E8E2D2"
+    },
+    {
+     "id": "voisine",
+     "nom": "Votre voisine",
+     "x": -50,
+     "z": 44,
+     "cap": 90,
+     "habit": "#3B3330",
+     "coiffe": "#3B3330",
+     "voile": "long",
+     "invite": "Parler à votre voisine"
+    },
+    {
+     "id": "enfant1",
+     "x": -51.5,
+     "z": 45,
+     "cap": 90,
+     "taille": 1.1,
+     "habit": "#8C6F4E"
+    },
+    {
+     "id": "enfant2",
+     "x": -49,
+     "z": 46,
+     "cap": 90,
+     "taille": 1.0,
+     "habit": "#A08060"
+    }
+   ],
+   "foules": [
+    {
+     "id": "armes",
+     "x": 10,
+     "z": 120,
+     "r": 6,
+     "n": 10,
+     "accessoire": "lance",
+     "errer": false,
+     "habits": [
+      "#3A3F4A",
+      "#4A3A30",
+      "#5E3A2E"
+     ]
+    },
+    {
+     "id": "affoles",
+     "x": -10,
+     "z": 40,
+     "r": 14,
+     "n": 8,
+     "invite": "Parler"
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "makka",
+   "titre": "La Mecque",
+   "sous": "20 Ramadân, an 8 de l'Hégire (janvier 630)"
+  },
+  {
+   "type": "recit",
+   "texte": "Cette nuit, dix mille feux brillaient sur les hauteurs de Marr az-Zahrân. Au matin, une armée immense s'avance vers La Mecque par plusieurs côtés à la fois. Dans les rues, c'est la panique : on court, on crie, on barricade les portes."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "crieur",
+     "vers": "joueur",
+     "vitesse": 2
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "crieur",
+   "texte": "Écoutez, gens de La Mecque ! Celui qui entre dans la maison d'Abû Sufyân est en sécurité. Celui qui dépose les armes est en sécurité. Celui qui ferme sa porte sur lui est en sécurité !"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "crieur",
+     "vers": [
+      [
+       -20,
+       60
+      ],
+      [
+       0,
+       140
+      ]
+     ],
+     "vitesse": 2,
+     "attendre": false
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Votre voisine et ses enfants sont dans la rue, affolés. Allez lui parler.",
+   "cible": "pnj:voisine",
+   "quand": {
+    "parler": "voisine"
+   }
+  },
+  {
+   "type": "parole",
+   "qui": "voisine",
+   "texte": "Que va-t-il nous arriver ? Mon mari est parti avec les hommes armés, vers al-Khandama. Il dit qu'ils barreront la route à l'armée…"
+  },
+  {
+   "type": "choix",
+   "qui": "voisine",
+   "question": "Que lui conseillez-vous ?",
+   "options": [
+    {
+     "texte": "« Rentre chez toi avec les enfants et ferme ta porte : le crieur a promis la sécurité à qui reste chez soi. »",
+     "juste": true
+    },
+    {
+     "texte": "« Viens, allons rejoindre les hommes à al-Khandama : à plusieurs, nous pourrons leur barrer la route. »",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "suivre": "voisine",
+         "ecart": 2.2
+        },
+        {
+         "suivre": "enfant1",
+         "ecart": 3
+        },
+        {
+         "suivre": "enfant2",
+         "ecart": 3.4
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Conduisez-les vers la colline d'al-Khandama, au sud.",
+       "cible": "zone:khandama",
+       "quand": {
+        "zone": "khandama"
+       }
+      },
+      {
+       "type": "recit",
+       "texte": "Sur la colline, quelques dizaines d'hommes attendent, l'arme au poing. Une colonne approche. Quelques flèches partent… puis c'est la débandade, et des hommes tombent."
+      }
+     ],
+     "titre": "Al-Khandama",
+     "consequence": "Et si vous les aviez menés au combat : à al-Khandama, une poignée d'hommes de Quraysh affronta la colonne de Khâlid ibn al-Walîd, et une douzaine y perdirent la vie. Partout ailleurs, la ville fut prise sans combat.",
+     "indice": "La sécurité était promise à ceux qui restaient chez eux, portes closes, ou entraient dans la Mosquée sacrée."
+    },
+    {
+     "texte": "« Partons nous cacher dans la montagne, comme nos pères au temps de l'Éléphant, jusqu'à ce que tout soit fini. »",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "suivre": "voisine",
+         "ecart": 2.2
+        },
+        {
+         "suivre": "enfant1",
+         "ecart": 3
+        },
+        {
+         "suivre": "enfant2",
+         "ecart": 3.4
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Emmenez-les vers la montagne, à l'ouest de la ville.",
+       "cible": "zone:montagne",
+       "quand": {
+        "zone": "montagne"
+       }
+      },
+      {
+       "type": "recit",
+       "texte": "Sur les pentes, sous le soleil, les enfants ont soif : vous n'avez emporté ni eau ni vivres. En bas, la ville est étrangement calme."
+      }
+     ],
+     "titre": "La fuite",
+     "consequence": "Et si vous aviez fui : des familles entières se seraient jetées sur les pentes sans eau ni abri, alors que la sécurité était promise à ceux qui restaient chez eux. Ce jour-là, La Mecque ne fut pas livrée au pillage.",
+     "indice": "La sécurité était promise à ceux qui restaient chez eux, portes closes, ou entraient dans la Mosquée sacrée."
+    }
+   ]
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "suivre": "voisine",
+     "ecart": 2.2
+    },
+    {
+     "suivre": "enfant1",
+     "ecart": 3
+    },
+    {
+     "suivre": "enfant2",
+     "ecart": 3.4
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Raccompagnez-les jusqu'à leur porte.",
+   "cible": "zone:porte_voisine",
+   "quand": {
+    "zone": "porte_voisine"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "lacher": "voisine"
+    },
+    {
+     "lacher": "enfant1"
+    },
+    {
+     "lacher": "enfant2"
+    },
+    {
+     "aller": "enfant1",
+     "vers": [
+      [
+       -46,
+       32.6
+      ]
+     ],
+     "attendre": false
+    },
+    {
+     "aller": "enfant2",
+     "vers": [
+      [
+       -46,
+       32.6
+      ]
+     ],
+     "attendre": false
+    },
+    {
+     "aller": "voisine",
+     "vers": [
+      [
+       -46,
+       32.6
+      ]
+     ]
+    },
+    {
+     "cacher": [
+      "voisine",
+      "enfant1",
+      "enfant2"
+     ]
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "La porte se referme. Dans les rues désertes, on n'entend plus que les pas de l'armée qui entre dans la ville. Un peu plus tard, la rumeur court : tout le monde se rend à la Mosquée sacrée."
+  },
+  {
+   "type": "objectif",
+   "texte": "Rendez-vous à la Mosquée sacrée, près de la Ka'ba.",
+   "cible": "zone:haram",
+   "quand": {
+    "zone": "haram"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "regarder": [
+      0,
+      3,
+      0
+     ],
+     "duree": 1.2
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Autour de la Ka'ba se dressent trois cent soixante idoles. Selon al-Bukhârî, le Prophète ﷺ les frappe une à une d'un bâton qu'il tient à la main, en récitant un verset du Coran."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "effet": "idoles",
+     "id": "idoles",
+     "intervalle": 0.12
+    },
+    {
+     "flottant": "جاء الحق وزهق الباطل",
+     "ar": true
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "qui": "Sourate al-Isrâ' (17:81)",
+   "sous": "traduction du sens",
+   "texte": "« La vérité est venue, et le faux a disparu : le faux est voué à disparaître. »"
+  },
+  {
+   "type": "recit",
+   "texte": "Puis Bilâl monte sur le toit de la Ka'ba et lance l'appel à la prière. Ce jour-là, le Prophète ﷺ accorde la sécurité à la plupart de ceux qui l'avaient combattu pendant vingt ans."
+  }
+ ],
+ "fin": "La Mecque en paix"
+}

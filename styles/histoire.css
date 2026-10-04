@@ -323,6 +323,7 @@ body.retour .monde canvas{filter:sepia(.35) hue-rotate(-12deg) saturate(.6) brig
   background:rgba(12,13,14,.72);border:1px solid rgba(230,190,106,.35);white-space:nowrap}
 .m-noms span i{font-style:normal;font-family:var(--f-ar);font-weight:400;font-size:13px;color:var(--j-or-fort)}
 .m-noms span[hidden]{display:none}
+.m-noms span.lieu{background:rgba(244,237,224,.88);color:#2A1E08;border-color:transparent;font-weight:700;font-size:11.5px}
 .m-joy{position:absolute;left:0;top:0;width:120px;height:120px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(0,0,0,.18);pointer-events:none}
 .m-joy i{position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(255,255,255,.55)}
 .m-agir,.m-courir{position:absolute;right:calc(18px + env(safe-area-inset-right,0px));border-radius:50%;font-weight:800;color:#2A1E08;background:linear-gradient(180deg,var(--j-or-fort),var(--j-or));box-shadow:0 10px 26px -10px #000}

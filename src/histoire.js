@@ -575,10 +575,10 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
   };
 
   // ---------- chapitre ----------
-  async function jouer(i, depuis = 0) {
+  async function jouer(i, depuis = 0, etapes = null) {
     const j = ++jeton, ok = () => { if (j !== jeton) throw ANNULE; };
     entrer(); toutMasquer(); nettoyerCarte(); sable.mode(null);
-    const c = CH[i], ev = evDe(c);
+    const c = etapes ? { ...CH[i], etapes } : CH[i], ev = evDe(c); // « etapes » : essais automatisés
     etat = { i, c, ev, evIndex: D.INDEX[c.evenement], erreurs: 0, lumieres: 0 };
     sauve.dernier = i; ecrire();
     carte.ambiance(c.ambiance || 'jour'); carte.epoque(Math.max(0, etat.evIndex - 1));
@@ -713,6 +713,7 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
     accueil,
     jouer: (i, k) => jouer(typeof i === 'string' ? CH.findIndex((c) => c.evenement === i) : i, k),
     mission: missions.test, // essais automatisés
+    essai: (id, etapes) => jouer(CH.findIndex((c) => c.evenement === id), 0, etapes),
     actif: () => actif,
     etat: () => etat && { i: etat.i, k: etat.k, erreurs: etat.erreurs, lumieres: etat.lumieres }, // pour les tests
   };

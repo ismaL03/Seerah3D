@@ -1,6 +1,6 @@
 // Joue une mission à la première personne de bout en bout : à chaque choix une mauvaise option puis la
 // bonne, à chaque objectif qui peut échouer un échec forcé puis la réussite. Captures en option.
-// usage : node mission.mjs <chapitre> [--captures dossier] [--sans-erreurs] [--anime] [--vp 1440x900]
+// usage : node mission.mjs <chapitre>[:<mission>] [--captures dossier] [--sans-erreurs] [--anime] [--vp 1440x900]
 import { ouvrir, images } from './commun.mjs';
 
 const args = process.argv.slice(2), chapitre = args[0] || 'naissance';
@@ -8,23 +8,28 @@ const opt = (n) => (args.includes(n) ? args[args.indexOf(n) + 1] : null);
 const dossier = opt('--captures'), [lw, lh] = (opt('--vp') || '1440x900').split('x').map(Number);
 const avecErreurs = !args.includes('--sans-erreurs'), reduit = !args.includes('--anime');
 const { browser, page, erreurs } = await ouvrir({ reduit, vp: { width: lw, height: lh } });
-const k = await page.evaluate((c) => {
-  const { D } = window.__sira, ch = D.HISTOIRE.chapitres.find((x) => x.evenement === c);
-  return ch.etapes.findIndex((e) => e.type === 'mission');
-}, chapitre);
-if (k < 0) { console.log('Pas de mission dans ce chapitre'); process.exit(1); }
-await page.evaluate(([c, k]) => { window.__sira.jeu.jouer(c, k); }, [chapitre, k]); // sans attendre la fin du chapitre
+// <chapitre> : la première mission du chapitre ; <chapitre>:<mission> : cette mission, jouée seule dans ce chapitre
+const [chap, seule] = chapitre.split(':');
+if (seule) await page.evaluate(([c, m]) => { window.__sira.jeu.essai(c, [{ type: 'mission', mission: m, epreuves: 0 }]); }, [chap, seule]);
+else {
+  const k = await page.evaluate((c) => {
+    const { D } = window.__sira, ch = D.HISTOIRE.chapitres.find((x) => x.evenement === c);
+    return ch.etapes.findIndex((e) => e.type === 'mission');
+  }, chap);
+  if (k < 0) { console.log('Pas de mission dans ce chapitre'); process.exit(1); }
+  await page.evaluate(([c, k]) => { window.__sira.jeu.jouer(c, k); }, [chap, k]); // sans attendre la fin du chapitre
+}
 const clic = async (s) => { try { await page.click(s, { timeout: 4000, force: true }); } catch { /* déjà masqué */ } };
 const journal = [], tentes = new Set();
 let n = 0, fin = false;
-const capture = async (nom) => { if (dossier) await page.screenshot({ path: `${dossier}/${chapitre}-${String(++n).padStart(2, '0')}-${nom}.png` }); };
+const capture = async (nom) => { if (dossier) await page.screenshot({ path: `${dossier}/${chapitre.replace(':', '-')}-${String(++n).padStart(2, '0')}-${nom}.png` }); };
 for (let tour = 0; tour < 400 && !fin; tour++) {
   await page.waitForTimeout(reduit ? 500 : 1200);
   const st = await page.evaluate(() => {
     const v = (s) => { const e = document.querySelector(s); return !!e && !e.hidden; };
     const m = window.__sira.jeu.mission, e = m.etat(), o = m.etape();
     return { carte: v('#jChapCarte'), role: v('#jRole'), conseq: v('#jConseq'), bilan: v('#jBilan'), dlg: v('#jDialogue'), suite: v('#jdSuite'),
-      opts: document.querySelectorAll('#jdOptions .j-opt').length, choix: m.choix(), monde: document.body.classList.contains('jeu-monde'),
+      opts: v('#jDialogue') ? document.querySelectorAll('#jdOptions .j-opt').length : 0, choix: m.choix(), monde: document.body.classList.contains('jeu-monde'),
       objectif: o && { texte: o.texte, echecs: (o.echecs || []).length, quand: o.quand }, scene: e && e.scene, texte: document.getElementById('jdTexte').textContent.slice(0, 80),
       etat: window.__sira.jeu.etat() };
   });

@@ -13,10 +13,10 @@ const HABITS = ['#7A5A3C', '#8C6F4E', '#5E4B3B', '#A08060', '#6B5A48', '#8A7A62'
 const COIFFES = ['#E2D6BF', '#D4C3A3', '#C9B48E', '#EDE4D3', '#BFAF95'];
 
 const AMBIANCES = {
-  aube: { haut: '#8EA6C4', bas: '#F2C597', soleil: 0xFFB473, si: 2.5, hc: 0xFFE1C2, hs: 0x8C6B4E, hi: 1.15, dir: [-0.85, 0.3, 0.32], brume: 0xE9C8A4, b0: 50, b1: 380 },
+  aube: { haut: '#8EA6C4', bas: '#F2C597', soleil: 0xFFB473, si: 2.5, hc: 0xFFE1C2, hs: 0x8C6B4E, hi: 1.15, dir: [0.85, 0.3, 0.32], brume: 0xE9C8A4, b0: 50, b1: 380 },
   jour: { haut: '#6E9FD2', bas: '#DCE6EB', soleil: 0xFFF1D6, si: 3.0, hc: 0xEEF4FA, hs: 0xC2A27A, hi: 1.25, dir: [0.45, 0.8, 0.35], brume: 0xDCE5EA, b0: 70, b1: 480 },
-  soir: { haut: '#3D4D77', bas: '#EC9B66', soleil: 0xFF9A55, si: 2.2, hc: 0xFFC9A0, hs: 0x5E4636, hi: 0.95, dir: [0.88, 0.22, -0.3], brume: 0xC98F6E, b0: 40, b1: 320 },
-  nuit: { haut: '#04081A', bas: '#16264A', soleil: 0xA8BEFF, si: 0.55, hc: 0x4A5C8C, hs: 0x18160F, hi: 0.55, dir: [0.3, 0.75, -0.45], brume: 0x0D1628, b0: 22, b1: 150, etoiles: true },
+  soir: { haut: '#3D4D77', bas: '#EC9B66', soleil: 0xFF9A55, si: 2.2, hc: 0xFFC9A0, hs: 0x5E4636, hi: 0.95, dir: [-0.88, 0.22, -0.3], brume: 0xC98F6E, b0: 40, b1: 320 },
+  nuit: { haut: '#050A1F', bas: '#1B2C52', soleil: 0xB4C6FF, si: 0.9, hc: 0x5C6FA0, hs: 0x241F18, hi: 0.95, dir: [0.3, 0.75, -0.45], brume: 0x111B33, b0: 30, b1: 210, etoiles: true },
 };
 
 export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas }) {
@@ -119,9 +119,12 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
       const bord = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.025, 6, 20), or); bord.rotation.x = Math.PI / 2; bord.position.y = 0.08; g.add(bord);
       const ceinture = new THREE.Mesh(new THREE.TorusGeometry(0.225, 0.02, 6, 18), or); ceinture.rotation.x = Math.PI / 2; ceinture.position.y = 1.0; g.add(ceinture);
     }
-    const tete = new THREE.Mesh(new THREE.SphereGeometry(0.12, 14, 10), M(coiffe)); tete.position.y = 1.61; tete.castShadow = true; g.add(tete);
-    const voile = new THREE.Mesh(new THREE.ConeGeometry(0.16, 0.34, 10, 1, true), M(coiffe, { side: THREE.DoubleSide })); voile.position.set(0, 1.5, -0.03); g.add(voile);
-    if (p.riche) {
+    const tete = new THREE.Mesh(new THREE.SphereGeometry(0.12, 14, 10), M(p.tete_nue ? '#9C7A5E' : coiffe)); tete.position.y = 1.61; tete.castShadow = true; g.add(tete);
+    if (!p.tete_nue) {
+      const long = p.voile === 'long';
+      const voile = new THREE.Mesh(new THREE.ConeGeometry(long ? 0.22 : 0.16, long ? 0.62 : 0.34, 10, 1, true), M(coiffe, { side: THREE.DoubleSide })); voile.position.set(0, long ? 1.4 : 1.5, -0.03); g.add(voile);
+    }
+    if (p.tete_nue || p.voile === 'long') { /* ni couronne ni cordon */ } else if (p.riche) {
       const couronne = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.125, 0.09, 12, 1, true), M('#D8B04A', { metalness: 0.6, roughness: 0.35, side: THREE.DoubleSide })); couronne.position.y = 1.72; g.add(couronne);
     } else {
       const agal = new THREE.Mesh(new THREE.TorusGeometry(0.115, 0.014, 6, 16), M('#2B2420')); agal.rotation.x = Math.PI / 2; agal.position.y = 1.69; g.add(agal);
@@ -232,7 +235,8 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
   // après (vers 605), plus haute, porte surélevée, Hijr laissé hors des murs. Étoffe rayée du Yémen (à vérifier).
   function kaba(e) {
     const g = new THREE.Group(), h = e.h || 9, apres = e.reconstruite !== false && h >= 7;
-    const etoffe = new THREE.MeshStandardMaterial({ map: textureRayures(e.rayures || ['#2B2524', '#3A2F2A', '#2B2524', '#5A4632']), roughness: 0.95 });
+    // étoffe rayée, ou pierre nue pendant le chantier
+    const etoffe = e.pierre ? M('#8E806F') : new THREE.MeshStandardMaterial({ map: textureRayures(e.rayures || ['#2B2524', '#3A2F2A', '#2B2524', '#5A4632']), roughness: 0.95 });
     const corps = new THREE.Mesh(new THREE.BoxGeometry(11, h, 12), etoffe); corps.position.y = h / 2; corps.castShadow = corps.receiveShadow = true; g.add(corps);
     const toit = new THREE.Mesh(new THREE.BoxGeometry(11.2, 0.3, 12.2), M('#5B4A3A')); toit.position.y = h + 0.1; g.add(toit);
     const porteY = apres ? 2.2 : 1.1;
@@ -299,6 +303,23 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
     const tete = new THREE.Mesh(new THREE.DodecahedronGeometry(0.28, 0), M('#7A6B5C')); tete.position.y = h + 0.15; g.add(tete);
     return g;
   }
+  // Panneau indicateur : texte en français (et en arabe) peint sur une planche.
+  function panneau(e) {
+    const g = new THREE.Group(), c = document.createElement('canvas'); c.width = 512; c.height = 256;
+    const x = c.getContext('2d'); x.fillStyle = e.fond || '#F4EFE2'; x.fillRect(0, 0, 512, 256);
+    x.strokeStyle = e.bord || '#2F6B4F'; x.lineWidth = 14; x.strokeRect(7, 7, 498, 242);
+    x.fillStyle = e.encre || '#1F2A24'; x.textAlign = 'center'; x.textBaseline = 'middle';
+    const l = String(e.texte || '').split('\n');
+    if (e.ar) { x.font = '600 58px Amiri, serif'; x.fillText(e.ar, 256, 74); }
+    x.font = `700 ${l.length > 1 ? 40 : 46}px "Plus Jakarta Sans", sans-serif`;
+    l.forEach((t, i) => x.fillText(t, 256, (e.ar ? 160 : 128) + (i - (l.length - 1) / 2) * 46));
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+    const h = e.h || 2.2;
+    [-0.9, 0.9].forEach((dx) => g.add(new THREE.Mesh(new THREE.BoxGeometry(0.1, h, 0.1), M('#5A4632')).translateX(dx).translateY(h / 2)));
+    const p = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.1, 0.06), [M('#E9E2D0'), M('#E9E2D0'), M('#E9E2D0'), M('#E9E2D0'), new THREE.MeshStandardMaterial({ map: t, roughness: 0.8 }), new THREE.MeshStandardMaterial({ map: t, roughness: 0.8 })]);
+    p.position.y = h - 0.3; p.castShadow = true; g.add(p);
+    return g;
+  }
   function cairn() { const g = new THREE.Group(); for (let i = 0; i < 4; i++) g.add(new THREE.Mesh(new THREE.DodecahedronGeometry(0.32 - i * 0.06, 0), M('#9C8C78')).translateY(0.25 + i * 0.4)); g.children.forEach((c) => (c.castShadow = true)); return g; }
   function cloture(e) { // enclos de cordes : poteaux et cordes, ouverture côté « ouverture »
     const g = new THREE.Group(), { w = 12, d = 10 } = e, poteaux = [];
@@ -314,6 +335,7 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
     return g;
   }
   let solidesLocaux = [];
+  const nomsLieux = [];
   const OBJETS = {
     rouleau: () => { const g = new THREE.Group(); g.add(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.32, 8), M('#E6D8B8')).rotateZ(Math.PI / 2)); g.add(new THREE.Mesh(new THREE.TorusGeometry(0.052, 0.012, 5, 10), M('#8E3B2E')).rotateY(Math.PI / 2)); return g; },
     outre: () => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.22, 8, 6), M('#7A5634')); m.scale.set(1, 0.7, 1.4); return m; },
@@ -330,10 +352,10 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
     if (monde) { scene.remove(monde); monde.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); }
     monde = new THREE.Group(); scene.add(monde);
     solides.length = zones.length = ravins.length = recifs.length = feux.length = animes.length = 0;
-    pnjs.clear(); objets.clear(); lieux.clear(); elements.clear(); $('.m-noms').innerHTML = '';
+    pnjs.clear(); objets.clear(); lieux.clear(); elements.clear(); $('.m-noms').innerHTML = ''; nomsLieux.length = 0;
     if (barque) { barque = null; J.vehicule = null; }
     if (etoiles) { scene.remove(etoiles); etoiles = null; }
-    J.dans.clear(); J.chute = null; J.porte = null; porteObj && camera.remove(porteObj); porteObj = null; J.vehicule = null;
+    J.dans.clear(); J.chute = null; J.porte = null; porteObj && camera.remove(porteObj); porteObj = null; J.vehicule = null; J.eau = null;
   }
   let groupe = null; // groupe où poser le décor (le décor fixe est fusionné après construction)
   function poser(o, x, z, r = 0, dy = 0) { o.position.set(x, sol(x, z) + dy, z); o.rotation.y = -r * RAD; (groupe || monde).add(o); return o; }
@@ -453,19 +475,44 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
       case 'mer': { const w = e.x2 - e.x1, dd = e.z2 - e.z1; const m = new THREE.Mesh(new THREE.PlaneGeometry(w + 400, dd + 400, 1, 1), new THREE.MeshStandardMaterial({ color: '#3F8C93', roughness: 0.35, metalness: 0.1, transparent: true, opacity: 0.88 })); m.rotation.x = -Math.PI / 2; m.position.set((e.x1 + e.x2) / 2, -0.4, (e.z1 + e.z2) / 2); m.receiveShadow = true; monde.add(m); o = m; J.eau = -0.4; break; }
       case 'recif': { const g = new THREE.Group(); for (let i = 0; i < 4; i++) g.add(rocher(0.5 + Math.random() * 0.8).translateX((Math.random() - 0.5) * e.r).translateZ((Math.random() - 0.5) * e.r)); const ecume = new THREE.Mesh(new THREE.RingGeometry(e.r * 0.8, e.r * 1.1, 20), new THREE.MeshBasicMaterial({ color: '#F2F6F4', transparent: true, opacity: 0.6, side: THREE.DoubleSide })); ecume.rotation.x = -Math.PI / 2; ecume.position.y = 0.05; g.add(ecume); g.position.set(e.x, -0.4, e.z); monde.add(g); recifs.push({ id: e.id, x: e.x, z: e.z, r: e.r }); o = g; break; }
       case 'boite': { const m = new THREE.Mesh(new THREE.BoxGeometry(e.w || 1, e.h || 1, e.d || 1), M(e.c || '#8B6A47')); m.castShadow = m.receiveShadow = true; o = poser(m, e.x, e.z, e.r || 0, (e.h || 1) / 2 + (e.dy || 0)); if (e.solide !== false && (e.h || 1) > 0.3) boite(e.x, e.z, e.w || 1, e.d || 1, e.r || 0); break; }
+      case 'panneau': o = poser(panneau(e), e.x, e.z, e.r || 0); cercle(e.x, e.z, 0.2); break;
+      case 'lumiere': { // halo doré (présence hors champ : on ne montre jamais la personne)
+        const g = new THREE.Group();
+        const R = e.r || 0.9, H = e.h || 6, voile = (r, op) => new THREE.Mesh(new THREE.CylinderGeometry(r * 0.6, r, H, 20, 1, true), new THREE.MeshBasicMaterial({ color: 0xFFE2A0, transparent: true, opacity: op, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false })).translateY(H / 2);
+        g.add(voile(R * 0.35, 0.16), voile(R, 0.06), voile(R * 1.8, 0.03));
+        const lum = new THREE.PointLight(0xFFD27A, 6, 16, 1.6); lum.position.y = 1.6; g.add(lum);
+        o = poser(g, e.x, e.z); break;
+      }
+      case 'manteau': { // manteau étendu, la Pierre noire posée au centre
+        const g = new THREE.Group();
+        g.add(new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.03, 2.2), M(e.c || '#E6DCC6')));
+        const pn = new THREE.Mesh(new THREE.SphereGeometry(0.28, 10, 8), M('#18110E', { roughness: 0.35 })); pn.scale.set(1.2, 0.7, 1); pn.position.y = 0.18; g.add(pn);
+        o = poser(g, e.x, e.z, e.r || 0, 0.05); break;
+      }
       case 'zone': zones.push(e.r ? { id: e.id, x: e.x, z: e.z, r: e.r } : { id: e.id, x1: e.x1, z1: e.z1, x2: e.x2, z2: e.z2 }); break;
       case 'ravin': ravins.push({ id: e.id || 'ravin', ax: e.de[0], az: e.de[1], bx: e.a[0], bz: e.a[1], l: e.largeur, p: e.profondeur }); break;
       case 'objet': o = poser(OBJETS[e.modele](), e.x, e.z, e.r || 0, e.dy || 0.1); break;
       default: break;
     }
     if (o && e.id) { elements.set(e.id, o); for (let i = n0; i < solides.length; i++) solides[i].ref = o; }
+    if (e.nom) { // nom flottant au-dessus d'un lieu (maison, puits, carrière…)
+      const el = document.createElement('span'); el.className = 'lieu'; el.textContent = e.nom; $('.m-noms').appendChild(el);
+      nomsLieux.push({ el, x: e.x, z: e.z, y: (e.hauteur ?? (e.h || 3.5)) + 0.8, o });
+    }
     if (o && e.visible === false) o.visible = false;
   }
 
   // ---------- personnages et animaux ----------
   function modelePnj(p) {
     switch (p.modele) {
-      case 'chameau': { const c = chameau(!!p.charge); return c; }
+      case 'chameau': {
+        const c = chameau(!!p.charge);
+        if (p.parure) { // colliers (qalâ'id) des bêtes destinées au sacrifice
+          [0, 1].forEach((k) => { const t = new THREE.Mesh(new THREE.TorusGeometry(0.2 - k * 0.03, 0.035, 6, 14), M(k ? '#C9A043' : '#B5552F')); t.position.set(0, 2.0 + k * 0.25, 1.05 + k * 0.12); t.rotation.x = Math.PI / 2 - 0.55; c.add(t); });
+          const ruban = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.35, 0.06), M('#E8E2D2')); ruban.position.set(0, 1.85, 1.15); c.add(ruban);
+        }
+        return c;
+      }
       case 'cheval': return cheval(p.robe || 0);
       case 'chevre': case 'mouton': return petitBetail(p.modele);
       case 'elephant': return elephant();
@@ -487,7 +534,7 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
   function ajouterTroupeau(t) {
     for (let i = 0; i < (t.n || 8); i++) {
       const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * (t.r || 5);
-      ajouterPnj({ id: `${t.id}#${i}`, groupe: t.id, modele: t.modele || 'chameau', x: t.x + Math.cos(a) * r, z: t.z + Math.sin(a) * r, cap: Math.random() * 360, charge: t.charge, vitesse: 1.5 + Math.random() * 0.5, visible: t.visible, invite: t.invite, errer: t.errer === false ? null : { r: t.r || 5, x: t.x, z: t.z } });
+      ajouterPnj({ id: `${t.id}#${i}`, groupe: t.id, modele: t.modele || 'chameau', x: t.x + Math.cos(a) * r, z: t.z + Math.sin(a) * r, cap: Math.random() * 360, charge: t.charge, parure: t.parure, vitesse: 1.5 + Math.random() * 0.5, visible: t.visible, invite: t.invite, errer: t.errer === false ? null : { r: t.r || 5, x: t.x, z: t.z } });
     }
   }
   function ajouterFoule(f) {
@@ -535,7 +582,7 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
       if (u.pattes) u.pattes.forEach((p, i) => (p.rotation.x = Math.sin(n.phase + (i % 2 ? Math.PI : 0) + (i > 1 ? Math.PI / 2 : 0)) * 0.35));
       if (n.def.modele === 'chameau' || n.def.modele === 'cheval') n.obj.position.y += Math.abs(Math.sin(n.phase)) * 0.05;
     } else if (u.bras && !reduit) { u.bras[0].rotation.x *= 0.9; u.bras[1].rotation.x *= 0.9; n.obj.position.y += Math.sin(t * 1.3 + n.phase) * 0.004; }
-    if (n.cone) n.cone.material.opacity = 0.06 + 0.03 * Math.sin(t * 3 + n.phase);
+    if (n.cone) n.cone.material.opacity = (J.nuit ? 0.11 : 0.06) + 0.03 * Math.sin(t * 3 + n.phase);
   }
   // Un garde voit le joueur : dans le cône, à portée (doublée s'il court), sans mur entre eux.
   function voit(n) {
@@ -548,6 +595,10 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
   }
   function cache(ax, az, bx, bz) {
     for (const s of solides) {
+      if (s.type === 'cercle') { // gros rochers : ils cachent aussi
+        if (s.r >= 1 && !(s.ref && !s.ref.visible) && distSeg(s.x, s.z, ax, az, bx, bz) < s.r * 0.9 && Math.hypot(bx - s.x, bz - s.z) > s.r) return true;
+        continue;
+      }
       if (s.type !== 'boite' || Math.max(s.hx, s.hz) < 1.2 || (s.ref && !s.ref.visible)) continue;
       const c = Math.cos(-s.r), si = Math.sin(-s.r);
       const lx = (x, z) => [(x - s.x) * c - (z - s.z) * si, (x - s.x) * si + (z - s.z) * c];
@@ -707,7 +758,7 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
     J.porte = modele || null;
     if (!modele) return;
     porteObj = OBJETS[modele] ? OBJETS[modele]() : OBJETS.sac();
-    porteObj.position.set(0.32, -0.38, -0.7); porteObj.rotation.set(0.3, 0.4, 0); camera.add(porteObj);
+    porteObj.position.set(0.34, -0.36, -0.85); porteObj.rotation.set(0.3, 0.4, 0); porteObj.scale.setScalar(0.55); camera.add(porteObj);
   }
   scene.add(camera);
 
@@ -767,6 +818,11 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
       return Promise.resolve();
     },
     poussiere({ x, z, s = 2 }) { poussiere(x, z, s); return Promise.resolve(); },
+    // Élève (ou abaisse) un élément de dy mètres
+    monter({ id, dy = 1, duree = 2 }) {
+      const o = elements.get(id); if (!o) return Promise.resolve(); const y0 = o.position.y; let t = 0;
+      return new Promise((fin) => animes.push((dt) => { t = Math.min(1, t + dt / (reduit ? 0.01 : duree)); o.position.y = y0 + dy * lisse(0, 1, t); if (t >= 1) { fin(); return false; } return true; }));
+    },
     // La roche cède sous les coups (le rocher du Fossé) : elle s'effondre en sable
     effondrer({ id }) {
       const o = elements.get(id); if (!o) return Promise.resolve(); let t = 0;
@@ -796,7 +852,8 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
     if (def && def.limites) { const [x1, z1, x2, z2] = def.limites; J.x = Math.max(x1, Math.min(x2, J.x)); J.z = Math.max(z1, Math.min(z2, J.z)); }
     const houle = reduit ? 0 : Math.sin(t * 1.3) * 0.12;
     J.y = (J.eau ?? -0.4) + 1.55 + houle;
-    B.obj.position.set(J.x + fx * 4.5, (J.eau ?? -0.4) - 0.1 + houle, J.z + fz * 4.5);
+    // le joueur se tient à la poupe, un peu à gauche du mât
+    B.obj.position.set(J.x + fx * 4.5 + Math.cos(B.cap) * 0.9, (J.eau ?? -0.4) - 0.1 + houle, J.z + fz * 4.5 - Math.sin(B.cap) * 0.9);
     B.obj.rotation.set(reduit ? 0 : Math.sin(t * 0.9) * 0.03, B.cap + Math.PI, reduit ? 0 : Math.sin(t * 1.3) * 0.04);
     for (const r of recifs) {
       const d = Math.min(Math.hypot(J.x - r.x, J.z - r.z), Math.hypot(J.x + fx * 8 - r.x, J.z + fz * 8 - r.z));
@@ -879,11 +936,21 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
     if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) { renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
     chrono.n++; chrono.t += dtr;
     if (chrono.n >= 60) { const moy = chrono.t / chrono.n; chrono.n = chrono.t = 0; const c = moy > 0.034 ? Math.max(0.75, dpr - 0.25) : moy < 0.015 ? Math.min(mobile ? 1.5 : 2, dpr + 0.25) : dpr; if (c !== dpr) { dpr = c; renderer.setPixelRatio(dpr); } }
-    if (!enPause && def) maj(dt, now / 1000);
+    // pas de temps fixes (0,05 s au plus) : sur une machine lente, plusieurs pas par image, sans traverser les murs
+    if (!enPause && def) { let reste = Math.min(0.25, dtr); do { const p = Math.min(0.05, reste); maj(p, now / 1000); reste -= p; } while (reste > 0.001); }
     renderer.render(scene, camera);
     if (def) { majBoussole(w, h); majNoms(w, h); }
   }
   function majNoms(w, h) {
+    for (const l of nomsLieux) {
+      const d = Math.hypot(l.x - J.x, l.z - J.z);
+      if (J.bloque || d > 60 || (l.o && !l.o.visible)) { l.el.hidden = true; continue; }
+      vp.set(l.x, sol(l.x, l.z) + l.y, l.z).project(camera);
+      if (vp.z > 1 || Math.abs(vp.x) > 1.1 || Math.abs(vp.y) > 1.1) { l.el.hidden = true; continue; }
+      l.el.hidden = false;
+      l.el.style.transform = `translate(${(vp.x * 0.5 + 0.5) * w}px,${(-vp.y * 0.5 + 0.5) * h}px) translate(-50%,-100%)`;
+      l.el.style.opacity = d > 45 ? (60 - d) / 15 : 1;
+    }
     for (const n of pnjs.values()) {
       const el = n.etiquette; if (!el) continue;
       const d = Math.hypot(n.x - J.x, n.z - J.z);
@@ -914,7 +981,9 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
       if (a || s) {
         const v = (J.course ? 3.6 : 1.75) * (def.vitesse || 1), n = Math.hypot(a, s), sin = Math.sin(J.lacet), cos = Math.cos(J.lacet);
         const dx = (-sin * a + cos * s) / Math.max(1, n) * v * dt, dz = (-cos * a - sin * s) / Math.max(1, n) * v * dt;
-        [J.x, J.z] = resoudre(J.x + dx, J.z + dz, 0.35); bouge = true;
+        const [nx, nz] = resoudre(J.x + dx, J.z + dz, 0.35);
+        // on n'entre pas dans l'eau au-delà des genoux
+        if (J.eau == null || sol(nx, nz) > J.eau - 0.45) { J.x = nx; J.z = nz; bouge = true; }
       }
       J.y = sol(J.x, J.z);
       const r = dansRavin(); if (r) { J.chute = { id: r.id, t: 0, v: 1, fini: false }; J.bloque = true; emit('chute-debut', { id: r.id }); }

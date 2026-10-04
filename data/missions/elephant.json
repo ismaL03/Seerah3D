@@ -188,6 +188,83 @@
        0
       ],
       [
+       160,
+       0
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "montagne",
+     "x": 205,
+     "z": -95,
+     "r": 85,
+     "h": 105
+    },
+    {
+     "type": "montagne",
+     "x": 175,
+     "z": 165,
+     "r": 70,
+     "h": 60,
+     "c": "#A3825F"
+    },
+    {
+     "type": "montagne",
+     "x": -215,
+     "z": -20,
+     "r": 95,
+     "h": 115
+    },
+    {
+     "type": "montagne",
+     "x": -40,
+     "z": -245,
+     "r": 110,
+     "h": 85,
+     "c": "#9E7E5E"
+    },
+    {
+     "type": "montagne",
+     "x": -70,
+     "z": 235,
+     "r": 100,
+     "h": 70,
+     "c": "#A3825F"
+    },
+    {
+     "type": "acacia",
+     "x": -60,
+     "z": 70
+    },
+    {
+     "type": "acacia",
+     "x": 95,
+     "z": 60
+    },
+    {
+     "type": "acacia",
+     "x": -90,
+     "z": -60
+    },
+    {
+     "type": "jarre",
+     "x": 21,
+     "z": 4
+    },
+    {
+     "type": "jarre",
+     "x": 21.6,
+     "z": 5.2
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
        40,
        -4
       ],
@@ -296,59 +373,6 @@
      "s": 1.3
     },
     {
-     "type": "montagne",
-     "x": 205,
-     "z": -95,
-     "r": 85,
-     "h": 105
-    },
-    {
-     "type": "montagne",
-     "x": 175,
-     "z": 165,
-     "r": 70,
-     "h": 60,
-     "c": "#A3825F"
-    },
-    {
-     "type": "montagne",
-     "x": -215,
-     "z": -20,
-     "r": 95,
-     "h": 115
-    },
-    {
-     "type": "montagne",
-     "x": -40,
-     "z": -245,
-     "r": 110,
-     "h": 85,
-     "c": "#9E7E5E"
-    },
-    {
-     "type": "montagne",
-     "x": -70,
-     "z": 235,
-     "r": 100,
-     "h": 70,
-     "c": "#A3825F"
-    },
-    {
-     "type": "acacia",
-     "x": -60,
-     "z": 70
-    },
-    {
-     "type": "acacia",
-     "x": 95,
-     "z": 60
-    },
-    {
-     "type": "acacia",
-     "x": -90,
-     "z": -60
-    },
-    {
      "type": "feu",
      "id": "feu1",
      "x": -14,
@@ -359,16 +383,6 @@
      "id": "feu2",
      "x": 15,
      "z": 19
-    },
-    {
-     "type": "jarre",
-     "x": 21,
-     "z": 4
-    },
-    {
-     "type": "jarre",
-     "x": 21.6,
-     "z": 5.2
     },
     {
      "type": "zone",
@@ -2327,7 +2341,7 @@
      "indice": "'Abd al-Muttalib savait qu'il n'avait pas la force de combattre l'armée : il s'en remit au Maître de la Maison."
     },
     {
-     "texte": "« Proposons au roi le tiers des richesses de la Tihâma, s'il accepte de rebrousser chemin et de laisser la Maison. »",
+     "texte": "« Proposons au roi le tiers de toutes les richesses de la Tihâma, s'il accepte de rebrousser chemin et de laisser la Maison. »",
      "suite": [
       {
        "type": "parole",

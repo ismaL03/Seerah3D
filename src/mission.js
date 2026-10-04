@@ -115,9 +115,11 @@ export function creerMissions({ hote, ui }) {
     if (a.aller) {
       // « vers le joueur » : on s'arrête à deux pas de lui, face à lui
       const devant = () => { const j = W.position(), n = W.pnj(a.aller) || { x: j.x, z: j.z + 1 }, d = Math.hypot(n.x - j.x, n.z - j.z) || 1; return [j.x + (n.x - j.x) / d * 1.9, j.z + (n.z - j.z) / d * 1.9]; };
+      // trop loin du joueur : on le rapproche d'abord (hors de sa vue, le plus souvent)
+      if (a.vers === 'joueur') { const j = W.position(), n = W.pnj(a.aller); if (n && Math.hypot(n.x - j.x, n.z - j.z) > 24) { const d = Math.hypot(n.x - j.x, n.z - j.z); W.placer(a.aller, [j.x + (n.x - j.x) / d * 12, j.z + (n.z - j.z) / d * 12], 0); } }
       const vers = a.vers === 'joueur' ? [devant()] : a.vers.map((p) => point(p));
       const fin = W.aller(a.aller, vers, a.vitesse);
-      if (a.attendre !== false) { await fin; ok(); }
+      if (a.attendre !== false) { await Promise.race([fin, ui.pause(a.max || 12000)]); ok(); }
     }
     if (a.regarder) { const p = typeof a.regarder === 'string' && a.regarder.startsWith('pnj:') ? W.tete(a.regarder.slice(4)) : a.regarder.length === 2 ? [a.regarder[0], 1.6, a.regarder[1]] : a.regarder; if (p) { await W.regarder(p, a.duree || 1.2); ok(); } }
     if (a.effet) { const fin = W.effet(a.effet, a); if (a.attendre !== false) { await fin; ok(); } }
@@ -179,10 +181,21 @@ export function creerMissions({ hote, ui }) {
             on('agir', (d) => { if (d.id !== id) return; if (q.prendre) { W.montrer(id, false); if (q.porter) W.porter(q.porter); } fini(); });
           }
           if (q.zone) { on('zone', (d) => d.id === q.zone && fini()); if (W.dans(q.zone)) fini(); }
+          if (q.tous) { // parler à chacun (leurs paroles sont dans « dialogues »)
+            const vus = new Set(); compteur(`${q.nom || 'Écoutés'} : 0 / ${q.tous.length}`);
+            on('agir', async (d) => {
+              if (!q.tous.includes(d.id)) return;
+              await parlerLibre(d.id, M.dialogues[d.id] || ['…'], true);
+              if (run !== r) return;
+              vus.add(d.id); compteur(`${q.nom || 'Écoutés'} : ${vus.size} / ${q.tous.length}`);
+              if (vus.size === q.tous.length) fini();
+            });
+          }
           if (q.tenir) {
-            on('tenir', (d) => d.id === q.tenir && q.invocation && invocation(q.invocation, d.p));
-            on('tenir-stop', (d) => d.id === q.tenir && invocation(null));
-            on('tenu', (d) => { if (d.id !== q.tenir) return; if (q.invocation) invocation(q.invocation, 1); ui.succes(null); fini(); });
+            // « tenir » : un identifiant, ou le début d'identifiants (plusieurs tapis, par exemple)
+            on('tenir', (d) => d.id.startsWith(q.tenir) && q.invocation && invocation(q.invocation, d.p));
+            on('tenir-stop', (d) => d.id.startsWith(q.tenir) && invocation(null));
+            on('tenu', (d) => { if (!d.id.startsWith(q.tenir)) return; if (q.invocation) invocation(q.invocation, 1); ui.succes(null); fini(); });
           }
           if (q.ramasser) {
             const { groupe, n } = q.ramasser; let k = 0; compteur(`${q.ramasser.nom || 'Ramassés'} : 0 / ${n}`);
@@ -203,10 +216,11 @@ export function creerMissions({ hote, ui }) {
           if (q.attendre) { const t = setTimeout(fini, reduit ? 10 : q.attendre * 1000); abos.push(() => clearTimeout(t)); }
           for (const f of e.echecs || []) {
             if (f.zone) { on('zone', (d) => d.id === f.zone && ech(f)); if (W.dans(f.zone)) ech(f); }
-            if (f.repere) on('repere', (d) => (d.id === f.repere || d.id.startsWith(f.repere + '#')) && ech(f));
+            if (f.repere) on('repere', (d) => d.id.startsWith(f.repere) && ech(f));
             if (f.chute) on('chute', (d) => (f.chute === true || d.id === f.chute) && ech(f));
             if (f.recif) on('recif', (d) => (f.recif === true || d.id === f.recif) && ech(f));
             if (f.echoue) on('echoue', () => ech(f));
+            if (f.tenu) on('tenu', (d) => d.id.startsWith(f.tenu) && ech(f));
             if (f.chrono) {
               const t0 = performance.now(), it = setInterval(() => {
                 const r = Math.max(0, f.chrono - (performance.now() - t0) / 1000);
@@ -218,7 +232,7 @@ export function creerMissions({ hote, ui }) {
           }
           // Interactions libres pendant l'objectif : paroles des passants, objets du décor.
           on('agir', (d) => {
-            if ([q.parler, q.utiliser, q.prendre].includes(d.id) || (q.ramasser && d.id.startsWith(q.ramasser.groupe))) return;
+            if ([q.parler, q.utiliser, q.prendre].includes(d.id) || (q.tous && q.tous.includes(d.id)) || (q.ramasser && d.id.startsWith(q.ramasser.groupe))) return;
             const dl = M.dialogues && M.dialogues[d.id.split('#')[0]];
             if (dl) parlerLibre(d.id, dl);
           });
@@ -245,13 +259,16 @@ export function creerMissions({ hote, ui }) {
 
   // Paroles d'un passant pendant un objectif : le joueur s'arrête, écoute, puis reprend.
   let parleEnCours = false;
-  async function parlerLibre(id, lignes) {
+  async function parlerLibre(id, lignes, tout = false) {
     if (parleEnCours || !run.objectif) return;
     parleEnCours = true; const r = run;
-    const k = (r.dits[id] = ((r.dits[id] ?? -1) + 1) % lignes.length), texte = lignes[k];
     W.bloquer(true); W.faireFace(id); const t = W.tete(id); if (t) await W.regarder(t, 0.5);
     W.geste(id);
-    await ui.dire(texte, tagPnj(id.split('#')[0]));
+    if (tout) { for (const texte of lignes) { await ui.dire(texte, tagPnj(id.split('#')[0])); if (run !== r) return; } }
+    else {
+      const k = (r.dits[id] = ((r.dits[id] ?? -1) + 1) % lignes.length);
+      await ui.dire(lignes[k], tagPnj(id.split('#')[0]));
+    }
     if (run !== r) return;
     W.faireFace(id, false); ui.masquerDialogue(); parleEnCours = false;
     if (run.objectif) W.bloquer(false);
@@ -358,8 +375,9 @@ export function creerMissions({ hote, ui }) {
         const e = run && run.objectif; if (!e) return false;
         const q = e.quand || {};
         if (q.parler || q.utiliser || q.prendre) W._test.agirSur(q.parler || q.utiliser || q.prendre);
-        else if (q.tenir) W._test.agirSur(q.tenir);
+        else if (q.tenir) { const it = W._test.interactifs().find((x) => x.id.startsWith(q.tenir)); if (it) W._test.agirSur(it.id); }
         else if (q.zone) { const p = point('zone:' + q.zone); W.teleporter(p[0], p[1]); }
+        else if (q.tous) { run.resoudre(); }
         else if (q.ramasser) W._test.interactifs().filter((it) => it.id.startsWith(q.ramasser.groupe) && !(run.def().objets.find((o) => o.id === it.id) || {}).faux).slice(0, q.ramasser.n).forEach((it) => W._test.emettre('agir', { id: it.id, type: 'objet' }));
         else if (q.lancer) for (let k = 0; k < q.lancer.touches; k++) W._test.emettre('impact', { id: q.lancer.cibles[0].id });
         else if (run.resoudre) run.resoudre();

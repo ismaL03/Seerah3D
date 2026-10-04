@@ -1,12 +1,20 @@
 {
-  "_lisez_moi": "Mode histoire : la Sîra en chapitres interactifs (un chapitre par événement de evenements.json). Le joueur est un chroniqueur qui retrouve ce qui s'est réellement passé ; aucun personnage n'est représenté. Étapes : recit (texte + vue), choix (une seule option « juste » ; les autres ont une « consequence » imaginaire, clairement présentée comme telle, et un « indice »), trouver (toucher un lieu sur la carte : cible = identifiant de lieu ou [lat, lon], rayon en km), itineraire (choisir un tracé ; « etapes » comme les trajets), trajet (trajet de l'événement), bataille (étape de batailles.json). vue : lieu ou point [lat, lon] (ou \"hijaz\": true pour toute la carte), r (distance en km), cap (direction du regard en degrés, 0 = vers le nord), incl (inclinaison en degrés, 0 = vue de dessus), duree (ms). ambiance : aube, jour ou nuit. epoque : true pour faire apparaître les constructions de l'événement à partir de cette étape. effet « doux » : erreur sans tempête. Tout le texte est un brouillon à vérifier par un enseignant.",
+  "_lisez_moi": "Mode histoire : la Sîra en chapitres interactifs (un chapitre par événement de evenements.json). Brouillon à vérifier par un enseignant. Étapes : recit (texte + vue), choix (une seule option « juste » ; une option fausse peut avoir une « suite » — phrases jouées avant la conséquence, pour que l'erreur ne se révèle pas tout de suite — puis une « consequence » imaginaire, présentée comme telle, et un « indice »), trouver (toucher un lieu : cible = lieu ou [lat, lon], rayon en km), itineraire (choisir un tracé), trajet, bataille, mission (scène à la première personne, data/missions/<id>.json ; « epreuves » = nombre de lumières possibles), ordre (remettre « elements » dans l'ordre ; un élément peut porter un « lieu » : le tracé se dessine sur la carte), associer (« paires » [gauche, droite, aide en cas d'erreur]), vraifaux (« affirmations » avec « vrai » et « explication »), estimer (curseur entre min et max ; juste ± tolerance ; « trace » dessine une ligne sur la carte). vue : lieu ou point [lat, lon] (ou \"hijaz\": true), r (km), cap (degrés, 0 = nord), incl (degrés, 0 = vue de dessus), duree (ms). ambiance : aube, jour ou nuit. Règle : la bonne réponse ne doit pas se reconnaître à sa longueur (le validateur le vérifie).",
   "titre": "Sur les traces de la Sîra",
   "titre_ar": "على خطى السيرة",
   "sous_titre": "Un récit interactif, de La Mecque à Médine",
   "livres": [
-    { "titre": "Avant la prophétie", "titre_ar": "قبل البعثة", "chapitres": ["naissance", "kaba"] },
-    { "titre": "La période mecquoise", "titre_ar": "العهد المكي", "chapitres": ["revelation", "predication", "habasha", "boycott", "tristesse", "taif", "isra", "aqaba"] },
-    { "titre": "La période médinoise", "titre_ar": "العهد المدني", "chapitres": ["hijra", "masjid", "badr", "uhud", "nadir", "khandaq", "hudaybiya", "khaybar", "fath", "hunayn", "tabuk", "hajj", "wafat"] }
+    {"titre": "Avant la prophétie", "titre_ar": "قبل البعثة", "chapitres": ["naissance", "kaba"]},
+    {
+      "titre": "La période mecquoise",
+      "titre_ar": "العهد المكي",
+      "chapitres": ["revelation", "predication", "habasha", "boycott", "tristesse", "taif", "isra", "aqaba"]
+    },
+    {
+      "titre": "La période médinoise",
+      "titre_ar": "العهد المدني",
+      "chapitres": ["hijra", "masjid", "badr", "uhud", "nadir", "khandaq", "hudaybiya", "khaybar", "fath", "hunayn", "tabuk", "hajj", "wafat"]
+    }
   ],
   "chapitres": [
     {
@@ -14,52 +22,88 @@
       "titre": "L'année de l'Éléphant",
       "titre_ar": "عام الفيل",
       "ambiance": "aube",
-      "a_retenir": "Il ﷺ naît à La Mecque l'année de l'Éléphant, dans le clan des Banû Hâshim, orphelin de père ; il grandit d'abord dans le désert, chez les Banû Sa'd.",
+      "a_retenir": "Il ﷺ naît à La Mecque l'année de l'Éléphant, dans le clan des Banû Hâshim, orphelin de père ; il grandit d'abord dans le désert, chez les Banû Sa'd, puis auprès de son grand-père et de son oncle.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La naissance ; chez les Banû Sa'd" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "L'année de l'Éléphant ; la naissance ; chez les Banû Sa'd"},
+        {"ouvrage": "ibn-hisham", "page": null, "passage": "L'affaire de l'Éléphant (d'après Ibn Ishâq)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "hijaz": true, "cap": 0, "incl": 32, "duree": 3200 },
-          "texte": "Le Hijaz, au VIe siècle. Entre la mer Rouge et les hauts plateaux, des montagnes de roche nue, des champs de lave noire et, çà et là, des oasis. Les caravanes y relient le Yémen au Shâm." },
-        { "type": "trouver", "vue": { "hijaz": true, "cap": 0, "incl": 18 },
+        {
+          "type": "recit",
+          "vue": {"hijaz": true, "cap": 0, "incl": 32, "duree": 3200},
+          "texte": "Le Hijaz, au VIe siècle. Entre la mer Rouge et les hauts plateaux s'étend un pays de montagnes nues, de champs de lave noire et d'oasis. Pas de royaume ici, mais des tribus, des puits et des pistes : les caravanes y relient le Yémen, au sud, au Shâm, au nord."
+        },
+        {
+          "type": "trouver",
+          "vue": {"hijaz": true, "cap": 0, "incl": 18},
           "consigne": "Dans une vallée de ce pays se dresse une maison de pierre très ancienne, la Ka'ba, bâtie par Ibrâhîm et Ismâ'îl. Touchez La Mecque sur la carte.",
           "indice": "Elle se trouve dans le sud du Hijaz, à environ 70 km de la mer Rouge.",
-          "cible": "makkah", "rayon": 30,
-          "reussite": "La Mecque : une vallée sèche, sans cultures, au carrefour des routes caravanières." },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 9, "cap": 15, "incl": 60 },
-          "texte": "Quraysh, la tribu qui garde la Ka'ba, vit du commerce et de l'accueil des pèlerins. Vers 570, la ville s'apprête à vivre une année que l'on n'oubliera pas." },
-        { "type": "mission", "mission": "elephant", "epreuves": 4 },
-        { "type": "choix",
-          "question": "Cette année-là, un événement marque tant l'Arabie qu'il lui donne son nom. Lequel ?",
+          "cible": "makkah",
+          "rayon": 30,
+          "reussite": "La Mecque : une vallée sèche, sans cultures, au carrefour des routes caravanières."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 9, "cap": 15, "incl": 60},
+          "texte": "Quraysh, la tribu qui garde la Ka'ba, vit du commerce et de l'accueil des pèlerins. Son chef, 'Abd al-Muttalib, est celui qui a fait recreuser le puits de Zamzam. Vers 570, on annonce qu'une armée venue du Yémen approche de la ville. Vivez ces journées à sa place."
+        },
+        {"type": "mission", "mission": "elephant", "epreuves": 4},
+        {
+          "type": "recit",
+          "vue": {"lieu": "mawlid", "r": 1.3, "cap": 200, "incl": 60},
+          "etiquettes": ["mawlid", "makkah"],
+          "texte": "Cette même année, au mois de Rabî' al-Awwal, naît Muhammad ﷺ, petit-fils de 'Abd al-Muttalib, dans le clan des Banû Hâshim. Son père, 'Abd Allâh, est mort quelques mois plus tôt, au retour d'un voyage de commerce ; sa mère s'appelle Âmina bint Wahb."
+        },
+        {
+          "type": "choix",
+          "question": "Comme c'était l'usage dans les familles de Quraysh, où passe-t-il ses premières années ?",
           "options": [
-            { "texte": "Abraha marche sur la Ka'ba avec des éléphants", "juste": true,
-              "reponse": "C'est « l'année de l'Éléphant ». Abraha, qui gouvernait le Yémen, voulait détruire la Ka'ba ; son armée fut anéantie avant d'y parvenir, comme le rapporte la sourate al-Fîl (105)." },
-            { "texte": "Une crue emporte une partie de la Ka'ba",
-              "titre": "Les années se mélangent",
-              "consequence": "Une crue endommagera bien la Ka'ba… mais trente-cinq ans plus tard, juste avant sa reconstruction. Le fil de l'histoire s'emmêle.",
-              "indice": "Une sourate du Coran porte le nom d'un animal lié à cette année." },
-            { "texte": "Une grande sécheresse vide La Mecque",
-              "titre": "Le fil se brouille",
-              "consequence": "Aucune source ne nomme cette année d'après une sécheresse. Les Arabes donnaient aux années le nom d'un événement marquant : celui-ci fut spectaculaire.",
-              "indice": "Une sourate du Coran porte le nom d'un animal lié à cette année." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "mawlid", "r": 1.3, "cap": 200, "incl": 60 }, "etiquettes": ["mawlid", "makkah"],
-          "texte": "C'est cette année-là, au mois de Rabî' al-Awwal, que naît Muhammad ﷺ, dans le clan des Banû Hâshim. Son père, 'Abd Allâh, est mort avant sa naissance ; sa mère s'appelle Âmina bint Wahb." },
-        { "type": "choix",
-          "question": "Comme c'était la coutume des familles de Quraysh, où passe-t-il ses premières années ?",
-          "options": [
-            { "texte": "Dans le désert, chez les Banû Sa'd, auprès de sa nourrice Halîma", "juste": true,
-              "reponse": "Les Mecquois confiaient leurs nourrissons aux tribus bédouines : l'air pur du désert, la langue arabe la plus claire. Halîma as-Sa'diyya l'élève plusieurs années." },
-            { "texte": "À Damas, chez des marchands du Shâm",
-              "titre": "Trop tôt, trop loin",
-              "consequence": "Il ne verra le Shâm que bien plus tard, à douze ans, avec la caravane de son oncle Abû Tâlib.",
-              "indice": "Les Mecquois croyaient aux bienfaits du désert pour les nourrissons." },
-            { "texte": "Dans la maison de son grand-père, à La Mecque",
+            {
+              "texte": "Dans le désert, chez les Banû Sa'd, avec Halîma",
+              "juste": true,
+              "reponse": "Les Mecquois confiaient leurs nourrissons aux tribus bédouines : l'air pur du désert, la langue arabe la plus claire. Halîma as-Sa'diyya l'élève plusieurs années, et sa tribu, raconte-t-on, connaît alors une prospérité inattendue."
+            },
+            {
+              "texte": "À Yathrib, chez les Banû an-Najjâr, la famille de sa grand-mère",
+              "suite": [
+                "Vous notez dans votre chronique : « élevé à Yathrib, dans l'oasis du nord ». Mais quelques pages plus loin, les récits parlent de son premier voyage à Yathrib… à six ans."
+              ],
+              "titre": "Les voyages se mélangent",
+              "consequence": "Il ira bien à Yathrib, mais à six ans, avec sa mère, rendre visite aux Banû an-Najjâr. Sur le chemin du retour, Âmina meurt à al-Abwâ'.",
+              "indice": "Les Mecquois croyaient aux bienfaits du désert pour les nourrissons."
+            },
+            {
+              "texte": "Dans la maison de son grand-père, au cœur de La Mecque",
+              "suite": [
+                "Vous écrivez : « élevé dans la maison de son grand-père ». Puis vous lisez qu'à six ans, à la mort de sa mère, c'est ce même grand-père qui le recueille… Il n'y vivait donc pas encore."
+              ],
               "titre": "Pas encore",
-              "consequence": "Il y vivra plus tard : quand sa mère meurt, il a six ans, et son grand-père 'Abd al-Muttalib le recueille.",
-              "indice": "Les Mecquois croyaient aux bienfaits du désert pour les nourrissons." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 4, "cap": 40, "incl": 62 },
-          "texte": "Orphelin de mère à six ans, puis de son grand-père à huit, il grandit auprès de son oncle Abû Tâlib. Jeune homme, il garde des troupeaux, puis commerce pour le compte de Khadîja, qu'il épouse à vingt-cinq ans." }
+              "consequence": "Il y vivra plus tard : quand sa mère meurt, il a six ans, et 'Abd al-Muttalib le recueille. Ses premières années, il les passe dans le désert.",
+              "indice": "Les Mecquois croyaient aux bienfaits du désert pour les nourrissons."
+            }
+          ]
+        },
+        {
+          "type": "ordre",
+          "consigne": "Remettez dans l'ordre les étapes de son enfance et de sa jeunesse.",
+          "elements": [
+            "Chez les Banû Sa'd, dans le désert",
+            "La mort de sa mère, à al-Abwâ' (vers 6 ans)",
+            "Chez son grand-père 'Abd al-Muttalib",
+            "Chez son oncle Abû Tâlib (à partir de 8 ans)",
+            "Le voyage au Shâm avec Abû Tâlib (vers 12 ans)",
+            "Le mariage avec Khadîja (à 25 ans)"
+          ],
+          "reponse": "Orphelin de père avant sa naissance, de mère à six ans, de grand-père à huit, il grandit auprès de son oncle Abû Tâlib, qu'il accompagne en caravane jusqu'au Shâm. Jeune homme, il garde les troupeaux, puis commerce pour Khadîja, qui l'épouse.",
+          "consequence": "Dans cet ordre, sa vie ne tient plus debout : les âges ne se suivent pas.",
+          "indice": "Repérez les âges : 6, 8, 12, puis 25 ans."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 4, "cap": 40, "incl": 62},
+          "texte": "Jeune homme, il prend part au pacte d'al-Fudûl, par lequel des clans de Quraysh s'engagent à défendre toute victime d'injustice à La Mecque, fût-elle étrangère. Marchand pour le compte de Khadîja, il est connu pour sa droiture : on l'appelle al-Amîn, le digne de confiance."
+        }
       ]
     },
     {
@@ -67,42 +111,52 @@
       "titre": "La Pierre noire",
       "titre_ar": "الحجر الأسود",
       "ambiance": "jour",
-      "a_retenir": "Lors de la reconstruction de la Ka'ba, son arbitrage évite un conflit entre les clans : chacun a sa part d'honneur. On le surnomme al-Amîn, le digne de confiance.",
+      "a_retenir": "Lors de la reconstruction de la Ka'ba, financée par des biens purs seulement, son arbitrage évite une guerre entre les clans : chacun a sa part d'honneur. On le surnomme al-Amîn, le digne de confiance.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La reconstruction de la Ka'ba et l'arbitrage" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "La reconstruction de la Ka'ba et l'arbitrage"},
+        {"ouvrage": "ibn-hisham", "page": null, "passage": "La reconstruction de la Ka'ba (d'après Ibn Ishâq)"},
+        {"ouvrage": "bukhari", "page": null, "passage": "Livre du Hajj : le Hijr (hadith de 'Â'isha)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 0.8, "cap": 25, "incl": 60 }, "etiquettes": [],
-          "texte": "Il ﷺ a trente-cinq ans. Abîmée par une crue, la Ka'ba menace de s'effondrer. Les clans de Quraysh décident de la rebâtir : chacun prend en charge un pan de mur." },
-        { "type": "choix",
-          "question": "Vient le moment de replacer la Pierre noire dans l'angle. Chaque clan réclame cet honneur ; la dispute dure plusieurs nuits et menace de tourner au combat. Que décident les clans pour l'apaiser ?",
-          "options": [
-            { "texte": "S'en remettre au premier homme qui entrera dans l'enceinte", "juste": true,
-              "reponse": "Le premier à entrer est Muhammad ﷺ. « Voici al-Amîn ! Nous l'acceptons ! » s'écrient-ils." },
-            { "texte": "Se battre : le clan vainqueur posera la pierre",
-              "titre": "Les épées sortent",
-              "consequence": "Et si… le sang avait coulé autour de la Ka'ba, au milieu des pierres du chantier ? Les sources rapportent au contraire que les clans cherchèrent un arbitre.",
-              "indice": "Ils cherchent quelqu'un pour trancher." },
-            { "texte": "Laisser la Ka'ba inachevée",
-              "titre": "Un chantier abandonné",
-              "consequence": "Et si… la Ka'ba était restée en ruine ? Ce n'est pas ce qui s'est passé : la reconstruction fut achevée.",
-              "indice": "Ils cherchent quelqu'un pour trancher." }
-          ] },
-        { "type": "choix",
-          "question": "Comment Muhammad ﷺ tranche-t-il le différend ?",
-          "options": [
-            { "texte": "Il fait soulever la pierre sur un manteau par tous les chefs, puis la place de sa main", "juste": true,
-              "reponse": "Il pose la pierre sur un manteau ; chaque chef de clan en saisit un bord et tous la soulèvent ensemble. Puis il la remet en place de sa propre main. Chaque clan a eu sa part d'honneur : la querelle s'éteint." },
-            { "texte": "Il tire au sort le clan qui la posera",
-              "titre": "Les perdants protestent",
-              "consequence": "Et si… le sort avait désigné un seul gagnant et laissé des perdants humiliés ? La querelle aurait repris de plus belle.",
-              "indice": "Sa solution ne laisse aucun clan de côté." },
-            { "texte": "Il la confie au clan le plus puissant",
-              "titre": "L'orgueil blessé",
-              "consequence": "Et si… les autres clans s'étaient sentis humiliés ? Ce n'est pas la solution que rapportent les sources.",
-              "indice": "Sa solution ne laisse aucun clan de côté." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 2.5, "cap": 210, "incl": 55 },
-          "texte": "Dès cette époque, toute La Mecque l'appelle al-Amîn, « le digne de confiance ». Cinq ans plus tard, cette confiance sera mise à l'épreuve." }
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 0.8, "cap": 25, "incl": 60},
+          "etiquettes": [],
+          "texte": "Il ﷺ a trente-cinq ans. Un torrent a dévalé la vallée et fissuré les murs de la Ka'ba, déjà fragilisés. Quraysh décide de la rebâtir, plus haute, avec un toit. Vivez ce chantier au milieu des clans, comme un homme de Quraysh parmi d'autres."
+        },
+        {"type": "mission", "mission": "kaba", "epreuves": 2},
+        {
+          "type": "vraifaux",
+          "consigne": "La reconstruction de la Ka'ba : vrai ou faux ?",
+          "affirmations": [
+            {
+              "texte": "Les bâtisseurs n'acceptèrent que des biens purs : ni usure, ni vol, ni gain de prostitution.",
+              "vrai": true,
+              "explication": "C'était l'engagement de Quraysh, selon Ibn Ishâq. Faute de fonds purs suffisants, une partie de l'ancienne Ka'ba resta hors des murs."
+            },
+            {
+              "texte": "La nouvelle Ka'ba fut construite plus basse que l'ancienne, pour économiser les pierres.",
+              "vrai": false,
+              "explication": "Elle fut au contraire rehaussée et couverte d'un toit ; on éleva aussi la porte au-dessus du sol."
+            },
+            {
+              "texte": "Le différend sur la Pierre noire fut réglé par un tirage au sort entre les clans.",
+              "vrai": false,
+              "explication": "On s'en remit au premier qui entrerait par la porte des Banû Shayba : ce fut Muhammad ﷺ, qui fit porter la Pierre sur un manteau par tous les clans."
+            },
+            {
+              "texte": "Le Hijr, ce muret en arc de cercle, entoure une partie de l'ancienne Ka'ba laissée hors des murs.",
+              "vrai": true,
+              "explication": "'Â'isha rapporte que le Prophète ﷺ lui expliqua que son peuple avait manqué de moyens pour la rebâtir entièrement (al-Bukhârî)."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 2.5, "cap": 210, "incl": 55},
+          "texte": "Dès cette époque, toute La Mecque l'appelle al-Amîn. On lui confie ses biens quand on part en voyage, on accepte son arbitrage. Cinq ans plus tard, cette confiance sera mise à l'épreuve."
+        }
       ]
     },
     {
@@ -110,170 +164,327 @@
       "titre": "Lis !",
       "titre_ar": "اقرأ",
       "ambiance": "nuit",
-      "a_retenir": "Dans la grotte de Hirâ', l'ange Jibrîl apporte les premiers versets : « Lis, au nom de ton Seigneur ». Khadîja est la première à croire.",
+      "a_retenir": "Dans la grotte de Hirâ', l'ange Jibrîl apporte les premiers versets : « Lis, au nom de ton Seigneur ». Khadîja le rassure en rappelant ses qualités et devient la première à croire.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Dans la grotte de Hirâ' ; Jibrîl apporte la révélation" }, { "ouvrage": "bukhari", "page": null, "passage": "Le début de la révélation" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "Dans la grotte de Hirâ' ; Jibrîl apporte la révélation"},
+        {"ouvrage": "bukhari", "page": null, "passage": "Le début de la révélation (hadith de 'Â'isha)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "hira", "r": 6, "cap": 40, "incl": 62 }, "etiquettes": ["makkah"],
-          "texte": "Il ﷺ approche de la quarantaine. Il aime se retirer, loin du bruit de La Mecque, dans une petite grotte d'une montagne au nord-est de la ville, pour y adorer Allah des nuits entières." },
-        { "type": "trouver", "vue": { "point": [21.443, 39.842], "r": 13, "cap": 20, "incl": 38 },
+        {
+          "type": "recit",
+          "vue": {"lieu": "hira", "r": 6, "cap": 40, "incl": 62},
+          "etiquettes": ["makkah"],
+          "texte": "Il ﷺ approche de la quarantaine. Depuis quelque temps, ses rêves se réalisent « comme l'aube qui se lève ». Il aime se retirer dans une petite grotte, au nord-est de La Mecque, pour y adorer Allah des nuits entières, avec quelques provisions que lui prépare Khadîja."
+        },
+        {
+          "type": "trouver",
+          "vue": {"point": [21.443, 39.842], "r": 13, "cap": 20, "incl": 38},
           "consigne": "Touchez la montagne de cette grotte : Hirâ', sur le Jabal an-Nûr, « la montagne de la lumière ».",
           "indice": "Au nord-est de la Ka'ba, à quelques kilomètres : un sommet isolé qui domine la vallée.",
-          "cible": "hira", "rayon": 1.2,
-          "reussite": "La grotte de Hirâ' s'ouvre près du sommet du Jabal an-Nûr, à plus de 600 m d'altitude." },
-        { "type": "choix",
-          "question": "Une nuit de Ramadan, l'ange Jibrîl lui apparaît dans la grotte. Quel est le premier mot qui lui est révélé ?",
+          "cible": "hira",
+          "rayon": 1.2,
+          "reussite": "La grotte de Hirâ' s'ouvre près du sommet du Jabal an-Nûr, à plus de 600 m d'altitude."
+        },
+        {
+          "type": "choix",
+          "question": "Une nuit de Ramadan, l'ange Jibrîl lui apparaît dans la grotte. Quel est le premier ordre qui lui est adressé ?",
           "options": [
-            { "texte": "« Iqra' » : « Lis ! »", "juste": true,
-              "reponse": "« Lis, au nom de ton Seigneur qui a créé… » : ce sont les premiers versets de la sourate al-'Alaq (96:1-5)." },
-            { "texte": "« Qul » : « Dis ! »",
+            {
+              "texte": "« Iqra' » : « Lis ! »",
+              "juste": true,
+              "reponse": "« Lis, au nom de ton Seigneur qui a créé… » : les premiers versets de la sourate al-'Alaq (96:1-5). Il répond : « Je ne sais pas lire. » L'ange l'étreint par trois fois, puis récite les versets."
+            },
+            {
+              "texte": "« Qul » : « Dis ! »",
+              "suite": [
+                "Vous écrivez : « Le premier mot fut : Dis ! » Mais le récit de 'Â'isha que vous recopiez ensuite parle d'un homme qui répond : « Je ne sais pas lire »…"
+              ],
               "titre": "Pas encore",
               "consequence": "« Dis » ouvre plusieurs sourates (al-Ikhlâs, al-Falaq, an-Nâs), révélées plus tard.",
-              "indice": "Le premier ordre porte sur la lecture." },
-            { "texte": "« Yâ ayyuhâ al-muddaththir » : « Ô toi, le revêtu d'un manteau ! »",
+              "indice": "Le premier ordre porte sur la lecture."
+            },
+            {
+              "texte": "« Qum » : « Lève-toi ! »",
+              "suite": ["Vous écrivez : « Lève-toi et avertis ! » Puis vous trouvez chez al-Bukhârî un autre récit, celui de 'Â'isha, qui commence autrement…"],
               "titre": "Une divergence connue",
-              "effet": "doux",
-              "consequence": "Presque ! Selon un récit de Jâbir, ces versets (74:1-5) vinrent les premiers… mais après une interruption de la révélation. L'avis le plus répandu retient la sourate al-'Alaq comme toute première.",
-              "indice": "Le premier ordre porte sur la lecture." }
-          ] },
-        { "type": "choix",
-          "question": "Bouleversé, il ﷺ redescend vers La Mecque. Auprès de qui trouve-t-il d'abord réconfort ?",
+              "consequence": "Presque : « Lève-toi et avertis » (74:2) vint très tôt, après une interruption de la révélation. Un récit de Jâbir place cette sourate en premier, mais l'avis le plus répandu retient al-'Alaq.",
+              "indice": "Le premier ordre porte sur la lecture.",
+              "effet": "doux"
+            }
+          ]
+        },
+        {
+          "type": "ordre",
+          "consigne": "Remettez dans l'ordre le récit de cette nuit, tel que le rapporte 'Â'isha.",
+          "elements": [
+            "La retraite dans la grotte de Hirâ'",
+            "L'ange : « Lis ! » — « Je ne sais pas lire »",
+            "Le retour, tremblant : « Couvrez-moi ! »",
+            "Khadîja le rassure",
+            "La visite chez Waraqa ibn Nawfal"
+          ],
+          "reponse": "Waraqa ibn Nawfal, cousin de Khadîja, qui connaissait les Écritures, reconnaît l'ange venu à Moïse et prévient : « Ton peuple te chassera. »",
+          "consequence": "Dans cet ordre, la nuit de la révélation devient incompréhensible.",
+          "indice": "Tout commence dans la grotte, tout finit chez un vieil homme qui connaît les Écritures."
+        },
+        {
+          "type": "choix",
+          "question": "Pour le rassurer, Khadîja lui dit : « Non, par Allah, Allah ne t'humiliera jamais, car… » Que cite-t-elle ?",
           "options": [
-            { "texte": "Khadîja, son épouse", "juste": true,
-              "reponse": "« Non, par Allah, Allah ne t'humiliera jamais : tu maintiens les liens de parenté, tu portes le fardeau des faibles… » Khadîja le rassure et devient la première à croire en lui." },
-            { "texte": "Abû Bakr, son ami",
-              "titre": "Un peu plus tard",
-              "consequence": "Abû Bakr sera le premier homme adulte à croire en lui. Mais ce soir-là, c'est chez lui, auprès de son épouse, qu'il rentre.",
-              "indice": "Il rentre chez lui." },
-            { "texte": "Abû Tâlib, son oncle",
-              "titre": "Pas ce soir-là",
-              "consequence": "Abû Tâlib le protégera pendant des années. Mais ce soir-là, c'est chez lui, auprès de son épouse, qu'il rentre.",
-              "indice": "Il rentre chez lui." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 5, "cap": 200, "incl": 60 }, "ambiance": "aube",
-          "texte": "Khadîja le conduit chez son cousin Waraqa ibn Nawfal, qui connaissait les Écritures. Waraqa reconnaît l'ange venu à Moïse et prévient : « Ton peuple te chassera. » La mission commence." }
+            {
+              "texte": "…tu es le plus riche des marchands de Quraysh, et ta parole est la plus écoutée.",
+              "suite": ["Vous notez : « sa richesse le protège ». Mais dans le récit d'al-Bukhârî, c'est Khadîja la riche marchande, pas lui…"],
+              "titre": "La richesse ?",
+              "consequence": "Il n'était pas riche : c'est Khadîja qui l'était. Ce qu'elle cita, ce sont ses actes de bonté envers les autres.",
+              "indice": "Elle parle de ce qu'il fait pour les autres."
+            },
+            {
+              "texte": "…tu maintiens les liens de parenté, tu aides le faible et tu honores l'hôte.",
+              "juste": true,
+              "reponse": "« …tu portes le fardeau du faible, tu donnes à celui qui n'a rien, tu honores l'hôte et tu aides dans les épreuves de la vérité » (al-Bukhârî). Khadîja est la première à croire en lui."
+            },
+            {
+              "texte": "…tu es le petit-fils de 'Abd al-Muttalib, le gardien de la Maison.",
+              "suite": ["Vous écrivez : « son nom le protège ». Pourtant, la noblesse du clan n'empêchera pas Quraysh de le persécuter…"],
+              "titre": "La lignée ?",
+              "consequence": "Elle ne cita pas sa lignée, mais son caractère : les liens de parenté, l'aide aux faibles, l'hospitalité.",
+              "indice": "Elle parle de ce qu'il fait pour les autres."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 5, "cap": 200, "incl": 60},
+          "ambiance": "aube",
+          "texte": "Khadîja le conduit chez son cousin Waraqa ibn Nawfal, un vieil homme qui connaissait les Écritures. Waraqa reconnaît l'ange venu à Moïse et prévient : « Ton peuple te chassera. » La mission commence."
+        }
       ]
     },
     {
       "evenement": "predication",
       "titre": "L'appel sur as-Safâ",
-      "titre_ar": "النداء على الصفا",
+      "titre_ar": "الدعوة الجهرية",
       "ambiance": "jour",
-      "a_retenir": "Après environ trois ans d'appel discret, il ﷺ appelle publiquement les clans depuis as-Safâ ; Quraysh, qui le surnommait al-Amîn, s'oppose désormais ouvertement.",
+      "a_retenir": "Après environ trois ans d'appel discret, il ﷺ appelle publiquement les clans depuis as-Safâ. Quraysh reconnaît qu'il n'a jamais menti, mais s'oppose désormais ouvertement ; les plus faibles des croyants sont persécutés.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'appel public" }, { "ouvrage": "bukhari", "page": null, "passage": "Tafsîr de la sourate al-Masad" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "L'appel public"},
+        {"ouvrage": "bukhari", "page": null, "passage": "Tafsîr des sourates ash-Shu'arâ' et al-Masad (hadith d'Ibn 'Abbâs)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "arqam", "r": 1.4, "cap": 300, "incl": 60 }, "etiquettes": ["arqam"],
-          "texte": "Pendant environ trois ans, l'appel reste discret : on se réunit en secret, notamment dans la maison d'al-Arqam. Les premiers croyants sont peu nombreux, souvent jeunes, parfois esclaves." },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 1.6, "cap": 60, "incl": 58 }, "etiquettes": [],
-          "texte": "Puis vient l'ordre : « Avertis les gens de ta proche parenté » (ash-Shu'arâ' 26:214). Il ﷺ monte sur une petite colline toute proche de la Ka'ba et appelle chaque clan par son nom." },
-        { "type": "trouver", "vue": { "lieu": "makkah", "r": 1.1, "cap": 60, "incl": 50 },
-          "consigne": "Touchez cette colline, d'où part aussi le parcours entre as-Safâ et al-Marwa : as-Safâ.",
+        {
+          "type": "recit",
+          "vue": {"lieu": "arqam", "r": 1.4, "cap": 300, "incl": 60},
+          "etiquettes": ["arqam"],
+          "texte": "Pendant environ trois ans, l'appel reste discret : on se réunit en secret, notamment dans la maison d'al-Arqam, au pied d'as-Safâ. Les premiers croyants sont peu nombreux, souvent jeunes, parfois esclaves ou étrangers sans protection."
+        },
+        {
+          "type": "trouver",
+          "vue": {"lieu": "makkah", "r": 1.1, "cap": 60, "incl": 50},
+          "consigne": "Touchez la colline d'où il lancera l'appel, et d'où part aussi le parcours entre as-Safâ et al-Marwa : as-Safâ.",
           "indice": "Une butte rocheuse, à moins de 200 m au sud-est de la Ka'ba.",
-          "cible": "safa", "rayon": 0.09,
-          "reussite": "as-Safâ : de là, sa voix porte sur toute la vallée." },
-        { "type": "choix",
-          "question": "Les clans rassemblés, il leur demande : « Si je vous annonçais qu'une cavalerie, derrière cette vallée, s'apprête à vous attaquer, me croiriez-vous ? » Que répondent-ils ?",
-          "options": [
-            { "texte": "« Oui : nous ne t'avons jamais connu mentir »", "juste": true,
-              "reponse": "« Alors je suis pour vous un avertisseur, avant un terrible châtiment. » Son oncle Abû Lahab s'emporte contre lui ; la sourate al-Masad (111) sera révélée à son sujet." },
-            { "texte": "« Non : tu es trop jeune pour nous avertir »",
-              "titre": "Le fil se brouille",
-              "consequence": "Il avait plus de quarante ans, et toute La Mecque connaissait sa droiture.",
-              "indice": "Souvenez-vous de son surnom." },
-            { "texte": "« Peut-être : il faut d'abord envoyer des éclaireurs »",
-              "titre": "Le fil se brouille",
-              "consequence": "Ils n'avaient aucune raison de douter de lui : sa parole suffisait.",
-              "indice": "Souvenez-vous de son surnom." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 6, "cap": 180, "incl": 60 },
-          "texte": "Désormais, l'opposition est ouverte : moqueries, pressions, puis violences contre les croyants les plus faibles, comme Bilâl ou la famille de Yâsir." }
+          "cible": "safa",
+          "rayon": 0.09,
+          "reussite": "as-Safâ : de là, une voix porte sur toute la vallée."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 1.6, "cap": 60, "incl": 58},
+          "etiquettes": [],
+          "texte": "Puis vient l'ordre : « Et avertis les gens de ta proche parenté » (26:214). Vivez ce matin-là dans la foule, comme un marchand de La Mecque."
+        },
+        {"type": "mission", "mission": "safa", "epreuves": 1},
+        {
+          "type": "vraifaux",
+          "consigne": "Les premiers croyants : vrai ou faux ?",
+          "affirmations": [
+            {
+              "texte": "La toute première personne à croire au message fut Khadîja, son épouse.",
+              "vrai": true,
+              "explication": "Elle crut dès la première nuit. Parmi les hommes libres, le premier fut Abû Bakr ; parmi les enfants, 'Alî ; parmi les affranchis, Zayd ibn Hâritha."
+            },
+            {
+              "texte": "Pendant les trois premières années, l'appel se fit ouvertement, à la grande foire de 'Ukâz.",
+              "vrai": false,
+              "explication": "L'appel resta discret environ trois ans, avant l'ordre d'avertir ouvertement les proches (26:214)."
+            },
+            {
+              "texte": "Bilâl, un esclave d'origine abyssine, torturé en plein soleil, répétait : « Ahad, Ahad » (Un, Un).",
+              "vrai": true,
+              "explication": "Son maître, Umayya ibn Khalaf, le faisait étendre sur le sable brûlant ; Abû Bakr l'acheta et l'affranchit."
+            },
+            {
+              "texte": "La première personne tuée à cause de sa foi fut un homme de Quraysh.",
+              "vrai": false,
+              "explication": "Ce fut une femme, Sumayya, la mère de 'Ammâr ibn Yâsir, tuée par Abû Jahl."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 6, "cap": 180, "incl": 60},
+          "texte": "Désormais, l'opposition est ouverte : moqueries, pressions sur les familles, puis violences contre les croyants les plus faibles, comme Bilâl ou la famille de Yâsir."
+        }
       ]
     },
     {
       "evenement": "habasha",
       "titre": "Le roi juste",
-      "titre_ar": "الملك العادل",
+      "titre_ar": "الهجرة إلى الحبشة",
       "ambiance": "jour",
-      "a_retenir": "Pour échapper aux persécutions, des croyants trouvent refuge en Abyssinie auprès du Négus, qui refuse de les livrer après avoir entendu la sourate Maryam.",
+      "a_retenir": "Pour échapper aux persécutions, des croyants trouvent refuge en Abyssinie auprès du Négus, roi chrétien réputé juste, qui refuse de les livrer après avoir entendu la sourate Maryam.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La première émigration en Abyssinie" }, { "ouvrage": "ibn-hisham", "page": null, "passage": "Les émigrés devant le Négus" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "La première émigration en Abyssinie"},
+        {"ouvrage": "ibn-hisham", "page": null, "passage": "Les émigrés devant le Négus"},
+        {"ouvrage": "ibn-sad", "page": null, "passage": "La première émigration en Abyssinie"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 35, "cap": 250, "incl": 55 },
-          "texte": "La persécution s'aggrave. Les croyants sans protection sont maltraités en plein soleil. Il ﷺ cherche pour eux un refuge." },
-        { "type": "choix",
-          "question": "Il ﷺ leur indique un pays dont le roi ne fait de tort à personne. Lequel ?",
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 35, "cap": 250, "incl": 55},
+          "texte": "La persécution s'aggrave. Les croyants sans protection sont maltraités en plein soleil ; d'autres sont enfermés par leur propre famille. Il ﷺ cherche pour eux un refuge, loin de Quraysh."
+        },
+        {
+          "type": "choix",
+          "question": "Il ﷺ leur indique un pays où règne un roi « auprès de qui personne n'est opprimé ». Lequel ?",
           "options": [
-            { "texte": "L'Abyssinie, de l'autre côté de la mer Rouge", "juste": true,
-              "reponse": "« Il y a là-bas un roi auprès de qui personne n'est opprimé. » Le Négus, an-Najâshî, est chrétien et réputé juste." },
-            { "texte": "Tâ'if, chez la tribu de Thaqîf",
+            {
+              "texte": "Tâ'if, dans les montagnes de Thaqîf",
+              "suite": [
+                "Les croyants prennent le chemin des montagnes, vers l'est. Au bout de deux jours, les portes de Tâ'if restent closes, et des messagers de Quraysh les ont précédés…"
+              ],
               "titre": "Un refuge piégé",
-              "consequence": "Et si… Thaqîf, liée à Quraysh, n'aurait offert aucune protection. Quelques années plus tard, Tâ'if repoussera durement le Prophète ﷺ lui-même.",
-              "indice": "Le refuge se trouve au-delà de la mer." },
-            { "texte": "La Perse, auprès de Chosroès",
+              "consequence": "Thaqîf, liée à Quraysh par le commerce, n'aurait offert aucune protection ; quelques années plus tard, Tâ'if repoussera durement le Prophète ﷺ lui-même.",
+              "indice": "Le refuge se trouve au-delà de la mer."
+            },
+            {
+              "texte": "L'Abyssinie, au-delà de la mer Rouge",
+              "juste": true,
+              "reponse": "« Il y a là-bas un roi auprès de qui personne n'est opprimé. » Le Négus, an-Najâshî, est un roi chrétien réputé pour sa justice."
+            },
+            {
+              "texte": "La Perse, à la cour du roi Chosroès, à Ctésiphon",
+              "suite": [
+                "Les croyants partent vers le nord-est, à travers le désert. Les puits se font rares ; au bout de dix jours, la Perse est encore loin…"
+              ],
               "titre": "Trop loin",
-              "consequence": "Et si… des semaines de route à travers le désert, vers un empire inconnu ? Les sources parlent d'un roi juste, bien plus proche… par la mer.",
-              "indice": "Le refuge se trouve au-delà de la mer." }
-          ] },
-        { "type": "trajet",
-          "texte": "En l'an 5 de la prophétie, douze hommes et quatre femmes gagnent discrètement le port d'ash-Shu'ayba et embarquent pour l'Abyssinie. D'autres suivront : plus de quatre-vingts hommes lors d'une seconde émigration." },
-        { "type": "choix",
+              "consequence": "Des semaines de route à travers le désert, vers un empire qui méprisait les Arabes : les sources parlent d'un roi juste bien plus proche, par la mer.",
+              "indice": "Le refuge se trouve au-delà de la mer."
+            }
+          ]
+        },
+        {"type": "mission", "mission": "passeur", "epreuves": 2},
+        {
+          "type": "trajet",
+          "texte": "En l'an 5 de la prophétie, une quinzaine de croyants, hommes et femmes, embarquent à ash-Shu'ayba pour l'Abyssinie. D'autres suivront : plus de quatre-vingts hommes lors d'une seconde émigration."
+        },
+        {
+          "type": "choix",
           "question": "Quraysh envoie au Négus deux émissaires chargés de cadeaux pour obtenir leur retour. Ja'far ibn Abî Tâlib parle au nom des émigrés et récite le début d'une sourate. Laquelle ?",
           "options": [
-            { "texte": "Maryam (Marie)", "juste": true,
-              "reponse": "En entendant les versets sur Marie et Jésus, le Négus pleure, puis refuse de livrer les émigrés : ils resteront en sécurité dans son pays." },
-            { "texte": "al-Fâtiha",
+            {
+              "texte": "La sourate Maryam (Marie)",
+              "juste": true,
+              "reponse": "En entendant les versets sur Marie et Jésus, le Négus pleure jusqu'à mouiller sa barbe, puis refuse de livrer les émigrés : ils resteront en sécurité dans son pays."
+            },
+            {
+              "texte": "La sourate al-Fâtiha (l'Ouverture)",
+              "suite": ["Ja'far récite. Le roi écoute poliment, puis se tourne vers les émissaires de Quraysh, qui sourient déjà…"],
               "titre": "Le roi reste de marbre",
-              "consequence": "Et si… Ja'far avait choisi d'autres versets ? Ce jour-là, il récita ceux qui parlaient directement à un roi chrétien.",
-              "indice": "Une sourate qui raconte l'histoire de la mère de Jésus." },
-            { "texte": "Yâ-Sîn",
+              "consequence": "Ce jour-là, Ja'far choisit des versets qui parlaient directement à un roi chrétien : ceux de la sourate Maryam.",
+              "indice": "Une sourate qui raconte l'histoire de la mère de Jésus."
+            },
+            {
+              "texte": "La sourate Yâ-Sîn",
+              "suite": ["Ja'far récite. Le roi écoute, hésite… Les émissaires de Quraysh déposent de nouveaux cadeaux à ses pieds."],
               "titre": "Le roi reste de marbre",
-              "consequence": "Et si… Ja'far avait choisi d'autres versets ? Ce jour-là, il récita ceux qui parlaient directement à un roi chrétien.",
-              "indice": "Une sourate qui raconte l'histoire de la mère de Jésus." }
-          ] }
+              "consequence": "Ce jour-là, Ja'far choisit des versets qui parlaient directement à un roi chrétien : ceux de la sourate Maryam.",
+              "indice": "Une sourate qui raconte l'histoire de la mère de Jésus."
+            }
+          ]
+        },
+        {
+          "type": "associer",
+          "consigne": "Associez chaque acteur à son rôle devant le Négus.",
+          "paires": [
+            ["Ja'far ibn Abî Tâlib", "Parle au nom des émigrés", "Ce n'est pas lui qui apporte les cadeaux."],
+            ["'Amr ibn al-'Âs", "Apporte les cadeaux de Quraysh", "Il était alors l'émissaire de Quraysh."],
+            ["Le Négus (an-Najâshî)", "Refuse de livrer les émigrés", "C'est le roi qui tranche."],
+            ["La sourate Maryam", "Fait pleurer le roi et ses évêques", "Pensez à l'effet des versets récités."]
+          ],
+          "reponse": "Le Négus protégea les émigrés pendant des années. À sa mort, le Prophète ﷺ pria pour lui à Médine la prière funéraire de l'absent."
+        }
       ]
     },
     {
       "evenement": "boycott",
       "titre": "Le vallon assiégé",
-      "titre_ar": "شعب أبي طالب",
+      "titre_ar": "حصار الشعب",
       "ambiance": "aube",
-      "a_retenir": "Pendant environ trois ans, les Banû Hâshim et les Banû al-Muttalib sont boycottés et vivent reclus dans le vallon d'Abû Tâlib, jusqu'à ce que des Mecquois fassent annuler le pacte.",
+      "a_retenir": "Pendant près de trois ans, les Banû Hâshim et les Banû al-Muttalib sont boycottés et vivent reclus dans le vallon d'Abû Tâlib ; des Mecquois les ravitaillent en secret, puis font annuler le pacte injuste.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le boycott général" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "Le boycott général"},
+        {"ouvrage": "ibn-hisham", "page": null, "passage": "Le pacte et son annulation (d'après Ibn Ishâq)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 0.9, "cap": 300, "incl": 58 }, "etiquettes": [],
-          "texte": "Quraysh rédige un pacte et le suspend dans la Ka'ba : plus de commerce ni de mariage avec les Banû Hâshim et les Banû al-Muttalib, tant qu'ils protégeront le Prophète ﷺ." },
-        { "type": "choix",
-          "question": "Où les Banû Hâshim se retirent-ils ?",
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 0.9, "cap": 300, "incl": 58},
+          "etiquettes": [],
+          "texte": "Quraysh rédige un pacte et le suspend dans la Ka'ba : plus de commerce, plus de mariage avec les Banû Hâshim et les Banû al-Muttalib, tant qu'ils protégeront le Prophète ﷺ. Croyants ou non, les membres du clan restent solidaires."
+        },
+        {
+          "type": "choix",
+          "question": "Où les Banû Hâshim se retirent-ils pendant le boycott ?",
           "options": [
-            { "texte": "Dans le vallon (shi'b) d'Abû Tâlib, à l'est de la Ka'ba", "juste": true,
-              "reponse": "Ils se replient dans le vallon de leur clan, au pied du mont Abû Qubays." },
-            { "texte": "À Yathrib, chez des cousins",
+            {
+              "texte": "À Yathrib, chez des cousins de l'oasis du nord, loin de Quraysh",
+              "suite": [
+                "Vous écrivez : « le clan part vers le nord ». Mais aucune caravane n'est mentionnée, et l'on entend encore, la nuit, des pleurs d'enfants dans la vallée de La Mecque…"
+              ],
               "titre": "Trop tôt",
               "consequence": "Le chemin de Yathrib ne s'ouvrira qu'avec les serments d'al-'Aqaba, plusieurs années plus tard.",
-              "indice": "Ils restent à La Mecque, mais à l'écart." },
-            { "texte": "En Abyssinie, avec les émigrés",
+              "indice": "Ils restent à La Mecque, mais à l'écart."
+            },
+            {
+              "texte": "Dans le vallon d'Abû Tâlib, à l'est de la Ka'ba",
+              "juste": true,
+              "reponse": "Ils se replient dans le vallon de leur clan, au pied du mont Abû Qubays, tout près de la ville… et pourtant coupés d'elle."
+            },
+            {
+              "texte": "En Abyssinie, avec les premiers émigrés",
+              "suite": [
+                "Vous imaginez le clan entier embarquant à ash-Shu'ayba… Mais Abû Tâlib, qui n'est pas musulman, n'a aucune raison de fuir : il protège son neveu sur place."
+              ],
               "titre": "Le clan reste",
-              "consequence": "Seuls certains croyants étaient partis. Les Banû Hâshim, croyants ou non, restèrent pour protéger l'un des leurs.",
-              "indice": "Ils restent à La Mecque, mais à l'écart." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "shib", "r": 0.9, "cap": 250, "incl": 60 }, "etiquettes": ["shib"],
-          "texte": "Pendant près de trois ans, ils vivent reclus dans le vallon. La faim est telle que l'on entend, dit-on, les pleurs des enfants au-dehors. Quelques Mecquois font passer des vivres en secret." },
-        { "type": "choix",
-          "question": "Comment le boycott prend-il fin ?",
-          "options": [
-            { "texte": "Des Mecquois font annuler le pacte ; on le retrouve rongé, sauf le nom d'Allah", "juste": true,
-              "reponse": "Hishâm ibn 'Amr, Zuhayr ibn Abî Umayya, al-Mut'im ibn 'Adî et d'autres réclament la fin de l'injustice. Le parchemin, rongé par les vers, ne portait plus que « Bismika Allâhumma »." },
-            { "texte": "Les Banû Hâshim cessent de protéger le Prophète ﷺ",
-              "titre": "Le fil se rompt",
-              "consequence": "Et si… le clan avait cédé ? Ce n'est pas ce qui s'est passé : Abû Tâlib et les siens tinrent bon jusqu'au bout, par fidélité à leur clan.",
-              "indice": "La fin vient de l'intérieur même de Quraysh." },
-            { "texte": "Une armée de Yathrib vient les délivrer",
-              "titre": "Anachronisme",
-              "consequence": "À ce moment, Yathrib n'a encore aucun lien avec les croyants.",
-              "indice": "La fin vient de l'intérieur même de Quraysh." }
-          ] }
+              "consequence": "Seuls certains croyants étaient partis. Les Banû Hâshim, croyants ou non, restèrent à La Mecque pour protéger l'un des leurs.",
+              "indice": "Ils restent à La Mecque, mais à l'écart."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "shib", "r": 0.9, "cap": 250, "incl": 60},
+          "etiquettes": ["shib"],
+          "texte": "Pendant près de trois ans, ils vivent reclus dans le vallon. La faim est telle qu'on entend, dit-on, les pleurs des enfants au-dehors. Certains Mecquois refusent cette injustice. Vivez une de ces nuits."
+        },
+        {"type": "mission", "mission": "vivres", "epreuves": 2},
+        {
+          "type": "estimer",
+          "question": "Combien de temps dura le boycott ?",
+          "min": 1,
+          "max": 60,
+          "pas": 1,
+          "juste": 30,
+          "tolerance": 8,
+          "unite": "mois",
+          "reponse": "Près de trois ans, de l'an 7 à l'an 10 de la prophétie selon la plupart des récits ; certains parlent de deux ans.",
+          "indice_plus": "Les récits parlent d'années, pas de mois.",
+          "indice_moins": "Il ne dura pas toute la période mecquoise."
+        }
       ]
     },
     {
@@ -281,66 +492,159 @@
       "titre": "L'année de la tristesse",
       "titre_ar": "عام الحزن",
       "ambiance": "aube",
-      "a_retenir": "En l'an 10 de la prophétie, il ﷺ perd son oncle protecteur Abû Tâlib et son épouse Khadîja.",
+      "a_retenir": "En l'an 10 de la prophétie, il ﷺ perd son oncle protecteur Abû Tâlib et son épouse Khadîja, son premier soutien.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'année de la tristesse" }],
+      "sources": [{"ouvrage": "rahiq", "page": null, "passage": "L'année de la tristesse"}],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 5, "cap": 330, "incl": 62 },
-          "texte": "Peu après la fin du boycott, l'an 10 de la prophétie apporte deux deuils, à quelques semaines d'intervalle." },
-        { "type": "choix",
-          "question": "Quels proches le Prophète ﷺ perd-il cette année-là ?",
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 5, "cap": 330, "incl": 62},
+          "texte": "Peu après la fin du boycott, l'an 10 de la prophétie apporte deux deuils, à quelques semaines d'intervalle. Les années de privation ont épuisé les anciens du clan."
+        },
+        {
+          "type": "choix",
+          "question": "Quels deux proches le Prophète ﷺ perd-il cette année-là ?",
           "options": [
-            { "texte": "Son oncle Abû Tâlib et son épouse Khadîja", "juste": true,
-              "reponse": "Abû Tâlib le protégeait face à Quraysh ; Khadîja l'avait soutenu de tout son être et de ses biens. On appellera cette année « l'année de la tristesse »." },
-            { "texte": "Abû Bakr et 'Umar",
+            {
+              "texte": "Son grand-père 'Abd al-Muttalib et sa nourrice Halîma",
+              "suite": [
+                "Vous écrivez le nom de 'Abd al-Muttalib… puis vous vous souvenez de l'année de l'Éléphant, et du petit-fils de huit ans qui pleurait son grand-père."
+              ],
               "titre": "Le fil se brouille",
-              "consequence": "Tous deux lui survivront et deviendront les deux premiers califes.",
-              "indice": "Son protecteur et son premier soutien." },
-            { "texte": "Hamza et Ja'far",
+              "consequence": "'Abd al-Muttalib était mort depuis plus de quarante ans : il avait huit ans à peine.",
+              "indice": "Son protecteur et son premier soutien."
+            },
+            {
+              "texte": "Ses compagnons Hamza et Ja'far ibn Abî Tâlib",
+              "suite": ["Vous notez deux noms de héros… mais l'un et l'autre combattront encore, bien après la Hijra."],
               "titre": "Plus tard",
               "consequence": "Hamza tombera à Uhud, en l'an 3 de l'Hégire ; Ja'far à Mu'ta, en l'an 8.",
-              "indice": "Son protecteur et son premier soutien." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "hajun", "r": 1.4, "cap": 10, "incl": 60 }, "etiquettes": ["hajun"],
-          "texte": "Khadîja est enterrée à al-Hajûn, au nord de La Mecque. Sans la protection d'Abû Tâlib, Quraysh ose désormais s'en prendre directement au Prophète ﷺ." }
+              "indice": "Son protecteur et son premier soutien."
+            },
+            {
+              "texte": "Son oncle Abû Tâlib et son épouse Khadîja",
+              "juste": true,
+              "reponse": "Abû Tâlib le protégeait face à Quraysh ; Khadîja l'avait soutenu de tout son être et de ses biens. On appellera cette année « l'année de la tristesse »."
+            }
+          ]
+        },
+        {
+          "type": "vraifaux",
+          "consigne": "Khadîja et Abû Tâlib : vrai ou faux ?",
+          "affirmations": [
+            {
+              "texte": "Khadîja fut la première personne à croire au message.",
+              "vrai": true,
+              "explication": "Elle crut dès la première nuit, et le soutint de ses biens et de son affection pendant dix ans."
+            },
+            {
+              "texte": "Abû Tâlib protégea son neveu jusqu'à sa mort, sans avoir embrassé l'islam selon l'avis le plus répandu.",
+              "vrai": true,
+              "explication": "C'est ce que rapportent les deux Sahîh ; sa protection fut décisive pendant dix ans."
+            },
+            {
+              "texte": "Après ces deux deuils, il ﷺ quitta La Mecque pour Yathrib dès le mois suivant.",
+              "vrai": false,
+              "explication": "Il resta encore près de trois ans à La Mecque ; c'est d'abord à Tâ'if qu'il alla chercher un soutien."
+            },
+            {
+              "texte": "Khadîja fut enterrée à al-Hajûn, au nord de La Mecque.",
+              "vrai": true,
+              "explication": "Le cimetière d'al-Ma'lâ, à al-Hajûn, accueille sa tombe."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "hajun", "r": 1.4, "cap": 10, "incl": 60},
+          "etiquettes": ["hajun"],
+          "texte": "Khadîja est enterrée à al-Hajûn, au nord de La Mecque. Sans la protection d'Abû Tâlib, Quraysh ose désormais s'en prendre directement au Prophète ﷺ."
+        }
       ]
     },
     {
       "evenement": "taif",
       "titre": "Les pierres de Tâ'if",
-      "titre_ar": "يوم الطائف",
+      "titre_ar": "الطائف",
       "ambiance": "jour",
-      "a_retenir": "Repoussé et blessé à Tâ'if, il ﷺ refuse que ses habitants soient châtiés et espère que leurs descendants adoreront Allah.",
+      "a_retenir": "Repoussé et blessé à Tâ'if, il ﷺ refuse que ses habitants soient châtiés et espère que leurs descendants adoreront Allah seul.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le Prophète ﷺ à Tâ'if" }, { "ouvrage": "bukhari", "page": null, "passage": "Récit de 'Â'isha sur l'ange des montagnes" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "Le Prophète ﷺ à Tâ'if"},
+        {"ouvrage": "bukhari", "page": null, "passage": "Livre du début de la création : l'ange des montagnes (hadith de 'Â'isha)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 70, "cap": 110, "incl": 52 },
-          "texte": "Ne trouvant plus d'appui à La Mecque, il ﷺ part à pied avec Zayd ibn Hâritha chercher du soutien auprès d'une tribu des montagnes de l'est : Thaqîf." },
-        { "type": "trouver", "vue": { "point": [21.35, 40.12], "r": 170, "cap": 80, "incl": 36 },
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 70, "cap": 110, "incl": 52},
+          "texte": "Ne trouvant plus d'appui à La Mecque, il ﷺ part à pied avec Zayd ibn Hâritha chercher du soutien auprès d'une tribu des montagnes de l'est : Thaqîf."
+        },
+        {
+          "type": "trouver",
+          "vue": {"point": [21.35, 40.12], "r": 170, "cap": 80, "incl": 36},
           "consigne": "Touchez la ville de Thaqîf, sur les hauteurs à l'est de La Mecque : Tâ'if.",
           "indice": "Une soixantaine de kilomètres à l'est de La Mecque, sur un plateau à plus de 1 500 m.",
-          "cible": "taif", "rayon": 10,
-          "reussite": "Tâ'if : une ville fraîche, entourée de vergers, sur les hauteurs." },
-        { "type": "trajet",
-          "texte": "Une dizaine de jours durant, il s'adresse aux notables de Thaqîf. Ils le repoussent et lancent contre lui des enfants et des esclaves, qui lui jettent des pierres. Ses pieds saignent ; Zayd tente de le protéger." },
-        { "type": "recit", "vue": { "lieu": "taif", "r": 3, "cap": 300, "incl": 60 },
-          "texte": "Il s'abrite dans un verger. Là, il invoque Allah, se plaignant à Lui de sa faiblesse. 'Addâs, un jeune serviteur chrétien, lui apporte une grappe de raisin… et croit en lui." },
-        { "type": "choix",
-          "question": "Sur le chemin du retour, l'ange des montagnes vient à lui : s'il le veut, il refermera deux montagnes sur ceux qui l'ont rejeté. Que répond-il ?",
+          "cible": "taif",
+          "rayon": 10,
+          "reussite": "Tâ'if : une ville fraîche, entourée de vergers, sur les hauteurs."
+        },
+        {
+          "type": "estimer",
+          "question": "À vol d'oiseau, quelle distance sépare La Mecque de Tâ'if ?",
+          "min": 10,
+          "max": 250,
+          "pas": 1,
+          "juste": 63,
+          "tolerance": 15,
+          "unite": "km",
+          "reponse": "Environ 65 km à vol d'oiseau, bien davantage par les sentiers de montagne : plusieurs jours de marche, en montant de près de 1 500 m.",
+          "trace": ["makkah", "taif"],
+          "indice_plus": "Regardez la ligne tracée sur la carte : 1 km de relief vaut environ 1 km de carte.",
+          "indice_moins": "La ligne tracée est plus longue qu'il n'y paraît."
+        },
+        {
+          "type": "trajet",
+          "texte": "Une dizaine de jours durant, il s'adresse aux notables de Thaqîf. Ils le repoussent et lancent contre lui des enfants et des esclaves, qui lui jettent des pierres. Ses pieds saignent ; Zayd tente de le protéger."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "taif", "r": 3, "cap": 300, "incl": 60},
+          "texte": "Il s'abrite dans un verger. Là, il se plaint à Allah de sa faiblesse et de son peu de moyens. 'Addâs, un jeune serviteur chrétien, lui apporte une grappe de raisin et s'étonne de l'entendre dire « Bismillâh »."
+        },
+        {
+          "type": "choix",
+          "question": "Sur le chemin du retour, selon al-Bukhârî, l'ange des montagnes vient à lui. Que lui propose-t-il ?",
           "options": [
-            { "texte": "« J'espère qu'Allah fera naître de leur descendance des gens qui L'adoreront Lui seul »", "juste": true,
-              "reponse": "Il refuse tout châtiment : l'espérance l'emporte. Des années plus tard, Thaqîf viendra d'elle-même embrasser l'islam." },
-            { "texte": "Il demande un temps pour réfléchir",
+            {
+              "texte": "De lui montrer le chemin le plus court vers Yathrib",
+              "suite": [
+                "Dans votre chronique, l'ange montre la route de Yathrib… Mais trois années passent encore à La Mecque avant la Hijra : le récit ne tient pas."
+              ],
+              "titre": "Pas encore",
+              "consequence": "L'ange des montagnes lui proposa de refermer sur Tâ'if les deux montagnes qui l'entourent. La Hijra vers Yathrib ne viendra que trois ans plus tard.",
+              "indice": "L'ange est celui des montagnes."
+            },
+            {
+              "texte": "De refermer sur Tâ'if les deux montagnes qui l'entourent",
+              "juste": true,
+              "reponse": "Il refuse : « J'espère plutôt qu'Allah fera naître de leur descendance des gens qui L'adoreront Lui seul, sans rien Lui associer. » Des années plus tard, Thaqîf viendra d'elle-même embrasser l'islam."
+            },
+            {
+              "texte": "De faire jaillir une source dans le verger où il s'abrite",
+              "suite": [
+                "Vous notez : « une source jaillit dans le verger ». Mais aucun récit ne parle d'eau ce jour-là, seulement de pierres et de montagnes."
+              ],
               "titre": "Le fil se brouille",
-              "consequence": "Les sources rapportent une réponse immédiate, pleine d'espérance.",
-              "indice": "Il pense aux générations futures." },
-            { "texte": "Il laisse Zayd répondre à sa place",
-              "titre": "Le fil se brouille",
-              "consequence": "C'est à lui que l'ange s'adresse, et c'est lui qui répond.",
-              "indice": "Il pense aux générations futures." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 22, "cap": 290, "incl": 55 },
-          "texte": "Il ne peut rentrer à La Mecque que sous la protection d'un notable qui n'a pas embrassé l'islam : al-Mut'im ibn 'Adî." }
+              "consequence": "Ce n'est pas ce que rapporte al-Bukhârî : l'ange des montagnes proposa de refermer les deux montagnes sur Tâ'if.",
+              "indice": "L'ange est celui des montagnes."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 22, "cap": 290, "incl": 55},
+          "texte": "Il ne peut rentrer à La Mecque que sous la protection d'un notable qui n'a pas embrassé l'islam : al-Mut'im ibn 'Adî, qui s'arme avec ses fils pour l'escorter jusqu'à la Ka'ba."
+        }
       ]
     },
     {
@@ -348,40 +652,107 @@
       "titre": "Le voyage nocturne",
       "titre_ar": "الإسراء والمعراج",
       "ambiance": "nuit",
-      "a_retenir": "En une nuit, il ﷺ est transporté de La Mecque à Jérusalem puis élevé à travers les cieux ; les cinq prières quotidiennes sont prescrites.",
+      "a_retenir": "En une nuit, il ﷺ est transporté de La Mecque à Jérusalem puis élevé à travers les cieux ; les cinq prières quotidiennes sont prescrites. Abû Bakr y gagne son surnom d'as-Siddîq.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "al-Isrâ' et al-Mi'râj" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "al-Isrâ' et al-Mi'râj"},
+        {"ouvrage": "bukhari", "page": null, "passage": "al-Isrâ' et al-Mi'râj ; Quraysh l'interroge sur Jérusalem"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 1.8, "cap": 0, "incl": 62 }, "etiquettes": [],
-          "texte": "Une nuit, alors qu'il ﷺ se trouve près de la Ka'ba, survient un voyage hors du commun." },
-        { "type": "trajet",
-          "texte": "« Gloire à Celui qui a fait voyager de nuit Son serviteur, de la Mosquée sacrée à la Mosquée al-Aqsâ… » (al-Isrâ' 17:1). De Jérusalem, il est élevé à travers les cieux : c'est al-Mi'râj." },
-        { "type": "choix",
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 1.8, "cap": 0, "incl": 62},
+          "etiquettes": [],
+          "texte": "Une nuit, alors qu'il ﷺ se trouve près de la Ka'ba, survient un voyage hors du commun. Sa date exacte est discutée : la plupart la situent dans les dernières années avant la Hijra."
+        },
+        {
+          "type": "trajet",
+          "texte": "« Gloire à Celui qui a fait voyager de nuit Son serviteur, de la Mosquée sacrée à la Mosquée al-Aqsâ… » (al-Isrâ' 17:1). De Jérusalem, il est élevé à travers les cieux : c'est al-Mi'râj."
+        },
+        {
+          "type": "choix",
           "question": "Quelle obligation est prescrite lors de ce voyage ?",
           "options": [
-            { "texte": "Les cinq prières quotidiennes", "juste": true,
-              "reponse": "D'abord cinquante, elles sont ramenées à cinq, avec la récompense de cinquante." },
-            { "texte": "Le jeûne du mois de Ramadan",
+            {
+              "texte": "Les cinq prières quotidiennes",
+              "juste": true,
+              "reponse": "D'abord cinquante, elles sont ramenées à cinq, avec la récompense de cinquante."
+            },
+            {
+              "texte": "Le jeûne du mois de Ramadan",
+              "suite": [
+                "Vous écrivez : « le jeûne est prescrit cette nuit-là ». Mais la suite de la chronique parle d'un mois de Ramadan à Médine, des années plus tard…"
+              ],
               "titre": "Plus tard",
               "consequence": "Le jeûne de Ramadan sera prescrit à Médine, en l'an 2 de l'Hégire.",
-              "indice": "Une obligation que l'on accomplit plusieurs fois par jour." },
-            { "texte": "Le pèlerinage à La Mecque",
+              "indice": "Une obligation que l'on accomplit plusieurs fois par jour."
+            },
+            {
+              "texte": "Le pèlerinage à la Maison de La Mecque",
+              "suite": ["Vous notez : « le pèlerinage est prescrit ». Mais à cette époque, les croyants ne peuvent même pas prier en paix près de la Ka'ba…"],
               "titre": "Plus tard",
               "consequence": "Le pèlerinage sera prescrit des années plus tard, après la Hijra.",
-              "indice": "Une obligation que l'on accomplit plusieurs fois par jour." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 3, "cap": 120, "incl": 60 }, "ambiance": "aube",
-          "texte": "Au matin, il raconte son voyage. Quraysh s'en moque : il faut un mois de caravane pour aller à Jérusalem, et autant pour en revenir." },
-        { "type": "choix",
+              "indice": "Une obligation que l'on accomplit plusieurs fois par jour."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 3, "cap": 120, "incl": 60},
+          "ambiance": "aube",
+          "texte": "Au matin, il raconte son voyage. Quraysh s'en moque : il faut un mois de caravane pour aller à Jérusalem, et autant pour en revenir. Ils l'interrogent sur la ville, qu'il n'a jamais visitée, et il la décrit."
+        },
+        {
+          "type": "choix",
           "question": "Des Mecquois courent demander à Abû Bakr ce qu'il en pense. Que répond-il ?",
           "options": [
-            { "texte": "« S'il l'a dit, alors il a dit vrai »", "juste": true,
-              "reponse": "Il y gagne le surnom d'as-Siddîq, « celui qui confirme la vérité »." },
-            { "texte": "« Je dois d'abord vérifier »",
+            {
+              "texte": "« Il a dû rêver : ne le répétez à personne. »",
+              "suite": ["Vous notez sa prudence… puis vous lisez son surnom, as-Siddîq, « celui qui confirme la vérité », et quelque chose ne colle plus."],
               "titre": "Le fil se brouille",
               "consequence": "Abû Bakr n'hésita pas un instant : c'est cette confiance totale qui lui valut son surnom.",
-              "indice": "Son surnom vient de cette réponse." }
-          ] }
+              "indice": "Son surnom vient de cette réponse."
+            },
+            {
+              "texte": "« S'il l'a dit, alors il a dit vrai. »",
+              "juste": true,
+              "reponse": "Il y gagne le surnom d'as-Siddîq, « celui qui confirme la vérité »."
+            },
+            {
+              "texte": "« Allons d'abord l'interroger sur Jérusalem. »",
+              "suite": ["Vous écrivez qu'Abû Bakr veut vérifier… Mais alors pourquoi l'appellerait-on désormais « celui qui confirme la vérité » ?"],
+              "titre": "Ce fut Quraysh",
+              "consequence": "Ce sont les Mecquois qui l'interrogèrent sur Jérusalem. Abû Bakr, lui, crut sans attendre.",
+              "indice": "Son surnom vient de cette réponse."
+            }
+          ]
+        },
+        {
+          "type": "vraifaux",
+          "consigne": "Le voyage nocturne : vrai ou faux ?",
+          "affirmations": [
+            {
+              "texte": "Le voyage mena de la Mosquée sacrée de La Mecque à la Mosquée al-Aqsâ, à Jérusalem.",
+              "vrai": true,
+              "explication": "C'est le premier verset de la sourate al-Isrâ' (17:1)."
+            },
+            {
+              "texte": "Les prières furent d'abord prescrites au nombre de cinquante, puis ramenées à cinq.",
+              "vrai": true,
+              "explication": "Selon le hadith rapporté par al-Bukhârî et Muslim, avec la récompense de cinquante."
+            },
+            {
+              "texte": "La date de ce voyage est connue avec certitude : le 27 Rajab de l'an 10.",
+              "vrai": false,
+              "explication": "Sa date est discutée : plusieurs années et plusieurs mois sont proposés. Le 27 Rajab est une date répandue, mais non établie."
+            },
+            {
+              "texte": "Quraysh lui demanda de décrire Jérusalem, et il la décrivit.",
+              "vrai": true,
+              "explication": "Al-Bukhârî rapporte qu'Allah lui montra la ville, et qu'il la décrivit à ceux qui l'interrogeaient."
+            }
+          ]
+        }
       ]
     },
     {
@@ -391,41 +762,93 @@
       "ambiance": "nuit",
       "a_retenir": "Des pèlerins de Yathrib (Aws et Khazraj) prêtent deux serments à al-'Aqaba, près de Minâ : la voie de la Hijra s'ouvre.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le premier et le second serment d'al-'Aqaba" }],
+      "sources": [{"ouvrage": "rahiq", "page": null, "passage": "Le premier et le second serment d'al-'Aqaba"}],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "aqaba", "r": 4, "cap": 290, "incl": 60 }, "ambiance": "aube", "etiquettes": ["aqaba", "makkah"],
-          "texte": "Chaque année, à la saison du pèlerinage, il ﷺ va au-devant des tribus venues de toute l'Arabie. Peu lui répondent. Mais un petit groupe de pèlerins l'écoute avec attention, près de Minâ." },
-        { "type": "choix",
+        {
+          "type": "recit",
+          "vue": {"lieu": "aqaba", "r": 4, "cap": 290, "incl": 60},
+          "ambiance": "aube",
+          "etiquettes": ["aqaba", "makkah"],
+          "texte": "Chaque année, à la saison du pèlerinage, il ﷺ va au-devant des tribus venues de toute l'Arabie. Peu lui répondent. Mais un petit groupe de pèlerins l'écoute avec attention, près de Minâ."
+        },
+        {
+          "type": "choix",
           "question": "D'où viennent ces pèlerins ?",
           "options": [
-            { "texte": "De Yathrib, une oasis du nord : des Aws et des Khazraj", "juste": true,
-              "reponse": "Ils avaient entendu leurs voisins juifs parler d'un prophète attendu. Ils croient en lui et promettent de revenir." },
-            { "texte": "De Tâ'if",
-              "titre": "Le fil se brouille",
-              "consequence": "Tâ'if vient de le repousser durement.",
-              "indice": "Une oasis du nord, partagée entre deux tribus." },
-            { "texte": "Du Yémen",
+            {
+              "texte": "Du Yémen, loin au sud",
+              "suite": ["Vous écrivez : « des Yéménites ». Mais la suite parle de deux tribus voisines, les Aws et les Khazraj, et d'un voisinage juif…"],
               "titre": "Le fil se brouille",
               "consequence": "Ce n'est pas ce que rapportent les sources : ces pèlerins venaient du nord.",
-              "indice": "Une oasis du nord, partagée entre deux tribus." }
-          ] },
-        { "type": "trouver", "vue": { "hijaz": true, "cap": 0, "incl": 18 },
+              "indice": "Une oasis du nord, partagée entre deux tribus."
+            },
+            {
+              "texte": "De Yathrib, une oasis du nord",
+              "juste": true,
+              "reponse": "Des Aws et des Khazraj. Ils avaient entendu leurs voisins juifs parler d'un prophète attendu ; ils croient en lui et promettent de revenir."
+            },
+            {
+              "texte": "De Tâ'if, dans les montagnes de l'est",
+              "suite": ["Vous notez : « des gens de Tâ'if ». Mais Tâ'if vient de le chasser à coups de pierres…"],
+              "titre": "Le fil se brouille",
+              "consequence": "Tâ'if vient de le repousser durement : ses pèlerins ne l'écoutent pas.",
+              "indice": "Une oasis du nord, partagée entre deux tribus."
+            }
+          ]
+        },
+        {
+          "type": "trouver",
+          "vue": {"hijaz": true, "cap": 0, "incl": 18},
           "consigne": "Touchez leur oasis : Yathrib.",
           "indice": "Environ 340 km au nord de La Mecque, entre deux champs de lave noire.",
-          "cible": "madinah", "rayon": 25,
-          "reussite": "Yathrib : des palmeraies serrées entre deux champs de lave, au pied du mont Uhud." },
-        { "type": "recit", "vue": { "lieu": "aqaba", "r": 2.2, "cap": 250, "incl": 62 }, "etiquettes": ["aqaba"],
-          "texte": "L'année suivante, douze hommes de Yathrib prêtent un premier serment à al-'Aqaba ; Mus'ab ibn 'Umayr repart avec eux pour enseigner le Coran. L'année d'après, 73 hommes et 2 femmes reviennent et s'engagent à le protéger comme ils protègent les leurs." },
-        { "type": "choix",
+          "cible": "madinah",
+          "rayon": 25,
+          "reussite": "Yathrib : des palmeraies serrées entre deux champs de lave, au pied du mont Uhud."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "aqaba", "r": 2.2, "cap": 250, "incl": 62},
+          "etiquettes": ["aqaba"],
+          "texte": "L'année suivante, douze hommes de Yathrib prêtent un premier serment à al-'Aqaba ; Mus'ab ibn 'Umayr repart avec eux pour enseigner le Coran. L'année d'après, soixante-treize hommes et deux femmes reviennent, et s'engagent à le protéger comme ils protègent les leurs."
+        },
+        {
+          "type": "associer",
+          "consigne": "Associez chaque année à ce qui s'y passe (dates approximatives).",
+          "paires": [
+            ["620", "Six hommes de Khazraj l'écoutent à Minâ", "Le tout premier contact, encore modeste."],
+            ["621", "Premier serment : douze hommes", "Un an après le premier contact."],
+            ["621-622", "Mus'ab ibn 'Umayr enseigne le Coran à Yathrib", "Entre les deux serments."],
+            ["622", "Second serment : 73 hommes et 2 femmes", "L'année même de la Hijra."]
+          ],
+          "reponse": "En trois saisons de pèlerinage, Yathrib passe de six croyants à une communauté prête à accueillir le Prophète ﷺ."
+        },
+        {
+          "type": "choix",
           "question": "Pourquoi ce second serment a-t-il lieu au cœur de la nuit, dans un vallon à l'écart ?",
           "options": [
-            { "texte": "Pour échapper à la surveillance de Quraysh", "juste": true,
-              "reponse": "Les croyants de Yathrib se glissent hors de leur camp à la nuit tombée, sans même que leurs compagnons de voyage polythéistes ne s'en doutent." },
-            { "texte": "Pour éviter la chaleur du jour",
+            {
+              "texte": "Pour éviter la chaleur écrasante du jour",
+              "suite": [
+                "Vous notez : « à cause de la chaleur ». Mais pourquoi, alors, les pèlerins se glissent-ils hors de leur camp un à un, sans prévenir leurs compagnons de voyage ?"
+              ],
               "titre": "Le fil se brouille",
               "consequence": "La chaleur n'y était pour rien : le secret, si.",
-              "indice": "Quraysh ne devait rien savoir." }
-          ] }
+              "indice": "Quraysh ne devait rien savoir."
+            },
+            {
+              "texte": "Parce que la lune éclairait mieux le vallon",
+              "suite": ["Vous écrivez : « pour profiter de la lune ». Mais les récits insistent sur le silence et la discrétion de cette nuit-là…"],
+              "titre": "Le fil se brouille",
+              "consequence": "La lumière n'y était pour rien : le secret, si.",
+              "indice": "Quraysh ne devait rien savoir."
+            },
+            {
+              "texte": "Pour échapper à la surveillance de Quraysh",
+              "juste": true,
+              "reponse": "Les croyants de Yathrib se glissent hors de leur camp à la nuit tombée, sans même que leurs compagnons de voyage polythéistes ne s'en doutent."
+            }
+          ]
+        }
       ]
     },
     {
@@ -433,69 +856,135 @@
       "titre": "La Hijra",
       "titre_ar": "الهجرة",
       "ambiance": "nuit",
-      "a_retenir": "Il ﷺ quitte La Mecque de nuit avec Abû Bakr, se cache trois nuits dans la grotte de Thawr au sud, puis rejoint Yathrib par une route côtière ; la ville devient Médine.",
+      "a_retenir": "Il ﷺ quitte La Mecque de nuit avec Abû Bakr, se cache trois nuits dans la grotte de Thawr au sud, puis rejoint Yathrib par la route de la côte, guidé par un homme qui n'était pas musulman mais tint parole ; la ville devient Médine.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'émigration du Prophète ﷺ" }, { "ouvrage": "bukhari", "page": null, "passage": "La Hijra ; récit de Surâqa" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "L'émigration du Prophète ﷺ"},
+        {"ouvrage": "bukhari", "page": null, "passage": "La Hijra (hadith de 'Â'isha) ; le récit de Surâqa"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "nadwa", "r": 1.5, "cap": 20, "incl": 60 }, "etiquettes": ["nadwa"],
-          "texte": "Les croyants partent un à un vers Yathrib. À Dâr an-Nadwa, les chefs de Quraysh se concertent : un jeune homme de chaque clan frappera en même temps, pour que la responsabilité soit partagée entre tous." },
-        { "type": "choix",
+        {
+          "type": "recit",
+          "vue": {"lieu": "nadwa", "r": 1.5, "cap": 20, "incl": 60},
+          "etiquettes": ["nadwa"],
+          "texte": "Les croyants partent un à un vers Yathrib. À Dâr an-Nadwa, les chefs de Quraysh se concertent : un jeune homme de chaque clan frappera en même temps, pour que la responsabilité du sang soit partagée entre tous."
+        },
+        {
+          "type": "choix",
           "question": "Prévenu, il ﷺ prépare son départ. Cette nuit-là, qui dort dans son lit, sous son manteau, pour tromper ceux qui guettent sa porte ?",
           "options": [
-            { "texte": "'Alî ibn Abî Tâlib", "juste": true,
-              "reponse": "'Alî prend sa place ; il restera aussi pour rendre aux Mecquois les biens qu'ils avaient confiés au Prophète ﷺ." },
-            { "texte": "Abû Bakr",
-              "titre": "Impossible",
-              "consequence": "Abû Bakr était son compagnon de route : il ne pouvait être à la fois dans le lit et sur le chemin.",
-              "indice": "Son jeune cousin, qui vit sous son toit." },
-            { "texte": "Zayd ibn Hâritha",
+            {
+              "texte": "'Abd Allâh ibn Abî Bakr",
+              "suite": [
+                "Vous écrivez le nom du fils d'Abû Bakr… mais vous le retrouvez trois nuits de suite sur le chemin de Thawr, portant des nouvelles. Il ne pouvait pas être dans ce lit."
+              ],
+              "titre": "Un autre rôle",
+              "consequence": "'Abd Allâh, le fils d'Abû Bakr, avait une autre mission : rapporter chaque nuit les nouvelles de La Mecque aux deux hommes cachés dans la grotte.",
+              "indice": "Son jeune cousin, qui vit sous son toit."
+            },
+            {
+              "texte": "'Alî ibn Abî Tâlib",
+              "juste": true,
+              "reponse": "'Alî prend sa place sous le manteau vert ; il restera aussi pour rendre aux Mecquois les biens qu'ils avaient confiés au Prophète ﷺ, même ses ennemis."
+            },
+            {
+              "texte": "Zayd ibn Hâritha",
+              "suite": ["Vous notez le nom de Zayd… Mais au matin, quand les conjurés découvrent qui dormait là, c'est un autre nom qu'ils prononcent."],
               "titre": "Le fil se brouille",
-              "consequence": "Ce n'est pas ce que rapportent les sources.",
-              "indice": "Son jeune cousin, qui vit sous son toit." }
-          ] },
-        { "type": "itineraire",
-          "vue": { "point": [22.75, 39.55], "r": 760, "cap": 0, "incl": 22 },
+              "consequence": "Ce n'est pas ce que rapportent les sources : ce fut son jeune cousin, 'Alî.",
+              "indice": "Son jeune cousin, qui vit sous son toit."
+            }
+          ]
+        },
+        {
+          "type": "itineraire",
+          "vue": {"point": [22.75, 39.55], "r": 760, "cap": 0, "incl": 22},
           "question": "Il ﷺ rejoint Abû Bakr ; ils quittent La Mecque à la nuit. Quel chemin prendre pour gagner Yathrib ?",
           "options": [
-            { "nom": "La route des caravanes, droit vers le nord",
+            {
+              "nom": "La route des caravanes, droit vers le nord",
               "etapes": ["makkah", [21.85, 39.8], [22.5, 39.72], [23.2, 39.63], [23.9, 39.58], "madinah"],
-              "titre": "La piste est découverte", "effet": "eclaireurs",
+              "titre": "La piste est découverte",
+              "effet": "eclaireurs",
               "consequence": "Et si… Quraysh avait promis cent chamelles à qui les ramènerait : ses cavaliers battaient justement les routes habituelles de Yathrib. Ce n'est pas ce chemin que rapportent les sources.",
-              "indice": "Ils partent d'abord dans la direction opposée…" },
-            { "nom": "Au sud vers Thawr, puis une route côtière peu fréquentée", "juste": true,
-              "etapes": ["makkah", "thawr", [21.4, 39.55], "usfan", [22.36, 39.32], [22.8, 39.08], [23.35, 38.98], [23.85, 39.18], [24.2, 39.42], "quba", "madinah"],
-              "reponse": "Personne ne les attend au sud. Ils se cachent trois nuits dans la grotte de Thawr ; puis leur guide, 'Abd Allâh ibn Urayqit, les mène par des pistes écartées, le long de la côte." },
-            { "nom": "À l'est, par Tâ'if et les plateaux",
+              "indice": "Ils partent d'abord dans la direction opposée…"
+            },
+            {
+              "nom": "Au sud vers Thawr, puis par la côte",
+              "juste": true,
+              "etapes": [
+                "makkah",
+                "thawr",
+                [21.4, 39.55],
+                "usfan",
+                [22.36, 39.32],
+                [22.8, 39.08],
+                [23.35, 38.98],
+                [23.85, 39.18],
+                [24.2, 39.42],
+                "quba",
+                "madinah"
+              ],
+              "reponse": "Personne ne les attend au sud. Ils se cachent trois nuits dans la grotte de Thawr ; puis leur guide, 'Abd Allâh ibn Urayqit, les mène par des pistes écartées, le long de la côte."
+            },
+            {
+              "nom": "À l'est, par Tâ'if et les plateaux",
               "etapes": ["makkah", "hunayn", "taif", [22.3, 40.35], [23.3, 40.05], [24.0, 39.8], "madinah"],
-              "titre": "Une impasse", "effet": "eclaireurs",
+              "titre": "Une impasse",
+              "effet": "eclaireurs",
               "consequence": "Et si… Tâ'if l'avait chassé trois ans plus tôt : ce long détour en terre hostile n'est pas celui que rapportent les sources.",
-              "indice": "Ils partent d'abord dans la direction opposée…" }
-          ] },
-        { "type": "recit", "vue": { "lieu": "thawr", "r": 1.6, "cap": 160, "incl": 62 }, "etiquettes": ["thawr"],
-          "texte": "Trois nuits dans la grotte de Thawr. 'Abd Allâh, le fils d'Abû Bakr, leur apporte les nouvelles de La Mecque ; un berger, 'Âmir ibn Fuhayra, fait passer son troupeau sur leurs traces pour les effacer." },
-        { "type": "choix",
-          "question": "Les poursuivants arrivent jusqu'à l'entrée de la grotte. Abû Bakr murmure : « S'ils regardaient à leurs pieds, ils nous verraient. » Que lui répond le Prophète ﷺ ?",
-          "options": [
-            { "texte": "« Ne t'afflige pas : Allah est avec nous »", "juste": true,
-              "reponse": "« Que penses-tu de deux dont Allah est le troisième ? » Le Coran rappelle ce moment : « Ne t'afflige pas, Allah est avec nous » (at-Tawba 9:40). Les poursuivants repartent." },
-            { "texte": "« Sortons, et fuyons par l'autre côté »",
-              "titre": "Le silence est rompu",
-              "consequence": "Et si… sortir de la grotte avait été se jeter sous les yeux des poursuivants ? Les sources rapportent au contraire une parole de pure confiance.",
-              "indice": "Une parole rapportée dans le Coran (at-Tawba 9:40)." },
-            { "texte": "« Préparons-nous à nous défendre »",
-              "titre": "Le fil se brouille",
-              "consequence": "Les sources ne rapportent rien de tel : seulement le calme et la confiance en Allah.",
-              "indice": "Une parole rapportée dans le Coran (at-Tawba 9:40)." }
-          ] },
-        { "type": "trajet", "ambiance": "jour",
-          "texte": "Ils prennent la route. Un cavalier, Surâqa ibn Mâlik, attiré par la récompense, les rattrape : par trois fois, les pattes de son cheval s'enfoncent dans le sable. Il renonce et demande grâce." },
-        { "type": "trouver", "vue": { "point": [24.452, 39.614], "r": 10, "cap": 0, "incl": 34 },
-          "consigne": "Après une dizaine de jours, ils arrivent en vue de Yathrib et font d'abord halte dans un village, au sud de l'oasis. Touchez Qubâ'.",
+              "indice": "Ils partent d'abord dans la direction opposée…"
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "thawr", "r": 1.6, "cap": 160, "incl": 62},
+          "etiquettes": ["thawr"],
+          "texte": "Trois nuits dans la grotte de Thawr. 'Abd Allâh, le fils d'Abû Bakr, leur apporte les nouvelles de La Mecque ; un berger, 'Âmir ibn Fuhayra, fait passer son troupeau sur leurs traces pour les effacer. Les poursuivants arrivent jusqu'à l'entrée de la grotte, sans regarder à leurs pieds."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "thawr", "r": 3, "cap": 200, "incl": 58},
+          "texte": "« Ne t'afflige pas : Allah est avec nous » (at-Tawba 9:40). Pendant ce temps, à La Mecque, un guide attend la troisième nuit pour amener les montures. Prenez sa place."
+        },
+        {"type": "mission", "mission": "guide", "epreuves": 3},
+        {
+          "type": "trajet",
+          "ambiance": "jour",
+          "texte": "Sur la route, un cavalier, Surâqa ibn Mâlik, attiré par la récompense, les rattrape : par trois fois, les pattes de son cheval s'enfoncent dans le sable. Il renonce et demande grâce."
+        },
+        {
+          "type": "estimer",
+          "question": "Quelle distance parcourent-ils environ, de La Mecque à Qubâ', par la route de la côte ?",
+          "min": 100,
+          "max": 1000,
+          "pas": 10,
+          "juste": 400,
+          "tolerance": 70,
+          "unite": "km",
+          "reponse": "Environ 400 km par les pistes de la côte : plus de huit jours de route, de nuit surtout, après trois nuits dans la grotte.",
+          "trace": ["makkah", "thawr", [21.4, 39.55], "usfan", [22.36, 39.32], [22.8, 39.08], [23.35, 38.98], [23.85, 39.18], [24.2, 39.42], "quba", "madinah"],
+          "vue": {"point": [22.9, 39.4], "r": 700, "cap": 0, "incl": 22},
+          "indice_plus": "La Mecque et Médine sont déjà à 340 km l'une de l'autre à vol d'oiseau, et la route fait un détour.",
+          "indice_moins": "Le détour par la côte rallonge la route, mais pas du double."
+        },
+        {
+          "type": "trouver",
+          "vue": {"point": [24.452, 39.614], "r": 10, "cap": 0, "incl": 34},
+          "consigne": "Ils arrivent en vue de Yathrib et font d'abord halte dans un village, au sud de l'oasis. Touchez Qubâ'.",
           "indice": "Au sud de l'oasis, à environ 3 km de l'emplacement de la future mosquée du Prophète ﷺ.",
-          "cible": "quba", "rayon": 0.9,
-          "reussite": "Qubâ' : les habitants de Yathrib guettaient leur arrivée depuis des jours." },
-        { "type": "recit", "vue": { "lieu": "quba", "r": 1.3, "cap": 340, "incl": 60 }, "etiquettes": ["quba"], "epoque": true,
-          "texte": "À Qubâ', il fonde la première mosquée. Puis il entre dans l'oasis, acclamé par ses habitants. Yathrib devient Madînat an-Nabî ﷺ, la ville du Prophète ﷺ : Médine. Cette année marquera le début du calendrier de l'Hégire." }
+          "cible": "quba",
+          "rayon": 0.9,
+          "reussite": "Qubâ' : les habitants de Yathrib guettaient leur arrivée depuis des jours, chaque matin, jusqu'à ce que la chaleur les chasse."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "quba", "r": 1.3, "cap": 340, "incl": 60},
+          "etiquettes": ["quba"],
+          "epoque": true,
+          "texte": "À Qubâ', il fonde la première mosquée. Puis il entre dans l'oasis, acclamé par ses habitants. Yathrib devient Madînat an-Nabî ﷺ, la ville du Prophète ﷺ : Médine. Cette année marquera le début du calendrier de l'Hégire."
+        }
       ]
     },
     {
@@ -503,117 +992,199 @@
       "titre": "La mosquée de Médine",
       "titre_ar": "المسجد النبوي",
       "ambiance": "jour",
-      "a_retenir": "À Médine, il ﷺ bâtit sa mosquée de ses mains et unit chaque Muhâjir à un Ansârî par un lien de fraternité.",
+      "a_retenir": "À Médine, il ﷺ bâtit sa mosquée de ses mains, unit chaque Muhâjir à un Ansârî par un lien de fraternité et organise la vie de la cité, jusque dans l'honnêteté du marché.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La construction de la mosquée ; la fraternité" }, { "ouvrage": "samhudi", "page": null, "passage": "La mosquée du Prophète ﷺ" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "La construction de la mosquée ; la fraternité ; le pacte de Médine"},
+        {"ouvrage": "samhudi", "page": null, "passage": "La mosquée du Prophète ﷺ"},
+        {"ouvrage": "muslim", "page": null, "passage": "« Celui qui trompe n'est pas des miens »"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 2.6, "cap": 20, "incl": 58 }, "etiquettes": [],
-          "texte": "À Médine, chaque famille veut accueillir le Prophète ﷺ ; on se dispute la bride de sa chamelle, al-Qaswâ'." },
-        { "type": "choix",
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 2.6, "cap": 20, "incl": 58},
+          "etiquettes": [],
+          "texte": "À Médine, chaque famille veut accueillir le Prophète ﷺ ; on se dispute la bride de sa chamelle, al-Qaswâ'. Lui ne veut favoriser personne."
+        },
+        {
+          "type": "choix",
           "question": "Comment choisit-il l'endroit où il s'installera ?",
           "options": [
-            { "texte": "Il laisse sa chamelle avancer jusqu'à ce qu'elle s'agenouille", "juste": true,
-              "reponse": "« Laissez-la, elle est guidée. » La chamelle s'agenouille sur un terrain où l'on faisait sécher les dattes, près de la maison d'Abû Ayyûb al-Ansârî, qui l'héberge." },
-            { "texte": "Il tire au sort parmi les familles",
+            {
+              "texte": "Il tire au sort parmi les familles qui l'invitent",
+              "suite": [
+                "Vous imaginez le tirage, les cris de joie… et la déception de toutes les autres familles. Mais les récits ne parlent d'aucun tirage au sort."
+              ],
               "titre": "Des hôtes déçus",
-              "consequence": "Et si… le sort avait fait des déçus parmi ceux qui l'attendaient ? Les sources rapportent qu'il ne voulut choisir personne lui-même.",
-              "indice": "C'est sa monture qui « choisit »." },
-            { "texte": "Il s'installe chez le chef le plus riche",
+              "consequence": "Il ne voulut pas choisir lui-même : il laissa sa chamelle avancer, en disant qu'elle était guidée.",
+              "indice": "C'est sa monture qui « choisit »."
+            },
+            {
+              "texte": "Il laisse sa chamelle avancer jusqu'à ce qu'elle s'agenouille",
+              "juste": true,
+              "reponse": "« Laissez-la, elle est guidée. » La chamelle s'agenouille sur un terrain où l'on faisait sécher les dattes, près de la maison d'Abû Ayyûb al-Ansârî, qui l'héberge."
+            },
+            {
+              "texte": "Il s'installe chez le chef le plus puissant et le plus riche de l'oasis",
+              "suite": ["Vous notez : « chez le plus puissant ». Mais la maison où il s'installe, celle d'Abû Ayyûb, est celle d'un homme modeste…"],
               "titre": "Le fil se brouille",
               "consequence": "Ce n'est pas ce que rapportent les sources : il ne voulut favoriser personne.",
-              "indice": "C'est sa monture qui « choisit »." }
-          ] },
-        { "type": "trouver", "vue": { "lieu": "madinah", "r": 4.2, "cap": 0, "incl": 40 },
+              "indice": "C'est sa monture qui « choisit »."
+            }
+          ]
+        },
+        {
+          "type": "trouver",
+          "vue": {"lieu": "madinah", "r": 4.2, "cap": 0, "incl": 40},
           "consigne": "Touchez l'endroit où la chamelle s'agenouilla : on y bâtit la mosquée.",
           "indice": "Au cœur de l'oasis, cherchez une cour carrée bordée de murs de terre et d'auvents de palmes.",
-          "cible": "madinah", "rayon": 0.13,
-          "reussite": "Ici s'élève la mosquée du Prophète ﷺ ; ses demeures, al-Hujurât, la bordent à l'est." },
-        { "type": "choix",
+          "cible": "madinah",
+          "rayon": 0.13,
+          "reussite": "Ici s'élève la mosquée du Prophète ﷺ ; ses demeures, al-Hujurât, la bordent à l'est."
+        },
+        {
+          "type": "choix",
           "question": "Comment la mosquée est-elle construite ?",
           "options": [
-            { "texte": "En briques crues, troncs et palmes de dattier ; il porte lui-même les briques", "juste": true,
-              "reponse": "Une construction simple, faite des matériaux de l'oasis. Il ﷺ y travaille avec ses Compagnons." },
-            { "texte": "En pierre taillée, par des bâtisseurs venus de Byzance",
+            {
+              "texte": "En briques crues, troncs et palmes de dattier",
+              "juste": true,
+              "reponse": "Une construction simple, faite des matériaux de l'oasis. Il ﷺ y porte lui-même les briques avec ses Compagnons, qui chantent en travaillant."
+            },
+            {
+              "texte": "En pierre taillée, par des maçons de Byzance",
+              "suite": [
+                "Vous imaginez des colonnes de marbre… Mais les récits parlent de troncs de palmiers pour piliers, et d'un toit de palmes qui laissait passer la pluie."
+              ],
               "titre": "Le fil se brouille",
               "consequence": "Rien de tel : une construction modeste, à laquelle chacun participa.",
-              "indice": "Les matériaux viennent de l'oasis elle-même." }
-          ] },
-        { "type": "choix",
-          "question": "Il unit chaque émigré mecquois à un habitant de Médine par un lien de fraternité. Comment appelle-t-on ces deux groupes ?",
-          "options": [
-            { "texte": "Les Muhâjirûn (les émigrés) et les Ansâr (les soutiens)", "juste": true,
-              "reponse": "Les Ansâr partagent leurs maisons et leurs biens avec les Muhâjirûn, arrivés souvent les mains vides." },
-            { "texte": "Les Aws et les Khazraj",
-              "titre": "Presque",
-              "consequence": "Ce sont les deux grandes tribus de Médine : toutes deux font partie des Ansâr.",
-              "indice": "L'un des noms signifie « les émigrés »." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 1.1, "cap": 200, "incl": 60 }, "etiquettes": ["hujurat", "ayyub"],
-          "texte": "Il établit aussi un pacte qui organise la vie de Médine entre ses communautés : musulmans, tribus juives et alliés." }
+              "indice": "Les matériaux viennent de l'oasis elle-même."
+            },
+            {
+              "texte": "En bois de cèdre, apporté du Shâm",
+              "suite": ["Vous notez : « des poutres de cèdre ». Puis vous lisez que le minbar même n'était, au début, qu'un tronc de palmier…"],
+              "titre": "Le fil se brouille",
+              "consequence": "Le bois venait des palmiers de l'oasis, pas du Shâm.",
+              "indice": "Les matériaux viennent de l'oasis elle-même."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "souq", "r": 0.9, "cap": 30, "incl": 60},
+          "etiquettes": ["souq"],
+          "texte": "Médine devient une cité où se côtoient émigrés de La Mecque, tribus de l'oasis et marchands venus de loin. Au marché, de nouvelles règles s'imposent. Vivez-les à la place d'un marchand étranger."
+        },
+        {"type": "mission", "mission": "marche", "epreuves": 2},
+        {
+          "type": "associer",
+          "consigne": "Médine au temps de la Hijra : associez chaque nom à ce qu'il désigne.",
+          "paires": [
+            ["Les Muhâjirûn", "Les émigrés venus de La Mecque", "« Muhâjir » vient de hijra, l'émigration."],
+            ["Les Ansâr", "Les habitants de Médine qui les accueillent", "« Ansâr » signifie « les soutiens »."],
+            ["Les Aws et les Khazraj", "Les deux grandes tribus arabes de l'oasis", "Ce sont des tribus, pas un groupe de croyants."],
+            ["Qaynuqâ', an-Nadîr, Qurayza", "Les tribus juives de l'oasis", "Trois noms de tribus vivant dans l'oasis."]
+          ],
+          "reponse": "Chaque émigré est uni à un Ansârî par un lien de fraternité ; un pacte organise la vie commune entre musulmans, tribus juives et alliés."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 1.1, "cap": 200, "incl": 60},
+          "etiquettes": ["hujurat", "ayyub"],
+          "texte": "Il établit aussi un pacte qui organise la vie de Médine entre ses communautés : musulmans, tribus juives et alliés s'engagent à défendre ensemble l'oasis."
+        }
       ]
     },
     {
       "evenement": "badr",
       "titre": "Le Jour du Discernement",
-      "titre_ar": "يوم الفرقان",
+      "titre_ar": "غزوة بدر",
       "ambiance": "jour",
       "a_retenir": "À Badr, environ 313 croyants l'emportent sur une armée trois fois plus nombreuse ; le Coran nomme ce jour « le Jour du Discernement ».",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La grande bataille de Badr" }],
+      "sources": [{"ouvrage": "rahiq", "page": null, "passage": "La grande bataille de Badr"}],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 40, "cap": 230, "incl": 55 },
-          "texte": "An 2 de l'Hégire. Une grande caravane de Quraysh revient du Shâm, menée par Abû Sufyân. Il ﷺ sort de Médine avec environ 313 hommes, deux chevaux et soixante-dix chameaux, pour l'intercepter." },
-        { "type": "trajet",
-          "texte": "L'armée descend vers le sud-ouest, vers les puits de Badr, étape des caravanes." },
-        { "type": "choix",
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 40, "cap": 230, "incl": 55},
+          "texte": "An 2 de l'Hégire. Une grande caravane de Quraysh revient du Shâm, menée par Abû Sufyân. Il ﷺ sort de Médine avec environ trois cents hommes, deux chevaux et soixante-dix chameaux qu'on monte à tour de rôle, pour l'intercepter."
+        },
+        {"type": "trajet", "texte": "L'armée descend vers le sud-ouest, vers les puits de Badr, étape des caravanes sur la route de la côte."},
+        {
+          "type": "choix",
           "question": "Abû Sufyân, méfiant, apprend la menace. Que fait-il ?",
           "options": [
-            { "texte": "Il détourne la caravane vers la côte et appelle La Mecque à l'aide", "juste": true,
-              "reponse": "La caravane s'échappe… mais près d'un millier de Mecquois sont déjà en marche. Malgré le salut de la caravane, ils choisissent de marcher sur Badr." },
-            { "texte": "Il fait face avec ses caravaniers",
+            {
+              "texte": "Il fait face avec ses caravaniers",
+              "suite": [
+                "Vous écrivez qu'il range ses caravaniers en ligne… Mais ses chameaux sont chargés de marchandises, ses hommes sont des marchands, et il le sait."
+              ],
               "titre": "Le fil se brouille",
-              "consequence": "Et si… quelques dizaines de caravaniers avaient affronté trois cents hommes ? Abû Sufyân, marchand prudent, ne prit pas ce risque.",
-              "indice": "Un marchand prudent contourne le danger." },
-            { "texte": "Il rebrousse chemin vers le Shâm",
+              "consequence": "Quelques dizaines de caravaniers face à trois cents hommes ? Abû Sufyân, marchand prudent, ne prit pas ce risque.",
+              "indice": "Un marchand prudent contourne le danger."
+            },
+            {
+              "texte": "Il détourne la caravane vers la côte",
+              "juste": true,
+              "reponse": "Et il envoie un messager appeler La Mecque à l'aide. La caravane s'échappe… mais près d'un millier de Mecquois sont déjà en marche, et choisissent malgré tout de marcher sur Badr."
+            },
+            {
+              "texte": "Il rebrousse chemin vers le Shâm",
+              "suite": ["Vous notez : « retour au Shâm ». Mais la caravane arrivera bien à La Mecque, quelques jours plus tard…"],
               "titre": "Le fil se brouille",
-              "consequence": "Il ne rebroussa pas chemin : il contourna le danger.",
-              "indice": "Un marchand prudent contourne le danger." }
-          ] },
-        { "type": "bataille", "phase": 0 },
-        { "type": "choix",
+              "consequence": "Il ne rebroussa pas chemin : il contourna le danger par la côte.",
+              "indice": "Un marchand prudent contourne le danger."
+            }
+          ]
+        },
+        {"type": "bataille", "phase": 0},
+        {
+          "type": "choix",
           "question": "Près des puits, al-Hubâb ibn al-Mundhir demande si l'emplacement choisi est un ordre d'Allah ou un choix de stratégie. C'est un choix : que propose-t-il alors ?",
           "options": [
-            { "texte": "Camper au puits le plus proche de l'ennemi et priver Quraysh des autres", "juste": true,
-              "reponse": "Le Prophète ﷺ adopte aussitôt son avis : les musulmans tiennent l'eau." },
-            { "texte": "Se retrancher sur les hauteurs, loin des puits",
+            {
+              "texte": "Tenir le puits le plus proche de l'ennemi",
+              "juste": true,
+              "reponse": "Et combler les autres, pour priver Quraysh d'eau. Le Prophète ﷺ adopte aussitôt son avis : les musulmans tiennent l'eau."
+            },
+            {
+              "texte": "Se retrancher sur les hauteurs, loin des puits",
+              "suite": ["Vous notez : « on monte sur les hauteurs ». Le lendemain, sous le soleil, les outres sont vides, et l'ennemi boit en bas…"],
               "titre": "La soif",
-              "consequence": "Et si… sans eau, sous le soleil de Ramadan, l'armée s'était épuisée avant même le combat ?",
-              "indice": "Dans le désert, celui qui tient l'eau…" },
-            { "texte": "Attaquer sans attendre le camp de Quraysh",
+              "consequence": "Sans eau, sous le soleil de Ramadan, l'armée se serait épuisée avant même le combat. Al-Hubâb proposa au contraire de tenir les puits.",
+              "indice": "Dans le désert, celui qui tient l'eau…"
+            },
+            {
+              "texte": "Attaquer sans attendre le camp de Quraysh",
+              "suite": ["Vous écrivez : « assaut de nuit ». Mais les récits parlent d'une nuit calme, d'une pluie légère, et de puits que l'on aménage…"],
               "titre": "Le fil se brouille",
               "consequence": "Ce n'est pas ce que proposa al-Hubâb : son conseil portait sur l'eau.",
-              "indice": "Dans le désert, celui qui tient l'eau…" }
-          ] },
-        { "type": "bataille", "phase": 1 },
-        { "type": "bataille", "phase": 2 },
-        { "type": "choix",
+              "indice": "Dans le désert, celui qui tient l'eau…"
+            }
+          ]
+        },
+        {"type": "bataille", "phase": 1},
+        {"type": "bataille", "phase": 2},
+        {
+          "type": "estimer",
           "question": "Combien de croyants font face aux quelque 1 000 combattants de Quraysh ?",
-          "options": [
-            { "texte": "Environ 313", "juste": true,
-              "reponse": "Trois fois moins nombreux. Les récits donnent 313, 314 ou 317 hommes." },
-            { "texte": "Environ 3 000",
-              "titre": "Mauvaise bataille",
-              "consequence": "C'est l'effectif des musulmans… au Fossé, trois ans plus tard.",
-              "indice": "Ils sont trois fois moins nombreux que leurs adversaires." },
-            { "texte": "Environ 700",
-              "titre": "Mauvaise bataille",
-              "consequence": "C'est l'effectif des musulmans à Uhud, un an plus tard.",
-              "indice": "Ils sont trois fois moins nombreux que leurs adversaires." }
-          ] },
-        { "type": "bataille", "phase": 3 },
-        { "type": "bataille", "phase": 4 },
-        { "type": "recit", "vue": { "lieu": "badr", "r": 7, "cap": 200, "incl": 58 },
-          "texte": "Le Coran nomme ce jour « le Jour du Discernement » (yawm al-Furqân, al-Anfâl 8:41). Quatorze croyants y tombent en martyrs." }
+          "min": 100,
+          "max": 1500,
+          "pas": 1,
+          "juste": 314,
+          "tolerance": 20,
+          "unite": "hommes",
+          "reponse": "Environ 313 : les récits donnent 313, 314 ou 317 hommes, face à 950 à 1 000 Mecquois. Trois fois moins nombreux.",
+          "indice_plus": "Ils sont trois fois moins nombreux que leurs adversaires… mais pas dix fois.",
+          "indice_moins": "Ils sont environ trois fois moins nombreux que les 1 000 Mecquois."
+        },
+        {"type": "bataille", "phase": 3},
+        {"type": "bataille", "phase": 4},
+        {
+          "type": "recit",
+          "vue": {"lieu": "badr", "r": 7, "cap": 200, "incl": 58},
+          "texte": "Le Coran nomme ce jour « le Jour du Discernement » (yawm al-Furqân, al-Anfâl 8:41). Quatorze croyants y tombent en martyrs ; du côté de Quraysh, de nombreux chefs, dont Abû Jahl."
+        }
       ]
     },
     {
@@ -623,61 +1194,126 @@
       "ambiance": "jour",
       "a_retenir": "À Uhud, la victoire se change en épreuve quand la plupart des archers quittent leur poste ; la cavalerie de Khâlid prend les musulmans à revers. Hamza tombe en martyr.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La bataille d'Uhud" }, { "ouvrage": "bukhari", "page": null, "passage": "Récit d'al-Barâ' sur les archers" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "La bataille d'Uhud"},
+        {"ouvrage": "bukhari", "page": null, "passage": "Récit d'al-Barâ' sur les archers"},
+        {"ouvrage": "umda", "page": 239, "passage": "Refusé à 14 ans à Uhud, accepté à 15 au Fossé (hadith 407)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 14, "cap": 0, "incl": 45 },
-          "texte": "An 3 de l'Hégire. Pour venger Badr, Quraysh revient avec environ 3 000 hommes et campe au nord de Médine, près d'une grande montagne." },
-        { "type": "trouver", "vue": { "lieu": "madinah", "r": 16, "cap": 0, "incl": 34 },
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 14, "cap": 0, "incl": 45},
+          "texte": "An 3 de l'Hégire. Pour venger Badr, Quraysh revient avec environ 3 000 hommes et campe au nord de Médine, près d'une grande montagne. Les croyants sont environ 700 ; même les très jeunes veulent combattre, mais on renvoie ceux qui n'ont pas quinze ans."
+        },
+        {
+          "type": "trouver",
+          "vue": {"lieu": "madinah", "r": 16, "cap": 0, "incl": 34},
           "consigne": "Touchez cette montagne : le mont Uhud.",
           "indice": "Au nord de Médine, à environ 4 km de la mosquée : le plus grand massif des environs.",
-          "cible": "uhud", "rayon": 2.5,
-          "reussite": "Uhud : une longue muraille de roche rouge au nord de l'oasis." },
-        { "type": "bataille", "phase": 0 },
-        { "type": "choix",
-          "question": "Il ﷺ place cinquante archers sur une petite colline, le mont 'Aynayn. Quel ordre leur donne-t-il ?",
+          "cible": "uhud",
+          "rayon": 2.5,
+          "reussite": "Uhud : une longue muraille de roche rouge au nord de l'oasis."
+        },
+        {"type": "bataille", "phase": 0},
+        {
+          "type": "trouver",
+          "vue": {"lieu": "uhud", "r": 3.2, "cap": 0, "incl": 40},
+          "consigne": "Il ﷺ place cinquante archers sur une petite colline, face au mont, pour protéger l'arrière de l'armée. Touchez cette colline : le mont 'Aynayn, qu'on appellera « le mont des archers ».",
+          "indice": "Une petite butte isolée, au pied du mont Uhud, du côté de Médine.",
+          "cible": "aynayn",
+          "rayon": 0.35,
+          "reussite": "Le mont 'Aynayn : de là, les archers tiennent le passage par où la cavalerie pourrait contourner l'armée."
+        },
+        {
+          "type": "choix",
+          "question": "Quelle mission reçoivent ces archers ?",
           "options": [
-            { "texte": "Ne quittez pas cette colline, quoi qu'il arrive, même si nous l'emportons", "juste": true,
-              "reponse": "« Même si vous voyez les oiseaux nous emporter, ne quittez pas votre place. » Ils protègent l'arrière de l'armée contre la cavalerie." },
-            { "texte": "Rejoignez la mêlée dès que l'ennemi recule",
+            {
+              "texte": "Garder le camp, les bagages et les montures",
+              "suite": ["Vous écrivez : « ils gardent les bagages ». Mais alors qui protège le flanc, quand la cavalerie de Quraysh cherche un passage ?"],
               "titre": "Le fil se brouille",
-              "consequence": "C'est précisément ce qu'il leur avait interdit.",
-              "indice": "Leur rôle : tenir, coûte que coûte." },
-            { "texte": "Gardez le camp et les montures",
+              "consequence": "Leur mission était de tenir la colline face à la cavalerie mecquoise, quoi qu'il arrive.",
+              "indice": "Leur rôle : tenir, coûte que coûte."
+            },
+            {
+              "texte": "Tenir la colline, même en cas de victoire",
+              "juste": true,
+              "reponse": "« Même si vous voyez les oiseaux nous emporter, ne quittez pas votre place » (al-Bukhârî). Ils protègent l'arrière de l'armée contre la cavalerie."
+            },
+            {
+              "texte": "Harceler la cavalerie ennemie dans la plaine",
+              "suite": [
+                "Vous notez : « les archers descendent harceler les cavaliers ». Mais à pied, dans la plaine, que peuvent cinquante archers contre deux cents chevaux ?"
+              ],
               "titre": "Le fil se brouille",
-              "consequence": "Leur mission était de tenir la colline face à la cavalerie mecquoise.",
-              "indice": "Leur rôle : tenir, coûte que coûte." }
-          ] },
-        { "type": "bataille", "phase": 1 },
-        { "type": "choix",
+              "consequence": "Leur mission était au contraire de ne pas bouger de leur colline.",
+              "indice": "Leur rôle : tenir, coûte que coûte."
+            }
+          ]
+        },
+        {"type": "bataille", "phase": 1},
+        {
+          "type": "choix",
           "question": "Quraysh recule, son camp est abandonné. Que font la plupart des archers ?",
           "options": [
-            { "texte": "Ils descendent vers le butin, malgré l'ordre reçu", "juste": true,
-              "reponse": "« Le butin ! » Seuls une dizaine restent avec 'Abd Allâh ibn Jubayr. Voilà ce qui s'est réellement passé, et la suite en découle." },
-            { "texte": "Ils restent tous à leur poste",
+            {
+              "texte": "Ils restent tous à leur poste",
+              "suite": [
+                "Vous écrivez : « la colline tient ». Mais pourquoi, alors, la cavalerie de Quraysh surgit-elle quelques instants plus tard derrière l'armée ?"
+              ],
               "titre": "Si seulement…",
-              "effet": "doux",
               "consequence": "C'est ce qui aurait dû se passer… mais ce n'est pas ce que rapportent les sources : la plupart des archers quittèrent la colline.",
-              "indice": "Le Coran revient sur cette désobéissance (Âl 'Imrân 3:152)." }
-          ] },
-        { "type": "bataille", "phase": 2 },
-        { "type": "choix",
+              "indice": "Le Coran revient sur cette désobéissance (Âl 'Imrân 3:152).",
+              "effet": "doux"
+            },
+            {
+              "texte": "Ils descendent vers le butin, malgré l'ordre",
+              "juste": true,
+              "reponse": "« Le butin ! » Seuls une dizaine restent avec 'Abd Allâh ibn Jubayr. Voilà ce qui s'est réellement passé, et la suite en découle."
+            },
+            {
+              "texte": "Ils poursuivent les fuyards jusqu'à La Mecque",
+              "suite": ["Vous notez une poursuite de plusieurs jours… Mais le soir même, l'armée de Quraysh est encore au pied d'Uhud."],
+              "titre": "Le fil se brouille",
+              "consequence": "Ils ne poursuivirent personne : ils descendirent vers le camp abandonné, et son butin.",
+              "indice": "Le Coran revient sur cette désobéissance (Âl 'Imrân 3:152)."
+            }
+          ]
+        },
+        {"type": "bataille", "phase": 2},
+        {
+          "type": "choix",
           "question": "Un chef de la cavalerie mecquoise remarque la colline dégarnie. Qui est-il ?",
           "options": [
-            { "texte": "Khâlid ibn al-Walîd", "juste": true,
-              "reponse": "Alors dans le camp de Quraysh, Khâlid contourne la colline avec ses cavaliers. Il embrassera l'islam quelques années plus tard." },
-            { "texte": "'Ikrima ibn Abî Jahl",
+            {
+              "texte": "Khâlid ibn al-Walîd",
+              "juste": true,
+              "reponse": "Alors dans le camp de Quraysh, Khâlid contourne la colline avec ses cavaliers. Il embrassera l'islam quelques années plus tard et deviendra un grand chef des musulmans."
+            },
+            {
+              "texte": "'Ikrima ibn Abî Jahl",
+              "suite": ["Vous écrivez le nom de 'Ikrima… mais ses cavaliers sont de l'autre côté du champ de bataille."],
               "titre": "L'autre aile",
               "consequence": "'Ikrima commandait l'autre aile de la cavalerie.",
-              "indice": "Il deviendra plus tard un grand chef de l'islam." },
-            { "texte": "Abû Sufyân",
+              "indice": "Il deviendra plus tard un grand chef de l'islam."
+            },
+            {
+              "texte": "Abû Sufyân ibn Harb",
+              "suite": ["Vous notez : « Abû Sufyân mène la charge ». Mais le chef de l'armée reste au centre, avec le gros des troupes…"],
               "titre": "Le fil se brouille",
               "consequence": "Abû Sufyân commandait l'ensemble de l'armée mecquoise, pas cette manœuvre.",
-              "indice": "Il deviendra plus tard un grand chef de l'islam." }
-          ] },
-        { "type": "bataille", "phase": 3 },
-        { "type": "bataille", "phase": 4 },
-        { "type": "recit", "vue": { "lieu": "uhud", "r": 3, "cap": 20, "incl": 60 }, "etiquettes": ["uhud", "aynayn"],
-          "texte": "Près de soixante-dix croyants tombent, dont Hamza, l'oncle du Prophète ﷺ. Ils reposent au pied du mont Uhud. La sourate Âl 'Imrân revient sur les leçons de cette journée." }
+              "indice": "Il deviendra plus tard un grand chef de l'islam."
+            }
+          ]
+        },
+        {"type": "bataille", "phase": 3},
+        {"type": "bataille", "phase": 4},
+        {
+          "type": "recit",
+          "vue": {"lieu": "uhud", "r": 3, "cap": 20, "incl": 60},
+          "etiquettes": ["uhud", "aynayn"],
+          "texte": "Près de soixante-dix croyants tombent, dont Hamza, l'oncle du Prophète ﷺ. Ils reposent au pied du mont Uhud. La sourate Âl 'Imrân revient sur les leçons de cette journée : l'obéissance, la patience, et l'espoir après l'épreuve."
+        }
       ]
     },
     {
@@ -685,22 +1321,81 @@
       "titre": "Les Banû an-Nadîr",
       "titre_ar": "بنو النضير",
       "ambiance": "jour",
-      "a_retenir": "Après un complot contre le Prophète ﷺ, les Banû an-Nadîr sont assiégés puis quittent Médine sans bataille ; leurs biens deviennent du fay'.",
+      "a_retenir": "Après un complot contre le Prophète ﷺ, les Banû an-Nadîr sont assiégés puis quittent Médine sans bataille ; leurs biens, obtenus sans combat, deviennent du fay'.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'expédition des Banû an-Nadîr" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "L'expédition des Banû an-Nadîr"},
+        {"ouvrage": "umda", "page": 238, "passage": "Les biens des Banû an-Nadîr, fay' (hadith 405, 'Umar)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "nadir", "r": 5, "cap": 120, "incl": 58 }, "etiquettes": ["nadir", "madinah"],
-          "texte": "An 4 de l'Hégire. Les Banû an-Nadîr, tribu juive de Médine liée aux musulmans par un pacte, préparent selon les sources un complot contre la vie du Prophète ﷺ, venu chez eux discuter d'une affaire." },
-        { "type": "choix",
+        {
+          "type": "recit",
+          "vue": {"lieu": "nadir", "r": 5, "cap": 120, "incl": 58},
+          "etiquettes": ["nadir", "madinah"],
+          "texte": "An 4 de l'Hégire. Les Banû an-Nadîr, tribu juive de Médine liée aux musulmans par un pacte, préparent selon les sources un complot contre la vie du Prophète ﷺ, venu chez eux discuter d'une affaire : on projette de faire tomber une pierre du haut d'un mur."
+        },
+        {
+          "type": "trouver",
+          "vue": {"lieu": "madinah", "r": 7, "cap": 0, "incl": 40},
+          "consigne": "Touchez le territoire des Banû an-Nadîr, au sud-est de l'oasis.",
+          "indice": "Au sud-est de Médine, sur les hauteurs fertiles de l'oasis (al-'Awâlî).",
+          "cible": "nadir",
+          "rayon": 1.0,
+          "reussite": "Le territoire des Banû an-Nadîr : des palmeraies et des fortins, au sud-est de l'oasis."
+        },
+        {
+          "type": "choix",
           "question": "Averti, il ﷺ leur demande de quitter Médine. Ils refusent, comptant sur des renforts promis. Comment l'affaire se termine-t-elle, après quelques jours de siège ?",
           "options": [
-            { "texte": "Ils partent avec ce que leurs chameaux peuvent porter, sans bataille", "juste": true,
-              "reponse": "Les renforts promis ne viennent pas. La plupart s'installent à Khaybar. Leurs biens, obtenus sans combat, deviennent du fay' (sourate al-Hashr)." },
-            { "texte": "Par une grande bataille rangée",
+            {
+              "texte": "Par une bataille rangée devant leurs fortins",
+              "suite": [
+                "Vous décrivez deux lignes face à face… Mais les récits ne mentionnent aucun mort ce jour-là, seulement des chameaux chargés qui s'éloignent."
+              ],
               "titre": "Le fil se brouille",
               "consequence": "Il n'y eut pas de bataille : seulement un siège, puis un départ.",
-              "indice": "L'affaire se règle sans combat." }
-          ] }
+              "indice": "L'affaire se règle sans combat."
+            },
+            {
+              "texte": "Ils obtiennent de rester, contre un tribut",
+              "suite": ["Vous notez : « ils restent et paient ». Mais l'année suivante, on les retrouve à Khaybar, loin au nord…"],
+              "titre": "Le fil se brouille",
+              "consequence": "Ils durent partir : l'accord leur laissa seulement emporter ce que leurs chameaux pouvaient porter.",
+              "indice": "L'affaire se règle sans combat."
+            },
+            {
+              "texte": "Ils partent avec ce que portent leurs chameaux",
+              "juste": true,
+              "reponse": "Les renforts promis ne viennent pas. La plupart s'installent à Khaybar. Leurs biens, obtenus sans combat, deviennent du fay' (sourate al-Hashr)."
+            }
+          ]
+        },
+        {
+          "type": "vraifaux",
+          "consigne": "Les Banû an-Nadîr : vrai ou faux ?",
+          "affirmations": [
+            {
+              "texte": "Les Banû an-Nadîr étaient liés aux musulmans par un pacte.",
+              "vrai": true,
+              "explication": "Le pacte de Médine liait les communautés de l'oasis ; le complot le rompait."
+            },
+            {
+              "texte": "Leurs biens, obtenus sans combat, furent partagés comme un butin de guerre.",
+              "vrai": false,
+              "explication": "Ils devinrent du fay' : un bien obtenu sans combat, dont 'Umar explique l'usage dans un hadith rapporté par al-'Umda (n° 405)."
+            },
+            {
+              "texte": "La plupart d'entre eux partirent s'installer à Khaybar.",
+              "vrai": true,
+              "explication": "Khaybar deviendra ensuite un foyer d'hostilité contre Médine."
+            },
+            {
+              "texte": "La sourate qui évoque leur départ s'appelle al-Anfâl.",
+              "vrai": false,
+              "explication": "C'est la sourate al-Hashr (59), « le Rassemblement »."
+            }
+          ]
+        }
       ]
     },
     {
@@ -708,43 +1403,109 @@
       "titre": "Le Fossé",
       "titre_ar": "غزوة الخندق",
       "ambiance": "aube",
-      "a_retenir": "Face à une coalition de 10 000 hommes, les croyants creusent un fossé au nord de Médine, seul côté non protégé ; après un long siège, un vent glacial disperse les coalisés.",
+      "a_retenir": "Face à une coalition de 10 000 hommes, les croyants creusent un fossé au nord de Médine, seul côté non protégé ; après près d'un mois de siège, un vent glacial disperse les coalisés.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La bataille des Coalisés (al-Ahzâb)" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "La bataille des Coalisés (al-Ahzâb)"},
+        {"ouvrage": "bukhari", "page": null, "passage": "Livre des expéditions : le Fossé (récits de Jâbir et d'al-Barâ')"},
+        {"ouvrage": "umda", "page": 239, "passage": "Accepté à 15 ans au Fossé (hadith 407)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 26, "cap": 0, "incl": 40 },
-          "texte": "An 5 de l'Hégire. Quraysh et de nombreuses tribus forment une coalition, al-Ahzâb, d'environ 10 000 hommes, et marchent sur Médine." },
-        { "type": "choix",
-          "question": "Les croyants ne sont que 3 000. Salmân al-Fârisî propose une défense connue en Perse. Laquelle ?",
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 26, "cap": 0, "incl": 40},
+          "texte": "An 5 de l'Hégire. Quraysh et de nombreuses tribus forment une coalition, al-Ahzâb, d'environ 10 000 hommes, et marchent sur Médine. Les croyants sont environ 3 000 ; l'hiver approche, et les vivres manquent."
+        },
+        {
+          "type": "choix",
+          "question": "Salmân al-Fârisî propose une défense connue en Perse. Laquelle ?",
           "options": [
-            { "texte": "Creuser un fossé", "juste": true,
-              "reponse": "Une technique inconnue des Arabes. Tous creusent, et le Prophète ﷺ avec eux, dans le froid et la faim." },
-            { "texte": "Bâtir une muraille de pierre autour de l'oasis",
+            {
+              "texte": "Inonder la plaine au nord de l'oasis",
+              "suite": ["Vous notez : « on inonde la plaine ». Mais avec quelle eau ? Les puits de l'oasis suffisent à peine à faire boire les palmeraies…"],
+              "titre": "Pas d'eau",
+              "consequence": "Il n'y avait pas de rivière à détourner : seulement des puits et des wadis à sec.",
+              "indice": "Une défense que l'on creuse."
+            },
+            {
+              "texte": "Creuser un fossé infranchissable",
+              "juste": true,
+              "reponse": "Une technique inconnue des Arabes. Tous creusent, et le Prophète ﷺ avec eux, dans le froid et la faim, en portant la terre jusqu'à en avoir le ventre couvert de poussière (al-Bukhârî)."
+            },
+            {
+              "texte": "Bâtir une muraille de pierre",
+              "suite": [
+                "Vous imaginez une muraille. On commence à tailler les pierres… mais au bout de six jours, à peine quelques mètres sont debout, et la coalition est en vue."
+              ],
               "titre": "Trop tard",
-              "consequence": "Et si… une muraille autour de toute l'oasis avait demandé des mois ? La coalition arrivait dans quelques jours.",
-              "indice": "Une défense que l'on creuse." },
-            { "texte": "Sortir combattre en terrain découvert",
-              "titre": "Écrasés par le nombre",
-              "consequence": "Et si… trois contre dix, en plaine ? C'est justement ce qu'espérait la coalition.",
-              "indice": "Une défense que l'on creuse." }
-          ] },
-        { "type": "trouver", "vue": { "lieu": "madinah", "r": 22, "cap": 0, "incl": 18 },
+              "consequence": "Une muraille autour de toute l'oasis aurait demandé des mois ; la coalition arrivait dans quelques jours.",
+              "indice": "Une défense que l'on creuse."
+            }
+          ]
+        },
+        {
+          "type": "trouver",
+          "vue": {"lieu": "madinah", "r": 22, "cap": 0, "incl": 18},
           "consigne": "Observez le relief : des champs de lave noire (harrât) protègent Médine à l'est et à l'ouest, des palmeraies serrées au sud. Touchez le côté ouvert, par où la coalition peut entrer : c'est là qu'on creuse le fossé.",
           "indice": "Le seul côté dégagé fait face au mont Uhud.",
-          "cible": "khandaq", "rayon": 2.5,
-          "reussite": "Le fossé est creusé au nord, entre les deux champs de lave, sur plusieurs kilomètres." },
-        { "type": "recit", "vue": { "lieu": "khandaq", "r": 4, "cap": 340, "incl": 58 }, "etiquettes": ["khandaq"], "epoque": true,
-          "texte": "Pendant près d'un mois, la coalition campe devant le fossé sans pouvoir le franchir. Les vivres s'épuisent, la discorde gagne les alliés." },
-        { "type": "choix",
+          "cible": "khandaq",
+          "rayon": 2.5,
+          "reussite": "Le fossé est creusé au nord, entre les deux champs de lave, sur plusieurs kilomètres."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "khandaq", "r": 4, "cap": 340, "incl": 58},
+          "etiquettes": ["khandaq"],
+          "epoque": true,
+          "texte": "Pendant le creusement, un rocher résiste à toutes les pioches. On appelle le Prophète ﷺ : il frappe, et la roche s'effrite comme du sable (al-Bukhârî, récit de Jâbir). Puis, pendant près d'un mois, la coalition campe devant le fossé sans pouvoir le franchir."
+        },
+        {
+          "type": "vraifaux",
+          "consigne": "Le Fossé : vrai ou faux ?",
+          "affirmations": [
+            {
+              "texte": "Le Prophète ﷺ creusa lui-même avec ses Compagnons et porta la terre.",
+              "vrai": true,
+              "explication": "Al-Barâ' rapporte qu'il portait la terre jusqu'à en avoir le ventre couvert de poussière (al-Bukhârî)."
+            },
+            {
+              "texte": "Le fossé faisait tout le tour de Médine.",
+              "vrai": false,
+              "explication": "Il ne fermait que le côté nord, ouvert ; ailleurs, les champs de lave et les palmeraies protégeaient l'oasis."
+            },
+            {
+              "texte": "Quelques cavaliers coalisés franchirent le fossé par un point étroit, et furent repoussés.",
+              "vrai": true,
+              "explication": "Ce fut le seul passage : l'armée coalisée ne franchit jamais le fossé en force."
+            },
+            {"texte": "Le siège dura plus d'un an.", "vrai": false, "explication": "Il dura environ un mois, selon la plupart des récits."}
+          ]
+        },
+        {
+          "type": "choix",
           "question": "Comment le siège prend-il fin ?",
           "options": [
-            { "texte": "Un vent glacial et violent balaie le camp des coalisés", "juste": true,
-              "reponse": "« Nous envoyâmes contre eux un vent et des armées que vous ne voyiez pas » (al-Ahzâb 33:9). La coalition lève le camp." },
-            { "texte": "Par une grande bataille devant le fossé",
+            {
+              "texte": "Par une grande bataille devant le fossé",
+              "suite": ["Vous décrivez une grande charge… mais le fossé est là, et les chevaux refusent de sauter."],
               "titre": "Le fil se brouille",
               "consequence": "Il n'y eut que des escarmouches : la coalition ne parvint jamais à franchir le fossé en force.",
-              "indice": "La fin vient du ciel." }
-          ] }
+              "indice": "La fin vient du ciel."
+            },
+            {
+              "texte": "Les coalisés acceptent un tribut et repartent",
+              "suite": ["Vous notez : « on paie la coalition ». Mais avec quoi ? Médine a faim, et les dattes de l'année ne sont pas encore récoltées…"],
+              "titre": "Le fil se brouille",
+              "consequence": "Aucun tribut ne fut versé : la coalition se défit d'elle-même.",
+              "indice": "La fin vient du ciel."
+            },
+            {
+              "texte": "Un vent glacial balaie le camp des coalisés",
+              "juste": true,
+              "reponse": "« Nous envoyâmes contre eux un vent et des armées que vous ne voyiez pas » (al-Ahzâb 33:9). Tentes arrachées, feux éteints : la coalition lève le camp dans la nuit."
+            }
+          ]
+        }
       ]
     },
     {
@@ -754,99 +1515,218 @@
       "ambiance": "jour",
       "a_retenir": "Venus pour la 'umra, les croyants prêtent serment sous l'arbre, puis concluent avec Quraysh une trêve de dix ans que le Coran appelle « une victoire éclatante ».",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le traité d'al-Hudaybiya" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "Le traité d'al-Hudaybiya"},
+        {"ouvrage": "ibn-hisham", "page": null, "passage": "Al-Hudaybiya (d'après Ibn Ishâq)"},
+        {"ouvrage": "bukhari", "page": null, "passage": "Livre des conditions : al-Hudaybiya"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 30, "cap": 200, "incl": 55 },
-          "texte": "An 6 de l'Hégire. Le Prophète ﷺ part pour la 'umra avec environ 1 400 croyants, en état de sacralisation, menant les bêtes du sacrifice, sans armes de guerre." },
-        { "type": "trajet",
-          "texte": "Ils prennent la route de La Mecque. Pour éviter la cavalerie de Quraysh postée sur la route, ils empruntent un chemin difficile à travers les montagnes." },
-        { "type": "trouver", "vue": { "lieu": "makkah", "r": 65, "cap": 280, "incl": 40 },
-          "consigne": "Ils s'arrêtent à la limite du territoire sacré, à l'ouest de La Mecque, près d'un puits. Touchez al-Hudaybiya.",
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 30, "cap": 200, "incl": 55},
+          "texte": "An 6 de l'Hégire. Le Prophète ﷺ part pour la 'umra avec environ 1 400 croyants, en état de sacralisation, menant les bêtes du sacrifice, sans armes de guerre."
+        },
+        {
+          "type": "trajet",
+          "texte": "Ils prennent la route de La Mecque. Pour éviter la cavalerie de Quraysh postée sur la route, ils empruntent un chemin difficile à travers les montagnes."
+        },
+        {
+          "type": "trouver",
+          "vue": {"lieu": "makkah", "r": 65, "cap": 280, "incl": 40},
+          "consigne": "Ils s'arrêtent à la limite du territoire sacré, à l'ouest de La Mecque, près d'un puits presque à sec. Touchez al-Hudaybiya.",
           "indice": "Une vingtaine de kilomètres à l'ouest de la Ka'ba.",
-          "cible": "hudaybiya", "rayon": 5,
-          "reussite": "al-Hudaybiya, aujourd'hui ash-Shumaysî, en bordure du territoire sacré." },
-        { "type": "choix",
+          "cible": "hudaybiya",
+          "rayon": 5,
+          "reussite": "Al-Hudaybiya, aujourd'hui ash-Shumaysî, en bordure du territoire sacré."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "hudaybiya", "r": 3, "cap": 60, "incl": 58},
+          "etiquettes": ["hudaybiya"],
+          "texte": "Quraysh s'inquiète : ces gens viennent-ils faire la guerre ? Les alliés de Quraysh envoient un éclaireur voir de ses propres yeux. Prenez sa place."
+        },
+        {"type": "mission", "mission": "eclaireur", "epreuves": 2},
+        {
+          "type": "choix",
           "question": "'Uthmân ibn 'Affân part négocier à La Mecque. Une rumeur annonce sa mort. Que font les croyants ?",
           "options": [
-            { "texte": "Ils prêtent serment sous un arbre : c'est Bay'at ar-Ridwân", "juste": true,
-              "reponse": "« Allah était satisfait des croyants quand ils te prêtaient serment sous l'arbre » (al-Fath 48:18). 'Uthmân revient sain et sauf." },
-            { "texte": "Ils rentrent aussitôt à Médine",
+            {
+              "texte": "Ils rentrent aussitôt à Médine",
+              "suite": ["Vous écrivez : « on lève le camp ». Mais le lendemain, 'Uthmân revient au camp… et le trouve plein."],
               "titre": "Le fil se brouille",
-              "consequence": "Ce n'est pas ce que rapportent les sources : ils restèrent, unis par un serment.",
-              "indice": "Un serment célèbre, sous un arbre." },
-            { "texte": "Ils entrent de force à La Mecque",
+              "consequence": "Ils restèrent, unis par un serment.",
+              "indice": "Un serment célèbre, sous un arbre."
+            },
+            {
+              "texte": "Ils prêtent serment sous un arbre",
+              "juste": true,
+              "reponse": "C'est Bay'at ar-Ridwân : « Allah était satisfait des croyants quand ils te prêtaient serment sous l'arbre » (al-Fath 48:18). 'Uthmân revient sain et sauf."
+            },
+            {
+              "texte": "Ils marchent sur La Mecque pour le venger",
+              "suite": ["Vous notez : « l'armée marche sur La Mecque ». Mais des pèlerins en ihrâm, sans armes de guerre, avec leurs bêtes de sacrifice ?"],
               "titre": "Le sang dans le territoire sacré",
-              "consequence": "Et si… le sang avait coulé dans le territoire sacré, en pleine 'umra ? Ce n'est pas ce qui s'est passé.",
-              "indice": "Un serment célèbre, sous un arbre." }
-          ] },
-        { "type": "choix",
+              "consequence": "Le sang aurait coulé dans le territoire sacré, en pleine 'umra : ce n'est pas ce qui s'est passé.",
+              "indice": "Un serment célèbre, sous un arbre."
+            }
+          ]
+        },
+        {
+          "type": "choix",
           "question": "Quraysh envoie Suhayl ibn 'Amr négocier une trêve. Pour combien d'années est-elle conclue ?",
           "options": [
-            { "texte": "Dix ans", "juste": true,
-              "reponse": "Les croyants rentrent sans faire la 'umra cette année-là, et devront rendre les Mecquois qui les rejoindraient. Des clauses qui paraissent bien dures…" },
-            { "texte": "Un an",
+            {
+              "texte": "Trois ans",
+              "suite": ["Vous notez : « trois ans ». Mais elle sera rompue par Quraysh moins de deux ans plus tard : sa durée prévue importe donc…"],
               "titre": "Le fil se brouille",
               "consequence": "La trêve prévoyait bien plus longtemps.",
-              "indice": "Une décennie." },
-            { "texte": "Pour toujours",
+              "indice": "Une décennie."
+            },
+            {
+              "texte": "Dix ans",
+              "juste": true,
+              "reponse": "Les croyants rentrent sans faire la 'umra cette année-là, et devront rendre les Mecquois qui les rejoindraient. Des clauses qui paraissent bien dures…"
+            },
+            {
+              "texte": "Un an",
+              "suite": ["Vous écrivez : « un an ». Mais l'année suivante, les croyants reviennent faire leur 'umra… en pleine trêve."],
               "titre": "Le fil se brouille",
-              "consequence": "La trêve avait une durée fixée.",
-              "indice": "Une décennie." }
-          ] },
-        { "type": "choix",
+              "consequence": "La trêve prévoyait bien plus longtemps.",
+              "indice": "Une décennie."
+            }
+          ]
+        },
+        {
+          "type": "choix",
           "question": "Sur le chemin du retour, une sourate est révélée au sujet de cette trêve. Comment la qualifie-t-elle ?",
           "options": [
-            { "texte": "« Une victoire éclatante » (al-Fath 48:1)", "juste": true,
-              "reponse": "La trêve permet à l'islam de se répandre en paix ; moins de deux ans plus tard, La Mecque ouvrira ses portes." },
-            { "texte": "« Une défaite passagère »",
-              "titre": "À l'envers",
-              "consequence": "Le Coran dit exactement l'inverse.",
-              "indice": "La sourate s'appelle al-Fath, « la Victoire »." }
-          ] }
+            {
+              "texte": "« Une épreuve à méditer longuement »",
+              "suite": ["Vous notez : « une épreuve ». Puis vous lisez le titre de la sourate : al-Fath…"],
+              "titre": "À côté",
+              "consequence": "Le Coran dit davantage : il parle d'une victoire.",
+              "indice": "La sourate s'appelle al-Fath, « la Victoire »."
+            },
+            {
+              "texte": "« Un repos avant la bataille »",
+              "suite": ["Vous notez : « un répit ». Pourtant, la trêve permettra surtout à l'islam de se répandre sans combat…"],
+              "titre": "À côté",
+              "consequence": "Le Coran parle d'une victoire, pas d'un répit.",
+              "indice": "La sourate s'appelle al-Fath, « la Victoire »."
+            },
+            {
+              "texte": "« Une victoire éclatante » (48:1)",
+              "juste": true,
+              "reponse": "La trêve permet à l'islam de se répandre en paix ; moins de deux ans plus tard, La Mecque ouvrira ses portes."
+            }
+          ]
+        }
       ]
     },
     {
       "evenement": "khaybar",
       "titre": "Les fortins de Khaybar",
-      "titre_ar": "فتح خيبر",
+      "titre_ar": "غزوة خيبر",
       "ambiance": "aube",
       "a_retenir": "Les fortins de Khaybar tombent un à un ; l'étendard est confié à 'Alî. Les habitants restent cultiver les palmeraies contre la moitié de la récolte.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La conquête de Khaybar" }, { "ouvrage": "bukhari", "page": null, "passage": "L'étendard remis à 'Alî" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "La conquête de Khaybar"},
+        {"ouvrage": "bukhari", "page": null, "passage": "L'étendard remis à 'Alî ; la viande empoisonnée"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 130, "cap": 340, "incl": 45 },
-          "texte": "Muharram, an 7 de l'Hégire. Au nord de Médine, l'oasis de Khaybar, hérissée de fortins, est devenue un foyer d'hostilité contre Médine ; une partie des Banû an-Nadîr s'y est installée." },
-        { "type": "trouver", "vue": { "point": [25.0, 39.35], "r": 480, "cap": 0, "incl": 24 },
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 130, "cap": 340, "incl": 45},
+          "texte": "Muharram, an 7 de l'Hégire. Au nord de Médine, l'oasis de Khaybar, hérissée de fortins, est devenue un foyer d'hostilité contre Médine ; une partie des Banû an-Nadîr s'y est installée."
+        },
+        {
+          "type": "trouver",
+          "vue": {"point": [25.0, 39.35], "r": 480, "cap": 0, "incl": 24},
           "consigne": "Touchez l'oasis de Khaybar.",
           "indice": "Environ 140 km au nord de Médine, au milieu d'un vaste champ de lave.",
-          "cible": "khaybar", "rayon": 15,
-          "reussite": "Khaybar : des palmeraies et des fortins, au cœur de la harra." },
-        { "type": "trajet",
-          "texte": "L'armée, environ 1 400 hommes, couvre la distance en quelques jours et arrive devant l'oasis à l'aube." },
-        { "type": "choix",
+          "cible": "khaybar",
+          "rayon": 15,
+          "reussite": "Khaybar : des palmeraies et des fortins, au cœur de la harra."
+        },
+        {
+          "type": "trajet",
+          "texte": "L'armée, environ 1 400 hommes, couvre la distance en quelques jours et arrive devant l'oasis à l'aube, quand les paysans sortent aux champs."
+        },
+        {
+          "type": "choix",
           "question": "Les fortins résistent. Il ﷺ annonce : « Demain, je remettrai l'étendard à un homme qu'Allah et Son Messager ﷺ aiment. » À qui le remet-il ?",
           "options": [
-            { "texte": "'Alî ibn Abî Tâlib", "juste": true,
-              "reponse": "'Alî, guéri d'un mal d'yeux, mène l'assaut : les fortins tombent un à un." },
-            { "texte": "Khâlid ibn al-Walîd",
+            {
+              "texte": "Khâlid ibn al-Walîd",
+              "suite": ["Vous écrivez le nom de Khâlid… puis vous vous souvenez d'Uhud : à cette date, il combat encore dans l'autre camp."],
               "titre": "Anachronisme",
               "consequence": "Khâlid n'a pas encore embrassé l'islam : il le fera l'année suivante.",
-              "indice": "Son cousin, qui dormit dans son lit la nuit de la Hijra." },
-            { "texte": "Abû Bakr",
+              "indice": "Son cousin, qui dormit dans son lit la nuit de la Hijra."
+            },
+            {"texte": "'Alî ibn Abî Tâlib", "juste": true, "reponse": "'Alî, guéri d'un mal d'yeux, mène l'assaut : les fortins tombent un à un."},
+            {
+              "texte": "Abû Bakr as-Siddîq",
+              "suite": ["Vous notez le nom d'Abû Bakr… mais il avait déjà porté l'étendard la veille."],
               "titre": "Le fil se brouille",
               "consequence": "Abû Bakr et 'Umar avaient mené des assauts les jours précédents ; l'étendard du lendemain revint à un autre.",
-              "indice": "Son cousin, qui dormit dans son lit la nuit de la Hijra." }
-          ] },
-        { "type": "choix",
+              "indice": "Son cousin, qui dormit dans son lit la nuit de la Hijra."
+            }
+          ]
+        },
+        {
+          "type": "choix",
           "question": "Après la victoire, que deviennent les palmeraies de Khaybar ?",
           "options": [
-            { "texte": "Les habitants restent les cultiver, contre la moitié de la récolte", "juste": true,
-              "reponse": "Ils connaissent la terre mieux que quiconque : l'accord leur permet de rester." },
-            { "texte": "Elles sont abandonnées",
+            {
+              "texte": "Elles sont abandonnées aux vents et à la poussière du désert",
+              "suite": [
+                "Vous écrivez : « l'oasis est désertée ». L'année suivante, les palmiers sans eau se dessèchent… Mais les récits parlent de récoltes partagées."
+              ],
               "titre": "Des palmiers qui meurent",
-              "consequence": "Et si… les palmeraies avaient été laissées sans soins ? Ce n'est pas ce qui s'est passé : un accord fut conclu.",
-              "indice": "Un partage de la récolte." }
-          ] }
+              "consequence": "Un accord fut conclu : les palmeraies restèrent cultivées.",
+              "indice": "Un partage de la récolte."
+            },
+            {
+              "texte": "Les habitants restent, contre la moitié de la récolte",
+              "juste": true,
+              "reponse": "Ils connaissent la terre mieux que quiconque : l'accord leur permet de rester et de cultiver."
+            },
+            {
+              "texte": "Elles sont vendues à des marchands venus du Shâm avec leurs caravanes",
+              "suite": ["Vous notez une grande vente… mais aucun marchand du Shâm n'apparaît dans les récits de Khaybar."],
+              "titre": "Le fil se brouille",
+              "consequence": "Rien de tel : les habitants restèrent les cultiver.",
+              "indice": "Un partage de la récolte."
+            }
+          ]
+        },
+        {
+          "type": "vraifaux",
+          "consigne": "Khaybar : vrai ou faux ?",
+          "affirmations": [
+            {
+              "texte": "L'oasis comptait plusieurs fortins, pris l'un après l'autre.",
+              "vrai": true,
+              "explication": "Nâ'im, al-Qamûs, al-Watîh, as-Sulâlim… le siège dura plusieurs semaines."
+            },
+            {
+              "texte": "Khaybar se trouve à environ 140 km au nord de Médine.",
+              "vrai": true,
+              "explication": "C'est la distance à vol d'oiseau sur la carte : plusieurs jours de marche."
+            },
+            {
+              "texte": "Après la victoire, tous les habitants furent chassés de l'oasis.",
+              "vrai": false,
+              "explication": "Ils restèrent cultiver les palmeraies, contre la moitié de la récolte."
+            },
+            {
+              "texte": "C'est à Khaybar qu'une femme tenta de l'empoisonner avec une épaule de mouton.",
+              "vrai": true,
+              "explication": "Al-Bukhârî rapporte cet épisode ; il ressentit les effets de ce poison jusqu'à sa dernière maladie."
+            }
+          ]
+        }
       ]
     },
     {
@@ -854,64 +1734,97 @@
       "titre": "Dix mille feux",
       "titre_ar": "فتح مكة",
       "ambiance": "jour",
-      "a_retenir": "Quraysh ayant rompu la trêve, il ﷺ entre à La Mecque presque sans combat, purifie la Ka'ba de ses idoles et pardonne à ceux qui l'avaient combattu.",
+      "a_retenir": "Quraysh ayant rompu la trêve, il ﷺ entre à La Mecque presque sans combat, promet la sécurité à qui reste chez soi, purifie la Ka'ba de ses idoles et pardonne à ceux qui l'avaient combattu.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La conquête de La Mecque" }, { "ouvrage": "bukhari", "page": null, "passage": "Les idoles autour de la Ka'ba" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "La conquête de La Mecque"},
+        {"ouvrage": "muslim", "page": null, "passage": "La sécurité promise (hadith d'Abû Hurayra)"},
+        {"ouvrage": "bukhari", "page": null, "passage": "Les idoles autour de la Ka'ba (hadith d'Ibn Mas'ûd)"},
+        {"ouvrage": "umda", "page": 126, "passage": "La sacralité de La Mecque (hadith 214)"},
+        {"ouvrage": "umda", "page": 130, "passage": "L'entrée avec le casque (mighfar) (hadith 217)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 50, "cap": 340, "incl": 52 },
-          "texte": "An 8 de l'Hégire. Les Banû Bakr, alliés de Quraysh, attaquent de nuit les Khuzâ'a, alliés des musulmans, avec l'aide d'hommes de Quraysh : la trêve d'al-Hudaybiya est rompue." },
-        { "type": "trajet",
-          "texte": "Le Prophète ﷺ part avec environ 10 000 hommes, dans le plus grand secret, pour ne pas laisser à Quraysh le temps de se préparer." },
-        { "type": "recit", "vue": { "point": [21.62, 39.69], "r": 9, "cap": 120, "incl": 62 }, "ambiance": "nuit", "etiquettes": [],
-          "texte": "L'armée campe à Marr az-Zahrân, à une étape de La Mecque. La nuit tombe." },
-        { "type": "choix",
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 50, "cap": 340, "incl": 52},
+          "texte": "An 8 de l'Hégire. Les Banû Bakr, alliés de Quraysh, attaquent de nuit les Khuzâ'a, alliés des musulmans, avec l'aide d'hommes de Quraysh : la trêve d'al-Hudaybiya est rompue."
+        },
+        {
+          "type": "trajet",
+          "texte": "Le Prophète ﷺ part avec environ 10 000 hommes, dans le plus grand secret, pour ne pas laisser à Quraysh le temps de se préparer."
+        },
+        {
+          "type": "recit",
+          "vue": {"point": [21.62, 39.69], "r": 9, "cap": 120, "incl": 62},
+          "ambiance": "nuit",
+          "etiquettes": [],
+          "texte": "L'armée campe à Marr az-Zahrân, à une étape de La Mecque. La nuit tombe."
+        },
+        {
+          "type": "choix",
           "question": "Cette nuit-là, comment montre-t-on à Quraysh la force de l'armée, sans combattre ?",
           "options": [
-            { "texte": "Chacun allume un feu : la vallée s'illumine", "juste": true,
-              "reponse": "Des milliers de feux s'allument dans la nuit." },
-            { "texte": "On frappe des tambours toute la nuit",
+            {
+              "texte": "On frappe des tambours et des cymbales toute la nuit",
+              "suite": ["Vous notez : « des tambours ». Mais Abû Sufyân, sorti aux nouvelles, ne parle que de ce qu'il voit…"],
               "titre": "Le fil se brouille",
               "consequence": "Les sources parlent d'une vallée illuminée, pas de tambours.",
-              "indice": "Quelque chose que l'on voit de loin, la nuit." },
-            { "texte": "On envoie un ultimatum écrit à Quraysh",
+              "indice": "Quelque chose que l'on voit de loin, la nuit."
+            },
+            {
+              "texte": "Chacun allume un feu : la vallée s'illumine",
+              "juste": true,
+              "reponse": "Des milliers de feux s'allument dans la nuit, comme une ville entière posée sur les collines."
+            },
+            {
+              "texte": "On envoie un ultimatum à Quraysh",
+              "suite": ["Vous écrivez : « un messager porte un ultimatum ». Mais tout le voyage s'est fait dans le secret… Pourquoi le rompre maintenant ?"],
               "titre": "Le secret éventé",
-              "consequence": "Et si… Quraysh avait été prévenue ? L'armée avançait au contraire dans le secret.",
-              "indice": "Quelque chose que l'on voit de loin, la nuit." }
-          ] },
-        { "type": "recit", "vue": { "point": [21.62, 39.69], "r": 7, "cap": 150, "incl": 66 }, "feux": { "point": [21.62, 39.69], "n": 700, "rayon": 3.2 },
-          "texte": "Abû Sufyân, sorti aux nouvelles, découvre la vallée embrasée. Il comprend qu'aucune résistance n'est possible… et embrasse l'islam." },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 3, "cap": 330, "incl": 60 }, "ambiance": "aube", "feux": null, "etiquettes": [],
-          "texte": "À l'aube, l'armée entre dans La Mecque par plusieurs côtés, presque sans combat." },
-        { "type": "choix",
-          "question": "Que fait-il à la Ka'ba ?",
+              "consequence": "L'armée avançait au contraire dans le secret : Quraysh ne devait rien savoir avant de la voir.",
+              "indice": "Quelque chose que l'on voit de loin, la nuit."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"point": [21.62, 39.69], "r": 7, "cap": 150, "incl": 66},
+          "feux": {"point": [21.62, 39.69], "n": 700, "rayon": 3.2},
+          "texte": "Abû Sufyân, sorti aux nouvelles, découvre la vallée embrasée. Il comprend qu'aucune résistance n'est possible… et embrasse l'islam. Au matin, l'armée entre dans La Mecque par plusieurs côtés. Vivez cette journée dans les rues de la ville."
+        },
+        {"type": "mission", "mission": "refuge", "epreuves": 1},
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 0.7, "cap": 40, "incl": 60},
+          "ambiance": "jour",
+          "feux": null,
+          "etiquettes": [],
+          "texte": "Autour de la Ka'ba, les Mecquois qui l'avaient persécuté pendant vingt ans attendent son verdict."
+        },
+        {
+          "type": "choix",
+          "question": "Selon les récits, il leur accorde le pardon en reprenant les paroles d'un prophète à ses frères : « Aucun reproche contre vous aujourd'hui. » Lequel ?",
           "options": [
-            { "texte": "Il la purifie des idoles en récitant « La vérité est venue, et le faux a disparu »", "juste": true,
-              "reponse": "Trois cent soixante idoles tombent (al-Isrâ' 17:81). Bilâl monte sur le toit de la Ka'ba et lance l'appel à la prière." },
-            { "texte": "Il la fait raser pour la rebâtir",
+            {
+              "texte": "Mûsâ (Moïse), devant Pharaon",
+              "suite": ["Vous notez le nom de Mûsâ… mais Pharaon n'était pas son frère, et Mûsâ ne lui pardonna pas."],
               "titre": "Le fil se brouille",
-              "consequence": "La Ka'ba resta debout ; seules les idoles furent détruites.",
-              "indice": "Ce qui entoure la Ka'ba, pas la Ka'ba elle-même." },
-            { "texte": "Il en interdit l'accès aux Mecquois",
+              "consequence": "Ce sont les mots de Yûsuf à ses frères (Yûsuf 12:92).",
+              "indice": "Un prophète trahi par ses propres frères."
+            },
+            {
+              "texte": "Nûh (Noé), à son peuple",
+              "suite": ["Vous écrivez le nom de Nûh… mais son peuple fut emporté par le déluge, sans pardon."],
               "titre": "Le fil se brouille",
-              "consequence": "Ce n'est pas ce que rapportent les sources.",
-              "indice": "Ce qui entoure la Ka'ba, pas la Ka'ba elle-même." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 0.7, "cap": 40, "incl": 60 }, "ambiance": "jour", "etiquettes": [],
-          "texte": "Autour de la Ka'ba, les Mecquois qui l'avaient persécuté pendant vingt ans attendent son verdict." },
-        { "type": "choix",
-          "question": "Que décide-t-il ?",
-          "options": [
-            { "texte": "Il leur pardonne", "juste": true,
-              "reponse": "« Aucun reproche contre vous aujourd'hui » : selon les récits, il reprend les mots de Yûsuf à ses frères et leur accorde le pardon. Beaucoup embrassent l'islam." },
-            { "texte": "Il les chasse de La Mecque",
-              "titre": "Le fil se rompt",
-              "consequence": "Et si… la vengeance l'avait emporté ? Ce n'est pas ce que rapportent les sources : il pardonna.",
-              "indice": "Pensez à ce que fit Yûsuf avec ses frères." },
-            { "texte": "Il confisque leurs biens",
-              "titre": "Le fil se rompt",
-              "consequence": "Ce n'est pas ce que rapportent les sources : il pardonna.",
-              "indice": "Pensez à ce que fit Yûsuf avec ses frères." }
-          ] }
+              "consequence": "Ce sont les mots de Yûsuf à ses frères (Yûsuf 12:92).",
+              "indice": "Un prophète trahi par ses propres frères."
+            },
+            {
+              "texte": "Yûsuf (Joseph), à ses frères",
+              "juste": true,
+              "reponse": "Comme Yûsuf pardonna à ses frères qui l'avaient jeté dans le puits (12:92), il pardonne à son peuple. Beaucoup embrassent l'islam ce jour-là."
+            }
+          ]
+        }
       ]
     },
     {
@@ -919,79 +1832,177 @@
       "titre": "La vallée de Hunayn",
       "titre_ar": "غزوة حنين",
       "ambiance": "aube",
-      "a_retenir": "À Hunayn, une embuscade fait refluer l'armée, fière de son grand nombre ; le Prophète ﷺ tient bon, les croyants se regroupent et l'emportent.",
+      "a_retenir": "À Hunayn, une embuscade fait refluer l'armée, fière de son grand nombre ; le Prophète ﷺ tient bon, al-'Abbâs rappelle les croyants, qui se regroupent et l'emportent.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La bataille de Hunayn ; le siège de Tâ'if" }, { "ouvrage": "muslim", "page": null, "passage": "Hunayn, l'appel d'al-'Abbâs" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "La bataille de Hunayn ; le siège de Tâ'if"},
+        {"ouvrage": "muslim", "page": null, "passage": "Hunayn, l'appel d'al-'Abbâs"},
+        {"ouvrage": "umda", "page": 236, "passage": "Les dépouilles à Hunayn (hadith 399)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "makkah", "r": 80, "cap": 80, "incl": 50 },
-          "texte": "Quelques semaines après l'entrée à La Mecque, les tribus de Hawâzin et de Thaqîf rassemblent leurs forces contre les croyants." },
-        { "type": "choix",
-          "question": "Les croyants sont environ 12 000, leur plus grande armée jusque-là. Quel danger guette certains d'entre eux ?",
+        {
+          "type": "recit",
+          "vue": {"lieu": "makkah", "r": 80, "cap": 80, "incl": 50},
+          "texte": "Quelques semaines après l'entrée à La Mecque, les tribus de Hawâzin et de Thaqîf rassemblent leurs forces contre les croyants, avec leurs familles et leurs troupeaux derrière les lignes."
+        },
+        {
+          "type": "estimer",
+          "question": "Combien d'hommes compte l'armée musulmane qui marche vers Hunayn ?",
+          "min": 1000,
+          "max": 30000,
+          "pas": 100,
+          "juste": 12000,
+          "tolerance": 1500,
+          "unite": "hommes",
+          "reponse": "Environ 12 000 : les 10 000 venus de Médine, et 2 000 Mecquois. Jamais l'armée n'avait été aussi nombreuse.",
+          "indice_plus": "Les 10 000 de la conquête de La Mecque sont toujours là, et des Mecquois les rejoignent.",
+          "indice_moins": "Pensez aux 10 000 de la conquête de La Mecque, plus quelques renforts."
+        },
+        {
+          "type": "choix",
+          "question": "Quel danger guette certains d'entre eux ?",
           "options": [
-            { "texte": "Se fier à leur grand nombre", "juste": true,
-              "reponse": "« … le jour de Hunayn, quand votre grand nombre vous plut, et ne vous servit à rien » (at-Tawba 9:25)." },
-            { "texte": "Manquer d'eau en chemin",
+            {
+              "texte": "Se fier à leur grand nombre",
+              "juste": true,
+              "reponse": "« … le jour de Hunayn, quand votre grand nombre vous plut, et ne vous servit à rien » (at-Tawba 9:25)."
+            },
+            {
+              "texte": "Manquer d'eau sur la route de la vallée",
+              "suite": ["Vous notez : « les outres sont vides ». Mais Hunayn n'est qu'à une journée de marche de La Mecque…"],
               "titre": "Le fil se brouille",
               "consequence": "La route de Hunayn était courte : le danger était ailleurs.",
-              "indice": "Un danger qui vient de soi-même." },
-            { "texte": "Être trop peu nombreux",
+              "indice": "Un danger qui vient de soi-même."
+            },
+            {
+              "texte": "Être trop peu nombreux",
+              "suite": ["Vous écrivez : « trop peu nombreux ». Mais vous venez d'estimer leur nombre : douze mille…"],
               "titre": "À l'envers",
               "consequence": "C'est tout le contraire : ils n'avaient jamais été aussi nombreux.",
-              "indice": "Un danger qui vient de soi-même." }
-          ] },
-        { "type": "trajet",
-          "texte": "À l'aube, l'armée s'engage dans la vallée étroite de Hunayn. Embusqués sur les hauteurs, les Hawâzin lancent une pluie de flèches : les premiers rangs refluent." },
-        { "type": "choix",
-          "question": "Dans la confusion, que fait le Prophète ﷺ ?",
+              "indice": "Un danger qui vient de soi-même."
+            }
+          ]
+        },
+        {
+          "type": "trajet",
+          "texte": "À l'aube, l'armée s'engage dans la vallée étroite de Hunayn. Embusqués sur les hauteurs, les Hawâzin lancent une pluie de flèches : les premiers rangs refluent dans la confusion."
+        },
+        {
+          "type": "choix",
+          "question": "Le Prophète ﷺ tient bon sur sa mule blanche. Qui appelle alors les croyants à revenir, d'une voix qui porte dans toute la vallée ?",
           "options": [
-            { "texte": "Il tient bon et fait rappeler les croyants autour de lui", "juste": true,
-              "reponse": "Sur sa mule blanche, il ne recule pas. Son oncle al-'Abbâs, à la voix puissante, rappelle les Compagnons, qui reviennent : le combat tourne." },
-            { "texte": "Il ordonne la retraite vers La Mecque",
+            {
+              "texte": "Bilâl, du haut d'un rocher",
+              "suite": [
+                "Vous imaginez l'appel de Bilâl… mais les récits de Muslim parlent d'un homme réputé pour la puissance de sa voix, de la famille même du Prophète ﷺ."
+              ],
               "titre": "Le fil se brouille",
-              "consequence": "Ce n'est pas ce que rapportent les sources : il resta ferme au milieu du reflux.",
-              "indice": "Il ne recule pas d'un pas." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "taif", "r": 9, "cap": 60, "incl": 58 }, "etiquettes": ["taif"],
-          "texte": "L'armée assiège ensuite Tâ'if, puis lève le siège. Quelques mois plus tard, Thaqîf viendra d'elle-même embrasser l'islam, comme l'espérait le Prophète ﷺ le jour des pierres." }
+              "consequence": "Bilâl appelait à la prière ; ce jour-là, c'est un autre qui rappela les croyants.",
+              "indice": "Un oncle du Prophète ﷺ, à la voix puissante."
+            },
+            {
+              "texte": "Son oncle al-'Abbâs",
+              "juste": true,
+              "reponse": "Al-'Abbâs, à la voix puissante, appelle « les gens de l'arbre » ; les croyants reviennent en criant « Labbayk ! », et le combat tourne (Muslim)."
+            },
+            {
+              "texte": "Abû Sufyân, monté sur un chameau",
+              "suite": ["Vous notez le nom d'Abû Sufyân… mais il tient la bride de la mule du Prophète ﷺ, il ne crie pas dans la vallée."],
+              "titre": "Le fil se brouille",
+              "consequence": "Abû Sufyân était présent, mais ce n'est pas lui qui lança l'appel.",
+              "indice": "Un oncle du Prophète ﷺ, à la voix puissante."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "taif", "r": 9, "cap": 60, "incl": 58},
+          "etiquettes": ["taif"],
+          "texte": "L'armée assiège ensuite Tâ'if, puis lève le siège. Quelques mois plus tard, Thaqîf viendra d'elle-même embrasser l'islam, comme l'espérait le Prophète ﷺ le jour des pierres."
+        }
       ]
     },
     {
       "evenement": "tabuk",
       "titre": "L'armée de la difficulté",
-      "titre_ar": "جيش العسرة",
+      "titre_ar": "غزوة تبوك",
       "ambiance": "jour",
       "a_retenir": "En pleine chaleur et disette, les dons des croyants équipent une armée de 30 000 hommes ; à Tabûk, aucun combat n'a lieu et des tribus frontalières concluent des accords.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'expédition de Tabûk" }],
+      "sources": [{"ouvrage": "rahiq", "page": null, "passage": "L'expédition de Tabûk"}],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 300, "cap": 330, "incl": 38 },
-          "texte": "Rajab, an 9 de l'Hégire. On annonce qu'une armée byzantine se prépare au nord. C'est l'été, la chaleur est écrasante, et les dattes sont presque mûres." },
-        { "type": "choix",
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 300, "cap": 330, "incl": 38},
+          "texte": "Rajab, an 9 de l'Hégire. On annonce qu'une armée byzantine se prépare au nord. C'est l'été, la chaleur est écrasante, et les dattes sont presque mûres : partir maintenant, c'est tout quitter."
+        },
+        {
+          "type": "choix",
           "question": "Comment équiper une armée de 30 000 hommes en pleine disette ?",
           "options": [
-            { "texte": "Par les dons des croyants : 'Uthmân en équipe une grande partie, Abû Bakr donne tout ce qu'il possède", "juste": true,
-              "reponse": "'Umar apporte la moitié de ses biens ; les plus pauvres, une poignée de dattes. On l'appellera « l'armée de la difficulté » (jaysh al-'usra)." },
-            { "texte": "Par un tribut versé par les Byzantins",
+            {
+              "texte": "Par un tribut exigé des tribus du Hijaz",
+              "suite": ["Vous notez : « un tribut ». Mais les récits parlent d'un homme qui n'apporte qu'une poignée de dattes, et dont on se moque…"],
               "titre": "Le fil se brouille",
               "consequence": "Rien de tel : ce sont les dons des croyants qui équipèrent l'armée.",
-              "indice": "Chacun donne selon ses moyens." },
-            { "texte": "En vendant les palmeraies de Médine",
+              "indice": "Chacun donne selon ses moyens."
+            },
+            {
+              "texte": "Par les dons des croyants, chacun selon ses moyens",
+              "juste": true,
+              "reponse": "'Uthmân en équipe une grande partie, Abû Bakr donne tout ce qu'il possède, 'Umar la moitié de ses biens, les plus pauvres une poignée de dattes. On l'appellera « l'armée de la difficulté »."
+            },
+            {
+              "texte": "En vendant les palmeraies de Médine aux marchands de passage",
+              "suite": ["Vous écrivez : « on vend les palmeraies ». Au retour, l'oasis n'a plus rien à récolter…"],
               "titre": "La faim",
-              "consequence": "Et si… Médine avait vendu ses palmeraies juste avant la récolte ? Ce n'est pas ce qui s'est passé.",
-              "indice": "Chacun donne selon ses moyens." }
-          ] },
-        { "type": "trajet",
-          "texte": "L'armée marche plusieurs semaines vers le nord, jusqu'à Tabûk, au-delà du bord de cette carte." },
-        { "type": "choix",
+              "consequence": "Médine aurait vendu ses palmeraies juste avant la récolte : ce n'est pas ce qui s'est passé.",
+              "indice": "Chacun donne selon ses moyens."
+            }
+          ]
+        },
+        {
+          "type": "trajet",
+          "texte": "L'armée marche plusieurs semaines vers le nord, par une chaleur terrible, jusqu'à Tabûk, au-delà du bord de cette carte."
+        },
+        {
+          "type": "estimer",
+          "question": "À vol d'oiseau, quelle distance sépare Médine de Tabûk ?",
+          "min": 100,
+          "max": 1500,
+          "pas": 10,
+          "juste": 530,
+          "tolerance": 120,
+          "unite": "km",
+          "reponse": "Environ 530 km à vol d'oiseau, bien davantage par les pistes : des semaines de marche dans la chaleur de l'été.",
+          "indice_plus": "Tabûk est au-delà du bord nord de la carte, plus loin que Khaybar (140 km).",
+          "indice_moins": "Moins loin que Jérusalem, qui est à plus de 1 000 km."
+        },
+        {
+          "type": "choix",
           "question": "Arrivée à Tabûk, l'armée attend une vingtaine de jours. Que se passe-t-il ?",
           "options": [
-            { "texte": "Aucun combat : les Byzantins ne viennent pas, des tribus frontalières signent des accords", "juste": true,
-              "reponse": "L'expédition affirme l'autorité de Médine jusqu'aux marches du Shâm." },
-            { "texte": "Une grande bataille contre les Byzantins",
+            {
+              "texte": "Une grande bataille rangée contre les Byzantins",
+              "suite": ["Vous décrivez deux armées immenses… Mais au retour, la liste des martyrs de Tabûk est vide."],
               "titre": "Mauvaise année",
               "consequence": "Il n'y eut aucun affrontement à Tabûk. Le choc avec une armée byzantine avait eu lieu l'année précédente, à Mu'ta.",
-              "indice": "L'armée rentre sans avoir combattu." }
-          ] }
+              "indice": "L'armée rentre sans avoir combattu."
+            },
+            {
+              "texte": "Aucun combat, mais des accords avec les tribus",
+              "juste": true,
+              "reponse": "Les Byzantins ne viennent pas ; des tribus frontalières signent des accords. L'expédition affirme l'autorité de Médine jusqu'aux marches du Shâm."
+            },
+            {
+              "texte": "Un long siège de la ville de Tabûk",
+              "suite": ["Vous notez : « siège de Tabûk ». Mais Tabûk n'a ni murailles ni fortins, seulement une source et des palmiers…"],
+              "titre": "Le fil se brouille",
+              "consequence": "Tabûk n'était pas une ville fortifiée : il n'y eut pas de siège.",
+              "indice": "L'armée rentre sans avoir combattu."
+            }
+          ]
+        }
       ]
     },
     {
@@ -999,51 +2010,104 @@
       "titre": "Le pèlerinage d'adieu",
       "titre_ar": "حجة الوداع",
       "ambiance": "aube",
-      "a_retenir": "Lors de son unique pèlerinage après la Hijra, il ﷺ prononce à 'Arafa un sermon sur la sacralité de la vie, des biens et de l'honneur ; le verset de l'achèvement de la religion est révélé.",
+      "a_retenir": "Lors de son unique pèlerinage après la Hijra, il ﷺ enseigne les rites par l'exemple et prononce à 'Arafa un sermon sur la sacralité de la vie, des biens et de l'honneur ; le verset de l'achèvement de la religion est révélé.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le pèlerinage d'adieu" }, { "ouvrage": "muslim", "page": null, "passage": "Hadith de Jâbir sur le Hajj du Prophète ﷺ" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "Le pèlerinage d'adieu"},
+        {"ouvrage": "muslim", "page": null, "passage": "Hadith de Jâbir sur le Hajj du Prophète ﷺ"},
+        {"ouvrage": "umda", "page": 121, "passage": "Les mawâqît"},
+        {"ouvrage": "umda", "page": 133, "passage": "Le tamattu' (hadith 226, Ibn 'Umar)"},
+        {"ouvrage": "umda", "page": 141, "passage": "Changer le hajj en 'umra (hadith 235, Jâbir)"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 22, "cap": 220, "incl": 55 },
-          "texte": "Dhû al-Qa'da, an 10 de l'Hégire. Le Prophète ﷺ annonce qu'il part en pèlerinage. Des croyants affluent de toute l'Arabie pour l'accompagner." },
-        { "type": "choix",
-          "question": "Les pèlerins de Médine se mettent en état de sacralisation (ihrâm) à un lieu précis, un mîqât. Lequel ?",
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 22, "cap": 220, "incl": 55},
+          "texte": "Dhû al-Qa'da, an 10 de l'Hégire. Le Prophète ﷺ annonce qu'il part en pèlerinage. Des croyants affluent de toute l'Arabie pour l'accompagner : ce sera son seul Hajj après la Hijra."
+        },
+        {
+          "type": "choix",
+          "question": "Les pèlerins de Médine entrent en état de sacralisation (ihrâm) à un lieu précis, un mîqât. Lequel ?",
           "options": [
-            { "texte": "Dhû al-Hulayfa, à quelques kilomètres de Médine", "juste": true,
-              "reponse": "C'est le mîqât des gens de Médine, appelé aujourd'hui Âbâr 'Alî." },
-            { "texte": "À La Mecque même",
+            {
+              "texte": "À La Mecque même, en arrivant",
+              "suite": ["Vous notez : « ihrâm à l'arrivée ». Mais les récits décrivent dix jours de route en répétant la talbiya…"],
               "titre": "Trop tard",
-              "consequence": "Ceux qui habitent La Mecque s'y sacralisent pour le hajj ; ceux qui viennent de Médine le font bien avant, au mîqât.",
-              "indice": "Tout près de Médine, dès le départ." },
-            { "texte": "al-Juhfa",
+              "consequence": "Ceux qui viennent de Médine se sacralisent bien avant, au mîqât, à quelques kilomètres de chez eux.",
+              "indice": "Tout près de Médine, dès le départ."
+            },
+            {
+              "texte": "Dhû al-Hulayfa, près de Médine",
+              "juste": true,
+              "reponse": "C'est le mîqât des gens de Médine, appelé aujourd'hui Abyâr 'Alî (al-'Umda, Livre du Hajj)."
+            },
+            {
+              "texte": "Al-Juhfa, sur la route de la côte",
+              "suite": ["Vous écrivez : « ihrâm à al-Juhfa ». Mais al-Juhfa est à plusieurs jours de Médine…"],
               "titre": "Mauvais mîqât",
-              "consequence": "al-Juhfa est le mîqât des gens du Shâm et d'Égypte.",
-              "indice": "Tout près de Médine, dès le départ." }
-          ] },
-        { "type": "trajet",
-          "texte": "Pendant une dizaine de jours, l'immense caravane descend vers La Mecque en répétant la talbiya : « Labbayk Allâhumma labbayk… »" },
-        { "type": "trouver", "vue": { "point": [21.389, 39.905], "r": 30, "cap": 115, "incl": 36 },
+              "consequence": "Al-Juhfa est le mîqât des gens du Shâm et d'Égypte.",
+              "indice": "Tout près de Médine, dès le départ."
+            }
+          ]
+        },
+        {
+          "type": "trajet",
+          "texte": "Pendant une dizaine de jours, l'immense caravane descend vers La Mecque en répétant la talbiya : « Labbayk Allâhumma labbayk… »"
+        },
+        {
+          "type": "trouver",
+          "vue": {"point": [21.389, 39.905], "r": 30, "cap": 115, "incl": 36},
           "consigne": "Le 9 Dhû al-Hijja, les pèlerins se tiennent dans une vaste plaine à l'est de La Mecque, au-delà de Minâ et de Muzdalifa. Touchez 'Arafa.",
           "indice": "Une vingtaine de kilomètres à l'est de la Ka'ba, autour d'une petite colline, le Jabal ar-Rahma.",
-          "cible": "arafat", "rayon": 2.5,
-          "reussite": "'Arafa : « le hajj, c'est 'Arafa »." },
-        { "type": "recit", "vue": { "lieu": "arafat", "r": 2.6, "cap": 300, "incl": 60 }, "etiquettes": ["arafat"],
-          "texte": "À 'Arafa, il prononce un sermon resté célèbre : « Votre sang, vos biens et votre honneur vous sont sacrés, comme est sacré ce jour-ci, dans ce mois-ci, dans cette cité-ci. »" },
-        { "type": "choix",
-          "question": "Ce jour-là, un verset est révélé. Lequel ?",
+          "cible": "arafat",
+          "rayon": 2.5,
+          "reussite": "'Arafa : « le Hajj, c'est 'Arafa »."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "arafat", "r": 2.6, "cap": 300, "incl": 60},
+          "etiquettes": ["arafat"],
+          "texte": "À 'Arafa, il prononce un sermon resté célèbre : « Votre sang, vos biens et votre honneur vous sont sacrés, comme est sacré ce jour-ci, dans ce mois-ci, dans cette cité-ci. » Quatorze siècles plus tard, des millions de pèlerins refont ses gestes. Suivez-les."
+        },
+        {"type": "mission", "mission": "pelerin", "epreuves": 4},
+        {
+          "type": "choix",
+          "question": "Ce jour-là, à 'Arafa, un verset est révélé. Lequel ?",
           "options": [
-            { "texte": "« Aujourd'hui, J'ai parachevé pour vous votre religion… » (al-Mâ'ida 5:3)", "juste": true,
-              "reponse": "Un vendredi, jour de 'Arafa : le verset annonce l'achèvement de la religion." },
-            { "texte": "« Lis, au nom de ton Seigneur… » (al-'Alaq 96:1)",
+            {
+              "texte": "« Lis, au nom de ton Seigneur… » (96:1)",
+              "suite": ["Vous notez ce verset… puis vous vous souvenez de la grotte, de la nuit, du premier ordre : « Lis ! »"],
               "titre": "Vingt-trois ans trop tôt",
               "consequence": "Ce furent les tout premiers versets, dans la grotte de Hirâ'.",
-              "indice": "Un verset sur l'achèvement." },
-            { "texte": "« Ô toi, le revêtu d'un manteau ! » (al-Muddaththir 74:1)",
+              "indice": "Un verset sur l'achèvement."
+            },
+            {
+              "texte": "« Ô toi, le revêtu d'un manteau ! » (74:1)",
+              "suite": ["Vous écrivez ce verset… mais il appartient aux tout débuts, à La Mecque."],
               "titre": "Bien plus tôt",
               "consequence": "Ces versets datent des débuts de la révélation, à La Mecque.",
-              "indice": "Un verset sur l'achèvement." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "arafat", "r": 6, "cap": 260, "incl": 58 },
-          "texte": "Il demande à la foule : « Ai-je transmis ? » — « Oui ! » — « Ô Allah, sois témoin. »" }
+              "indice": "Un verset sur l'achèvement."
+            },
+            {
+              "texte": "« J'ai parachevé votre religion… » (5:3)",
+              "juste": true,
+              "reponse": "Un vendredi, jour de 'Arafa : le verset annonce l'achèvement de la religion (al-Mâ'ida 5:3)."
+            }
+          ]
+        },
+        {
+          "type": "ordre",
+          "consigne": "Le 10 Dhû al-Hijja, quatre rites se succèdent. Remettez-les dans l'ordre suivi par le Prophète ﷺ.",
+          "elements": ["Lapider Jamrat al-'Aqaba", "Sacrifier la bête (hady)", "Se raser ou se couper les cheveux", "Faire le tawâf al-ifâda autour de la Ka'ba"],
+          "reponse": "C'est l'ordre qu'il suivit. Interrogé par des pèlerins qui avaient interverti ces rites, il répondit : « Fais-le, il n'y a pas de mal » (al-Bukhârî, Muslim).",
+          "consequence": "Dans cet ordre, ce n'est pas celui qu'il suivit… même si, ce jour-là, il excusa ceux qui s'étaient trompés.",
+          "indice": "On commence par la stèle de Minâ, on termine à la Ka'ba."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "arafat", "r": 6, "cap": 260, "incl": 58},
+          "texte": "Il demande à la foule : « Ai-je transmis ? » — « Oui ! » — « Ô Allah, sois témoin. » Quelques semaines plus tard, il rentre à Médine."
+        }
       ]
     },
     {
@@ -1053,25 +2117,78 @@
       "ambiance": "aube",
       "a_retenir": "Il ﷺ s'éteint à Médine, à soixante-trois ans, dans la chambre de 'Â'isha où il est enterré. Abû Bakr rappelle qu'Allah est Vivant et ne meurt pas.",
       "statut": "à vérifier",
-      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Vers le Compagnon suprême" }, { "ouvrage": "bukhari", "page": null, "passage": "La maladie et le décès du Prophète ﷺ" }],
+      "sources": [
+        {"ouvrage": "rahiq", "page": null, "passage": "Vers le Compagnon suprême"},
+        {"ouvrage": "bukhari", "page": null, "passage": "La maladie et le décès du Prophète ﷺ"}
+      ],
       "etapes": [
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 1.3, "cap": 20, "incl": 60 }, "etiquettes": ["hujurat"],
-          "texte": "Rabî' al-Awwal, an 11 de l'Hégire. Peu après son retour du pèlerinage, le Prophète ﷺ tombe malade. Il demande à être soigné dans la chambre de 'Â'isha et charge Abû Bakr de diriger la prière." },
-        { "type": "recit", "vue": { "lieu": "hujurat", "r": 0.7, "cap": 290, "incl": 62 }, "etiquettes": ["hujurat"],
-          "texte": "Un lundi matin, il soulève le rideau de sa chambre et regarde les croyants en rang pour la prière ; il sourit. Il s'éteint le jour même, à soixante-trois ans." },
-        { "type": "choix",
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 1.3, "cap": 20, "incl": 60},
+          "etiquettes": ["hujurat"],
+          "texte": "Rabî' al-Awwal, an 11 de l'Hégire. Peu après son retour du pèlerinage, le Prophète ﷺ tombe malade. Il demande à être soigné dans la chambre de 'Â'isha et charge Abû Bakr de diriger la prière."
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "hujurat", "r": 0.7, "cap": 290, "incl": 62},
+          "etiquettes": ["hujurat"],
+          "texte": "Un lundi matin, il soulève le rideau de sa chambre et regarde les croyants en rang pour la prière ; il sourit. Il s'éteint le jour même, la tête reposant contre 'Â'isha."
+        },
+        {
+          "type": "choix",
           "question": "Médine est bouleversée ; certains refusent d'y croire. Abû Bakr s'adresse aux croyants et récite un verset. Lequel ?",
           "options": [
-            { "texte": "« Muhammad ﷺ n'est qu'un messager ; des messagers avant lui sont passés… » (Âl 'Imrân 3:144)", "juste": true,
-              "reponse": "« Quiconque adorait Muhammad ﷺ : Muhammad ﷺ est mort. Quiconque adore Allah : Allah est Vivant et ne meurt pas. » Les croyants eurent l'impression d'entendre ce verset pour la première fois." },
-            { "texte": "« Lis, au nom de ton Seigneur… » (al-'Alaq 96:1)",
-              "effet": "doux",
+            {
+              "texte": "« Muhammad ﷺ n'est qu'un messager… » (3:144)",
+              "juste": true,
+              "reponse": "« … des messagers avant lui sont passés. » Puis : « Quiconque adorait Muhammad ﷺ : Muhammad ﷺ est mort. Quiconque adore Allah : Allah est Vivant et ne meurt pas. »"
+            },
+            {
+              "texte": "« Lis, au nom de ton Seigneur… » (96:1)",
+              "suite": ["Vous notez ce verset… mais il parle d'un commencement, pas d'une fin."],
               "titre": "Un autre verset",
               "consequence": "Ce verset ouvrit la révélation. Abû Bakr en choisit un qui rappelle que tous les messagers passent.",
-              "indice": "Un verset de la sourate Âl 'Imrân sur les messagers d'avant lui." }
-          ] },
-        { "type": "recit", "vue": { "lieu": "madinah", "r": 900, "cap": 180, "incl": 30, "duree": 9000 }, "etiquettes": ["madinah", "makkah"],
-          "texte": "Il est enterré là où il s'est éteint, au bord de sa mosquée. Il laisse un Livre, une Sunna, et une communauté qui portera son message bien au-delà du Hijaz." }
+              "indice": "Un verset de la sourate Âl 'Imrân sur les messagers d'avant lui.",
+              "effet": "doux"
+            },
+            {
+              "texte": "« Allah nous suffit, quel excellent garant ! » (3:173)",
+              "suite": ["Vous écrivez cette parole de confiance… mais elle répond à une menace, pas à un deuil."],
+              "titre": "Un autre verset",
+              "consequence": "Cette parole fut celle des croyants après Uhud. Abû Bakr récita un autre verset de la même sourate (3:144).",
+              "indice": "Un verset de la sourate Âl 'Imrân sur les messagers d'avant lui.",
+              "effet": "doux"
+            }
+          ]
+        },
+        {
+          "type": "vraifaux",
+          "consigne": "Les derniers jours : vrai ou faux ?",
+          "affirmations": [
+            {
+              "texte": "Pendant sa maladie, il désigna Abû Bakr pour diriger la prière.",
+              "vrai": true,
+              "explication": "Abû Bakr dirigea la prière plusieurs jours, sur son ordre."
+            },
+            {"texte": "Il mourut à l'âge de soixante-dix ans.", "vrai": false, "explication": "À soixante-trois ans, selon l'avis le plus répandu."},
+            {
+              "texte": "Il fut enterré à al-Baqî', le cimetière de Médine.",
+              "vrai": false,
+              "explication": "Il fut enterré là où il s'était éteint, dans la chambre de 'Â'isha, au bord de sa mosquée."
+            },
+            {
+              "texte": "Il s'éteignit un lundi, au mois de Rabî' al-Awwal.",
+              "vrai": true,
+              "explication": "Un lundi de Rabî' al-Awwal de l'an 11 ; le jour du mois est discuté, le 12 étant le plus cité."
+            }
+          ]
+        },
+        {
+          "type": "recit",
+          "vue": {"lieu": "madinah", "r": 900, "cap": 180, "incl": 30, "duree": 9000},
+          "etiquettes": ["madinah", "makkah"],
+          "texte": "Il est enterré là où il s'est éteint, au bord de sa mosquée. Il laisse un Livre, une Sunna, et une communauté qui portera son message bien au-delà du Hijaz."
+        }
       ]
     }
   ]

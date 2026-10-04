@@ -1,0 +1,852 @@
+{
+ "_lisez_moi": "Mission à la première personne. Coordonnées en mètres : x vers l'est, z vers le sud ; cap en degrés (0 = nord). Brouillon à vérifier.",
+ "id": "eclaireur",
+ "titre": "Le regard de l'éclaireur",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "ibn-hisham",
+   "page": null,
+   "passage": "Al-Hudaybiya : la mission d'al-Hulays ibn 'Alqama (d'après Ibn Ishâq)"
+  },
+  {
+   "ouvrage": "bukhari",
+   "page": null,
+   "passage": "Livre des conditions : le récit d'al-Hudaybiya"
+  }
+ ],
+ "role": {
+  "nom": "Un éclaireur des Ahâbîsh",
+  "nom_ar": "طليعة من الأحابيش",
+  "texte": "Votre tribu, alliée de Quraysh, a juré de défendre La Mecque. Mais vous êtes un homme qui ne ment pas : on vous envoie voir, vous direz ce que vous avez vu.",
+  "regle": "Les pèlerins venus de Médine, des Compagnons, ne sont jamais montrés : on ne voit que leurs tentes et leurs bêtes. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "chef": {
+   "nom": "Un chef de Quraysh",
+   "qualite": "au conseil"
+  },
+  "chef2": {
+   "nom": "Un chef de Quraysh",
+   "qualite": "au conseil"
+  },
+  "chef3": {
+   "nom": "Un chef de Quraysh",
+   "qualite": "au conseil"
+  },
+  "ahabish": {
+   "nom": "Un homme des Ahâbîsh",
+   "qualite": "allié de Quraysh"
+  },
+  "hady": {
+   "nom": "Bêtes du sacrifice",
+   "qualite": ""
+  }
+ },
+ "dialogues": {
+  "ahabish": [
+   "Notre chef, al-Hulays, n'aime pas les menteurs. Rapporte-lui exactement ce que tu as vu.",
+   "S'ils viennent pour la Maison, de quel droit les en empêcherait-on ? Elle n'appartient pas qu'à Quraysh."
+  ],
+  "hady": [
+   "Des colliers au cou, une entaille sur la bosse : ces bêtes sont destinées au sacrifice. Personne n'y touche."
+  ]
+ },
+ "scenes": {
+  "hudaybiya": {
+   "titre": "Al-Hudaybiya",
+   "taille": 420,
+   "limites": [
+    -150,
+    -150,
+    150,
+    150
+   ],
+   "ambiance": "jour",
+   "depart": {
+    "x": -22,
+    "z": 70,
+    "cap": 0
+   },
+   "elements": [
+    {
+     "type": "colline",
+     "x": -10,
+     "z": -20,
+     "r": 22,
+     "h": 11
+    },
+    {
+     "type": "colline",
+     "x": -120,
+     "z": -60,
+     "r": 50,
+     "h": 22
+    },
+    {
+     "type": "colline",
+     "x": 130,
+     "z": 40,
+     "r": 55,
+     "h": 24
+    },
+    {
+     "type": "montagne",
+     "x": 0,
+     "z": -260,
+     "r": 120,
+     "h": 90
+    },
+    {
+     "type": "montagne",
+     "x": -240,
+     "z": 80,
+     "r": 100,
+     "h": 80,
+     "c": "#A3825F"
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       -150,
+       -40
+      ],
+      [
+       -60,
+       -55
+      ],
+      [
+       20,
+       -70
+      ],
+      [
+       150,
+       -60
+      ]
+     ],
+     "l": 7
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       -20,
+       110
+      ],
+      [
+       -24,
+       40
+      ],
+      [
+       -12,
+       -10
+      ]
+     ],
+     "l": 2.5
+    },
+    {
+     "type": "zone",
+     "id": "colline",
+     "x": -10,
+     "z": -20,
+     "r": 6
+    },
+    {
+     "type": "zone",
+     "id": "wadi",
+     "x": 30,
+     "z": -66,
+     "r": 9
+    },
+    {
+     "type": "zone",
+     "id": "conseil",
+     "x": -20,
+     "z": 92,
+     "r": 7
+    },
+    {
+     "type": "puits",
+     "nom": "Le puits d'al-Hudaybiya",
+     "x": 70,
+     "z": -40
+    },
+    {
+     "type": "tente",
+     "x": -20,
+     "z": 104,
+     "w": 8,
+     "d": 9,
+     "h": 4,
+     "r": 180,
+     "riche": true,
+     "fanion": "#2E4A6B",
+     "c": "#D6C39C"
+    },
+    {
+     "type": "boite",
+     "x": -20,
+     "z": 96,
+     "w": 7,
+     "d": 5,
+     "h": 0.05,
+     "c": "#7A2E3A",
+     "solide": false
+    },
+    {
+     "type": "feu",
+     "x": -8,
+     "z": 96,
+     "force": 4
+    },
+    {
+     "type": "tente",
+     "x": 36.5,
+     "z": -99.0,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 104.3,
+     "z": -85.5,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#CDB892"
+    },
+    {
+     "type": "tente",
+     "x": 38.4,
+     "z": -106.3,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 57.1,
+     "z": -103.7,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 99.4,
+     "z": -119.5,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#CDB892"
+    },
+    {
+     "type": "tente",
+     "x": 24.2,
+     "z": -85.1,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#CDB892"
+    },
+    {
+     "type": "tente",
+     "x": 64.2,
+     "z": -86.9,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#CDB892"
+    },
+    {
+     "type": "tente",
+     "x": 31.6,
+     "z": -87.2,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 35.5,
+     "z": -93.2,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 65.3,
+     "z": -105.2,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 68.5,
+     "z": -121.6,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 106.6,
+     "z": -119.4,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 87.4,
+     "z": -93.9,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 76.0,
+     "z": -104.8,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 54.1,
+     "z": -123.4,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 56.5,
+     "z": -109.7,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 119.5,
+     "z": -112.6,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 35.9,
+     "z": -97.8,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 69.2,
+     "z": -105.2,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#CDB892"
+    },
+    {
+     "type": "tente",
+     "x": 80.9,
+     "z": -105.0,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 87.0,
+     "z": -101.8,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 96.2,
+     "z": -88.2,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 36.9,
+     "z": -88.5,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 57.5,
+     "z": -99.2,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 111.8,
+     "z": -122.7,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 69.1,
+     "z": -113.1,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 36.2,
+     "z": -126.9,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 180,
+     "c": "#CDB892"
+    },
+    {
+     "type": "tente",
+     "x": 68.3,
+     "z": -92.3,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#DCD2BC"
+    },
+    {
+     "type": "tente",
+     "x": 85.8,
+     "z": -128.4,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "tente",
+     "x": 59.5,
+     "z": -90.8,
+     "w": 3.6,
+     "d": 4.4,
+     "h": 2.2,
+     "r": 0,
+     "c": "#E8E2D2"
+    },
+    {
+     "type": "acacia",
+     "x": 68.8,
+     "z": 46.2
+    },
+    {
+     "type": "acacia",
+     "x": -69.4,
+     "z": 132.6
+    },
+    {
+     "type": "acacia",
+     "x": 7.2,
+     "z": 91.1
+    },
+    {
+     "type": "acacia",
+     "x": -132.1,
+     "z": -1.8
+    },
+    {
+     "type": "acacia",
+     "x": 94.7,
+     "z": 103.1
+    },
+    {
+     "type": "acacia",
+     "x": 106.8,
+     "z": 68.2
+    },
+    {
+     "type": "acacia",
+     "x": -20.7,
+     "z": 64.6
+    },
+    {
+     "type": "acacia",
+     "x": 97.8,
+     "z": 15.4
+    },
+    {
+     "type": "acacia",
+     "x": 9.6,
+     "z": 9.7
+    },
+    {
+     "type": "acacia",
+     "x": 75.1,
+     "z": -38.2
+    },
+    {
+     "type": "acacia",
+     "x": 51.9,
+     "z": 131.7
+    },
+    {
+     "type": "acacia",
+     "x": -133.4,
+     "z": 66.9
+    },
+    {
+     "type": "acacia",
+     "x": 40.3,
+     "z": 113.3
+    },
+    {
+     "type": "acacia",
+     "x": 23.6,
+     "z": 6.3
+    },
+    {
+     "type": "acacia",
+     "x": -26.4,
+     "z": 132.6
+    },
+    {
+     "type": "acacia",
+     "x": 113.6,
+     "z": -16.0
+    },
+    {
+     "type": "acacia",
+     "x": -113.4,
+     "z": -23.1
+    },
+    {
+     "type": "acacia",
+     "x": -132.9,
+     "z": 40.4
+    },
+    {
+     "type": "acacia",
+     "x": -100.6,
+     "z": 116.1
+    },
+    {
+     "type": "acacia",
+     "x": 43.5,
+     "z": -17.2
+    },
+    {
+     "type": "acacia",
+     "x": 10.8,
+     "z": 18.4
+    },
+    {
+     "type": "acacia",
+     "x": -1.7,
+     "z": -0.5
+    }
+   ],
+   "pnj": [
+    {
+     "id": "chef",
+     "nom": "Un chef de Quraysh",
+     "x": -20,
+     "z": 98,
+     "cap": 0,
+     "habit": "#5B2333",
+     "riche": true,
+     "taille": 1.8
+    },
+    {
+     "id": "chef2",
+     "nom": "Un chef de Quraysh",
+     "x": -25,
+     "z": 97,
+     "cap": 20,
+     "habit": "#2E4A6B",
+     "riche": true
+    },
+    {
+     "id": "chef3",
+     "nom": "Un chef de Quraysh",
+     "x": -15,
+     "z": 97,
+     "cap": 340,
+     "habit": "#4E6B3A"
+    }
+   ],
+   "troupeaux": [
+    {
+     "id": "hady",
+     "modele": "chameau",
+     "x": 30,
+     "z": -66,
+     "r": 9,
+     "n": 12,
+     "invite": "Observer les bêtes",
+     "parure": true
+    }
+   ],
+   "foules": [
+    {
+     "id": "ahabish",
+     "x": -40,
+     "z": 80,
+     "r": 8,
+     "n": 6,
+     "invite": "Parler",
+     "habits": [
+      "#8C6F4E",
+      "#6B5A48",
+      "#7A5A3C"
+     ]
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "hudaybiya",
+   "titre": "Al-Hudaybiya",
+   "sous": "Dhû al-Qa'da, an 6 de l'Hégire"
+  },
+  {
+   "type": "recit",
+   "texte": "On annonce à Quraysh que les gens de Médine approchent, nombreux, et campent à al-Hudaybiya, aux limites du territoire sacré. Viennent-ils faire la guerre ? Votre chef, allié de Quraysh, vous envoie voir de vos yeux avant de décider."
+  },
+  {
+   "type": "objectif",
+   "texte": "Montez sur la colline, au nord, pour observer le camp de loin.",
+   "cible": "zone:colline",
+   "quand": {
+    "zone": "colline"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "regarder": [
+      60,
+      2,
+      -100
+     ],
+     "duree": 1.4
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "D'en haut, vous voyez le camp : des tentes, et des hommes vêtus de deux simples pièces de tissu blanc, sans armure. Une rumeur monte jusqu'à vous : « Labbayka Allâhumma labbayk… » Dans le lit du wadi, des chamelles sont rassemblées."
+  },
+  {
+   "type": "objectif",
+   "texte": "Descendez voir de plus près les chamelles rassemblées dans le wadi.",
+   "cible": "zone:wadi",
+   "quand": {
+    "zone": "wadi"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "regarder": [
+      30,
+      1.8,
+      -66
+     ],
+     "duree": 1
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Ces bêtes portent des colliers au cou et une entaille à la bosse : ce sont des offrandes destinées au sacrifice, à La Mecque. Chez les Arabes, on ne touche pas à de tels animaux. Ceux qui les mènent viennent en pèlerins."
+  },
+  {
+   "type": "objectif",
+   "texte": "Retournez au conseil de Quraysh, au sud, pour rendre compte de ce que vous avez vu.",
+   "cible": "zone:conseil",
+   "quand": {
+    "zone": "conseil"
+   }
+  },
+  {
+   "type": "parole",
+   "qui": "chef",
+   "texte": "Alors, l'éclaireur ? Qu'as-tu vu ? Une armée qui vient nous prendre la ville ?"
+  },
+  {
+   "type": "choix",
+   "qui": "chef",
+   "question": "Que rapportez-vous au conseil ?",
+   "options": [
+    {
+     "texte": "« Ils viennent en pèlerins, avec des bêtes de sacrifice parées. On n'écarte pas de la Maison ceux qui viennent l'honorer. »",
+     "juste": true
+    },
+    {
+     "texte": "« Une armée, sans aucun doute : ils sont très nombreux. Attaquons-les avant qu'ils ne soient à nos portes. »",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "chef",
+       "texte": "Je le savais ! Qu'on prépare les chevaux et les armes."
+      },
+      {
+       "type": "recit",
+       "texte": "Les hommes courent aux armes. Au mois sacré, à deux pas du territoire sacré, le sang va couler…"
+      }
+     ],
+     "titre": "Le faux rapport",
+     "consequence": "Et si l'éclaireur avait menti : Quraysh aurait attaqué des pèlerins au mois sacré. Selon Ibn Ishâq, le chef des Ahâbîsh, al-Hulays, vit les bêtes du sacrifice et revint dire à Quraysh qu'on ne pouvait pas écarter de la Maison ceux qui venaient l'honorer.",
+     "indice": "Chez les Arabes, on n'écartait pas de la Maison ceux qui venaient l'honorer avec leurs bêtes de sacrifice."
+    },
+    {
+     "texte": "« Je n'ai pas bien vu : il faisait trop chaud, et c'était trop loin. Décidez sans moi, je ne veux pas d'histoires. »",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "chef",
+       "texte": "À quoi sert un éclaireur qui n'a rien vu ? Nous déciderons donc seuls : ils n'entreront pas."
+      }
+     ],
+     "titre": "Le témoin qui se tait",
+     "consequence": "Et si l'éclaireur s'était dérobé : faute de témoin, la méfiance l'aurait emporté. Selon Ibn Ishâq, al-Hulays rapporta au contraire fidèlement ce qu'il avait vu, et prit la défense des pèlerins.",
+     "indice": "Chez les Arabes, on n'écartait pas de la Maison ceux qui venaient l'honorer avec leurs bêtes de sacrifice."
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "chef",
+   "texte": "Assieds-toi ! Tu n'es qu'un Bédouin : tu n'y connais rien."
+  },
+  {
+   "type": "choix",
+   "qui": "chef",
+   "question": "Le chef vous méprise devant tous. Que répondez-vous ?",
+   "options": [
+    {
+     "texte": "« Ce n'est pas pour cela que nous nous sommes alliés à vous : laissez-les accomplir ce pour quoi ils sont venus. »",
+     "juste": true
+    },
+    {
+     "texte": "« Tu as raison, je ne suis qu'un Bédouin : faites comme vous l'entendez, ce n'est pas mon affaire. »",
+     "suite": [
+      {
+       "type": "recit",
+       "texte": "Vous vous rasseyez en silence. Le conseil décide de barrer la route aux pèlerins, par la force s'il le faut."
+      }
+     ],
+     "titre": "La vérité abandonnée",
+     "consequence": "Et si les alliés de Quraysh s'étaient tus : la voix de la raison aurait manqué ce jour-là. Selon Ibn Ishâq, al-Hulays menaça au contraire de se retirer avec tous les Ahâbîsh si l'on empêchait les pèlerins d'honorer la Maison.",
+     "indice": "Dire la vérité, c'est aussi la défendre quand on la conteste."
+    },
+    {
+     "texte": "Tirer votre épée : on n'insulte pas un homme des Ahâbîsh impunément, chef de Quraysh ou pas.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "geste": "chef2"
+        },
+        {
+         "aller": "chef2",
+         "vers": "joueur",
+         "vitesse": 2.5
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "chef2",
+       "texte": "Une épée tirée sous la tente du conseil ? Qu'on le désarme !"
+      }
+     ],
+     "titre": "L'épée tirée",
+     "consequence": "Et si l'éclaireur avait répondu par l'épée : une querelle entre alliés aurait éclaté, au lieu de faire entendre la vérité. Selon Ibn Ishâq, al-Hulays répondit par des paroles fermes, sans violence.",
+     "indice": "Dire la vérité, c'est aussi la défendre quand on la conteste."
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "chef",
+   "texte": "Calme-toi, calme-toi… Laisse-nous le temps de trouver ce qui nous convient."
+  },
+  {
+   "type": "recit",
+   "texte": "Inquiets de perdre leurs alliés, les chefs de Quraysh cherchent un accord. Quelques jours plus tard, ils enverront Suhayl ibn 'Amr négocier : ce sera la trêve d'al-Hudaybiya."
+  }
+ ],
+ "fin": "Vers la trêve"
+}

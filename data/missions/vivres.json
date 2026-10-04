@@ -1,0 +1,1954 @@
+{
+ "_lisez_moi": "Mission à la première personne. Coordonnées en mètres : x vers l'est, z vers le sud ; cap en degrés (0 = nord). Brouillon à vérifier.",
+ "id": "vivres",
+ "titre": "Le blé de la nuit",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "ibn-hisham",
+   "page": null,
+   "passage": "Le blocus du vallon d'Abû Tâlib et l'annulation du pacte (d'après Ibn Ishâq)"
+  },
+  {
+   "ouvrage": "rahiq",
+   "page": null,
+   "passage": "Le boycott"
+  }
+ ],
+ "role": {
+  "nom": "Un homme de Quraysh",
+  "nom_ar": "رجل من قريش",
+  "texte": "Vous n'êtes pas de leur clan, mais vous ne supportez pas que des familles entières meurent de faim dans le vallon. Cette nuit, vous allez y porter du blé, au risque d'être dénoncé.",
+  "regle": "Le Prophète ﷺ et sa famille, enfermés dans le vallon, ne sont jamais montrés. Abû Jahl, adversaire déclaré, apparaît en silhouette sans visage. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "chameau": {
+   "nom": "Votre chameau",
+   "qualite": ""
+  },
+  "abujahl": {
+   "nom": "Abû Jahl",
+   "qualite": "chef de l'opposition à La Mecque"
+  },
+  "abujahl_jour": {
+   "nom": "Abû Jahl",
+   "qualite": "chef de l'opposition à La Mecque"
+  },
+  "guetteur1": {
+   "nom": "Un guetteur",
+   "qualite": "homme d'Abû Jahl"
+  },
+  "guetteur2": {
+   "nom": "Un guetteur",
+   "qualite": "homme d'Abû Jahl"
+  },
+  "assemblee": {
+   "nom": "Un homme de Quraysh",
+   "qualite": "près de la Ka'ba"
+  }
+ },
+ "dialogues": {
+  "assemblee": [
+   "Trois ans de blocus… Nos propres cousins, dans ce vallon. Quelle honte pour Quraysh.",
+   "Les termites ont tout mangé, sauf le nom d'Allah ? Comment pouvait-il le savoir ?",
+   "Abû Jahl peut crier tant qu'il veut : cette fois, beaucoup sont contre lui."
+  ]
+ },
+ "scenes": {
+  "makka": {
+   "titre": "La Mecque",
+   "taille": 420,
+   "limites": [
+    -150,
+    -150,
+    150,
+    150
+   ],
+   "ambiance": "nuit",
+   "depart": {
+    "x": -46,
+    "z": 22,
+    "cap": 180
+   },
+   "elements": [
+    {
+     "type": "kaba",
+     "id": "kaba",
+     "x": 0,
+     "z": 0,
+     "h": 9,
+     "reconstruite": true,
+     "r": -135
+    },
+    {
+     "type": "puits",
+     "id": "zamzam",
+     "x": 18,
+     "z": 2
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       -160
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       0,
+       160
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       -160,
+       0
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "chemin",
+     "points": [
+      [
+       0,
+       0
+      ],
+      [
+       160,
+       0
+      ]
+     ],
+     "l": 4
+    },
+    {
+     "type": "montagne",
+     "x": 205,
+     "z": -95,
+     "r": 85,
+     "h": 105
+    },
+    {
+     "type": "montagne",
+     "x": 175,
+     "z": 165,
+     "r": 70,
+     "h": 60,
+     "c": "#A3825F"
+    },
+    {
+     "type": "montagne",
+     "x": -215,
+     "z": -20,
+     "r": 95,
+     "h": 115
+    },
+    {
+     "type": "montagne",
+     "x": -40,
+     "z": -245,
+     "r": 110,
+     "h": 85,
+     "c": "#9E7E5E"
+    },
+    {
+     "type": "montagne",
+     "x": -70,
+     "z": 235,
+     "r": 100,
+     "h": 70,
+     "c": "#A3825F"
+    },
+    {
+     "type": "acacia",
+     "x": -60,
+     "z": 70
+    },
+    {
+     "type": "acacia",
+     "x": 95,
+     "z": 60
+    },
+    {
+     "type": "acacia",
+     "x": -90,
+     "z": -60
+    },
+    {
+     "type": "jarre",
+     "x": 21,
+     "z": 4
+    },
+    {
+     "type": "jarre",
+     "x": 21.6,
+     "z": 5.2
+    },
+    {
+     "type": "colline",
+     "x": 98,
+     "z": -34,
+     "r": 24,
+     "h": 16
+    },
+    {
+     "type": "colline",
+     "x": 98,
+     "z": 40,
+     "r": 24,
+     "h": 16
+    },
+    {
+     "type": "colline",
+     "x": 140,
+     "z": -40,
+     "r": 30,
+     "h": 22
+    },
+    {
+     "type": "colline",
+     "x": 140,
+     "z": 46,
+     "r": 30,
+     "h": 22
+    },
+    {
+     "type": "rochers",
+     "x": 100,
+     "z": -14,
+     "r": 5,
+     "n": 6,
+     "s": 1.1
+    },
+    {
+     "type": "rochers",
+     "x": 100,
+     "z": 20,
+     "r": 5,
+     "n": 6,
+     "s": 1.1
+    },
+    {
+     "type": "zone",
+     "id": "chib",
+     "x": 106,
+     "z": 3,
+     "r": 5
+    },
+    {
+     "type": "panneau",
+     "x": 92,
+     "z": 10,
+     "texte": "Vallon d'Abû Tâlib",
+     "ar": "شعب أبي طالب",
+     "r": 270,
+     "h": 2.4
+    },
+    {
+     "type": "maison",
+     "id": "maison_joueur",
+     "nom": "Votre maison",
+     "x": -46,
+     "z": 30,
+     "w": 7,
+     "d": 6,
+     "h": 3.4,
+     "r": 0,
+     "porte": "n"
+    },
+    {
+     "type": "enclos",
+     "x": -34,
+     "z": 36,
+     "w": 8,
+     "d": 7,
+     "ouverture": "n"
+    },
+    {
+     "type": "feu",
+     "x": 76,
+     "z": 8,
+     "force": 7
+    },
+    {
+     "type": "lanterne",
+     "x": 30,
+     "z": 6
+    },
+    {
+     "type": "lanterne",
+     "x": -20,
+     "z": 12
+    },
+    {
+     "type": "feu",
+     "x": -8,
+     "z": 16,
+     "force": 5
+    },
+    {
+     "type": "maison",
+     "x": 14.3,
+     "z": -26.4,
+     "w": 5.3,
+     "d": 6.8,
+     "h": 3.6,
+     "r": 28
+    },
+    {
+     "type": "maison",
+     "x": 21.1,
+     "z": -21.3,
+     "w": 5.4,
+     "d": 5.6,
+     "h": 3.6,
+     "r": 45
+    },
+    {
+     "type": "maison",
+     "x": 26.2,
+     "z": -14.5,
+     "w": 6.4,
+     "d": 5.1,
+     "h": 3.1,
+     "r": 61
+    },
+    {
+     "type": "maison",
+     "x": 29.8,
+     "z": 3.9,
+     "w": 7.2,
+     "d": 6.1,
+     "h": 3.1,
+     "r": 97
+    },
+    {
+     "type": "maison",
+     "x": 26.7,
+     "z": 13.7,
+     "w": 6.8,
+     "d": 7.0,
+     "h": 3.9,
+     "r": 117
+    },
+    {
+     "type": "maison",
+     "x": 20.7,
+     "z": 21.7,
+     "w": 6.1,
+     "d": 7.3,
+     "h": 3.5,
+     "r": 136
+    },
+    {
+     "type": "maison",
+     "x": 13.1,
+     "z": 27.0,
+     "w": 7.0,
+     "d": 5.9,
+     "h": 3.1,
+     "r": 154
+    },
+    {
+     "type": "maison",
+     "x": -6.9,
+     "z": 29.2,
+     "w": 6.3,
+     "d": 6.9,
+     "h": 3.3,
+     "r": 193,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -15.7,
+     "z": 25.6,
+     "w": 6.0,
+     "d": 7.4,
+     "h": 3.3,
+     "r": 211,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -22.6,
+     "z": 19.7,
+     "w": 5.3,
+     "d": 5.1,
+     "h": 3.4,
+     "r": 229
+    },
+    {
+     "type": "maison",
+     "x": -27.2,
+     "z": 12.6,
+     "w": 7.5,
+     "d": 6.0,
+     "h": 3.5,
+     "r": 245
+    },
+    {
+     "type": "maison",
+     "x": -29.2,
+     "z": -6.7,
+     "w": 6.6,
+     "d": 5.8,
+     "h": 3.1,
+     "r": 283
+    },
+    {
+     "type": "maison",
+     "x": -25.5,
+     "z": -15.8,
+     "w": 7.1,
+     "d": 7.5,
+     "h": 3.3,
+     "r": 302
+    },
+    {
+     "type": "maison",
+     "x": -18.7,
+     "z": -23.5,
+     "w": 7.8,
+     "d": 6.8,
+     "h": 4.3,
+     "r": 322,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -9.1,
+     "z": -28.6,
+     "w": 7.9,
+     "d": 5.2,
+     "h": 3.6,
+     "r": 342,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 14.9,
+     "z": -41.4,
+     "w": 7.4,
+     "d": 7.8,
+     "h": 3.8,
+     "r": 20
+    },
+    {
+     "type": "maison",
+     "x": 24.4,
+     "z": -36.6,
+     "w": 7.2,
+     "d": 6.0,
+     "h": 4.4,
+     "r": 34
+    },
+    {
+     "type": "maison",
+     "x": 32.3,
+     "z": -29.9,
+     "w": 5.6,
+     "d": 5.2,
+     "h": 3.7,
+     "r": 47
+    },
+    {
+     "type": "maison",
+     "x": 37.6,
+     "z": -22.9,
+     "w": 7.8,
+     "d": 7.9,
+     "h": 3.3,
+     "r": 59,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 42.1,
+     "z": -12.8,
+     "w": 6.6,
+     "d": 5.5,
+     "h": 3.8,
+     "r": 73
+    },
+    {
+     "type": "maison",
+     "x": 43.6,
+     "z": 5.7,
+     "w": 7.7,
+     "d": 6.3,
+     "h": 3.5,
+     "r": 97
+    },
+    {
+     "type": "maison",
+     "x": 40.9,
+     "z": 16.2,
+     "w": 7.4,
+     "d": 7.7,
+     "h": 4.0,
+     "r": 112
+    },
+    {
+     "type": "maison",
+     "x": 35.8,
+     "z": 25.5,
+     "w": 7.1,
+     "d": 7.5,
+     "h": 3.9,
+     "r": 125
+    },
+    {
+     "type": "maison",
+     "x": 28.9,
+     "z": 33.1,
+     "w": 5.9,
+     "d": 6.2,
+     "h": 4.1,
+     "r": 139
+    },
+    {
+     "type": "maison",
+     "x": 21.5,
+     "z": 38.4,
+     "w": 6.6,
+     "d": 7.5,
+     "h": 3.2,
+     "r": 151
+    },
+    {
+     "type": "maison",
+     "x": 12.5,
+     "z": 42.2,
+     "w": 6.0,
+     "d": 6.7,
+     "h": 4.2,
+     "r": 164
+    },
+    {
+     "type": "maison",
+     "x": -17.0,
+     "z": 40.6,
+     "w": 5.7,
+     "d": 6.7,
+     "h": 3.7,
+     "r": 203
+    },
+    {
+     "type": "maison",
+     "x": -24.8,
+     "z": 36.3,
+     "w": 7.2,
+     "d": 5.0,
+     "h": 3.5,
+     "r": 214
+    },
+    {
+     "type": "maison",
+     "x": -37.8,
+     "z": 22.6,
+     "w": 5.6,
+     "d": 7.0,
+     "h": 3.2,
+     "r": 239
+    },
+    {
+     "type": "maison",
+     "x": -41.5,
+     "z": 14.6,
+     "w": 6.3,
+     "d": 5.2,
+     "h": 4.0,
+     "r": 251
+    },
+    {
+     "type": "maison",
+     "x": -41.6,
+     "z": -14.4,
+     "w": 5.9,
+     "d": 7.7,
+     "h": 3.1,
+     "r": 289
+    },
+    {
+     "type": "maison",
+     "x": -37.7,
+     "z": -22.6,
+     "w": 7.6,
+     "d": 6.5,
+     "h": 4.1,
+     "r": 301
+    },
+    {
+     "type": "maison",
+     "x": -31.1,
+     "z": -31.1,
+     "w": 6.8,
+     "d": 5.9,
+     "h": 3.4,
+     "r": 315
+    },
+    {
+     "type": "maison",
+     "x": -23.3,
+     "z": -37.3,
+     "w": 5.9,
+     "d": 7.9,
+     "h": 3.5,
+     "r": 328
+    },
+    {
+     "type": "maison",
+     "x": -15.1,
+     "z": -41.3,
+     "w": 6.3,
+     "d": 7.4,
+     "h": 3.7,
+     "r": 340
+    },
+    {
+     "type": "maison",
+     "x": 19.9,
+     "z": -54.5,
+     "w": 5.3,
+     "d": 6.4,
+     "h": 3.2,
+     "r": 20
+    },
+    {
+     "type": "maison",
+     "x": 27.7,
+     "z": -51.0,
+     "w": 6.3,
+     "d": 7.6,
+     "h": 3.4,
+     "r": 29
+    },
+    {
+     "type": "maison",
+     "x": 35.6,
+     "z": -45.8,
+     "w": 5.7,
+     "d": 7.9,
+     "h": 3.9,
+     "r": 38,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 42.2,
+     "z": -39.7,
+     "w": 7.4,
+     "d": 5.8,
+     "h": 3.5,
+     "r": 47,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 48.8,
+     "z": -31.4,
+     "w": 7.5,
+     "d": 5.3,
+     "h": 4.0,
+     "r": 57
+    },
+    {
+     "type": "maison",
+     "x": 53.7,
+     "z": -21.9,
+     "w": 7.0,
+     "d": 5.9,
+     "h": 3.1,
+     "r": 68
+    },
+    {
+     "type": "maison",
+     "x": 57.3,
+     "z": 9.1,
+     "w": 5.5,
+     "d": 5.1,
+     "h": 3.9,
+     "r": 99,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 55.3,
+     "z": 17.6,
+     "w": 7.2,
+     "d": 6.4,
+     "h": 4.0,
+     "r": 108
+    },
+    {
+     "type": "maison",
+     "x": 51.3,
+     "z": 27.1,
+     "w": 7.3,
+     "d": 7.5,
+     "h": 3.8,
+     "r": 118
+    },
+    {
+     "type": "maison",
+     "x": 45.5,
+     "z": 35.9,
+     "w": 6.0,
+     "d": 5.4,
+     "h": 3.1,
+     "r": 128
+    },
+    {
+     "type": "maison",
+     "x": 39.3,
+     "z": 42.7,
+     "w": 5.6,
+     "d": 6.3,
+     "h": 3.4,
+     "r": 137
+    },
+    {
+     "type": "maison",
+     "x": 32.4,
+     "z": 48.1,
+     "w": 6.6,
+     "d": 7.6,
+     "h": 3.6,
+     "r": 146
+    },
+    {
+     "type": "maison",
+     "x": 23.8,
+     "z": 52.9,
+     "w": 7.0,
+     "d": 7.2,
+     "h": 4.3,
+     "r": 156
+    },
+    {
+     "type": "maison",
+     "x": 14.3,
+     "z": 56.2,
+     "w": 7.7,
+     "d": 7.9,
+     "h": 4.4,
+     "r": 166,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -16.3,
+     "z": 55.7,
+     "w": 6.2,
+     "d": 7.2,
+     "h": 4.1,
+     "r": 196
+    },
+    {
+     "type": "maison",
+     "x": -25.0,
+     "z": 52.3,
+     "w": 5.6,
+     "d": 6.2,
+     "h": 3.1,
+     "r": 206
+    },
+    {
+     "type": "maison",
+     "x": -32.7,
+     "z": 47.9,
+     "w": 6.3,
+     "d": 7.5,
+     "h": 3.8,
+     "r": 214
+    },
+    {
+     "type": "maison",
+     "x": -40.0,
+     "z": 42.0,
+     "w": 5.7,
+     "d": 5.9,
+     "h": 3.9,
+     "r": 224
+    },
+    {
+     "type": "maison",
+     "x": -54.8,
+     "z": 19.0,
+     "w": 6.6,
+     "d": 6.9,
+     "h": 3.6,
+     "r": 251
+    },
+    {
+     "type": "maison",
+     "x": -54.6,
+     "z": -19.6,
+     "w": 6.2,
+     "d": 6.1,
+     "h": 3.1,
+     "r": 290,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -50.7,
+     "z": -28.1,
+     "w": 6.2,
+     "d": 7.9,
+     "h": 4.0,
+     "r": 299
+    },
+    {
+     "type": "maison",
+     "x": -45.5,
+     "z": -35.9,
+     "w": 7.0,
+     "d": 5.8,
+     "h": 3.2,
+     "r": 308
+    },
+    {
+     "type": "maison",
+     "x": -38.5,
+     "z": -43.3,
+     "w": 5.2,
+     "d": 6.8,
+     "h": 3.7,
+     "r": 318
+    },
+    {
+     "type": "maison",
+     "x": -31.9,
+     "z": -48.4,
+     "w": 5.4,
+     "d": 5.2,
+     "h": 3.7,
+     "r": 327,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -24.4,
+     "z": -52.6,
+     "w": 6.9,
+     "d": 5.9,
+     "h": 3.9,
+     "r": 335
+    },
+    {
+     "type": "maison",
+     "x": -14.9,
+     "z": -56.1,
+     "w": 6.8,
+     "d": 6.6,
+     "h": 3.3,
+     "r": 345
+    },
+    {
+     "type": "maison",
+     "x": 22.7,
+     "z": -68.3,
+     "w": 7.9,
+     "d": 5.1,
+     "h": 4.1,
+     "r": 18
+    },
+    {
+     "type": "maison",
+     "x": 32.9,
+     "z": -64.0,
+     "w": 7.7,
+     "d": 5.5,
+     "h": 4.0,
+     "r": 27
+    },
+    {
+     "type": "maison",
+     "x": 42.2,
+     "z": -58.3,
+     "w": 7.0,
+     "d": 5.3,
+     "h": 4.3,
+     "r": 36
+    },
+    {
+     "type": "maison",
+     "x": 50.0,
+     "z": -51.8,
+     "w": 5.3,
+     "d": 7.5,
+     "h": 3.1,
+     "r": 44,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 55.8,
+     "z": -45.5,
+     "w": 7.4,
+     "d": 7.2,
+     "h": 4.3,
+     "r": 51
+    },
+    {
+     "type": "maison",
+     "x": 61.9,
+     "z": -36.8,
+     "w": 6.5,
+     "d": 5.8,
+     "h": 3.8,
+     "r": 59
+    },
+    {
+     "type": "maison",
+     "x": 66.3,
+     "z": -28.2,
+     "w": 6.9,
+     "d": 7.6,
+     "h": 3.3,
+     "r": 67
+    },
+    {
+     "type": "maison",
+     "x": 71.1,
+     "z": 11.1,
+     "w": 7.0,
+     "d": 5.4,
+     "h": 4.4,
+     "r": 99,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 68.9,
+     "z": 21.0,
+     "w": 7.4,
+     "d": 7.3,
+     "h": 3.8,
+     "r": 107
+    },
+    {
+     "type": "maison",
+     "x": 65.0,
+     "z": 30.9,
+     "w": 7.4,
+     "d": 6.9,
+     "h": 3.2,
+     "r": 115
+    },
+    {
+     "type": "maison",
+     "x": 59.8,
+     "z": 40.1,
+     "w": 6.1,
+     "d": 6.8,
+     "h": 3.7,
+     "r": 124
+    },
+    {
+     "type": "maison",
+     "x": 54.2,
+     "z": 47.4,
+     "w": 6.2,
+     "d": 7.6,
+     "h": 3.1,
+     "r": 131
+    },
+    {
+     "type": "maison",
+     "x": 47.5,
+     "z": 54.1,
+     "w": 7.0,
+     "d": 6.8,
+     "h": 4.2,
+     "r": 139
+    },
+    {
+     "type": "maison",
+     "x": 39.4,
+     "z": 60.3,
+     "w": 7.4,
+     "d": 7.4,
+     "h": 3.2,
+     "r": 147,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 30.1,
+     "z": 65.4,
+     "w": 6.7,
+     "d": 7.9,
+     "h": 3.9,
+     "r": 155
+    },
+    {
+     "type": "maison",
+     "x": 20.8,
+     "z": 68.9,
+     "w": 6.5,
+     "d": 7.4,
+     "h": 3.7,
+     "r": 163
+    },
+    {
+     "type": "maison",
+     "x": -18.0,
+     "z": 69.7,
+     "w": 7.5,
+     "d": 7.2,
+     "h": 4.3,
+     "r": 194
+    },
+    {
+     "type": "maison",
+     "x": -28.1,
+     "z": 66.3,
+     "w": 5.4,
+     "d": 6.5,
+     "h": 3.5,
+     "r": 203
+    },
+    {
+     "type": "maison",
+     "x": -35.8,
+     "z": 62.5,
+     "w": 6.5,
+     "d": 8.0,
+     "h": 4.1,
+     "r": 210,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -43.9,
+     "z": 57.1,
+     "w": 5.7,
+     "d": 6.1,
+     "h": 4.2,
+     "r": 218
+    },
+    {
+     "type": "maison",
+     "x": -50.6,
+     "z": 51.2,
+     "w": 5.5,
+     "d": 6.7,
+     "h": 3.3,
+     "r": 225,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -56.4,
+     "z": 44.8,
+     "w": 6.8,
+     "d": 8.0,
+     "h": 4.1,
+     "r": 232
+    },
+    {
+     "type": "maison",
+     "x": -62.0,
+     "z": 36.6,
+     "w": 5.5,
+     "d": 6.7,
+     "h": 3.9,
+     "r": 239
+    },
+    {
+     "type": "maison",
+     "x": -66.0,
+     "z": 28.9,
+     "w": 6.3,
+     "d": 5.2,
+     "h": 4.3,
+     "r": 246
+    },
+    {
+     "type": "maison",
+     "x": -69.2,
+     "z": 19.9,
+     "w": 7.2,
+     "d": 6.4,
+     "h": 4.1,
+     "r": 254
+    },
+    {
+     "type": "maison",
+     "x": -69.8,
+     "z": -17.6,
+     "w": 6.1,
+     "d": 7.2,
+     "h": 3.2,
+     "r": 284
+    },
+    {
+     "type": "maison",
+     "x": -66.9,
+     "z": -26.5,
+     "w": 7.8,
+     "d": 5.1,
+     "h": 4.2,
+     "r": 292
+    },
+    {
+     "type": "maison",
+     "x": -62.1,
+     "z": -36.4,
+     "w": 7.1,
+     "d": 5.3,
+     "h": 4.0,
+     "r": 300
+    },
+    {
+     "type": "maison",
+     "x": -56.3,
+     "z": -44.9,
+     "w": 6.9,
+     "d": 7.9,
+     "h": 4.3,
+     "r": 309
+    },
+    {
+     "type": "maison",
+     "x": -49.5,
+     "z": -52.3,
+     "w": 7.8,
+     "d": 5.4,
+     "h": 3.4,
+     "r": 317
+    },
+    {
+     "type": "maison",
+     "x": -41.0,
+     "z": -59.2,
+     "w": 6.6,
+     "d": 7.9,
+     "h": 3.9,
+     "r": 325
+    },
+    {
+     "type": "maison",
+     "x": -32.6,
+     "z": -64.2,
+     "w": 6.9,
+     "d": 7.8,
+     "h": 3.6,
+     "r": 333
+    },
+    {
+     "type": "maison",
+     "x": -23.3,
+     "z": -68.1,
+     "w": 6.8,
+     "d": 6.2,
+     "h": 3.5,
+     "r": 341,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -13.7,
+     "z": -70.7,
+     "w": 5.0,
+     "d": 6.0,
+     "h": 3.4,
+     "r": 349,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 21.4,
+     "z": -83.3,
+     "w": 7.5,
+     "d": 5.8,
+     "h": 3.2,
+     "r": 14
+    },
+    {
+     "type": "maison",
+     "x": 31.6,
+     "z": -80.0,
+     "w": 5.7,
+     "d": 8.0,
+     "h": 3.6,
+     "r": 22
+    },
+    {
+     "type": "maison",
+     "x": 39.7,
+     "z": -76.3,
+     "w": 5.7,
+     "d": 5.3,
+     "h": 3.9,
+     "r": 28
+    },
+    {
+     "type": "maison",
+     "x": 47.4,
+     "z": -71.7,
+     "w": 5.8,
+     "d": 7.8,
+     "h": 4.4,
+     "r": 33
+    },
+    {
+     "type": "maison",
+     "x": 54.6,
+     "z": -66.4,
+     "w": 7.9,
+     "d": 7.9,
+     "h": 3.2,
+     "r": 39
+    },
+    {
+     "type": "maison",
+     "x": 62.8,
+     "z": -58.8,
+     "w": 7.2,
+     "d": 7.2,
+     "h": 3.5,
+     "r": 47
+    },
+    {
+     "type": "maison",
+     "x": 69.4,
+     "z": -50.8,
+     "w": 6.8,
+     "d": 7.5,
+     "h": 3.1,
+     "r": 54
+    },
+    {
+     "type": "maison",
+     "x": 74.8,
+     "z": -42.4,
+     "w": 5.9,
+     "d": 7.4,
+     "h": 3.2,
+     "r": 60,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 85.1,
+     "z": 12.2,
+     "w": 6.4,
+     "d": 7.2,
+     "h": 3.9,
+     "r": 98
+    },
+    {
+     "type": "maison",
+     "x": 70.5,
+     "z": 49.3,
+     "w": 7.4,
+     "d": 7.2,
+     "h": 4.2,
+     "r": 125
+    },
+    {
+     "type": "maison",
+     "x": 63.9,
+     "z": 57.5,
+     "w": 6.6,
+     "d": 6.9,
+     "h": 3.1,
+     "r": 132
+    },
+    {
+     "type": "maison",
+     "x": 57.0,
+     "z": 64.4,
+     "w": 7.2,
+     "d": 7.7,
+     "h": 4.2,
+     "r": 139
+    },
+    {
+     "type": "maison",
+     "x": 48.8,
+     "z": 70.8,
+     "w": 5.7,
+     "d": 7.7,
+     "h": 3.9,
+     "r": 145
+    },
+    {
+     "type": "maison",
+     "x": 41.2,
+     "z": 75.5,
+     "w": 5.1,
+     "d": 7.6,
+     "h": 3.8,
+     "r": 151,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": 33.8,
+     "z": 79.1,
+     "w": 8.0,
+     "d": 6.8,
+     "h": 4.1,
+     "r": 157
+    },
+    {
+     "type": "maison",
+     "x": 23.2,
+     "z": 82.8,
+     "w": 5.8,
+     "d": 6.6,
+     "h": 3.2,
+     "r": 164
+    },
+    {
+     "type": "maison",
+     "x": -22.0,
+     "z": 83.1,
+     "w": 7.6,
+     "d": 5.5,
+     "h": 4.2,
+     "r": 195
+    },
+    {
+     "type": "maison",
+     "x": -32.3,
+     "z": 79.7,
+     "w": 5.7,
+     "d": 6.9,
+     "h": 3.4,
+     "r": 202
+    },
+    {
+     "type": "maison",
+     "x": -40.3,
+     "z": 75.9,
+     "w": 5.3,
+     "d": 5.5,
+     "h": 3.3,
+     "r": 208
+    },
+    {
+     "type": "maison",
+     "x": -47.6,
+     "z": 71.6,
+     "w": 5.1,
+     "d": 6.6,
+     "h": 3.3,
+     "r": 214
+    },
+    {
+     "type": "maison",
+     "x": -54.3,
+     "z": 66.7,
+     "w": 5.0,
+     "d": 6.1,
+     "h": 4.0,
+     "r": 219,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -60.4,
+     "z": 61.2,
+     "w": 6.2,
+     "d": 6.0,
+     "h": 3.7,
+     "r": 225
+    },
+    {
+     "type": "maison",
+     "x": -66.8,
+     "z": 54.2,
+     "w": 5.2,
+     "d": 7.6,
+     "h": 3.4,
+     "r": 231
+    },
+    {
+     "type": "maison",
+     "x": -71.7,
+     "z": 47.4,
+     "w": 5.4,
+     "d": 5.3,
+     "h": 3.3,
+     "r": 237,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -76.1,
+     "z": 40.0,
+     "w": 5.7,
+     "d": 5.4,
+     "h": 3.1,
+     "r": 242
+    },
+    {
+     "type": "maison",
+     "x": -79.9,
+     "z": 31.9,
+     "w": 6.6,
+     "d": 6.5,
+     "h": 3.7,
+     "r": 248
+    },
+    {
+     "type": "maison",
+     "x": -83.0,
+     "z": 22.6,
+     "w": 5.1,
+     "d": 5.1,
+     "h": 3.9,
+     "r": 255,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -82.3,
+     "z": -24.9,
+     "w": 7.3,
+     "d": 7.9,
+     "h": 3.8,
+     "r": 287
+    },
+    {
+     "type": "maison",
+     "x": -78.7,
+     "z": -34.7,
+     "w": 7.5,
+     "d": 7.5,
+     "h": 4.1,
+     "r": 294
+    },
+    {
+     "type": "maison",
+     "x": -73.8,
+     "z": -44.2,
+     "w": 5.3,
+     "d": 7.4,
+     "h": 4.2,
+     "r": 301
+    },
+    {
+     "type": "maison",
+     "x": -69.1,
+     "z": -51.2,
+     "w": 5.9,
+     "d": 7.9,
+     "h": 3.9,
+     "r": 307
+    },
+    {
+     "type": "maison",
+     "x": -63.2,
+     "z": -58.3,
+     "w": 7.4,
+     "d": 5.7,
+     "h": 3.3,
+     "r": 313
+    },
+    {
+     "type": "maison",
+     "x": -55.6,
+     "z": -65.6,
+     "w": 5.2,
+     "d": 7.6,
+     "h": 3.6,
+     "r": 320
+    },
+    {
+     "type": "maison",
+     "x": -49.0,
+     "z": -70.7,
+     "w": 7.1,
+     "d": 7.7,
+     "h": 3.3,
+     "r": 325,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -40.2,
+     "z": -76.0,
+     "w": 6.5,
+     "d": 5.7,
+     "h": 3.6,
+     "r": 332,
+     "etage": true
+    },
+    {
+     "type": "maison",
+     "x": -31.4,
+     "z": -80.1,
+     "w": 5.3,
+     "d": 6.7,
+     "h": 3.1,
+     "r": 339
+    },
+    {
+     "type": "maison",
+     "x": -23.4,
+     "z": -82.8,
+     "w": 6.2,
+     "d": 5.3,
+     "h": 4.1,
+     "r": 344
+    }
+   ],
+   "pnj": [
+    {
+     "id": "chameau",
+     "nom": "Votre chameau",
+     "modele": "chameau",
+     "x": -34,
+     "z": 37,
+     "cap": 0,
+     "invite": "Charger le sac sur le chameau"
+    },
+    {
+     "id": "chameau_charge",
+     "nom": "Votre chameau",
+     "modele": "chameau",
+     "charge": true,
+     "x": -34,
+     "z": 37,
+     "cap": 0,
+     "visible": false
+    },
+    {
+     "id": "abujahl",
+     "nom": "Abû Jahl",
+     "x": 80,
+     "z": 2,
+     "cap": 270,
+     "habit": "#5B2333",
+     "riche": true,
+     "accessoire": "lanterne",
+     "garde": {
+      "portee": 17,
+      "angle": 95,
+      "delai": 0.5
+     }
+    },
+    {
+     "id": "guetteur1",
+     "nom": "Un guetteur",
+     "x": 40,
+     "z": 4,
+     "cap": 90,
+     "habit": "#3A3F4A",
+     "accessoire": "lanterne",
+     "chemin": [
+      [
+       40,
+       4
+      ],
+      [
+       72,
+       4
+      ]
+     ],
+     "boucle": true,
+     "vitesse": 1.1,
+     "pause": 2,
+     "garde": {
+      "portee": 13,
+      "angle": 80,
+      "delai": 0.6
+     }
+    },
+    {
+     "id": "guetteur2",
+     "nom": "Un guetteur",
+     "x": 50,
+     "z": -44,
+     "cap": 90,
+     "habit": "#2F3A2E",
+     "accessoire": "lanterne",
+     "chemin": [
+      [
+       50,
+       -44
+      ],
+      [
+       84,
+       -52
+      ]
+     ],
+     "boucle": true,
+     "vitesse": 1.0,
+     "pause": 3,
+     "garde": {
+      "portee": 12,
+      "angle": 75,
+      "delai": 0.7
+     }
+    },
+    {
+     "id": "abujahl_jour",
+     "nom": "Abû Jahl",
+     "x": 8,
+     "z": 14,
+     "cap": 330,
+     "habit": "#5B2333",
+     "riche": true,
+     "visible": false
+    }
+   ],
+   "foules": [
+    {
+     "id": "assemblee",
+     "x": 0,
+     "z": 16,
+     "r": 8,
+     "n": 14,
+     "visible": false,
+     "errer": false,
+     "invite": "Parler"
+    }
+   ],
+   "objets": [
+    {
+     "id": "sac",
+     "modele": "sac",
+     "nom": "le sac de blé",
+     "x": -42,
+     "z": 25,
+     "invite": "Prendre le sac de blé"
+    }
+   ],
+   "lieux": [
+    {
+     "id": "sahifa",
+     "x": 7.4,
+     "z": -4.6,
+     "r": 2.8,
+     "invite": null
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "makka",
+   "titre": "La Mecque",
+   "sous": "La nuit, vers l'an 8 de la mission (618)"
+  },
+  {
+   "type": "recit",
+   "texte": "Depuis des mois, les Banû Hâshim et les Banû al-Muttalib sont enfermés dans le vallon d'Abû Tâlib. Quraysh a juré de ne plus rien leur vendre, ni leur acheter, ni s'allier à eux par le mariage. Le pacte est accroché dans la Ka'ba. La nuit, on entend pleurer les enfants affamés."
+  },
+  {
+   "type": "objectif",
+   "texte": "Prenez le sac de blé que vous avez mis de côté, devant votre maison.",
+   "cible": "objet:sac",
+   "quand": {
+    "prendre": "sac",
+    "porter": "sac"
+   }
+  },
+  {
+   "type": "objectif",
+   "texte": "Chargez-le sur votre chameau, dans l'enclos voisin.",
+   "cible": "pnj:chameau",
+   "quand": {
+    "parler": "chameau"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "porter": null
+    },
+    {
+     "cacher": "chameau"
+    },
+    {
+     "montrer": "chameau_charge"
+    },
+    {
+     "suivre": "chameau_charge",
+     "ecart": 2.6
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Abû Jahl et ses hommes surveillent la ville avec des lanternes : quiconque porte des vivres au vallon sera dénoncé. Le défilé s'ouvre à l'est, au pied du mont."
+  },
+  {
+   "type": "objectif",
+   "epreuve": true,
+   "texte": "Menez le chameau jusqu'à l'entrée du vallon, à l'est, sans être vu des guetteurs ni d'Abû Jahl.",
+   "cible": "zone:chib",
+   "quand": {
+    "zone": "chib"
+   },
+   "echecs": [
+    {
+     "repere": "abujahl",
+     "titre": "Pris sur le fait",
+     "consequence": "Et si vous aviez été pris : le blé confisqué, et vous dénoncé à toute la ville. Selon Ibn Ishâq, Abû Jahl arrêta ainsi Hakîm ibn Hizâm qui portait du blé à sa tante Khadîja ; il fallut l'intervention d'Abû al-Bakhtarî pour qu'il passe.",
+     "indice": "Les lanternes éclairent un cône devant les guetteurs : passez derrière eux, par la colline du nord.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "abujahl",
+         "vers": "joueur",
+         "vitesse": 3
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "abujahl",
+       "texte": "Tu portes des vivres aux Banû Hâshim ? Par Allah, tu n'iras pas plus loin avec ce blé avant que je t'aie dénoncé à toute La Mecque !"
+      }
+     ]
+    },
+    {
+     "repere": "guetteur1",
+     "titre": "Pris sur le fait",
+     "consequence": "Et si vous aviez été pris : le blé confisqué, et vous dénoncé à toute la ville. Selon Ibn Ishâq, Abû Jahl arrêta ainsi Hakîm ibn Hizâm qui portait du blé à sa tante Khadîja ; il fallut l'intervention d'Abû al-Bakhtarî pour qu'il passe.",
+     "indice": "Les lanternes éclairent un cône devant les guetteurs : passez derrière eux, par la colline du nord.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "guetteur1",
+         "vers": "joueur",
+         "vitesse": 3
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "guetteur1",
+       "texte": "Halte ! Un chameau chargé, en pleine nuit, vers le vallon ? Abû Jahl ! Par ici !"
+      }
+     ]
+    },
+    {
+     "repere": "guetteur2",
+     "titre": "Pris sur le fait",
+     "consequence": "Et si vous aviez été pris : le blé confisqué, et vous dénoncé à toute la ville. Selon Ibn Ishâq, Abû Jahl arrêta ainsi Hakîm ibn Hizâm qui portait du blé à sa tante Khadîja ; il fallut l'intervention d'Abû al-Bakhtarî pour qu'il passe.",
+     "indice": "Les lanternes éclairent un cône devant les guetteurs : passez derrière eux, par la colline du nord.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "guetteur2",
+         "vers": "joueur",
+         "vitesse": 3
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "guetteur2",
+       "texte": "Qui va là ? Montre-moi ce que porte ce chameau !"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "lacher": "chameau_charge"
+    },
+    {
+     "aller": "chameau_charge",
+     "vers": [
+      [
+       118,
+       3
+      ],
+      [
+       150,
+       6
+      ]
+     ],
+     "vitesse": 1.4,
+     "attendre": false
+    },
+    {
+     "regarder": [
+      130,
+      2,
+      4
+     ],
+     "duree": 1.2
+    },
+    {
+     "pause": 1500
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "À l'entrée du défilé, vous lâchez la bride et frappez la croupe du chameau : il entre seul dans le vallon, chargé de blé. On rapporte qu'un homme de Quraysh, Hishâm ibn 'Amr, faisait ainsi entrer de nuit des chameaux chargés de vivres."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "fondu": true,
+     "texte": "Des mois plus tard…"
+    },
+    {
+     "ambiance": "jour"
+    },
+    {
+     "cacher": [
+      "abujahl",
+      "guetteur1",
+      "guetteur2",
+      "chameau_charge"
+     ]
+    },
+    {
+     "montrer": [
+      "assemblee",
+      "abujahl_jour"
+     ]
+    },
+    {
+     "teleporter": [
+      0,
+      28,
+      0
+     ]
+    },
+    {
+     "inviter": "sahifa",
+     "texte": "Regarder le document"
+    },
+    {
+     "pause": 500
+    },
+    {
+     "fondu": false
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Près de trois ans ont passé. Plusieurs hommes de Quraysh ont honte de ce pacte ; cinq d'entre eux ont décidé de le dénoncer devant tous. Abû Tâlib arrive alors : son neveu ﷺ lui a dit que les termites ont dévoré le document, à l'exception du nom d'Allah."
+  },
+  {
+   "type": "objectif",
+   "texte": "Allez voir le document accroché dans la Ka'ba.",
+   "cible": "lieu:sahifa",
+   "quand": {
+    "utiliser": "sahifa"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "inviter": "sahifa",
+     "texte": null
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "On décroche le parchemin. Il tombe en miettes : les termites l'ont rongé. Seule demeure la formule par laquelle on commençait alors les écrits : « Bismika Allâhumma », « En Ton nom, ô Allah »."
+  },
+  {
+   "type": "parole",
+   "qui": "abujahl_jour",
+   "texte": "Ce pacte tient toujours ! Personne n'y touchera, termites ou pas."
+  },
+  {
+   "type": "choix",
+   "question": "Toute l'assemblée vous regarde. Que dites-vous ?",
+   "options": [
+    {
+     "texte": "« Ce pacte est injuste et brise les liens du sang. Je ne l'accepte plus : qu'on le déchire ! »",
+     "juste": true,
+     "suite": [
+      {
+       "type": "recit",
+       "texte": "D'autres voix s'élèvent avec la vôtre. Abû Jahl crie au complot, mais il est seul : le pacte est déchiré."
+      }
+     ]
+    },
+    {
+     "texte": "« Ce n'est pas mon affaire : que les chefs en décident. Je ne veux pas d'ennuis avec Abû Jahl. »",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "abujahl_jour",
+       "texte": "Vous voyez ? Personne n'ose. Le pacte tient !"
+      },
+      {
+       "type": "recit",
+       "texte": "Les mois passent encore. Dans le vallon, les enfants ont faim."
+      }
+     ],
+     "titre": "Le silence",
+     "consequence": "Et si personne n'avait parlé : le silence face à l'injustice la prolonge. Selon Ibn Ishâq, cinq hommes de Quraysh se levèrent au contraire ensemble pour dénoncer le pacte, malgré Abû Jahl.",
+     "indice": "Face à une injustice, se taire, c'est la laisser durer."
+    },
+    {
+     "texte": "« Recopions vite le pacte sur un parchemin neuf, avant que la nouvelle ne se répande en ville. »",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "abujahl_jour",
+       "texte": "Bonne idée ! Qu'on apporte un parchemin neuf."
+      },
+      {
+       "type": "recit",
+       "texte": "Le nouveau document est accroché… mais toute la ville sait déjà ce que les termites ont laissé."
+      }
+     ],
+     "titre": "Le pacte recopié",
+     "consequence": "Et si l'on avait recopié le pacte : on aurait prolongé une injustice que beaucoup reconnaissaient déjà. Selon Ibn Ishâq, le document rongé fut au contraire l'occasion de mettre fin au blocus.",
+     "indice": "Face à une injustice, se taire, c'est la laisser durer."
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Le blocus est levé. Les familles sortent du vallon, amaigries, après près de trois ans de privations. Quelques mois plus tard viendra ce qu'on appellera « l'année de la tristesse »."
+  }
+ ],
+ "fin": "Le blocus est levé"
+}

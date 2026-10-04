@@ -115,10 +115,15 @@ def verifier_mission(mid, lieux, ouvrages):
                     err(o, f"cible « {e.get('cible')} » absente de la scène {scene}")
                 q = e.get("quand") or {}
                 for cle in ("parler", "utiliser", "prendre", "tenir", "zone"):
-                    if cle in q and q[cle] not in ids.get(scene, set()):
+                    if cle in q and q[cle] not in ids.get(scene, set()) and not (cle == "tenir" and any(i and i.startswith(q[cle]) for i in ids.get(scene, set()))):
                         err(o, f"quand.{cle} : « {q[cle]} » absent de la scène {scene}")
                 if not q:
                     err(o, "objectif sans « quand »")
+                for i in q.get("tous", []):
+                    if i not in ids.get(scene, set()):
+                        err(o, f"quand.tous : « {i} » absent de la scène {scene}")
+                    elif i not in M.get("dialogues", {}):
+                        err(o, f"quand.tous : « {i} » n'a pas de « dialogues »")
                 for f in e.get("echecs", []):
                     if not f.get("consequence"):
                         err(o, "échec sans « consequence »")
