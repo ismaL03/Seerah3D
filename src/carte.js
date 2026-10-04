@@ -437,7 +437,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   // Clavier (hors vol libre) : flèches pour se déplacer, Maj + flèches pour tourner et incliner, + et − pour zoomer
   const TOUCHES_ORBITE = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Equal', 'Minus', 'NumpadAdd', 'NumpadSubtract', 'ShiftLeft', 'ShiftRight'];
   addEventListener('keydown', (e) => {
-    if (libre.actif || ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (libre.actif || enPause || ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
     if (TOUCHES_ORBITE.includes(e.code)) { clavier.add(e.code); if (!e.code.startsWith('Shift')) { e.preventDefault(); transit = null; surInteraction(); } }
   });
   addEventListener('keyup', (e) => clavier.delete(e.code));
@@ -654,9 +654,10 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   // ---------- boucle ----------
   const lisse = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const v3 = new THREE.Vector3(), avantV = new THREE.Vector3();
-  let dernier = performance.now(), u = 0;
+  let dernier = performance.now(), u = 0, enPause = false;
   function boucle(now) {
     const dtReel = Math.max(0, (now - dernier) / 1000), dt = Math.min(0.05, dtReel); dernier = now;
+    if (enPause) { requestAnimationFrame(boucle); return; } // une scène à la première personne occupe l'écran
     adapter(dtReel);
     let infoVol = null;
     majVue();
@@ -822,6 +823,8 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     nord: () => { if (libre.actif) libre.lacet = 0; else volVers(cam.cible, cam.r, 0, cam.phi, 700); },
     placer: (r, theta, phi) => { cam.r = r; cam.theta = theta; cam.phi = phi; },
     rafraichirVue: () => { cleVue = ''; },
+    // Suspend le rendu et le clavier de la carte (scène à la première personne au premier plan).
+    pause(on) { enPause = !!on; clavier.clear(); if (!on) dernier = performance.now(); },
     apercu: () => terrain.apercu,
     emprise: () => R.meta.emprise,
     teleporter(lat, lon) {

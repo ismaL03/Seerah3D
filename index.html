@@ -152,6 +152,7 @@
 
   <!-- Mode histoire : la Sîra en chapitres interactifs -->
   <section class="jeu" id="jeu" hidden aria-label="Mode histoire">
+    <div class="j-monde" id="jMonde"></div>
     <div class="cine haut"></div><div class="cine bas"></div>
     <canvas class="j-sable" id="jSable" aria-hidden="true"></canvas>
 
@@ -193,6 +194,35 @@
       <div><b id="jcQ"></b><small id="jcRetour"></small></div>
       <button class="j-btn petit" id="jIndiceBtn">Indice</button>
     </div>
+
+    <!-- scènes à la première personne -->
+    <div class="j-objectif" id="jObjectif" hidden>
+      <small id="joMission"></small>
+      <b id="joTexte"></b>
+      <span class="j-compteur" id="joCompteur" hidden></span>
+      <button class="j-guider" id="joGuider" hidden>Me guider</button>
+    </div>
+    <div class="j-commandes" id="jCommandes" hidden></div>
+    <div class="j-role" id="jRole" hidden>
+      <small>Vous incarnez</small>
+      <h3 id="jrNom"></h3>
+      <div class="j-ar" lang="ar" id="jrAr"></div>
+      <p id="jrTexte"></p>
+      <p class="j-regle" id="jrRegle"></p>
+      <dl class="j-touches" id="jrTouches"></dl>
+      <button class="j-btn or" id="jrGo">Commencer</button>
+    </div>
+    <div class="j-invoc" id="jInvoc" hidden>
+      <small id="jiTitre">Invocation</small>
+      <p class="j-ar" lang="ar" id="jiAr"></p>
+      <p class="fr" id="jiFr"></p>
+      <i class="j-jauge"><i id="jiJauge"></i></i>
+      <small class="src" id="jiSrc"></small>
+    </div>
+    <div class="j-flottants" id="jFlottants" aria-hidden="true"></div>
+
+    <!-- petits jeux : remettre dans l'ordre, associer, vrai ou faux, estimer -->
+    <div class="j-mini" id="jMini" hidden></div>
 
     <div class="j-dialogue" id="jDialogue" hidden>
       <div class="j-tag"><span id="jdLieu"></span><span id="jdDate"></span></div>

@@ -4,6 +4,7 @@
 // dans le temps jusqu'au moment du choix. Aucun personnage n'est représenté ; aucune musique
 // (vent et effets seulement).
 import { ic, remplirIcones } from './icones.js';
+import { creerMissions } from './mission.js';
 
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -19,7 +20,9 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
   const jeu = $('#jeu'), corps = document.body;
   const evDe = (c) => D.EVENEMENTS[D.INDEX[c.evenement]];
   const livreDe = (c) => H.livres.findIndex((l) => l.chapitres.includes(c.evenement));
-  const interactives = (c) => c.etapes.filter((e) => ['choix', 'trouver', 'itineraire'].includes(e.type)).length;
+  // Nombre de « jeux » d'un chapitre (une lumière possible pour chacun ; une mission en compte plusieurs).
+  const JEUX = ['choix', 'trouver', 'itineraire', 'ordre', 'associer', 'vraifaux', 'estimer'];
+  const interactives = (c) => c.etapes.reduce((n, e) => n + (e.type === 'mission' ? e.epreuves || 0 : JEUX.includes(e.type) ? 1 : 0), 0);
   const LUM_MAX = CH.reduce((n, c) => n + interactives(c), 0);
   const couleurCat = (cat) => getComputedStyle(document.documentElement).getPropertyValue('--c-' + cat).trim() || '#C9962F';
 
@@ -28,6 +31,24 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
   const son = creerSon(() => sauve.son !== false);
   const voix = creerVoix(() => !!sauve.voix);
   const sable = creerSable($('#jSable'), reduit);
+  const mobile = matchMedia('(pointer: coarse)').matches;
+  const missions = creerMissions({
+    hote: $('#jMonde'),
+    ui: {
+      reduit, mobile, son, ANNULE,
+      dire: (t, g) => dire(t, g),
+      proposer: (q, o, t, g, i) => proposer(q, o, t, g, i),
+      boutonOption: (i) => boutonOption(i),
+      succes: (el) => succes(el),
+      gagnerLumiere: (el) => gagnerLumiere(el),
+      consequence: (o, ok, av) => consequence(o, ok, av),
+      masquerDialogue: () => masquerDialogue(),
+      pause,
+      erreur: () => { if (etat) etat.erreurs++; },
+      // la scène à la première personne remplace la carte (rendu de la carte suspendu)
+      entrerMonde(on) { corps.classList.toggle('jeu-monde', on); carte.pause(on); if (on) { cinema(false); disposition(null); } },
+    },
+  });
 
   function lire() {
     try { return Object.assign({ faits: {}, son: true }, JSON.parse(localStorage.getItem(CLE)) || {}); } catch { return { faits: {}, son: true }; }
@@ -49,7 +70,8 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
     carte.feux(0, 0, 0); carte.viserSol(null); carte.derive(0); carte.surligner(null);
   }
   function toutMasquer() {
-    ['#jTitre', '#jHud', '#jChapCarte', '#jConsigne', '#jDialogue', '#jConseq', '#jRetour', '#jBilan', '#jPanneau'].forEach((s) => ($(s).hidden = true));
+    missions.arreter();
+    ['#jTitre', '#jHud', '#jChapCarte', '#jConsigne', '#jDialogue', '#jConseq', '#jRetour', '#jBilan', '#jPanneau', '#jMini'].forEach((s) => ($(s).hidden = true));
     corps.classList.remove('tempete', 'retour', 'jeu-options', 'jeu-consigne'); cinema(false); attente = null;
   }
   function quitter(idEv) {
@@ -156,10 +178,15 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
   addEventListener('keydown', (e) => {
     if (!actif || e.ctrlKey || e.metaKey || e.altKey || e.target.tagName === 'INPUT') return;
     const k = e.key;
-    if (k === 'Escape') { e.preventDefault(); if (!$('#jPanneau').hidden && etat) $('#jPanneau').hidden = true; else if (etat && $('#jTitre').hidden) panneauMenu(); return; }
+    if (k === 'Escape') { e.preventDefault(); if (!$('#jPanneau').hidden && etat) { $('#jPanneau').hidden = true; missions.pause(false); } else if (etat && $('#jTitre').hidden) panneauMenu(); return; }
     if (!$('#jPanneau').hidden) return;
-    const valider = k === ' ' || k === 'Enter';
+    const valider = k === ' ' || k === 'Enter' || (corps.classList.contains('jeu-monde') && (k === 'e' || k === 'E'));
     if (!attente) return;
+    if (attente.type === 'vf') {
+      if ('vV1'.includes(k)) { e.preventDefault(); resoudre(true); } else if ('fF2'.includes(k)) { e.preventDefault(); resoudre(false); }
+      return;
+    }
+    if (attente.type === 'mini' && k === 'Enter') { const b = $('#jMini [data-a="ok"]'); if (b && !b.disabled) { e.preventDefault(); b.click(); } return; }
     if (attente.type === 'option') {
       const n = '1234'.indexOf(k) >= 0 ? '1234'.indexOf(k) : 'abcd'.indexOf(k.toLowerCase());
       const b = n >= 0 && document.querySelector(`#jdOptions .j-opt[data-i="${n}"]`);
@@ -271,6 +298,19 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
     sable.eclat(r ? r.left + r.width / 2 : innerWidth / 2, r ? r.top + r.height / 2 : innerHeight / 2);
   }
 
+  // Un mauvais choix n'est pas signalé tout de suite : l'histoire continue un peu sur cette voie.
+  async function poursuivre(o, e, ok) {
+    for (const x of o.suite || []) {
+      const t = typeof x === 'string' ? { texte: x } : x;
+      if (t.vue) { cinema(true); disposition(null); vue(t.vue); }
+      if (t.ambiance) carte.ambiance(t.ambiance);
+      await dire(t.texte, tag(e)); ok();
+    }
+  }
+  const enTete = (genre, consigne) => `<div class="j-mini-tete"><small>${genre}</small><b>${esc(consigne)}</b></div>`;
+  function mini(html) { const m = $('#jMini'); m.innerHTML = html; m.hidden = false; remplirIcones(m); return m; }
+  const finMini = () => { $('#jMini').hidden = true; $('#jMini').innerHTML = ''; };
+
   // ---------- étapes ----------
   const ETAPES = {
     async recit(e, ok) {
@@ -300,6 +340,7 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
           return;
         }
         tentes.add(i); etat.erreurs++;
+        await poursuivre(o, e, ok);
         await consequence(o, ok); ok();
       }
     },
@@ -375,6 +416,154 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
       carte.etiquettes([...new Set([ev.lieu, ...(ev.trajet ? ev.trajet.etapes.filter((x) => typeof x === 'string' && LIEUX[x]) : [])])]);
       await dire(e.texte, tag(e)); ok();
     },
+    // Mission à la première personne (data/missions/<id>.json)
+    async mission(e, ok) {
+      cinema(false); disposition(null); masquerDialogue();
+      await missions.jouer(e.mission, ok); ok();
+      masquerDialogue();
+    },
+    // Remettre dans l'ordre (des étapes, des lieux : le tracé se dessine sur la carte au fur et à mesure)
+    async ordre(e, ok) {
+      cinema(false); masquerDialogue(); disposition('options');
+      if (e.vue) vue(e.vue);
+      carte.etiquettes('aucune'); carte.trajetLibre(null); carte.surligner(null);
+      const items = e.elements.map((x, k) => ({ ...(typeof x === 'string' ? { texte: x } : x), k }));
+      const ordre = e._ordre || (e._ordre = (() => { let o; do { o = melanger(items.map((x) => x.k)); } while (o.every((k, i) => k === i)); return o; })());
+      voix.dire(e.consigne);
+      for (let essai = 0; ; essai++) {
+        const place = [];
+        const m = mini(enTete('Remettre dans l\'ordre', e.consigne) + `<ol class="j-cases">${items.map((_, i) => `<li data-i="${i}"><span>${i + 1}</span><em></em></li>`).join('')}</ol>
+          <div class="j-cartes">${ordre.map((k) => `<button class="j-carte" data-k="${k}">${esc(items[k].texte)}</button>`).join('')}</div>
+          <div class="j-mini-pied"><small class="j-mini-retour"></small><button class="j-btn petit fantome" data-a="raz">Recommencer</button><button class="j-btn petit or" data-a="ok" disabled>Valider</button></div>`);
+        const maj = () => {
+          m.querySelectorAll('.j-cases li').forEach((li, i) => { li.classList.toggle('pris', i < place.length); li.querySelector('em').textContent = i < place.length ? items[place[i]].texte : ''; });
+          m.querySelectorAll('.j-carte').forEach((b) => (b.disabled = place.includes(+b.dataset.k)));
+          m.querySelector('[data-a="ok"]').disabled = place.length < items.length;
+          const lieux = place.map((k) => items[k].lieu).filter(Boolean);
+          if (items.some((x) => x.lieu)) { carte.etiquettes(lieux); carte.trajetLibre(lieux.length > 1 ? { type: 'caravane', etapes: lieux } : null, '#E6BE6A'); }
+        };
+        m.querySelectorAll('.j-carte').forEach((b) => (b.onclick = () => { if (!place.includes(+b.dataset.k)) { place.push(+b.dataset.k); son.page(); maj(); } }));
+        m.querySelectorAll('.j-cases li').forEach((li) => (li.onclick = () => { const i = +li.dataset.i; if (i < place.length) { place.splice(i); maj(); } }));
+        m.querySelector('[data-a="raz"]').onclick = () => { place.length = 0; maj(); };
+        m.querySelector('[data-a="ok"]').onclick = () => resoudre();
+        maj();
+        await attendre('mini'); ok();
+        const faux = place.findIndex((k, i) => k !== i);
+        if (faux < 0) {
+          m.querySelectorAll('.j-cases li').forEach((li) => li.classList.add('juste'));
+          succes(m); if (!essai) gagnerLumiere(m);
+          await pause(reduit ? 0 : 1100); ok();
+          finMini(); disposition(null);
+          await dire(e.reponse, tag(e)); ok();
+          return;
+        }
+        etat.erreurs++;
+        m.querySelectorAll('.j-cases li').forEach((li, i) => li.classList.toggle('faux', i >= faux));
+        m.querySelector('.j-mini-retour').textContent = faux === 0 ? 'Dès la première case, le fil se brouille…' : `Les ${faux} première${faux > 1 ? 's' : ''} case${faux > 1 ? 's sont justes' : ' est juste'}… puis le fil se brouille.`;
+        await pause(reduit ? 0 : 1600); ok();
+        finMini();
+        if (e.lieux_faux !== false && items.some((x) => x.lieu)) carte.trajetLibre({ type: 'caravane', etapes: place.map((k) => items[k].lieu).filter(Boolean) }, '#D9694E');
+        await consequence({ titre: e.titre_erreur || 'Le fil s\'emmêle', consequence: e.consequence || 'Dans cet ordre, l\'histoire ne tient pas debout.', indice: e.indice, effet: e.effet }, ok, () => carte.trajetLibre(null)); ok();
+        disposition('options');
+      }
+    },
+    // Associer deux à deux (cliquer à gauche puis à droite)
+    async associer(e, ok) {
+      cinema(false); masquerDialogue(); disposition('options');
+      if (e.vue) vue(e.vue);
+      const droite = e._ordre || (e._ordre = melanger(e.paires.map((_, k) => k)));
+      const m = mini(enTete('Associer', e.consigne) + `<div class="j-paires"><div>${e.paires.map((p, k) => `<button class="j-carte g" data-k="${k}">${esc(p[0])}</button>`).join('')}</div>
+        <div>${droite.map((k) => `<button class="j-carte d" data-k="${k}">${esc(e.paires[k][1])}</button>`).join('')}</div></div><div class="j-mini-pied"><small class="j-mini-retour"></small></div>`);
+      voix.dire(e.consigne);
+      let g = null, d = null, faits = 0, fautes = 0; const montres = [];
+      carte.etiquettes('aucune'); carte.surligner(null);
+      const essayer = () => {
+        if (g == null || d == null) return;
+        const bg = m.querySelector(`.g[data-k="${g}"]`), bd = m.querySelector(`.d[data-k="${d}"]`);
+        if (g === d) {
+          [bg, bd].forEach((b) => { b.classList.remove('choisi'); b.classList.add('lie'); b.disabled = true; b.style.setProperty('--h', `${(faits * 67) % 360}`); });
+          faits++; son.lumiere();
+          if (e.lieux && e.lieux[g]) { montres.push(e.lieux[g]); carte.etiquettes(montres); carte.surligner(e.lieux[g]); }
+          if (faits === e.paires.length) resoudre();
+        } else {
+          fautes++; etat.erreurs++; son.erreur();
+          [bg, bd].forEach((b) => { b.classList.remove('choisi'); b.classList.add('non'); setTimeout(() => b.classList.remove('non'), 600); });
+          m.querySelector('.j-mini-retour').textContent = e.paires[g][2] || 'Ces deux-là ne vont pas ensemble.';
+        }
+        g = d = null;
+      };
+      m.querySelectorAll('.j-carte').forEach((b) => (b.onclick = () => {
+        const k = +b.dataset.k;
+        if (b.classList.contains('g')) { m.querySelectorAll('.g').forEach((x) => x.classList.remove('choisi')); g = k; } else { m.querySelectorAll('.d').forEach((x) => x.classList.remove('choisi')); d = k; }
+        b.classList.add('choisi'); essayer();
+      }));
+      await attendre('mini'); ok();
+      succes(m); if (!fautes) gagnerLumiere(m);
+      await pause(reduit ? 0 : 1000); ok();
+      finMini(); disposition(null);
+      await dire(e.reponse, tag(e)); ok();
+    },
+    // Vrai ou faux : une série d'affirmations, chacune expliquée
+    async vraifaux(e, ok) {
+      cinema(false); masquerDialogue(); disposition('options');
+      if (e.vue) vue(e.vue);
+      let fautes = 0;
+      for (let k = 0; k < e.affirmations.length; k++) {
+        const a = e.affirmations[k];
+        const m = mini(enTete(`Vrai ou faux · ${k + 1} / ${e.affirmations.length}`, e.consigne || 'Vrai ou faux ?') + `<p class="j-affirmation">${esc(a.texte)}</p>
+          <div class="j-vf"><button class="j-btn" data-v="1">Vrai<kbd>V</kbd></button><button class="j-btn" data-v="0">Faux<kbd>F</kbd></button></div><p class="j-explication" hidden></p>
+          <div class="j-mini-pied"><button class="j-suite" data-a="suite" hidden>Continuer<kbd>Espace</kbd></button></div>`);
+        voix.dire(a.texte);
+        const v = await new Promise((r) => {
+          m.querySelectorAll('[data-v]').forEach((b) => (b.onclick = () => r(b.dataset.v === '1')));
+          attente = { type: 'vf', ok: r };
+        }); ok(); attente = null;
+        const juste = v === !!a.vrai, b = m.querySelector(`[data-v="${v ? 1 : 0}"]`);
+        m.querySelectorAll('[data-v]').forEach((x) => (x.disabled = true));
+        b.classList.add(juste ? 'juste' : 'non');
+        if (!juste) { fautes++; etat.erreurs++; son.erreur(); filCasse(true); setTimeout(() => filCasse(false), 700); } else son.lumiere();
+        const ex = m.querySelector('.j-explication'); ex.hidden = false;
+        ex.innerHTML = `<b>${a.vrai ? 'Vrai' : 'Faux'}.</b> ${esc(a.explication || '')}`;
+        voix.dire(`${a.vrai ? 'Vrai' : 'Faux'}. ${a.explication || ''}`);
+        const sb = m.querySelector('[data-a="suite"]'); sb.hidden = false;
+        await new Promise((r) => { sb.onclick = () => r(); attente = { type: 'suite', ok: r }; }); ok();
+      }
+      succes($('#jMini')); if (!fautes) gagnerLumiere($('#jMini'));
+      finMini(); disposition(null);
+      if (e.reponse) { await dire(e.reponse, tag(e)); ok(); }
+    },
+    // Estimer une distance, une durée, un nombre (curseur), avec une marge
+    async estimer(e, ok) {
+      cinema(false); masquerDialogue(); disposition('options');
+      if (e.vue) vue(e.vue);
+      if (e.trace) { carte.trajetLibre({ type: 'caravane', etapes: e.trace }, '#E6BE6A'); carte.etiquettes(e.trace.filter((x) => typeof x === 'string' && LIEUX[x])); }
+      const milieu = Math.round((e.min + e.max) / 2 / (e.pas || 1)) * (e.pas || 1);
+      for (let essai = 0; ; essai++) {
+        const m = mini(enTete('Estimer', e.question) + `<div class="j-estime"><output>${milieu}</output><span>${esc(e.unite || '')}</span></div>
+          <input class="j-curseur" type="range" min="${e.min}" max="${e.max}" step="${e.pas || 1}" value="${milieu}" aria-label="${esc(e.question)}">
+          <div class="j-bornes"><span>${e.min} ${esc(e.unite || '')}</span><span>${e.max} ${esc(e.unite || '')}</span></div>
+          <div class="j-mini-pied"><small class="j-mini-retour"></small><button class="j-btn petit or" data-a="ok">Valider</button></div>`);
+        voix.dire(e.question);
+        const cur = m.querySelector('input'), out = m.querySelector('output');
+        cur.oninput = () => { out.textContent = cur.value; };
+        m.querySelector('[data-a="ok"]').onclick = () => resoudre(+cur.value);
+        cur.focus();
+        const v = await attendre('mini'); ok();
+        const ecart = v - e.juste;
+        if (Math.abs(ecart) <= e.tolerance) {
+          succes(m); if (!essai) gagnerLumiere(m);
+          m.querySelector('.j-mini-retour').textContent = `Bonne estimation : environ ${e.juste} ${e.unite || ''}.`;
+          await pause(reduit ? 0 : 1100); ok();
+          finMini(); disposition(null);
+          await dire(e.reponse, tag(e)); ok();
+          return;
+        }
+        etat.erreurs++; son.erreur(); filCasse(true); setTimeout(() => filCasse(false), 700);
+        m.querySelector('.j-mini-retour').textContent = ecart < 0 ? `C'est davantage. ${e.indice_plus || ''}` : `C'est moins. ${e.indice_moins || ''}`;
+        m.querySelector('.j-mini-retour').className = 'j-mini-retour loin';
+        await pause(reduit ? 0 : 1800); ok();
+      }
+    },
     async bataille(e, ok) {
       cinema(true); disposition(null);
       const B = D.BATAILLES[etat.ev.id], P = B.phases[e.phase];
@@ -386,7 +575,7 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
   };
 
   // ---------- chapitre ----------
-  async function jouer(i) {
+  async function jouer(i, depuis = 0) {
     const j = ++jeton, ok = () => { if (j !== jeton) throw ANNULE; };
     entrer(); toutMasquer(); nettoyerCarte(); sable.mode(null);
     const c = CH[i], ev = evDe(c);
@@ -406,7 +595,7 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
       $('#jChapCarte').hidden = false; son.chapitre();
       await Promise.race([attendre('carte'), pause(reduit ? 1500 : 4200)]); ok();
       attente = null; $('#jChapCarte').hidden = true;
-      for (let k = 0; k < c.etapes.length; k++) {
+      for (let k = depuis; k < c.etapes.length; k++) {
         etat.k = k; carte.effacerMarques();
         await ETAPES[c.etapes[k].type](c.etapes[k], ok); ok();
       }
@@ -453,8 +642,8 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
   // ---------- panneaux ----------
   function panneau(html) {
     const p = $('#jPanneau'); p.innerHTML = html; p.hidden = false; p.scrollTop = 0;
-    remplirIcones(p);
-    p.querySelectorAll('[data-fermer]').forEach((b) => (b.onclick = () => { p.hidden = true; if (!etat && $('#jTitre').hidden) accueil(); }));
+    remplirIcones(p); missions.pause(true);
+    p.querySelectorAll('[data-fermer]').forEach((b) => (b.onclick = () => { p.hidden = true; missions.pause(false); if (!etat && $('#jTitre').hidden) accueil(); }));
     return p;
   }
   function panneauMenu() {
@@ -522,7 +711,8 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
 
   return {
     accueil,
-    jouer: (i) => jouer(typeof i === 'string' ? CH.findIndex((c) => c.evenement === i) : i),
+    jouer: (i, k) => jouer(typeof i === 'string' ? CH.findIndex((c) => c.evenement === i) : i, k),
+    mission: missions.test, // essais automatisés
     actif: () => actif,
     etat: () => etat && { i: etat.i, k: etat.k, erreurs: etat.erreurs, lumieres: etat.lumieres }, // pour les tests
   };
@@ -599,6 +789,7 @@ function creerSon(permis) {
     retour: () => souffle({ duree: 1.5, f0: 4500, f1: 160, q: 3, gain: 0.16, attaque: 1.1 }),
     erreur: () => souffle({ duree: 0.35, f0: 320, f1: 120, q: 2, gain: 0.1, attaque: 0.02 }),
     chapitre: () => souffle({ duree: 3, f0: 180, f1: 900, q: 0.7, gain: 0.1, attaque: 1.4 }),
+    pas: (course) => souffle({ duree: course ? 0.11 : 0.15, f0: 900 + Math.random() * 400, f1: 300, q: 1.2, gain: course ? 0.05 : 0.035, attaque: 0.01 }),
   };
 }
 

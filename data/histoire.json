@@ -27,6 +27,7 @@
           "reussite": "La Mecque : une vallée sèche, sans cultures, au carrefour des routes caravanières." },
         { "type": "recit", "vue": { "lieu": "makkah", "r": 9, "cap": 15, "incl": 60 },
           "texte": "Quraysh, la tribu qui garde la Ka'ba, vit du commerce et de l'accueil des pèlerins. Vers 570, la ville s'apprête à vivre une année que l'on n'oubliera pas." },
+        { "type": "mission", "mission": "elephant", "epreuves": 4 },
         { "type": "choix",
           "question": "Cette année-là, un événement marque tant l'Arabie qu'il lui donne son nom. Lequel ?",
           "options": [

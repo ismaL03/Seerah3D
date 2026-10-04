@@ -55,6 +55,104 @@ def verifier_salat(ou, fiche):
             err(ou, f"« {m.group(1)} » sans ﷺ : …{t[max(0, m.start() - 20):m.end() + 20]}…")
 
 
+CHOIX_MISSIONS = []
+# Personnes qui ne sont jamais représentées, même en silhouette (Prophète ﷺ, prophètes, Compagnons, sa famille).
+JAMAIS = re.compile(r"Proph|Muhammad|Mu[hḥ]ammad|Ab[uû] Bakr|'Umar|'Uthm[aâ]n|'Al[iî]\b|Kh[aâ]d[iî]ja|'[AÂ]'isha|F[aâ]tima|Bil[aâ]l|Hamza|al-'Abb[aâ]s|Ab[uû] T[aâ]lib|Ab[uû] Lahab|[AÂ]mina|Hal[iî]ma|Zayd|Ja'far|Mus'ab|Sa'd|Ab[uû] Sufy[aâ]n|Kh[aâ]lid|Suhayl|'Ikrima|Jibr[iî]l|Ibr[aâ]h[iî]m|Ism[aâ]'[iî]l")
+
+
+def verifier_mission(mid, lieux, ouvrages):
+    """Vérifie data/missions/<mid>.json ; renvoie le nombre d'épreuves (lumières possibles)."""
+    ou = f"mission {mid}"
+    chemin = DATA / "missions" / f"{mid}.json"
+    if not chemin.exists():
+        err(ou, "fichier absent")
+        return None
+    M = json.loads(chemin.read_text(encoding="utf-8"))
+    for champ in ("titre", "role", "scenes", "sequence", "statut", "sources"):
+        if champ not in M:
+            err(ou, f"champ « {champ} » manquant")
+    verifier_sources(ou, M, ouvrages)
+    verifier_salat(ou, M)
+    scenes = M.get("scenes", {})
+    for sid, S in scenes.items():
+        for p in S.get("pnj", []) + S.get("foules", []):
+            if p.get("nom") and JAMAIS.search(p["nom"]) and p.get("modele") in (None, "silhouette"):
+                err(ou, f"scène {sid} : « {p['nom']} » ne doit jamais être représenté")
+    ids = {}
+    for sid, S in scenes.items():
+        e = set()
+        for p in S.get("pnj", []) + S.get("foules", []) + S.get("troupeaux", []) + S.get("objets", []) + S.get("lieux", []):
+            e.add(p.get("id"))
+        for x in S.get("elements", []):
+            if x.get("id"):
+                e.add(x["id"])
+        ids[sid] = e
+    epreuves = 0
+    def cible_ok(scene, c):
+        if c is None or isinstance(c, list):
+            return True
+        typ, _, i = str(c).partition(":")
+        return i in ids.get(scene, set())
+    def parcourir(liste, scene, haut):
+        nonlocal epreuves
+        for k, e in enumerate(liste, 1):
+            o = f"{ou}, {'étape' if haut else 'suite'} {k}"
+            t = e.get("type")
+            if t not in ("scene", "recit", "parole", "choix", "objectif", "faire"):
+                err(o, f"type « {t} » inconnu")
+                continue
+            if t == "scene":
+                scene = e.get("scene")
+                if scene not in scenes:
+                    err(o, f"scène « {scene} » inconnue")
+            for champ in ("qui",):
+                if t in ("parole", "choix") and e.get(champ) and e[champ] not in ids.get(scene, set()):
+                    err(o, f"« {e[champ]} » absent de la scène {scene}")
+            if t == "parole" and not e.get("qui"):
+                err(o, "parole sans « qui »")
+            if t == "objectif":
+                if not cible_ok(scene, e.get("cible")):
+                    err(o, f"cible « {e.get('cible')} » absente de la scène {scene}")
+                q = e.get("quand") or {}
+                for cle in ("parler", "utiliser", "prendre", "tenir", "zone"):
+                    if cle in q and q[cle] not in ids.get(scene, set()):
+                        err(o, f"quand.{cle} : « {q[cle]} » absent de la scène {scene}")
+                if not q:
+                    err(o, "objectif sans « quand »")
+                for f in e.get("echecs", []):
+                    if not f.get("consequence"):
+                        err(o, "échec sans « consequence »")
+                    parcourir(f.get("suite", []), scene, False)
+                if haut and (e.get("epreuve")):
+                    epreuves += 1
+            if t == "choix":
+                opts = e.get("options", [])
+                if sum(1 for x in opts if x.get("juste")) != 1:
+                    err(o, "il faut exactement une option « juste »")
+                for x in opts:
+                    if not x.get("juste") and not x.get("consequence"):
+                        err(o, "option fausse sans « consequence »")
+                    parcourir(x.get("suite", []), scene, False)
+                CHOIX_MISSIONS.append((o, opts))
+                if haut and e.get("epreuve") is not False:
+                    epreuves += 1
+            if t == "faire":
+                for a in e.get("actions", []):
+                    for cle in ("montrer", "cacher"):
+                        for i in ([a[cle]] if isinstance(a.get(cle), str) else a.get(cle, [])):
+                            if i not in ids.get(scene, set()):
+                                err(o, f"{cle} : « {i} » absent de la scène {scene}")
+                    for cle in ("aller", "suivre", "lacher", "tourner", "geste", "placer", "inviter"):
+                        if a.get(cle) and a[cle] not in ids.get(scene, set()):
+                            err(o, f"{cle} : « {a[cle]} » absent de la scène {scene}")
+        return scene
+    seq = M.get("sequence", [])
+    if not seq or seq[0].get("type") != "scene":
+        err(ou, "la séquence doit commencer par une scène")
+    parcourir(seq, None, True)
+    return epreuves
+
+
 def verifier_sources(ou, fiche, ouvrages):
     sources = fiche.get("sources") or []
     if not sources:
@@ -182,6 +280,7 @@ def main():
 
     # Mode histoire : chapitres reliés aux événements, une seule option juste par choix, lieux connus.
     H = lire("histoire.json")
+    equilibre_choix = []
     ids_chap = [c.get("evenement") for c in H.get("chapitres", [])]
     for l in H.get("livres", []):
         for c in l.get("chapitres", []):
@@ -198,7 +297,7 @@ def main():
         for k, e in enumerate(c.get("etapes", []), 1):
             o = f"{ou}, étape {k}"
             t = e.get("type")
-            if t not in ("recit", "choix", "trouver", "itineraire", "trajet", "bataille"):
+            if t not in ("recit", "choix", "trouver", "itineraire", "trajet", "bataille", "mission", "ordre", "associer", "vraifaux", "estimer"):
                 err(o, f"type « {t} » inconnu")
             v = e.get("vue")
             if v and not (v.get("hijaz") or position(v.get("point")) or v.get("lieu") in lieux):
@@ -210,6 +309,8 @@ def main():
                 opts = e.get("options", [])
                 if sum(1 for x in opts if x.get("juste")) != 1:
                     err(o, "il faut exactement une option « juste »")
+                if t == "choix" and opts:
+                    equilibre_choix.append((o, opts))
                 for x in opts:
                     if x.get("juste") and not x.get("reponse"):
                         err(o, "option juste sans « reponse »")
@@ -218,6 +319,32 @@ def main():
                     for p in x.get("etapes", []):
                         if not (position(p) or (isinstance(p, str) and (p in lieux or p in etapes))):
                             err(o, f"itinéraire : étape « {p} » inconnue")
+            if t == "mission":
+                n = verifier_mission(e.get("mission"), lieux, ouvrages)
+                if n is not None and n != e.get("epreuves"):
+                    err(o, f"mission « {e.get('mission')} » : « epreuves » vaut {e.get('epreuves')}, la mission en compte {n}")
+            if t == "ordre":
+                el = e.get("elements", [])
+                if len(el) < 3 or not e.get("consigne") or not e.get("reponse"):
+                    err(o, "ordre : au moins trois éléments, une consigne et une réponse")
+                for x in el:
+                    if isinstance(x, dict) and x.get("lieu") and x["lieu"] not in lieux and x["lieu"] not in etapes:
+                        err(o, f"ordre : lieu « {x['lieu']} » inconnu")
+            if t == "associer":
+                if len(e.get("paires", [])) < 3 or any(len(p) < 2 for p in e.get("paires", [])) or not e.get("reponse"):
+                    err(o, "associer : au moins trois paires et une réponse")
+                for x in e.get("lieux", []) or []:
+                    if x and x not in lieux:
+                        err(o, f"associer : lieu « {x} » inconnu")
+            if t == "vraifaux":
+                af = e.get("affirmations", [])
+                if len(af) < 3 or any(not isinstance(a.get("vrai"), bool) or not a.get("explication") for a in af):
+                    err(o, "vrai ou faux : au moins trois affirmations, chacune avec « vrai » et une « explication »")
+                elif not (0 < sum(a["vrai"] for a in af) < len(af)):
+                    avert(o, "vrai ou faux : toutes les réponses sont identiques")
+            if t == "estimer":
+                if not (e.get("min", 0) < e.get("juste", -1) < e.get("max", 0)) or not e.get("tolerance") or not e.get("reponse"):
+                    err(o, "estimer : il faut min < juste < max, une tolérance et une réponse")
             if t == "trouver":
                 if not (position(e.get("cible")) or (isinstance(e.get("cible"), str) and e.get("cible") in lieux)):
                     err(o, "cible inconnue ou hors de la carte")
@@ -231,6 +358,22 @@ def main():
                     err(o, "étape de bataille inconnue")
         verifier_sources(ou, c, ouvrages)
         verifier_salat(ou, c)
+
+    # La bonne réponse ne doit pas se reconnaître à sa longueur (choix des chapitres et des missions).
+    equilibre_choix.extend(CHOIX_MISSIONS)
+    plus_longue = 0
+    for o, opts in equilibre_choix:
+        lg = [len(x.get("texte", "")) for x in opts]
+        juste = next(i for i, x in enumerate(opts) if x.get("juste")) if any(x.get("juste") for x in opts) else 0
+        if max(lg) > 1.6 * min(lg) and max(lg) - min(lg) > 25:
+            err(o, f"réponses de longueurs trop inégales ({min(lg)} à {max(lg)} caractères)")
+        if lg[juste] == max(lg):
+            plus_longue += 1
+    if equilibre_choix:
+        part = plus_longue / len(equilibre_choix)
+        print(f"Choix : la bonne réponse est la plus longue dans {plus_longue} cas sur {len(equilibre_choix)} ({part:.0%}).")
+        if part > 0.45:
+            err("histoire", f"la bonne réponse est trop souvent la plus longue ({part:.0%}) : varier les longueurs")
 
     a_verifier = sum(1 for e in evenements if e.get("statut") != "validé")
     pages = sum(1 for a in avertissements if "page à compléter" in a)
