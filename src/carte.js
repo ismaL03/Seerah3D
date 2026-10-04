@@ -239,10 +239,15 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     ndc.set((clientX - rc.left) / rc.width * 2 - 1, -(clientY - rc.top) / rc.height * 2 + 1);
     rayon.setFromCamera(ndc, camera);
     const o = rayon.ray.origin, d = rayon.ray.direction, p = new THREE.Vector3();
-    let t = 0, pas = Math.max(0.01, (o.y - R.sol(o.x, o.z)) * 0.05), avant = 0;
-    for (let k = 0; k < 400; k++) {
+    let t = 0, pas = Math.max(0.01, (o.y - R.sol(o.x, o.z)) * 0.05), avant = 0, entre = false;
+    for (let k = 0; k < 600; k++) {
       p.copy(o).addScaledVector(d, t);
-      if (!R.dedans(p.x, p.z)) return null;
+      // la caméra peut être hors de l'emprise (vue d'ensemble inclinée) : on avance jusqu'à y entrer
+      if (!R.dedans(p.x, p.z)) {
+        if (entre || p.y < -10) return null;
+        avant = t; t += pas; pas *= 1.04; continue;
+      }
+      entre = true;
       if (p.y <= R.sol(p.x, p.z)) {
         let a = avant, c = t; // dichotomie entre le dernier point au-dessus et le premier en dessous
         for (let j = 0; j < 20; j++) { const m = (a + c) / 2; p.copy(o).addScaledVector(d, m); if (p.y <= R.sol(p.x, p.z)) c = m; else a = m; }
