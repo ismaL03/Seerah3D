@@ -119,46 +119,71 @@ function texture(source, renderer) {
   return t;
 }
 
-// Maillage en grille : un sommet par pixel du relief (ou un sur « pas »).
+// Position (scène) du sommet (colonne c, ligne r) de la grille.
+function sommet(R, c, r) {
+  const [x, z] = R.xz(R.latLig(r), R.lonCol(c));
+  return [x, R.sommet(c, r) * R.exag, z];
+}
+
+// Morceau de maillage : sommets (i0..i1, j0..j1) de la grille, un sur « pas » pixels.
+// Les normales viennent du relief lui-même (et non des triangles du morceau) : deux tuiles
+// voisines ont donc exactement les mêmes normales sur leur bord commun, sans couture visible.
 // Les cases recouvertes par un encart (trous, en indices de la grille) ne sont pas dessinées.
-function maillage(R, pas, trous = []) {
-  const W = R.W, H = R.H;
-  const nx = Math.floor((W - 1) / pas) + 1, nz = Math.floor((H - 1) / pas) + 1;
-  const pos = new Float32Array(nx * nz * 3), uv = new Float32Array(nx * nz * 2);
-  for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) {
-    const c = i * pas, r = j * pas, v = j * nx + i;
-    const [x, z] = R.xz(R.latLig(r), R.lonCol(c));
-    pos[v * 3] = x; pos[v * 3 + 1] = R.sommet(c, r) * R.exag; pos[v * 3 + 2] = z;
+function maillage(R, pas, trous, i0, j0, i1, j1) {
+  const W = R.W, H = R.H, nx = i1 - i0 + 1, n = nx * (j1 - j0 + 1);
+  const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3), uv = new Float32Array(n * 2);
+  const derniere = (k, max) => Math.min(max, Math.max(0, k));
+  for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+    const c = i * pas, r = j * pas, v = (j - j0) * nx + (i - i0);
+    const p = sommet(R, c, r);
+    pos.set(p, v * 3);
+    const ca = derniere(c - pas, (W - 1) - (W - 1) % pas), cb = derniere(c + pas, (W - 1) - (W - 1) % pas);
+    const ra = derniere(r - pas, (H - 1) - (H - 1) % pas), rb = derniere(r + pas, (H - 1) - (H - 1) % pas);
+    const A = sommet(R, ca, r), B = sommet(R, cb, r), C = sommet(R, c, ra), Dd = sommet(R, c, rb);
+    const gx = (B[1] - A[1]) / Math.max(1e-6, B[0] - A[0]), gz = (Dd[1] - C[1]) / Math.max(1e-6, Dd[2] - C[2]);
+    const l = Math.hypot(gx, 1, gz);
+    nor[v * 3] = -gx / l; nor[v * 3 + 1] = 1 / l; nor[v * 3 + 2] = -gz / l;
     uv[v * 2] = R.encart ? c / (W - 1) : (c + 0.5) / W;
     uv[v * 2 + 1] = 1 - (R.encart ? r / (H - 1) : (r + 0.5) / H);
   }
   const idx = [];
-  for (let j = 0; j < nz - 1; j++) for (let i = 0; i < nx - 1; i++) {
+  for (let j = j0; j < j1; j++) for (let i = i0; i < i1; i++) {
     const c = i * pas, r = j * pas;
     if (trous.some((t) => c >= t.c0 && c + pas <= t.c1 && r >= t.r0 && r + pas <= t.r1)) continue;
-    const a = j * nx + i, b = a + 1, cc = a + nx, d = cc + 1;
+    const a = (j - j0) * nx + (i - i0), b = a + 1, cc = a + nx, d = cc + 1;
     idx.push(a, cc, b, b, cc, d);
   }
+  if (!idx.length) return null;
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
   g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
-  g.setIndex(new THREE.BufferAttribute(new Uint32Array(idx), 1));
-  g.computeVertexNormals();
-  return { g, nx, nz, pos };
+  g.setIndex(new THREE.BufferAttribute(n > 65535 ? new Uint32Array(idx) : new Uint16Array(idx), 1));
+  g.computeBoundingSphere();
+  return g;
+}
+
+// Tuiles du maillage : seules celles qui sont à l'écran sont dessinées.
+function tuiles(R, pas, trous, taille = 64) {
+  const nx = Math.floor((R.W - 1) / pas), nz = Math.floor((R.H - 1) / pas), out = [];
+  for (let j = 0; j < nz; j += taille) for (let i = 0; i < nx; i += taille) {
+    const g = maillage(R, pas, trous, i, j, Math.min(nx, i + taille), Math.min(nz, j + taille));
+    if (g) out.push(g);
+  }
+  return out;
 }
 
 // Parois du socle, sous le bord du terrain.
-function parois({ nx, nz, pos }) {
+function parois(R, pas) {
+  const cMax = (R.W - 1) - (R.W - 1) % pas, rMax = (R.H - 1) - (R.H - 1) % pas;
+  const pasDe = (max) => Array.from({ length: max / pas + 1 }, (_, k) => k * pas);
   const bords = [
-    Array.from({ length: nx }, (_, i) => i),                              // nord
-    Array.from({ length: nz }, (_, j) => j * nx + nx - 1),                // est
-    Array.from({ length: nx }, (_, i) => (nz - 1) * nx + nx - 1 - i),     // sud
-    Array.from({ length: nz }, (_, j) => (nz - 1 - j) * nx),              // ouest
+    pasDe(cMax).map((c) => [c, 0]), pasDe(rMax).map((r) => [cMax, r]),
+    pasDe(cMax).reverse().map((c) => [c, rMax]), pasDe(rMax).reverse().map((r) => [0, r]),
   ];
   const p = [];
-  for (const b of bords) for (let k = 0; k < b.length - 1; k++) {
-    const A = b[k] * 3, B = b[k + 1] * 3;
-    const ax = pos[A], ay = pos[A + 1], az = pos[A + 2], bx = pos[B], by = pos[B + 1], bz = pos[B + 2];
+  for (const bord of bords) for (let k = 0; k < bord.length - 1; k++) {
+    const [ax, ay, az] = sommet(R, ...bord[k]), [bx, by, bz] = sommet(R, ...bord[k + 1]);
     p.push(ax, ay, az, ax, SOCLE, az, bx, by, bz, bx, by, bz, ax, SOCLE, az, bx, SOCLE, bz);
   }
   const g = new THREE.BufferGeometry();
@@ -167,35 +192,70 @@ function parois({ nx, nz, pos }) {
   return g;
 }
 
+// Grain du sol, visible de près : bruit périodique (mosaïque sans couture) en coordonnées du monde.
+function texturGrain() {
+  const n = 256, cv = document.createElement('canvas'); cv.width = cv.height = n;
+  const ctx = cv.getContext('2d'), img = ctx.createImageData(n, n);
+  const h = (a, b) => { const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return s - Math.floor(s); };
+  const bruitP = (x, y, p) => { // bruit de valeur dont le réseau se répète tous les « p » nœuds
+    const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi, u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy);
+    const q = (a, b) => h(((a % p) + p) % p, ((b % p) + p) % p);
+    return (q(xi, yi) * (1 - u) + q(xi + 1, yi) * u) * (1 - v) + (q(xi, yi + 1) * (1 - u) + q(xi + 1, yi + 1) * u) * v;
+  };
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    let s = 0, a = 0.5;
+    for (const p of [8, 16, 32, 64]) { s += a * bruitP(x / n * p, y / n * p, p); a *= 0.5; }
+    const k = (y * n + x) * 4, g = Math.max(0, Math.min(255, Math.round(150 + (s - 0.47) * 190)));
+    img.data[k] = img.data[k + 1] = img.data[k + 2] = g; img.data[k + 3] = 255;
+  }
+  ctx.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(cv);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
+
 export async function creerTerrain(RR, { renderer, pas = 1, oasis = [] }) {
   const R = RR.R, groupe = new THREE.Group();
   R.pasMaillage = pas;
   RR.encarts.forEach((E) => E.fondre(R));
-  const m = maillage(R, pas, RR.encarts.map((E) => E.meta.grille_hijaz));
   const image = await chargerImage(`data/relief/${R.meta.satellite.fichier}`);
   const style = styliser(R, image, oasis);
-  const materiaux = [];
-  const habillages = [];
-  function poser(geo, texStyle, texSat) {
+  const grain = texturGrain();
+  const materiaux = [], habillages = [];
+  function poser(geos, texStyle, texSat) {
     const mat = new THREE.MeshStandardMaterial({ map: texStyle, flatShading: true, roughness: 1, metalness: 0 });
-    const sol = new THREE.Mesh(geo, mat);
-    sol.castShadow = sol.receiveShadow = true;
-    groupe.add(sol);
+    mat.onBeforeCompile = (sh) => {
+      sh.uniforms.grain = { value: grain };
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vMonde;')
+        .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvMonde = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vMonde;\nuniform sampler2D grain;')
+        .replace('#include <map_fragment>', `#include <map_fragment>
+          float dGrain = length(vMonde - cameraPosition);
+          if (dGrain < 9.0) {
+            float g = texture2D(grain, vMonde.xz * 9.0).r * 0.6 + texture2D(grain, vMonde.xz * 41.0).r * 0.4;
+            diffuseColor.rgb *= mix(1.0, 0.72 + g * 0.5, 1.0 - smoothstep(1.5, 9.0, dGrain));
+          }`);
+    };
+    for (const geo of geos) {
+      const sol = new THREE.Mesh(geo, mat);
+      sol.receiveShadow = true; // le relief ne projette pas d'ombre (trop coûteux), les objets si
+      groupe.add(sol);
+    }
     materiaux.push(mat);
     habillages.push((satellite) => { mat.map = satellite ? texSat : texStyle; mat.needsUpdate = true; });
   }
-  poser(m.g, texture(style.cv, renderer), texture(image, renderer));
+  poser(tuiles(R, pas, RR.encarts.map((E) => E.meta.grille_hijaz)), texture(style.cv, renderer), texture(image, renderer));
 
   // Encarts détaillés, textures fondues dans celles du Hijaz près des bords.
   const styleHijaz = pixels(style.cv), satHijaz = pixels(image);
   for (const E of RR.encarts) {
     const img = await chargerImage(`data/relief/${E.meta.satellite.fichier}`);
     const st = styliser(E, img, oasis, style);
-    poser(maillage(E, 1).g, texture(fondreTexture(E, R, st.cv, styleHijaz), renderer), texture(fondreTexture(E, R, img, satHijaz), renderer));
+    poser(tuiles(E, 1, [], 64), texture(fondreTexture(E, R, st.cv, styleHijaz), renderer), texture(fondreTexture(E, R, img, satHijaz), renderer));
   }
 
   const matParoi = new THREE.MeshStandardMaterial({ color: 0xB79770, roughness: 1, side: THREE.DoubleSide });
-  const paroi = new THREE.Mesh(parois(m), matParoi);
+  const paroi = new THREE.Mesh(parois(R, pas), matParoi);
   paroi.receiveShadow = true;
   groupe.add(paroi);
 
@@ -209,7 +269,7 @@ export async function creerTerrain(RR, { renderer, pas = 1, oasis = [] }) {
   groupe.add(eau);
 
   return {
-    groupe, materiaux, matParoi, matEau,
+    groupe, materiaux, matParoi, matEau, apercu: style.cv,
     habillage(satellite) { habillages.forEach((f) => f(satellite)); },
   };
 }

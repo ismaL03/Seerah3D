@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Sîra 3D</title>
 <meta name="description" content="Carte 3D interactive de la Sîra : lieux, événements et trajets sur le relief réel du Hijaz.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,110 +22,128 @@
   <canvas id="scene" aria-label="Carte 3D du Hijaz : La Mecque, Médine et les lieux de la Sîra"></canvas>
   <div id="labels"></div>
 
-  <header class="topbar card">
-    <div class="brand">
+  <!-- Barre haute : marque et contexte à gauche, outils à droite -->
+  <header class="barre ui">
+    <div class="verre marque">
       <span class="logo" data-ic="star"></span>
-      <div><b>Sîra 3D</b><small lang="ar">السيرة النبوية</small></div>
+      <span class="nom"><b>Sîra 3D</b><small lang="ar">السيرة النبوية</small></span>
+      <button class="brouillon" id="etatBtn" title="Fiches en brouillon : voir les sources">Brouillon</button>
     </div>
-    <label class="search" for="q">
+    <div class="verre contexte" id="contexte" aria-live="polite">
+      <span class="an" id="ctxAn">1 H</span>
+      <span id="ctxAnnee">622</span>
+      <span id="ctxAge">53 ans</span>
+      <span id="ctxPeriode">Médinoise</span>
+    </div>
+    <div class="espace"></div>
+    <label class="verre recherche" for="q">
       <span data-ic="search"></span>
       <input id="q" type="search" placeholder="Rechercher un lieu, un événement…" autocomplete="off">
       <kbd>/</kbd>
-      <div class="results card" id="results" hidden></div>
+      <div class="resultats verre" id="resultats" hidden></div>
     </label>
-    <div class="spacer"></div>
-    <div class="site">
-      <span class="sitebadge" id="siteBadge">HJZ</span>
-      <div><b id="siteName">Hijaz</b><small id="siteSub">Vue générale</small></div>
-      <span class="chev" data-ic="chev"></span>
-      <select id="view" aria-label="Changer de vue"></select>
-    </div>
-    <div class="era"><span class="dot"></span><span id="eraText">1 H</span></div>
-    <button class="iconbtn" id="themeBtn" aria-label="Basculer jour / nuit"></button>
-    <button class="srcbtn" id="srcBtn" aria-label="Voir les sources et l'état de validation">
-      <span class="bk" data-ic="book"></span>
-      <span><b>Fiches en brouillon</b><small id="srcSub">à vérifier</small></span>
-    </button>
+    <nav class="verre outils" aria-label="Outils">
+      <button id="rechBtn" data-ic="search" aria-label="Rechercher"></button>
+      <button id="indexBtn" data-ic="list" aria-label="Index : événements, lieux, hadiths, sources" aria-pressed="false"></button>
+      <button id="satBtn" data-ic="globe" aria-label="Image satellite d'aujourd'hui" aria-pressed="false"></button>
+      <button id="themeBtn" aria-label="Basculer jour / nuit"></button>
+      <span class="sep"></span>
+      <button id="volBtn" data-ic="plane" aria-label="Vol libre" aria-pressed="false"></button>
+      <button id="immersifBtn" data-ic="expand" aria-label="Mode immersif (touche H)"></button>
+    </nav>
   </header>
 
-  <section class="kpis" aria-label="Indicateurs">
-    <div class="kpi card"><span class="ki" data-ic="user"></span><div><small>Âge du Prophète ﷺ</small><div class="v" id="kAge">53 ans</div><div class="s">années lunaires (approx.)</div></div></div>
-    <div class="kpi card"><span class="ki" data-ic="calendar"></span><div><small>Année</small><div class="v" id="kYear">1 H</div><div class="s" id="kYearS">622 apr. J.-C.</div></div></div>
-    <div class="kpi card"><span class="ki" data-ic="layers"></span><div><small>Période</small><div class="v" id="kPer">Médinoise</div><div class="s" id="kPerS">an 1 sur 10</div></div></div>
-  </section>
-
-  <div class="mapctl card" aria-label="Contrôles de la carte">
-    <button id="zIn" aria-label="Zoomer" data-ic="plus"></button>
-    <button id="zOut" aria-label="Dézoomer" data-ic="minus"></button>
-    <hr>
-    <button id="rL" aria-label="Pivoter à gauche" data-ic="rotL"></button>
-    <button id="rR" aria-label="Pivoter à droite" data-ic="rotR"></button>
-    <button id="home" aria-label="Vue d'ensemble du Hijaz" data-ic="home"></button>
-    <hr>
-    <button id="satBtn" aria-label="Image satellite (aujourd'hui)" aria-pressed="false" data-ic="globe"></button>
-  </div>
-
-  <aside class="detail card" id="detail" aria-live="polite">
-    <div class="dhead">
-      <div class="dicon" id="dIcon"></div>
-      <div class="dtitle"><span class="eyebrow" id="dCat"></span><h2 id="dTitle"></h2><span class="dsub" id="dSub"></span></div>
-      <div class="dbtns">
-        <button id="dLink" aria-label="Copier le lien de cette fiche" data-ic="link"></button>
-        <button id="dFocus" aria-label="Zoomer sur le lieu" data-ic="target"></button>
-        <button id="dClose" aria-label="Fermer la fiche" data-ic="close"></button>
-      </div>
-    </div>
-    <div class="dar" id="dAr" lang="ar"></div>
-    <div class="dstatus"><span class="chip" id="dChip"></span><span class="statut" id="dStatut"></span><span id="dPlace"></span></div>
-    <dl class="rows" id="dRows"></dl>
-    <p class="summary" id="dSummary"></p>
-    <div class="quran" id="dQuran"></div>
-    <div id="dDiv"></div>
-    <div id="dUmda"></div>
-    <div id="dLieu"></div>
-    <div id="dSrc"></div>
-    <div class="also" id="dAlso"></div>
-  </aside>
-
-  <div class="scale" id="scale">Relief réel exagéré ×6 · positions réelles</div>
-
-  <section class="timeline card" id="timeline">
-    <div class="thead"><span class="ti" data-ic="route"></span><b>Parcours prophétique</b><span class="tmeta" id="tMeta"></span></div>
-    <div class="tbody">
-      <ol class="stepper" id="stepper"></ol>
-      <button class="nextcard" id="nextCard"></button>
-    </div>
-    <div class="scrub">
-      <button id="prev" aria-label="Événement précédent" data-ic="chevL"></button>
-      <button id="play" aria-label="Lancer la visite guidée"></button>
-      <button id="next" aria-label="Événement suivant" data-ic="chev"></button>
-      <div class="track" id="track" aria-label="Chronologie des événements"></div>
-    </div>
-  </section>
-
-  <section class="lists card" id="lists">
-    <div class="lhead">
-      <span class="li" data-ic="list"></span>
-      <div class="tabs" role="tablist">
+  <!-- Index : tiroir à gauche -->
+  <aside class="tiroir verre ui" id="tiroir" hidden>
+    <div class="tiroir-tete">
+      <div class="segments" role="tablist">
         <button data-tab="ev" class="on" role="tab">Événements <span id="nEv"></span></button>
         <button data-tab="loc" role="tab">Lieux <span id="nLoc"></span></button>
         <button data-tab="had" role="tab">Hadiths <span id="nHad"></span></button>
         <button data-tab="src" role="tab">Sources</button>
       </div>
+      <button class="rond" id="tiroirFermer" data-ic="close" aria-label="Fermer l'index"></button>
     </div>
-    <div class="lbody" id="lbody"></div>
-  </section>
+    <div class="tiroir-corps" id="lbody"></div>
+  </aside>
 
-  <nav class="mtabs card" aria-label="Panneaux">
-    <button data-m="detail" class="on"><span data-ic="pin"></span>Fiche</button>
-    <button data-m="time"><span data-ic="route"></span>Parcours</button>
-    <button data-m="list"><span data-ic="list"></span>Liste</button>
-  </nav>
+  <!-- Récit de l'événement courant -->
+  <article class="recit verre ui" id="recit" aria-live="polite">
+    <header class="recit-tete">
+      <div class="recit-boutons">
+        <button class="rond" id="dLink" data-ic="link" aria-label="Copier le lien de cette fiche"></button>
+        <button class="rond" id="dFocus" data-ic="target" aria-label="Voir le lieu de près"></button>
+        <button class="rond" id="dReduire" data-ic="minimize" aria-label="Réduire la fiche"></button>
+      </div>
+      <span class="surtitre" id="dCat"></span>
+      <h2 id="dTitre"></h2>
+      <div class="titre-ar" id="dAr" lang="ar"></div>
+      <div class="meta"><span id="dDate"></span><span id="dStatut"></span></div>
+    </header>
+    <nav class="segments onglets" role="tablist">
+      <button data-p="recit" class="on" role="tab">Récit</button>
+      <button data-p="bataille" role="tab" id="ongletBataille" hidden>Déroulement</button>
+      <button data-p="reperes" role="tab">Repères</button>
+      <button data-p="sources" role="tab">Sources <span id="nDiv"></span></button>
+    </nav>
+    <div class="recit-corps">
+      <section data-p="recit" class="volet on"></section>
+      <section data-p="bataille" class="volet"></section>
+      <section data-p="reperes" class="volet"></section>
+      <section data-p="sources" class="volet"></section>
+    </div>
+    <footer class="aussi" id="dAussi"></footer>
+  </article>
+  <button class="recit-pli verre ui" id="recitPli" hidden><span data-ic="chevL"></span><span id="pliTitre"></span></button>
 
+  <!-- Mini-carte : cliquer pour s'y rendre -->
+  <div class="minicarte verre ui" id="minicarte">
+    <canvas id="miniCanvas" width="150" height="236" aria-label="Mini-carte : cliquer pour s'y rendre"></canvas>
+    <button class="rond mini-fermer" id="miniFermer" data-ic="close" aria-label="Masquer la mini-carte"></button>
+  </div>
+  <button class="verre mini-ouvrir ui" id="miniOuvrir" data-ic="map" aria-label="Afficher la mini-carte" hidden></button>
+
+  <!-- Commandes de la carte -->
+  <div class="commandes verre ui" aria-label="Commandes de la carte">
+    <button id="zIn" data-ic="plus" aria-label="Zoomer"></button>
+    <button id="zOut" data-ic="minus" aria-label="Dézoomer"></button>
+    <button id="nord" aria-label="Remettre le nord en haut"><span class="aiguille" data-ic="compass"></span></button>
+    <button id="home" data-ic="home" aria-label="Vue d'ensemble du Hijaz"></button>
+  </div>
+
+  <!-- Ruban chronologique -->
+  <footer class="ruban verre ui" id="ruban">
+    <div class="lecture">
+      <button class="rond" id="prev" data-ic="chevL" aria-label="Événement précédent"></button>
+      <button class="lire" id="play" aria-label="Lancer la visite guidée"></button>
+      <button class="rond" id="next" data-ic="chev" aria-label="Événement suivant"></button>
+    </div>
+    <div class="axe" id="axe" aria-label="Chronologie">
+      <div class="eres" id="eres"></div>
+      <div class="points" id="points"></div>
+      <div class="courant" id="courant"></div>
+    </div>
+  </footer>
+
+  <!-- Vol libre -->
+  <div class="vol-hud verre" id="volHud" hidden>
+    <b>Vol libre</b>
+    <span id="volInfo"></span>
+    <span class="aide"><kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> avancer · <kbd>Espace</kbd>/<kbd>C</kbd> monter, descendre · <kbd>Maj</kbd> vite · double-clic : s'y rendre</span>
+    <button class="rond" id="volQuitter" data-ic="close" aria-label="Quitter le vol libre"></button>
+  </div>
+  <div class="vol-pad" id="volPad" hidden>
+    <button data-v="avant" aria-label="Avancer" data-ic="chevU"></button>
+    <button data-v="arriere" aria-label="Reculer" data-ic="chevD"></button>
+    <button data-v="haut" aria-label="Monter" data-ic="plus"></button>
+    <button data-v="bas" aria-label="Descendre" data-ic="minus"></button>
+  </div>
+
+  <button class="verre sortie" id="sortieImmersif" hidden><span data-ic="shrink"></span>Afficher l'interface</button>
   <div class="toast" id="toast" role="status" hidden></div>
 
   <div class="chargement" id="chargement">
-    <div class="card">
+    <div class="verre">
       <span class="logo" data-ic="star"></span>
       <b>Sîra 3D</b>
       <p id="chargementTexte">Chargement du relief du Hijaz…</p>

@@ -27,6 +27,22 @@ python3 -m http.server 8000
 
 **Liens directs** pour le cours : `#evenement/badr`, `#evenement/hijra`, `#lieu/uhud`… (bouton « lien » dans la fiche).
 
+### Se déplacer
+
+| Geste | Effet |
+|---|---|
+| glisser | déplacer la carte |
+| clic droit ou Maj + glisser | tourner et incliner la vue |
+| molette | zoomer vers le point visé (jusqu'à quelques dizaines de mètres) |
+| double-clic | s'y rendre |
+| mini-carte (en bas à gauche) | se téléporter |
+| deux doigts | zoomer, tourner, incliner (tablette, téléphone) |
+| ← → | événement précédent / suivant |
+| `H` | mode immersif : masquer toute l'interface |
+| `V` | vol libre : `Z Q S D` (ou `W A S D`, ou flèches) pour avancer, `Espace` / `C` pour monter et descendre, `Maj` pour aller plus vite, souris pour regarder, `Échap` pour sortir |
+
+Les batailles de Badr et d'Uhud ont un onglet **Déroulement** : étapes commentées, blocs d'armée aux couleurs de chaque camp, étendards et flèches de mouvement (sans représentation humaine).
+
 ## Organisation
 
 ```
@@ -35,15 +51,18 @@ styles/app.css        mise en page et thèmes jour / nuit
 src/                  code (modules JavaScript, Three.js chargé depuis un CDN, version figée)
   main.js             démarrage
   donnees.js          lecture des fiches
-  relief.js           relief réel, projection, encarts
-  terrain.js          maillage, habillage stylisé ou satellite, socle, mer
-  decor.js            bâtiments, camps, palmeraies… (sans personnages)
-  carte.js            scène, caméra, épingles, trajets animés
-  interface.js        fiche, frise, listes, recherche, visite guidée, liens
+  relief.js, png.js   relief réel (PNG 16 bits), projection, encarts
+  terrain.js          maillage en tuiles, habillage stylisé ou satellite, socle, mer
+  decor.js            villes, monuments, camps, palmeraies… (sans personnages)
+  montures.js         chameaux, chevaux sans cavalier, boutres, étendards
+  bataille.js         déroulement des batailles (blocs, étendards, flèches)
+  carte.js            scène, caméra (orbite et vol libre), épingles, trajets, convois
+  interface.js        récit, ruban chronologique, index, recherche, mini-carte, visite guidée
 data/                 contenu modifiable sans toucher au code
   evenements.json     événements (une fiche par événement)
   lieux.json          lieux (coordonnées réelles, certitude) et étapes de trajets
   hadiths.json        hadiths d'al-'Umda reliés aux événements
+  batailles.json      déroulement des batailles, étape par étape
   sources.json        ouvrages cités et attributions des données de carte
   relief/             relief et images produits par tools/relief.py
 tools/
@@ -62,7 +81,7 @@ Les fiches sont dans `data/*.json`. Chaque fichier commence par un champ `_lisez
 | `sources` | liste de `{ "ouvrage": "rahiq", "page": 123, "passage": "…" }` ; `page: null` = à compléter |
 | `divergences` | liste de `{ "sujet": "…", "texte": "…" }` |
 | `lieu` | identifiant d'un lieu de `lieux.json` |
-| `trajet` | `{ "type": "caravane" \| "mer" \| "nuit", "etapes": ["madinah", [24.3, 39.35], "badr"] }` |
+| `trajet` | `{ "type": "caravane" \| "armee" \| "mer" \| "nuit", "etapes": ["madinah", [24.3, 39.35], "badr"] }` |
 
 Après une modification, vérifier les fiches :
 

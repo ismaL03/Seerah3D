@@ -122,8 +122,8 @@ def main():
             if h not in hadiths:
                 err(ou, f"hadith « {h} » inconnu")
         if "trajet" in e:
-            if e["trajet"].get("type") not in ("caravane", "mer", "nuit"):
-                err(ou, "type de trajet attendu : caravane, mer ou nuit")
+            if e["trajet"].get("type") not in ("caravane", "armee", "mer", "nuit"):
+                err(ou, "type de trajet attendu : caravane, armee, mer ou nuit")
             for p in e["trajet"].get("etapes", []):
                 if isinstance(p, list):
                     if len(p) != 2 or not dans_carte(*p):
@@ -149,6 +149,29 @@ def main():
         if h.get("statut") not in STATUTS:
             err(ou, "statut invalide")
         verifier_salat(ou, h)
+
+    for id_ev, B in lire("batailles.json")["batailles"].items():
+        ou = f"bataille {id_ev}"
+        if id_ev not in ids:
+            err(ou, "aucun événement ne porte cet identifiant")
+        for u_id, u in B.get("unites", {}).items():
+            if u.get("camp") not in B.get("camps", {}):
+                err(ou, f"unité « {u_id} » : camp inconnu")
+            if u.get("forme") not in ("infanterie", "archers", "cavalerie", "caravane"):
+                err(ou, f"unité « {u_id} » : forme attendue infanterie, archers, cavalerie ou caravane")
+        for k, P in enumerate(B.get("phases", []), 1):
+            for u_id, pos in P.get("positions", {}).items():
+                if u_id not in B.get("unites", {}):
+                    err(ou, f"étape {k} : unité « {u_id} » inconnue")
+                elif not dans_carte(pos[0], pos[1]):
+                    err(ou, f"étape {k} : position de « {u_id} » hors de la carte")
+            for f in P.get("fleches", []):
+                if f.get("camp") not in B.get("camps", {}):
+                    err(ou, f"étape {k} : flèche d'un camp inconnu")
+                if any(not dans_carte(*pt) for pt in f.get("points", [])):
+                    err(ou, f"étape {k} : flèche hors de la carte")
+        verifier_sources(ou, B, ouvrages)
+        verifier_salat(ou, B)
 
     a_verifier = sum(1 for e in evenements if e.get("statut") != "validé")
     pages = sum(1 for a in avertissements if "page à compléter" in a)

@@ -1,5 +1,5 @@
 {
-  "_lisez_moi": "Une fiche par événement, dans l'ordre chronologique. statut : à vérifier / validé. Chaque fiche cite au moins une source (ouvrage + page). Une page null signifie « à compléter ». Les divergences (dates, effectifs, lieux) sont signalées, jamais tranchées en silence. trajet.etapes : identifiants de lieux ou d'étapes, ou [lat, lon].",
+  "_lisez_moi": "Une fiche par événement, dans l'ordre chronologique. statut : à vérifier / validé. Chaque fiche cite au moins une source (ouvrage + page). Une page null signifie « à compléter ». Les divergences (dates, effectifs, lieux) sont signalées, jamais tranchées en silence. trajet.type : caravane, armee, mer ou nuit ; trajet.etapes : identifiants de lieux ou d'étapes, ou [lat, lon].",
   "categories": {
     "vie": { "nom": "Vie", "icone": "star" },
     "revelation": { "nom": "Révélation", "icone": "book" },
@@ -198,7 +198,7 @@
       "faits": [["Musulmans", "≈ 313"], ["Quraysh", "≈ 950 à 1 000"], ["Issue", "Victoire décisive"], ["Martyrs", "14"]],
       "resume": "Parti intercepter une caravane de Quraysh, le petit groupe de croyants se retrouve face à l'armée mecquoise, trois fois plus nombreuse, près des puits de Badr. Allah leur accorde la victoire : c'est le « Jour du Discernement ».",
       "coran": "al-Anfâl (8)",
-      "trajet": { "type": "caravane", "etapes": ["madinah", [24.30, 39.35], [24.05, 39.10], [23.85, 38.90], "badr"] },
+      "trajet": { "type": "armee", "etapes": ["madinah", [24.30, 39.35], [24.05, 39.10], [23.85, 38.90], "badr"] },
       "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La grande bataille de Badr" }],
       "divergences": [
         { "sujet": "Effectif musulman", "texte": "313, 314 ou 317 selon les récits." },
@@ -216,7 +216,7 @@
       "resume": "Au pied du mont Uhud, les musulmans prennent d'abord l'avantage. Mais la plupart des archers quittent leur colline ; la cavalerie de Khâlid ibn al-Walîd, alors dans le camp adverse, contourne et retourne la situation. Hamza tombe en martyr.",
       "coran": "Âl 'Imrân (3)",
       "hadiths": ["u7"],
-      "trajet": { "type": "caravane", "etapes": ["madinah", "uhud"] },
+      "trajet": { "type": "armee", "etapes": ["madinah", "uhud"] },
       "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La bataille d'Uhud" }],
       "divergences": [
         { "sujet": "Jour", "texte": "7 ou 15 Shawwâl selon les récits." },
@@ -234,7 +234,7 @@
       "resume": "Après la découverte d'un complot visant la vie du Prophète ﷺ, la tribu juive des Banû an-Nadîr, liée par pacte, est assiégée puis quitte Médine. Ses biens, obtenus sans combat, deviennent du fay'.",
       "coran": "al-Hashr (59)",
       "hadiths": ["u6"],
-      "trajet": { "type": "caravane", "etapes": ["madinah", "nadir"] },
+      "trajet": { "type": "armee", "etapes": ["madinah", "nadir"] },
       "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'expédition des Banû an-Nadîr" }],
       "divergences": [
         { "sujet": "Date", "texte": "Rabî' al-Awwal 4 H selon Ibn Ishâq ; az-Zuhrî, d'après 'Urwa, la place six mois après Badr, avant Uhud." }
@@ -281,7 +281,7 @@
       "periode": "medinoise", "periode_detail": "an 7 sur 10",
       "faits": [["Défenses", "Fortins sur les hauteurs"], ["Étendard", "Confié à 'Alî ibn Abî Tâlib"], ["Issue", "Accord sur les palmeraies"]],
       "resume": "L'armée marche sur l'oasis fortifiée de Khaybar, au nord de Médine. Les fortins tombent un à un ; l'étendard est remis à 'Alî. Les habitants restent cultiver les palmeraies contre la moitié de la récolte.",
-      "trajet": { "type": "caravane", "etapes": ["madinah", [24.85, 39.55], [25.30, 39.42], "khaybar"] },
+      "trajet": { "type": "armee", "etapes": ["madinah", [24.85, 39.55], [25.30, 39.42], "khaybar"] },
       "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La conquête de Khaybar" }],
       "divergences": [
         { "sujet": "Date", "texte": "Muharram 7 H selon Ibn Ishâq ; certains récits la placent à la fin de l'an 6 H." }
@@ -298,7 +298,7 @@
       "resume": "Quraysh ayant rompu la trêve, il ﷺ entre à La Mecque presque sans combat. Il purifie la Ka'ba de ses idoles, Bilâl lance l'appel à la prière depuis son toit, et il pardonne à ceux qui l'avaient combattu.",
       "coran": "an-Nasr (110)",
       "hadiths": ["u2", "u3"],
-      "trajet": { "type": "caravane", "etapes": ["madinah", "dhul-hulayfa", [24.00, 39.25], [23.40, 39.05], "juhfa", "usfan", "marr", "makkah"] },
+      "trajet": { "type": "armee", "etapes": ["madinah", "dhul-hulayfa", [24.00, 39.25], [23.40, 39.05], "juhfa", "usfan", "marr", "makkah"] },
       "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La conquête de La Mecque" }],
       "divergences": [],
       "statut": "à vérifier"
@@ -313,7 +313,7 @@
       "resume": "Surpris par une embuscade dans la vallée de Hunayn, les rangs musulmans reculent, tandis que le Prophète ﷺ tient bon. Ils se regroupent et l'emportent ; l'armée assiège ensuite Tâ'if.",
       "coran": "at-Tawba 9:25-26",
       "hadiths": ["u5"],
-      "trajet": { "type": "caravane", "etapes": ["makkah", "hunayn", [21.40, 40.20], "taif"] },
+      "trajet": { "type": "armee", "etapes": ["makkah", "hunayn", [21.40, 40.20], "taif"] },
       "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La bataille de Hunayn ; le siège de Tâ'if" }],
       "divergences": [],
       "statut": "à vérifier"
@@ -327,7 +327,7 @@
       "faits": [["Armée", "≈ 30 000"], ["Contexte", "Chaleur et disette"], ["Issue", "Aucun combat ; accords avec les tribus du nord"]],
       "resume": "Dans la chaleur et la pénurie, il conduit sa plus grande armée vers le nord, face à la menace byzantine. Aucun affrontement n'a lieu ; plusieurs tribus frontalières concluent des accords.",
       "coran": "at-Tawba (9)",
-      "trajet": { "type": "caravane", "etapes": ["madinah", [25.00, 39.20], [25.80, 38.70], "tabuk"] },
+      "trajet": { "type": "armee", "etapes": ["madinah", [25.00, 39.20], [25.80, 38.70], "tabuk"] },
       "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'expédition de Tabûk" }],
       "divergences": [],
       "statut": "à vérifier"

@@ -1,0 +1,120 @@
+{
+  "_lisez_moi": "Déroulement des batailles, étape par étape (clé = identifiant de l'événement). Unités : camp, nom affiché, forme (infanterie, archers, cavalerie, caravane), taille [largeur, profondeur] en km. positions : [lat, lon, orientation en degrés, 0 = nord, 90 = est] ; une unité absente d'une étape est masquée. fleches : points [lat, lon]. Aucune représentation humaine : blocs, étendards et chevaux sans cavalier. Schémas approximatifs, à vérifier.",
+  "batailles": {
+    "badr": {
+      "statut": "à vérifier",
+      "note": "Schéma pédagogique approximatif : emplacements des camps, orientation des lignes et chemin de la caravane sont à vérifier sur un atlas (al-Maghlûth, Abû Khalîl) avant validation.",
+      "sources": [
+        { "ouvrage": "rahiq", "page": null, "passage": "La grande bataille de Badr" },
+        { "ouvrage": "biladi", "page": null, "passage": "Badr" }
+      ],
+      "camps": {
+        "m": { "nom": "Musulmans", "couleur": "#0E7A5A" },
+        "q": { "nom": "Quraysh", "couleur": "#A9452F" },
+        "c": { "nom": "Caravane d'Abû Sufyân", "couleur": "#B5822A" }
+      },
+      "unites": {
+        "m": { "camp": "m", "nom": "Musulmans (≈ 313)", "forme": "infanterie", "taille": [0.1, 0.035] },
+        "q": { "camp": "q", "nom": "Quraysh (≈ 1 000)", "forme": "infanterie", "taille": [0.22, 0.06] },
+        "c": { "camp": "c", "nom": "Caravane d'Abû Sufyân", "forme": "caravane", "taille": [0.12, 0.03] },
+        "dm": { "camp": "m", "nom": "Hamza, 'Alî, 'Ubayda", "forme": "infanterie", "taille": [0.014, 0.007] },
+        "dq": { "camp": "q", "nom": "'Utba, Shayba, al-Walîd", "forme": "infanterie", "taille": [0.014, 0.007] }
+      },
+      "phases": [
+        {
+          "titre": "La caravane s'échappe, les armées arrivent",
+          "texte": "La caravane d'Abû Sufyân, qui revenait de Shâm, s'est détournée vers la côte et a échappé aux musulmans. L'armée de Quraysh, sortie pour la protéger, choisit malgré tout de marcher sur Badr. Les musulmans arrivent par le nord, du côté de Médine ; Quraysh campe sur le versant opposé de la vallée.",
+          "positions": { "c": [23.78, 38.585, 190], "m": [23.7445, 38.7805, 220], "q": [23.7215, 38.7645, 30] },
+          "fleches": [
+            { "camp": "c", "points": [[23.95, 38.56], [23.86, 38.57], [23.78, 38.585], [23.66, 38.62]] },
+            { "camp": "m", "points": [[23.762, 38.80], [23.753, 38.79], [23.7445, 38.7805]] },
+            { "camp": "q", "points": [[23.70, 38.775], [23.711, 38.769], [23.7215, 38.7645]] }
+          ]
+        },
+        {
+          "titre": "Les puits",
+          "texte": "Sur le conseil d'al-Hubâb ibn al-Mundhir, les musulmans prennent position au puits le plus proche de l'ennemi et privent Quraysh des autres points d'eau. Pendant la nuit, une pluie raffermit le sol sous leurs pas (al-Anfâl 8:11).",
+          "positions": { "m": [23.7355, 38.7712, 220], "q": [23.7215, 38.7645, 30] },
+          "fleches": [{ "camp": "m", "points": [[23.7445, 38.7805], [23.7400, 38.7760], [23.7355, 38.7712]] }]
+        },
+        {
+          "titre": "Les duels",
+          "texte": "Trois champions de Quraysh, 'Utba, Shayba et al-Walîd, sortent des rangs et lancent un défi. Hamza, 'Alî et 'Ubayda ibn al-Hârith leur répondent ; les trois Mecquois tombent.",
+          "positions": { "m": [23.7340, 38.7705, 220], "q": [23.7285, 38.7665, 40], "dm": [23.7322, 38.7690, 220], "dq": [23.7306, 38.7677, 40] },
+          "chocs": [{ "nom": "Duels", "lieu": [23.7314, 38.7684] }]
+        },
+        {
+          "titre": "La mêlée",
+          "texte": "Les deux armées s'affrontent. Malgré leur nombre, les rangs mecquois cèdent ; Abû Jahl, qui commandait Quraysh, est tué.",
+          "positions": { "m": [23.7322, 38.7692, 220], "q": [23.7300, 38.7676, 40] },
+          "fleches": [{ "camp": "m", "points": [[23.7340, 38.7705], [23.7322, 38.7692]] }],
+          "chocs": [{ "nom": "Mêlée", "lieu": [23.7311, 38.7684] }]
+        },
+        {
+          "titre": "La victoire",
+          "texte": "Quraysh s'enfuit. Elle perd environ soixante-dix morts et laisse soixante-dix prisonniers ; les musulmans comptent quatorze martyrs.",
+          "positions": { "m": [23.7300, 38.7678, 220], "q": [23.7175, 38.7610, 210] },
+          "fleches": [{ "camp": "q", "points": [[23.7300, 38.7676], [23.7240, 38.7640], [23.7175, 38.7610]] }]
+        }
+      ]
+    },
+    "uhud": {
+      "statut": "à vérifier",
+      "note": "Schéma pédagogique approximatif : la position exacte des lignes, l'orientation des armées et le chemin de la cavalerie autour du mont 'Aynayn (mont des archers) sont à vérifier sur un atlas (al-Maghlûth, Abû Khalîl) avant validation.",
+      "sources": [
+        { "ouvrage": "rahiq", "page": null, "passage": "La bataille d'Uhud" },
+        { "ouvrage": "samhudi", "page": null, "passage": "Uhud et 'Aynayn" }
+      ],
+      "camps": {
+        "m": { "nom": "Musulmans", "couleur": "#0E7A5A" },
+        "q": { "nom": "Quraysh", "couleur": "#A9452F" }
+      },
+      "unites": {
+        "m": { "camp": "m", "nom": "Musulmans (≈ 700)", "forme": "infanterie", "taille": [0.16, 0.05] },
+        "a": { "camp": "m", "nom": "Archers (50)", "forme": "archers", "taille": [0.05, 0.022] },
+        "a2": { "camp": "m", "nom": "Ibn Jubayr et une dizaine d'archers", "forme": "archers", "taille": [0.022, 0.012] },
+        "q": { "camp": "q", "nom": "Quraysh (≈ 3 000)", "forme": "infanterie", "taille": [0.34, 0.08] },
+        "k": { "camp": "q", "nom": "Cavalerie : Khâlid ibn al-Walîd", "forme": "cavalerie", "taille": [0.09, 0.04] },
+        "i": { "camp": "q", "nom": "Cavalerie : 'Ikrima ibn Abî Jahl", "forme": "cavalerie", "taille": [0.08, 0.035] }
+      },
+      "phases": [
+        {
+          "titre": "Les positions",
+          "texte": "Dos au mont Uhud, l'armée musulmane (≈ 700) fait face à Quraysh (≈ 3 000). Le Prophète ﷺ place cinquante archers, menés par 'Abd Allâh ibn Jubayr, sur le mont 'Aynayn, avec l'ordre de ne pas le quitter quoi qu'il arrive. La cavalerie mecquoise tient les ailes : Khâlid ibn al-Walîd d'un côté, 'Ikrima ibn Abî Jahl de l'autre.",
+          "positions": { "m": [24.5040, 39.6085, 200], "a": [24.4998, 39.6128, 225], "q": [24.4968, 39.6030, 30], "k": [24.4958, 39.6082, 20], "i": [24.4995, 39.5985, 45] }
+        },
+        {
+          "titre": "L'avantage musulman",
+          "texte": "Les musulmans enfoncent les rangs de Quraysh ; les porte-étendards mecquois tombent l'un après l'autre et l'armée recule vers son camp.",
+          "positions": { "m": [24.5008, 39.6058, 210], "a": [24.4998, 39.6128, 225], "q": [24.4945, 39.6008, 30], "k": [24.4950, 39.6080, 20], "i": [24.4985, 39.5975, 45] },
+          "fleches": [
+            { "camp": "m", "points": [[24.5040, 39.6085], [24.5025, 39.6072], [24.5010, 39.6060]] },
+            { "camp": "q", "points": [[24.4968, 39.6030], [24.4956, 39.6019], [24.4945, 39.6008]] }
+          ]
+        },
+        {
+          "titre": "Les archers quittent la colline",
+          "texte": "Croyant la bataille gagnée, la plupart des archers descendent vers le butin malgré l'ordre reçu. 'Abd Allâh ibn Jubayr reste sur la colline avec une dizaine d'hommes.",
+          "positions": { "m": [24.5008, 39.6058, 210], "a": [24.5014, 39.6078, 200], "a2": [24.4998, 39.6128, 225], "q": [24.4945, 39.6008, 30], "k": [24.4950, 39.6080, 20], "i": [24.4985, 39.5975, 45] },
+          "fleches": [{ "camp": "m", "points": [[24.4998, 39.6128], [24.5008, 39.6102], [24.5014, 39.6080]] }]
+        },
+        {
+          "titre": "Le contournement de Khâlid",
+          "texte": "Khâlid ibn al-Walîd, alors dans le camp adverse, voit la colline dégarnie. Sa cavalerie la contourne, submerge les derniers archers et prend les musulmans à revers, tandis que Quraysh revient au combat.",
+          "positions": { "m": [24.5015, 39.6065, 210], "a": [24.5014, 39.6078, 200], "q": [24.4968, 39.6035, 30], "k": [24.5045, 39.6120, 250], "i": [24.4995, 39.6025, 60] },
+          "fleches": [
+            { "camp": "q", "points": [[24.4950, 39.6080], [24.4975, 39.6150], [24.5010, 39.6165], [24.5045, 39.6122]] },
+            { "camp": "q", "points": [[24.4985, 39.5975], [24.4990, 39.6000], [24.4995, 39.6022]] }
+          ],
+          "chocs": [{ "nom": "Pris à revers", "lieu": [24.5030, 39.6090] }]
+        },
+        {
+          "titre": "Le repli sur la montagne",
+          "texte": "Pris entre deux fronts, les musulmans subissent de lourdes pertes (≈ 70 martyrs, dont Hamza). Ils se regroupent sur les pentes du mont Uhud ; Quraysh se retire sans entrer à Médine.",
+          "positions": { "m": [24.5068, 39.6100, 200], "q": [24.4975, 39.6040, 30], "k": [24.5030, 39.6110, 230], "i": [24.5000, 39.6030, 60] },
+          "fleches": [{ "camp": "m", "points": [[24.5015, 39.6065], [24.5042, 39.6085], [24.5068, 39.6100]] }]
+        }
+      ]
+    }
+  }
+}

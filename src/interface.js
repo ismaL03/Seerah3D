@@ -1,41 +1,44 @@
-// Interface : fiche détaillée, indicateurs, frise, listes, recherche, visite guidée, liens directs.
+// Interface : récit de l'événement, contexte, ruban chronologique, index, recherche,
+// mini-carte, visite guidée, modes immersif et vol libre, liens directs.
 import { ic, remplirIcones } from './icones.js';
 
 const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const norm = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/['’`ʿʾ]/g, '').toLowerCase();
-const PERIODES = { avant: 'Avant la prophétie', mecquoise: 'Mecquoise', medinoise: 'Médinoise' };
+const PERIODES = { avant: 'Avant la prophétie', mecquoise: 'Période mecquoise', medinoise: 'Période médinoise' };
 const CERTITUDE = { 'certaine': 'certaine', 'probable': 'probable', 'discutée': 'discutee' };
-const VUES = [['', 'Vue générale du Hijaz'], ['makkah', 'La Mecque'], ['madinah', 'Médine'], ['badr', 'Badr'], ['taif', "Tâ'if"], ['khaybar', 'Khaybar'], ['hudaybiya', 'al-Hudaybiya']];
+// Échelle du ruban : trois périodes, chacune avec sa part de la largeur (années réelles).
+const ERES = [
+  { nom: 'Avant la prophétie', de: 568, a: 610, part: 0.2 },
+  { nom: 'Période mecquoise', de: 610, a: 622, part: 0.32 },
+  { nom: 'Période médinoise', de: 622, a: 633, part: 0.48 },
+];
 
 export function creerInterface(D) {
-  const { EVENEMENTS: EV, LIEUX, HADITHS, CATEGORIES: CAT, OUVRAGES } = D;
-  let carte = null, cur = -1, onglet = 'ev', visite = null;
-  // Événements liés à un lieu : ceux qui s'y déroulent, puis ceux dont le trajet y passe.
+  const { EVENEMENTS: EV, LIEUX, HADITHS, CATEGORIES: CAT, OUVRAGES, BATAILLES } = D;
+  let carte = null, cur = -1, onglet = 'ev', volet = 'recit', visite = null, phase = 0, suiteBataille = null;
+  let recitReduit = innerWidth <= 760; // sur téléphone, la carte d'abord : la fiche s'ouvre d'un geste
   const evDuLieu = (id) => EV.map((e, i) => [e, i]).filter(([e]) => e.lieu === id || (e.trajet && e.trajet.etapes.includes(id)));
   const lieuxAvecEv = Object.keys(LIEUX).filter((k) => evDuLieu(k).length);
   const aVerifier = EV.filter((e) => e.statut !== 'validé').length;
+  const couleur = (cat) => getComputedStyle(document.documentElement).getPropertyValue('--c-' + cat).trim() || '#C9962F';
+  const annee = (e) => (e.annee_hegire ? `${e.annee_hegire} H` : e.annee_ap_jc);
+  const lien = (h) => { try { history.replaceState(null, '', h); } catch { /* adresse non modifiable (page isolée) */ } };
 
   remplirIcones();
   $('#nEv').textContent = EV.length;
   $('#nLoc').textContent = lieuxAvecEv.length;
   $('#nHad').textContent = Object.keys(HADITHS).length;
-  $('#srcSub').textContent = aVerifier ? `${aVerifier} sur ${EV.length} à vérifier` : 'Toutes validées';
-  $('#view').innerHTML = VUES.map((v) => `<option value="${v[0]}">${v[1]}</option>`).join('');
-
-  const couleur = (cat) => getComputedStyle(document.documentElement).getPropertyValue('--c-' + cat).trim() || '#C9962F';
-  const annee = (e) => (e.annee_hegire ? `${e.annee_hegire} H` : e.annee_ap_jc);
-  // Lien direct dans l'adresse ; ignoré là où la page est isolée (aperçu intégré).
-  const lien = (h) => { try { history.replaceState(null, '', h); } catch { /* adresse non modifiable */ } };
+  $('#etatBtn').title = `${aVerifier} fiche${aVerifier > 1 ? 's' : ''} sur ${EV.length} à vérifier : voir les sources`;
 
   function toast(texte) {
     const t = $('#toast'); t.textContent = texte; t.hidden = false;
-    clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 1800);
+    clearTimeout(toast.t); toast.t = setTimeout(() => (t.hidden = true), 2200);
   }
 
-  function statutHTML(statut) {
-    return statut === 'validé' ? `<span class="statut valide">${ic('check')}Validé</span>` : `<span class="statut brouillon">${ic('alert')}Brouillon · à vérifier</span>`;
-  }
+  // ---------- volets du récit ----------
+  const statutHTML = (s) => (s === 'validé' ? `<span class="statut valide">${ic('check')}Validé</span>` : `<span class="statut brouillon">${ic('alert')}Brouillon · à vérifier</span>`);
   function sourceHTML(s) {
     const o = OUVRAGES[s.ouvrage] || { titre: s.ouvrage };
     const page = s.page != null ? `p. ${esc(s.page)}` : '<span class="manque">page à compléter</span>';
@@ -43,58 +46,95 @@ export function creerInterface(D) {
   }
   function hadithHTML(id) {
     const h = HADITHS[id];
-    return `<div class="umda" id="umda-${id}"><div class="uh">${ic('book')}al-'Umda fî al-Ahkâm<span>n° ${h.numero} · p. ${h.page} (PDF p. ${h.page_pdf})</span></div>
-      <div class="uar" lang="ar">${esc(h.ar)}</div><p class="ufr">${esc(h.fr)}</p><div class="unr">Rapporté par ${esc(h.rapporteur)} · ${esc(h.livre)} · traduction à vérifier</div></div>`;
+    return `<details class="hadith" id="umda-${id}"><summary>${ic('book')}al-'Umda · ${esc(h.titre)}<small>n° ${h.numero} · p. ${h.page}</small></summary>
+      <div class="uar" lang="ar">${esc(h.ar)}</div><p class="ufr">${esc(h.fr)}</p>
+      <div class="unr">Rapporté par ${esc(h.rapporteur)} · ${esc(h.livre)} · PDF p. ${h.page_pdf} · traduction à vérifier</div></details>`;
   }
+  function remplirVolets(ev) {
+    const L = LIEUX[ev.lieu];
+    $('.volet[data-p="recit"]').innerHTML = `<p>${esc(ev.resume)}</p>
+      ${ev.coran ? `<div class="coran"><span class="pastille">${ic('book')} Coran</span>Sourate ${esc(ev.coran)}</div>` : ''}
+      ${(ev.hadiths || []).map(hadithHTML).join('')}`;
+    const lignes = [['Date', ev.date], ['Année', ev.annee_ap_jc + ' apr. J.-C.'], ['Lieu', L.nom], ['Âge du Prophète ﷺ', ev.age === 0 ? 'Naissance' : ev.age + ' ans']].concat(ev.faits);
+    $('.volet[data-p="reperes"]').innerHTML = `<dl class="faits">${lignes.map((r) => `<dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd>`).join('')}</dl>
+      <div class="bloc"><h3>${ic('pin')}Localisation · ${esc(L.nom)}</h3><span class="certitude ${CERTITUDE[L.certitude] || ''}">${esc(L.certitude)}</span>
+      ${L.note_localisation ? `<p class="note">${esc(L.note_localisation)}</p>` : ''}${ev.trajet && ev.trajet.note ? `<p class="note">${esc(ev.trajet.note)}</p>` : ''}</div>`;
+    const div = ev.divergences || [];
+    $('#nDiv').textContent = div.length ? `· ${div.length}` : '';
+    $('.volet[data-p="sources"]').innerHTML = `${div.length ? `<div class="bloc div"><h3>${ic('split')}Divergences signalées</h3><ul>${div.map((d) => `<li><b>${esc(d.sujet)} :</b> ${esc(d.texte)}</li>`).join('')}</ul></div>` : ''}
+      <div class="bloc"><h3>${ic('book')}Sources</h3><ul>${ev.sources.map(sourceHTML).join('')}</ul>
+      ${ev.statut !== 'validé' ? '<p class="note">Brouillon rédigé d\'après ces sources, en attente de validation par un enseignant.</p>' : ''}</div>`;
+    const B = BATAILLES[ev.id];
+    $('#ongletBataille').hidden = !B;
+    if (B) remplirBataille(ev, B);
+  }
+  function remplirBataille(ev, B) {
+    const P = B.phases[phase];
+    $('.volet[data-p="bataille"]').innerHTML = `
+      <div class="phases">${B.phases.map((_, k) => `<button data-ph="${k}" class="${k === phase ? 'on' : ''}" aria-label="Étape ${k + 1}">${k + 1}</button>`).join('')}</div>
+      <h3 class="phase-titre">${esc(P.titre)}</h3>
+      <p>${esc(P.texte)}</p>
+      <div class="legende">${Object.values(B.camps).map((c) => `<span><i style="background:${esc(c.couleur)}"></i>${esc(c.nom)}</span>`).join('')}</div>
+      <div class="phase-nav">
+        <button data-nav="-1" ${phase === 0 ? 'disabled' : ''}>${ic('chevL')}Étape précédente</button>
+        <button data-nav="1" class="principal">${phase === B.phases.length - 1 ? 'Recommencer' : 'Étape suivante'}${ic('chev')}</button>
+      </div>
+      <div class="bloc"><h3>${ic('alert')}Schéma à vérifier</h3><p class="note">${esc(B.note)}</p><ul>${B.sources.map(sourceHTML).join('')}</ul></div>`;
+    $$('.volet[data-p="bataille"] [data-ph]').forEach((b) => (b.onclick = () => montrerPhase(+b.dataset.ph)));
+    $$('.volet[data-p="bataille"] [data-nav]').forEach((b) => (b.onclick = () => {
+      const n = B.phases.length; montrerPhase(+b.dataset.nav > 0 && phase === n - 1 ? 0 : Math.max(0, Math.min(n - 1, phase + +b.dataset.nav)));
+    }));
+  }
+  function montrerPhase(k) {
+    const ev = EV[cur], B = BATAILLES[ev.id]; if (!B) return;
+    clearTimeout(suiteBataille); arreterVisite();
+    phase = k; remplirBataille(ev, B); ouvrirVolet('bataille');
+    carte.bataille(B, phase);
+  }
+  function ouvrirVolet(p) {
+    volet = p;
+    $$('.onglets button').forEach((b) => b.classList.toggle('on', b.dataset.p === p));
+    $$('.volet').forEach((v) => v.classList.toggle('on', v.dataset.p === p));
+    $('.recit-corps').scrollTop = 0;
+  }
+  $$('.onglets button').forEach((b) => (b.onclick = () => {
+    ouvrirVolet(b.dataset.p);
+    if (b.dataset.p === 'bataille') montrerPhase(phase);
+  }));
 
   // ---------- sélection d'un événement ----------
   function choisir(i, opts = {}) {
     i = (i + EV.length) % EV.length; cur = i;
-    const ev = EV[i], L = LIEUX[ev.lieu], c = CAT[ev.categorie];
-    document.body.classList.remove('noDetail');
-    const det = $('#detail'); det.className = 'detail card cat-' + ev.categorie;
-    $('#dIcon').innerHTML = ic(c.icone);
+    const ev = EV[i], L = LIEUX[ev.lieu], c = CAT[ev.categorie], B = BATAILLES[ev.id];
+    clearTimeout(suiteBataille);
+    ouvrirRecit(!recitReduit);
+    $('#recit').className = 'recit verre ui cat-' + ev.categorie;
     $('#dCat').textContent = `${c.nom} · ${L.nom}`;
-    $('#dTitle').textContent = ev.titre;
-    $('#dSub').textContent = `#${String(i + 1).padStart(2, '0')} · ${ev.date}`;
+    $('#dTitre').textContent = ev.titre;
     $('#dAr').textContent = ev.titre_ar;
-    $('#dChip').textContent = c.nom;
+    $('#dDate').textContent = `${ev.date} · ${ev.annee_ap_jc}`;
     $('#dStatut').innerHTML = statutHTML(ev.statut);
-    $('#dPlace').textContent = `${L.nom} · ${ev.annee_ap_jc}`;
-    const lignes = [['Date', ev.date], ['Année', ev.annee_ap_jc + ' apr. J.-C.'], ['Lieu', L.nom], ['Âge du Prophète ﷺ', ev.age === 0 ? 'Naissance' : ev.age + ' ans']].concat(ev.faits);
-    $('#dRows').innerHTML = lignes.map((r) => `<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('');
-    $('#dSummary').textContent = ev.resume;
-    $('#dQuran').innerHTML = ev.coran ? `<span class="chip">${ic('book')} Coran</span>Sourate ${esc(ev.coran)}` : '';
-    $('#dDiv').innerHTML = ev.divergences && ev.divergences.length
-      ? `<div class="bloc div"><h3>${ic('split')}Divergences signalées</h3><ul>${ev.divergences.map((d) => `<li><b>${esc(d.sujet)} :</b> ${esc(d.texte)}</li>`).join('')}</ul></div>` : '';
-    $('#dUmda').innerHTML = (ev.hadiths || []).map(hadithHTML).join('');
-    $('#dLieu').innerHTML = `<div class="bloc"><h3>${ic('pin')}Localisation · ${esc(L.nom)}</h3>
-      <span class="certitude ${CERTITUDE[L.certitude] || ''}">${esc(L.certitude)}</span>
-      ${L.note_localisation ? `<p class="note">${esc(L.note_localisation)}</p>` : ''}
-      ${ev.trajet && ev.trajet.note ? `<p class="note">${esc(ev.trajet.note)}</p>` : ''}</div>`;
-    $('#dSrc').innerHTML = `<div class="bloc"><h3>${ic('book')}Sources</h3><ul>${ev.sources.map(sourceHTML).join('')}</ul>
-      ${ev.statut !== 'validé' ? '<p class="note">Brouillon rédigé d\'après ces sources, en attente de validation par un enseignant.</p>' : ''}</div>`;
+    $('#pliTitre').textContent = ev.titre;
+    phase = 0;
+    remplirVolets(ev);
+    ouvrirVolet(B ? 'bataille' : opts.hadith ? 'recit' : (volet === 'bataille' ? 'recit' : volet));
+    if (opts.hadith) { const el = document.getElementById('umda-' + opts.hadith); if (el) { el.open = true; el.scrollIntoView({ block: 'nearest' }); } }
     const autres = EV.map((e, k) => [e, k]).filter(([e, k]) => e.lieu === ev.lieu && k !== i);
-    $('#dAlso').innerHTML = autres.length ? 'Aussi ici :' + autres.map(([e, k]) => `<button data-i="${k}">${esc(e.titre)}</button>`).join('') : '';
-    $('#dAlso').querySelectorAll('button').forEach((b) => (b.onclick = () => choisir(+b.dataset.i)));
-    det.scrollTop = 0;
-    if (opts.hadith) { const el = document.getElementById('umda-' + opts.hadith); if (el) det.scrollTop = el.offsetTop - 80; }
-    // indicateurs
-    $('#kAge').textContent = ev.age === 0 ? 'Naissance' : `${ev.age} ans`;
-    $('#kYear').textContent = annee(ev);
-    $('#kYearS').textContent = ev.annee_hegire ? ev.annee_ap_jc + ' apr. J.-C.' : "apr. J.-C. · avant l'Hégire";
-    $('#kPer').textContent = PERIODES[ev.periode] || ev.periode;
-    $('#kPerS').textContent = ev.periode_detail || '—';
-    $('#eraText').textContent = ev.annee_hegire ? 'An ' + annee(ev) : ev.annee_ap_jc;
-    $('#siteBadge').textContent = L.code || 'HJZ';
-    $('#siteName').textContent = L.nom;
-    const n = EV.filter((e) => e.lieu === ev.lieu).length;
-    $('#siteSub').textContent = n + (n > 1 ? ' événements ici' : ' événement ici');
-    $('#view').value = VUES.some((v) => v[0] === ev.lieu) ? ev.lieu : '';
-    frise(); liste();
+    $('#dAussi').innerHTML = autres.length ? 'Aussi ici :' + autres.map(([e, k]) => `<button data-i="${k}">${esc(e.titre)}</button>`).join('') : '';
+    $$('#dAussi button').forEach((b) => (b.onclick = () => { arreterVisite(); choisir(+b.dataset.i); }));
+    // contexte
+    $('#ctxAn').textContent = ev.annee_hegire ? `An ${ev.annee_hegire} H` : 'Avant l\'Hégire';
+    $('#ctxAnnee').textContent = ev.annee_ap_jc;
+    $('#ctxAge').textContent = ev.age === 0 ? 'Naissance' : `${ev.age} ans`;
+    $('#ctxPeriode').textContent = PERIODES[ev.periode] || ev.periode;
+    ruban();
+    if (onglet !== 'src' && !$('#tiroir').hidden) liste();
     if (!opts.sansLien) lien('#evenement/' + ev.id);
+    carte.bataille(null);
     carte.selectionner(ev, i, couleur(ev.categorie));
     if (!opts.sansVol) carte.cadrer(ev, opts.duree);
+    // Bataille : on montre d'abord la marche de l'armée, puis on descend sur le champ de bataille.
+    if (B) suiteBataille = setTimeout(() => montrerPhase(0), opts.sansVol ? 300 : (ev.trajet ? 3800 : 1200));
   }
 
   function choisirLieu(id) {
@@ -103,61 +143,103 @@ export function creerInterface(D) {
     const suivant = liste.find(([e, i]) => i > cur && e.lieu === id) || liste.find(([e]) => e.lieu === id) || liste[0];
     choisir(suivant[1], { sansLien: true });
     lien('#lieu/' + id);
-    mobile('detail');
     return true;
   }
 
-  // ---------- frise ----------
-  function frise() {
-    const ev = EV[cur];
-    $('#tMeta').textContent = `Événement ${cur + 1} / ${EV.length} · ${ev.annee_ap_jc}`;
-    let jc = 0; D.JALONS.forEach((j, k) => { if (j.i <= cur) jc = k; });
-    $('#stepper').innerHTML = D.JALONS.map((j, k) => `<li class="step ${k < jc ? 'done' : k === jc ? 'cur' : ''}"><button data-i="${j.i}"><span class="node">${ic(CAT[EV[j.i].categorie].icone)}</span><span class="lb">${esc(j.nom)}</span><span class="yr">${esc(EV[j.i].annee_hegire ? EV[j.i].annee_ap_jc + ' · ' + annee(EV[j.i]) : EV[j.i].annee_ap_jc)}</span></button></li>`).join('');
-    $('#stepper').querySelectorAll('button').forEach((b) => (b.onclick = () => { arreterVisite(); choisir(+b.dataset.i); }));
-    const ni = (cur + 1) % EV.length, n = EV[ni], nc = $('#nextCard');
-    nc.className = 'nextcard cat-' + n.categorie;
-    nc.innerHTML = `<span class="ni">${ic(CAT[n.categorie].icone)}</span><span class="nc"><small>${ni === 0 ? 'Recommencer' : 'Événement suivant'}</small><b>${esc(n.titre)}</b><span class="chip">${esc(CAT[n.categorie].nom)}</span><div class="ns">${esc(LIEUX[n.lieu].nom)} · ${esc(n.annee_ap_jc)}</div></span>${ic('chev')}`;
-    nc.onclick = () => { arreterVisite(); choisir(ni); };
-    $('#track').innerHTML = EV.map((e, k) => `<button class="cat-${e.categorie} ${k < cur ? 'past' : ''} ${k === cur ? 'on' : ''}" data-i="${k}" title="${esc(e.titre)} · ${esc(e.annee_ap_jc)}" aria-label="${esc(e.titre)}"><i></i></button>`).join('');
-    $('#track').querySelectorAll('button').forEach((b) => (b.onclick = () => { arreterVisite(); choisir(+b.dataset.i); }));
+  // ---------- récit : ouvrir / réduire ----------
+  function ouvrirRecit(ouvert) {
+    document.body.classList.toggle('recit-ferme', !ouvert);
+    $('#recitPli').hidden = ouvert;
+    carte && carte.rafraichirVue();
   }
+  $('#dReduire').onclick = () => { recitReduit = true; ouvrirRecit(false); };
+  $('#recitPli').onclick = () => { recitReduit = false; ouvrirRecit(true); };
+  $('#dFocus').onclick = () => { arreterVisite(); clearTimeout(suiteBataille); carte.bataille(null); carte.zoomLieu(EV[cur].lieu); };
+  $('#dLink').onclick = async () => {
+    try { await navigator.clipboard.writeText(location.href); toast('Lien copié : ' + location.hash); }
+    catch { toast('Lien de la fiche : ' + location.hash); }
+  };
 
-  // ---------- listes ----------
+  // ---------- ruban chronologique ----------
+  const anneeNum = (e) => +(String(e.annee_ap_jc).match(/\d{3}/) || [600])[0];
+  function echelle(an) {
+    let x = 0;
+    for (const e of ERES) {
+      if (an >= e.a) { x += e.part; continue; }
+      return x + Math.max(0, an - e.de) / (e.a - e.de) * e.part;
+    }
+    return 1;
+  }
+  $('#eres').innerHTML = ERES.map((e) => `<div style="flex:${e.part}"><span>${e.nom}</span></div>`).join('');
+  $('#points').innerHTML = EV.map((e, k) => `<button class="cat-${e.categorie}" data-i="${k}" title="${esc(e.titre)} · ${esc(e.annee_ap_jc)}" aria-label="${esc(e.titre)}"><i></i></button>`).join('');
+  $$('#points button').forEach((b) => (b.onclick = () => { arreterVisite(); choisir(+b.dataset.i); }));
+  function placerPoints() {
+    const w = $('#axe').clientWidth || 600, ecart = 13 / w;
+    let precedent = -1;
+    const xs = EV.map((e) => { const x = Math.max(echelle(anneeNum(e) + 0.5), precedent + ecart); precedent = x; return x; });
+    const deborde = Math.max(0, xs[xs.length - 1] - 0.995);
+    $$('#points button').forEach((b, k) => { b.style.left = `${(xs[k] - deborde * (k / (xs.length - 1))) * 100}%`; });
+  }
+  function ruban() {
+    const ev = EV[cur], an = anneeNum(ev);
+    $$('#points button').forEach((b, k) => b.classList.toggle('on', k === cur));
+    $$('#eres div').forEach((d, k) => d.classList.toggle('passe', an >= ERES[k].a));
+    const point = $$('#points button')[cur], axe = $('#axe'), lbl = $('#courant');
+    lbl.innerHTML = `${esc(ev.titre)}<small>${esc(annee(ev))}</small>`;
+    const x = point.offsetLeft, w = axe.clientWidth, demi = lbl.offsetWidth / 2;
+    lbl.style.left = `${Math.min(w - demi, Math.max(demi, x))}px`;
+  }
+  placerPoints();
+
+  // ---------- index (tiroir) ----------
+  function ouvrirTiroir(ouvert) {
+    $('#tiroir').hidden = !ouvert;
+    document.body.classList.toggle('tiroir-ouvert', ouvert);
+    $('#indexBtn').setAttribute('aria-pressed', ouvert);
+    if (ouvert) liste();
+    carte && carte.rafraichirVue();
+  }
+  $('#indexBtn').onclick = () => ouvrirTiroir($('#tiroir').hidden);
+  $('#tiroirFermer').onclick = () => ouvrirTiroir(false);
+  $('#etatBtn').onclick = () => { ouvrirOnglet('src'); ouvrirTiroir(true); };
   function liste() {
     const corps = $('#lbody'); let h = '';
-    if (onglet === 'ev') h = EV.map((e, k) => `<button class="row cat-${e.categorie} ${k === cur ? 'on' : ''}" data-i="${k}"><span class="c1"><b>#${String(k + 1).padStart(2, '0')}</b><small>${esc(e.annee_ap_jc)}</small></span><span class="c2"><i class="d"></i><span>${esc(e.titre)}</span><span class="ar" lang="ar">${esc(e.titre_ar)}</span></span><span class="chip">${esc(CAT[e.categorie].nom)}</span>${ic('chev')}</button>`).join('');
+    if (onglet === 'ev') h = EV.map((e, k) => `<button class="row cat-${e.categorie} ${k === cur ? 'on' : ''}" data-i="${k}"><span class="c1"><b>${esc(annee(e))}</b><small>${esc(e.annee_ap_jc)}</small></span><span class="c2"><b>${esc(e.titre)}</b><span class="ar" lang="ar">${esc(e.titre_ar)}</span></span><span class="pastille">${esc(CAT[e.categorie].nom)}</span></button>`).join('');
     if (onglet === 'loc') h = lieuxAvecEv.map((k) => {
       const L = LIEUX[k], n = evDuLieu(k).length, on = EV[cur].lieu === k;
-      return `<button class="row ${on ? 'on' : ''}" data-l="${k}"><span class="c1"><b>${esc(L.code || (L.hors_carte ? 'Hors carte' : 'Lieu'))}</b><small class="certitude ${CERTITUDE[L.certitude]}">${esc(L.certitude)}</small></span><span class="c2"><i class="d"></i><span>${esc(L.nom)}</span><span class="ar" lang="ar">${esc(L.nom_ar)}</span></span><span class="chip">${n} évén.</span>${ic('chev')}</button>`;
+      return `<button class="row ${on ? 'on' : ''}" data-l="${k}"><span class="c1"><b>${esc(L.code || (L.hors_carte ? 'Hors carte' : 'Lieu'))}</b></span><span class="c2"><b>${esc(L.nom)}</b><span class="ar" lang="ar">${esc(L.nom_ar)}</span></span><span class="certitude ${CERTITUDE[L.certitude]}">${esc(L.certitude)} · ${n}</span></button>`;
     }).join('');
     if (onglet === 'had') h = Object.values(HADITHS).map((u) => {
       const e = EV[D.INDEX[u.evenements[0]]], on = u.evenements.includes(EV[cur].id);
-      return `<button class="row cat-${e.categorie} ${on ? 'on' : ''}" data-u="${u.id}"><span class="c1"><b>n° ${u.numero}</b><small>p. ${u.page}</small></span><span class="c2"><i class="d"></i><span>${esc(u.titre)}</span></span><span class="chip">${esc(u.evenements.map((id) => EV[D.INDEX[id]].titre.replace(/^(Bataille d[eu']?|La |Conquête de |Pèlerinage d'|Départ des )\s?/, '')).join(' · '))}</span>${ic('chev')}</button>`;
+      return `<button class="row cat-${e.categorie} ${on ? 'on' : ''}" data-u="${u.id}"><span class="c1"><b>n° ${u.numero}</b><small>p. ${u.page}</small></span><span class="c2"><b>${esc(u.titre)}</b><span class="ar">${esc(u.evenements.map((id) => EV[D.INDEX[id]].titre).join(' · '))}</span></span><span></span></button>`;
     }).join('');
     if (onglet === 'src') {
       const usage = {};
-      EV.forEach((e) => e.sources.forEach((s) => { const u = (usage[s.ouvrage] ||= { n: 0, sans: 0 }); u.n++; if (s.page == null) u.sans++; }));
-      Object.values(LIEUX).forEach((l) => (l.sources || []).forEach((s) => { const u = (usage[s.ouvrage] ||= { n: 0, sans: 0 }); u.n++; if (s.page == null) u.sans++; }));
-      h = Object.entries(OUVRAGES).filter(([k]) => usage[k] || k === 'umda').map(([k, o]) => {
-        const u = usage[k] || { n: 0, sans: 0 }, nh = k === 'umda' ? Object.keys(HADITHS).length : 0;
-        return `<div class="srcrow"><b>${esc(o.titre)}</b><small>${esc(o.auteur || '')}${o.edition ? ' · ' + esc(o.edition) : ' · <span class="manque">édition à préciser</span>'}</small><br><small>${u.n + nh} citation${u.n + nh > 1 ? 's' : ''}${u.sans ? ` · <span class="manque">${u.sans} page${u.sans > 1 ? 's' : ''} à compléter</span>` : ''}</small></div>`;
-      }).join('') + `<p class="credits"><b>${aVerifier} fiche${aVerifier > 1 ? 's' : ''} sur ${EV.length}</b> en brouillon, à valider par un enseignant.<br>${D.DONNEES_CARTE.map((d) => `<b>${esc(d.nom)}</b> (${esc(d.usage.toLowerCase())}) : ${esc(d.attribution)}.`).join('<br>')}</p>`;
+      const compter = (s) => { const u = (usage[s.ouvrage] ||= { n: 0, sans: 0 }); u.n++; if (s.page == null) u.sans++; };
+      EV.forEach((e) => e.sources.forEach(compter));
+      Object.values(LIEUX).forEach((l) => (l.sources || []).forEach(compter));
+      Object.values(BATAILLES).forEach((b) => b.sources.forEach(compter));
+      h = `<p class="credits"><b>${aVerifier} fiche${aVerifier > 1 ? 's' : ''} sur ${EV.length}</b> en brouillon, à valider par un enseignant.</p>` +
+        Object.entries(OUVRAGES).filter(([k]) => usage[k] || k === 'umda').map(([k, o]) => {
+          const u = usage[k] || { n: 0, sans: 0 }, nh = k === 'umda' ? Object.keys(HADITHS).length : 0;
+          return `<div class="srcrow"><b>${esc(o.titre)}</b><small>${esc(o.auteur || '')}${o.edition ? ' · ' + esc(o.edition) : ' · <span class="manque">édition à préciser</span>'}</small><br><small>${u.n + nh} citation${u.n + nh > 1 ? 's' : ''}${u.sans ? ` · <span class="manque">${u.sans} page${u.sans > 1 ? 's' : ''} à compléter</span>` : ''}</small></div>`;
+        }).join('') + `<p class="credits">${D.DONNEES_CARTE.map((d) => `<b>${esc(d.nom)}</b> (${esc(d.usage.toLowerCase())}) : ${esc(d.attribution)}.`).join('<br>')}</p>`;
     }
     corps.innerHTML = h;
-    corps.querySelectorAll('[data-i]').forEach((b) => (b.onclick = () => { arreterVisite(); choisir(+b.dataset.i); mobile('detail'); }));
-    corps.querySelectorAll('[data-l]').forEach((b) => (b.onclick = () => { arreterVisite(); choisirLieu(b.dataset.l); }));
-    corps.querySelectorAll('[data-u]').forEach((b) => (b.onclick = () => { arreterVisite(); const u = HADITHS[b.dataset.u]; choisir(D.INDEX[u.evenements[0]], { hadith: u.id }); mobile('detail'); }));
+    corps.querySelectorAll('[data-i]').forEach((b) => (b.onclick = () => { arreterVisite(); choisir(+b.dataset.i); fermerSurMobile(); }));
+    corps.querySelectorAll('[data-l]').forEach((b) => (b.onclick = () => { arreterVisite(); choisirLieu(b.dataset.l); fermerSurMobile(); }));
+    corps.querySelectorAll('[data-u]').forEach((b) => (b.onclick = () => { arreterVisite(); const u = HADITHS[b.dataset.u]; choisir(D.INDEX[u.evenements[0]], { hadith: u.id }); fermerSurMobile(); }));
     const on = corps.querySelector('.on');
-    if (on) { const top = on.offsetTop - corps.offsetTop; if (top < corps.scrollTop || top > corps.scrollTop + corps.clientHeight - 40) corps.scrollTop = top - 8; }
+    if (on) on.scrollIntoView({ block: 'nearest' });
   }
+  const fermerSurMobile = () => { if (innerWidth <= 760) ouvrirTiroir(false); };
   function ouvrirOnglet(t) {
     onglet = t;
     $('#lbody').scrollTop = 0;
-    document.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('on', x.dataset.tab === t));
+    $$('#tiroir .segments button').forEach((x) => x.classList.toggle('on', x.dataset.tab === t));
     liste();
   }
-  document.querySelectorAll('.tabs button').forEach((b) => (b.onclick = () => ouvrirOnglet(b.dataset.tab)));
-  $('#srcBtn').onclick = () => { ouvrirOnglet('src'); mobile('list'); };
+  $$('#tiroir .segments button').forEach((b) => (b.onclick = () => ouvrirOnglet(b.dataset.tab)));
 
   // ---------- visite guidée ----------
   function boutonVisite() {
@@ -168,30 +250,18 @@ export function creerInterface(D) {
   $('#play').onclick = () => {
     if (visite) return arreterVisite();
     choisir(cur + 1);
-    visite = setInterval(() => choisir(cur + 1), 8000);
+    visite = setInterval(() => choisir(cur + 1), 9000);
     boutonVisite();
   };
   boutonVisite();
   $('#prev').onclick = () => { arreterVisite(); choisir(cur - 1); };
   $('#next').onclick = () => { arreterVisite(); choisir(cur + 1); };
-  $('#dClose').onclick = () => { document.body.classList.add('noDetail'); carte.rafraichirVue(); };
-  $('#dFocus').onclick = () => { arreterVisite(); carte.zoomLieu(EV[cur].lieu); };
-  $('#dLink').onclick = async () => {
-    try { await navigator.clipboard.writeText(location.href); toast('Lien copié : ' + location.hash); }
-    catch { toast('Lien : ' + location.href); }
-  };
 
-  // ---------- vues, carte, thème ----------
-  $('#view').onchange = (e) => {
-    const k = e.target.value; arreterVisite();
-    if (!k) { carte.accueil(); $('#siteBadge').textContent = 'HJZ'; $('#siteName').textContent = 'Hijaz'; $('#siteSub').textContent = 'Vue générale'; return; }
-    carte.vueLieu(k);
-  };
-  $('#zIn').onclick = () => carte.zoom(0.75);
-  $('#zOut').onclick = () => carte.zoom(1.33);
-  $('#rL').onclick = () => carte.pivoter(-Math.PI / 4);
-  $('#rR').onclick = () => carte.pivoter(Math.PI / 4);
-  $('#home').onclick = () => { arreterVisite(); carte.accueil(); };
+  // ---------- carte : commandes, calques, thème ----------
+  $('#zIn').onclick = () => carte.zoom(0.7);
+  $('#zOut').onclick = () => carte.zoom(1.43);
+  $('#nord').onclick = () => carte.nord();
+  $('#home').onclick = () => { arreterVisite(); clearTimeout(suiteBataille); carte.accueil(); };
   $('#satBtn').onclick = (e) => {
     const on = e.currentTarget.getAttribute('aria-pressed') !== 'true';
     e.currentTarget.setAttribute('aria-pressed', on);
@@ -209,16 +279,78 @@ export function creerInterface(D) {
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', appliquerTheme);
   new MutationObserver(appliquerTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-  // ---------- mobile ----------
-  function mobile(m) {
-    document.body.dataset.m = m;
-    document.querySelectorAll('.mtabs button').forEach((b) => b.classList.toggle('on', b.dataset.m === m));
+  // ---------- mode immersif ----------
+  function immersif(on) {
+    document.body.classList.toggle('immersif', on);
+    $('#sortieImmersif').hidden = !on;
+    carte && carte.rafraichirVue();
   }
-  document.querySelectorAll('.mtabs button').forEach((b) => (b.onclick = () => { document.body.classList.remove('noDetail'); mobile(b.dataset.m); }));
-  mobile('detail');
+  $('#immersifBtn').onclick = () => immersif(true);
+  $('#sortieImmersif').onclick = () => immersif(false);
+
+  // ---------- vol libre ----------
+  function vol(on) {
+    if (on === document.body.classList.contains('vol')) return;
+    arreterVisite(); clearTimeout(suiteBataille);
+    document.body.classList.toggle('vol', on);
+    $('#volBtn').setAttribute('aria-pressed', on);
+    $('#volHud').hidden = !on;
+    $('#volPad').hidden = !on || !matchMedia('(pointer: coarse)').matches;
+    carte.vol(on);
+    if (on) toast('Vol libre : avancez avec Z (ou W, ou ↑), regardez en glissant la souris.');
+  }
+  $('#volBtn').onclick = () => vol(!document.body.classList.contains('vol'));
+  $('#volQuitter').onclick = () => vol(false);
+  $$('#volPad button').forEach((b) => {
+    const k = b.dataset.v;
+    b.addEventListener('pointerdown', (e) => { e.preventDefault(); carte.commandeVol(k, true); });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach((t) => b.addEventListener(t, () => carte.commandeVol(k, false)));
+  });
+  function surVol(info) {
+    const ou = info.nom ? (info.distance < 1 ? `au-dessus de ${info.nom}` : `à ${info.distance.toFixed(info.distance < 10 ? 1 : 0).replace('.', ',')} km de ${info.nom}`) : '';
+    const v = info.vitesse ? (info.vitesse < 1 ? `${Math.round(info.vitesse * 1000)} m/s` : `${info.vitesse.toFixed(1).replace('.', ',')} km/s`) : 'en vol stationnaire';
+    $('#volInfo').textContent = `${ou} · ${v}`;
+  }
+
+  // ---------- mini-carte ----------
+  const mini = $('#miniCanvas'), mctx = mini.getContext('2d');
+  let fondMini = null;
+  function dessinerMini(etat) {
+    if (!fondMini || $('#minicarte').hidden || document.body.classList.contains('immersif')) return;
+    const w = mini.width, h = mini.height;
+    mctx.drawImage(fondMini, 0, 0, w, h);
+    const px = (lat, lon) => [(lon - etat.emprise.ouest) / (etat.emprise.est - etat.emprise.ouest) * w, (etat.emprise.nord - lat) / (etat.emprise.nord - etat.emprise.sud) * h];
+    for (const id of ['makkah', 'madinah', 'badr', 'khaybar', 'taif']) {
+      const [x, y] = px(LIEUX[id].lat, LIEUX[id].lon);
+      mctx.fillStyle = '#0E6B53'; mctx.beginPath(); mctx.arc(x, y, 2.5, 0, 7); mctx.fill();
+    }
+    // position et direction de la vue
+    const [x, y] = px(etat.lat, etat.lon), a = etat.cap;
+    const portee = Math.max(6, Math.min(40, etat.portee / (etat.emprise.nord - etat.emprise.sud) / 110 * h));
+    mctx.fillStyle = 'rgba(201,150,47,.35)'; mctx.strokeStyle = '#C9962F'; mctx.lineWidth = 1.5;
+    mctx.beginPath(); mctx.moveTo(x, y);
+    mctx.arc(x, y, portee, -Math.PI / 2 + a - 0.5, -Math.PI / 2 + a + 0.5); mctx.closePath(); mctx.fill(); mctx.stroke();
+    mctx.fillStyle = '#fff'; mctx.beginPath(); mctx.arc(x, y, 3.5, 0, 7); mctx.fill();
+    mctx.strokeStyle = '#C9962F'; mctx.beginPath(); mctx.arc(x, y, 3.5, 0, 7); mctx.stroke();
+  }
+  mini.addEventListener('click', (e) => {
+    const r = mini.getBoundingClientRect(), E = carte.emprise();
+    const lon = E.ouest + (e.clientX - r.left) / r.width * (E.est - E.ouest), lat = E.nord - (e.clientY - r.top) / r.height * (E.nord - E.sud);
+    arreterVisite(); clearTimeout(suiteBataille);
+    carte.teleporter(lat, lon);
+  });
+  function miniVisible(on) { $('#minicarte').hidden = !on; $('#miniOuvrir').hidden = on; }
+  $('#miniFermer').onclick = () => miniVisible(false);
+  $('#miniOuvrir').onclick = () => miniVisible(true);
+  let image = 0;
+  function surImage(etat) {
+    if (++image % 4 === 0) dessinerMini(etat);
+    $('#nord .aiguille').style.transform = `rotate(${-etat.cap}rad)`;
+    if (etat.vol) surVol(etat.vol);
+  }
 
   // ---------- recherche ----------
-  const q = $('#q'), res = $('#results'); let resultats = [], sel = 0;
+  const q = $('#q'), res = $('#resultats'); let resultats = [], sel = 0;
   function chercher() {
     const brut = q.value.trim(), v = norm(brut);
     if (!v) { res.hidden = true; return; }
@@ -232,32 +364,45 @@ export function creerInterface(D) {
     res.innerHTML = resultats.length ? resultats.map((r, j) => r.t === 'e'
       ? `<button class="res ${j === 0 ? 'on' : ''}" data-j="${j}">${ic(CAT[EV[r.i].categorie].icone)}<span class="t"><b>${esc(EV[r.i].titre)}</b><small>${esc(LIEUX[EV[r.i].lieu].nom)} · ${esc(EV[r.i].annee_ap_jc)}</small></span><span class="ar" lang="ar">${esc(EV[r.i].titre_ar)}</span></button>`
       : `<button class="res ${j === 0 ? 'on' : ''}" data-j="${j}">${ic('pin')}<span class="t"><b>${esc(LIEUX[r.k].nom)}</b><small>Lieu</small></span><span class="ar" lang="ar">${esc(LIEUX[r.k].nom_ar)}</span></button>`).join('')
-      : `<div class="empty">Aucun résultat pour « ${esc(brut)} ». Essayez Badr, Hijra, Khadîja…</div>`;
+      : `<div class="vide">Aucun résultat pour « ${esc(brut)} ». Essayez Badr, Hijra, Khadîja…</div>`;
     res.hidden = false;
     res.querySelectorAll('.res').forEach((b) => (b.onmousedown = (e) => { e.preventDefault(); aller(+b.dataset.j); }));
   }
   function aller(j) {
     const r = resultats[j]; if (!r) return;
     arreterVisite();
-    if (r.t === 'e') { choisir(r.i); mobile('detail'); } else choisirLieu(r.k);
-    q.value = ''; res.hidden = true; q.blur();
+    if (r.t === 'e') choisir(r.i); else choisirLieu(r.k);
+    q.value = ''; res.hidden = true; q.blur(); document.body.classList.remove('recherche-ouverte');
   }
   q.addEventListener('input', chercher);
   q.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { e.preventDefault(); aller(sel); }
-    else if (e.key === 'Escape') { q.value = ''; res.hidden = true; q.blur(); }
+    else if (e.key === 'Escape') { q.value = ''; res.hidden = true; q.blur(); document.body.classList.remove('recherche-ouverte'); }
     else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault(); sel = Math.max(0, Math.min(resultats.length - 1, sel + (e.key === 'ArrowDown' ? 1 : -1)));
       res.querySelectorAll('.res').forEach((b, j) => b.classList.toggle('on', j === sel));
     }
   });
   q.addEventListener('blur', () => setTimeout(() => (res.hidden = true), 120));
+  $('#rechBtn').onclick = () => { document.body.classList.add('recherche-ouverte'); q.focus(); };
+
+  // ---------- clavier ----------
   addEventListener('keydown', (e) => {
-    if (e.target === q || e.target.tagName === 'SELECT') return;
-    if (e.key === '/') { e.preventDefault(); q.focus(); }
+    if (e.target === q || e.target.tagName === 'SELECT' || e.ctrlKey || e.metaKey || e.altKey) return;
+    const enVol = document.body.classList.contains('vol');
+    if (e.key === 'Escape') {
+      if (enVol) vol(false);
+      else if (!$('#tiroir').hidden) ouvrirTiroir(false);
+      else if (document.body.classList.contains('immersif')) immersif(false);
+      else { recitReduit = !document.body.classList.contains('recit-ferme'); ouvrirRecit(!recitReduit); }
+      return;
+    }
+    if (enVol) return; // les touches pilotent l'appareil
+    if (e.key === '/') { e.preventDefault(); if (innerWidth <= 760) document.body.classList.add('recherche-ouverte'); q.focus(); }
     else if (e.key === 'ArrowRight') { arreterVisite(); choisir(cur + 1); }
     else if (e.key === 'ArrowLeft') { arreterVisite(); choisir(cur - 1); }
-    else if (e.key === 'Escape') { document.body.classList.add('noDetail'); carte && carte.rafraichirVue(); }
+    else if (e.key === 'h' || e.key === 'H') immersif(!document.body.classList.contains('immersif'));
+    else if (e.key === 'v' || e.key === 'V') vol(true);
   });
 
   // ---------- liens directs : #evenement/badr, #lieu/uhud ----------
@@ -269,27 +414,32 @@ export function creerInterface(D) {
   }
   addEventListener('hashchange', () => { arreterVisite(); lireLien(); });
 
-  // Zone de la carte laissée libre par les panneaux (pour centrer la vue).
+  // Zone de la carte laissée libre par les panneaux (pour centrer la vue dedans).
   function zoneLibre(w, h) {
-    const mob = w <= 900, det = !document.body.classList.contains('noDetail');
-    let l, r, t, b;
-    if (mob) { l = 0; r = w; t = 200; b = h - 76 - h * 0.38; }
-    else { l = 16; r = det ? w - 16 - 372 - 24 : w - 16; t = 96 + ($('.kpis').offsetHeight || 86) + 8; b = h - 16 - $('#timeline').offsetHeight - 12; }
-    if (b - t < 120) t = Math.max(0, b - 120);
-    return { l, r, t, b };
+    const b = document.body.classList;
+    if (b.contains('immersif') || b.contains('vol')) return { l: 0, r: w, t: 0, b: h };
+    const rect = (s) => $(s).getBoundingClientRect();
+    let l = 0, r = w, t = rect('.barre').bottom + 8, bas = rect('#ruban').top - 8;
+    if (!$('#tiroir').hidden) l = rect('#tiroir').right + 8;
+    if (!b.contains('recit-ferme')) {
+      const rc = rect('#recit');
+      if (w > 760) r = rc.left - 8; else bas = Math.min(bas, rc.top - 8);
+    }
+    if (bas - t < 140) t = Math.max(0, bas - 140);
+    if (r - l < 200) l = Math.max(0, r - 200);
+    return { l, r, t, b: bas };
   }
-  addEventListener('resize', () => {
-    document.documentElement.style.setProperty('--tlh', $('#timeline').offsetHeight + 'px');
-    carte && carte.rafraichirVue();
-  });
-  document.documentElement.style.setProperty('--tlh', $('#timeline').offsetHeight + 'px');
+  addEventListener('resize', () => { placerPoints(); if (cur >= 0) ruban(); carte && carte.rafraichirVue(); });
 
   return {
     zoneLibre,
-    arreterVisite,
+    surImage,
+    arreterVisite: () => { arreterVisite(); clearTimeout(suiteBataille); },
     choisirLieu: (id) => { arreterVisite(); choisirLieu(id); },
     demarrer(c) {
       carte = c;
+      fondMini = carte.apercu();
+      if (innerWidth <= 760) miniVisible(false);
       appliquerTheme();
       if (lireLien()) return;
       // Ouverture : vue d'ensemble, puis la Hijra.

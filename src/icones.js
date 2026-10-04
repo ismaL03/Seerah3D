@@ -27,7 +27,15 @@ const P = {
   globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
   alert: '<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>',
   check: '<path d="m5 12 5 5 9-10"/>',
-  split: '<path d="M6 3v6a6 6 0 0 0 6 6h0a6 6 0 0 1 6 6M18 3v6"/><path d="m15 6 3-3 3 3"/>'
+  split: '<path d="M6 3v6a6 6 0 0 0 6 6h0a6 6 0 0 1 6 6M18 3v6"/><path d="m15 6 3-3 3 3"/>',
+  plane: '<path d="M10.5 19.5 12 22l1.5-2.5V14l8 3v-2.5l-8-5V4a1.5 1.5 0 0 0-3 0v5.5l-8 5V17l8-3z"/>',
+  expand: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',
+  shrink: '<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>',
+  compass: '<circle cx="12" cy="12" r="9"/><path d="m12 5 2.5 7h-5z" fill="currentColor" stroke="none"/><path d="m12 19-2.5-7h5z"/>',
+  map: '<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z"/><path d="M9 3v15M15 6v15"/>',
+  swords: '<path d="m14.5 17.5 6-6V4h-7.5l-6 6"/><path d="m13 19 6-6M16 16l4 4M3 21l4.5-4.5"/><path d="M9.5 6.5 4 4v7.5l6 6"/>',
+  chevD: '<path d="m6 9 6 6 6-6"/>', chevU: '<path d="m18 15-6-6-6 6"/>',
+  minimize: '<path d="M5 12h14"/>'
 };
 
 export const ic = (n) =>

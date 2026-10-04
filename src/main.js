@@ -25,6 +25,7 @@ try {
     surLieu: ui.choisirLieu,
     surInteraction: ui.arreterVisite,
     zoneLibre: ui.zoneLibre,
+    surImage: ui.surImage,
   });
   ui.demarrer(carte);
   ecran.classList.add('fini');
