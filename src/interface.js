@@ -141,6 +141,7 @@ export function creerInterface(D) {
     $('#dDate').textContent = `${ev.date} · ${ev.annee_ap_jc}`;
     $('#dStatut').innerHTML = statutHTML(ev.statut);
     $('#pliTitre').textContent = ev.titre;
+    $('#dJouer').hidden = !(D.HISTOIRE && D.HISTOIRE.chapitres.some((c) => c.evenement === ev.id));
     phase = 0;
     remplirVolets(ev);
     ouvrirVolet(B ? 'bataille' : opts.hadith ? 'recit' : (volet === 'bataille' ? 'recit' : volet));
@@ -177,6 +178,7 @@ export function creerInterface(D) {
     $('#dDate').innerHTML = `<span class="certitude ${CERTITUDE[L.certitude] || ''}">localisation ${esc(L.certitude)}</span>`;
     $('#dStatut').innerHTML = statutHTML(L.statut);
     $('#pliTitre').textContent = L.nom;
+    $('#dJouer').hidden = true;
     $('#ongletRecit').textContent = 'Présentation';
     $('#ongletBataille').hidden = true;
     $('#nDiv').textContent = '';
@@ -215,6 +217,7 @@ export function creerInterface(D) {
     carte && carte.rafraichirVue();
   }
   $('#dReduire').onclick = () => { recitReduit = true; ouvrirRecit(false); };
+  $('#dJouer').onclick = () => { arreterVisite(); clearTimeout(suiteBataille); carte.bataille(null); api.surChapitre && api.surChapitre(EV[cur].id); };
   $('#recitPli').onclick = () => { recitReduit = false; ouvrirRecit(true); };
   $('#dFocus').onclick = () => { arreterVisite(); clearTimeout(suiteBataille); carte.bataille(null); carte.zoomLieu(lieuOuvert || EV[cur].lieu); };
   $('#dLink').onclick = async () => {
@@ -455,6 +458,7 @@ export function creerInterface(D) {
   // ---------- clavier ----------
   addEventListener('keydown', (e) => {
     if (e.target === q || e.target.tagName === 'SELECT' || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (document.body.classList.contains('histoire')) return; // le jeu a ses propres touches
     const enVol = document.body.classList.contains('vol');
     if (e.key === 'Escape') {
       if (enVol) vol(false);
@@ -506,6 +510,11 @@ export function creerInterface(D) {
     if (!ouvert) try { localStorage.setItem(AIDE_VUE, '1'); } catch { /* stockage indisponible */ }
   }
   $('#aideBtn').onclick = () => aide($('#aide').hidden);
+  function aidePremiereFois() {
+    let vue = false;
+    try { vue = localStorage.getItem(AIDE_VUE) === '1'; } catch { /* stockage indisponible */ }
+    if (!vue) setTimeout(() => { if (!document.body.classList.contains('histoire')) aide(true); }, 3200);
+  }
   $('#aideOk').onclick = () => aide(false);
 
   // ---------- liens directs : #evenement/badr, #lieu/uhud ----------
@@ -520,6 +529,11 @@ export function creerInterface(D) {
   // Zone de la carte laissée libre par les panneaux (pour centrer la vue dedans).
   function zoneLibre(w, h) {
     const b = document.body.classList;
+    // mode histoire : sous le bandeau du jeu, au-dessus du dialogue
+    if (b.contains('histoire')) {
+      const tel = w <= 760;
+      return { l: 0, r: w, t: b.contains('jeu-consigne') ? (tel ? 150 : 170) : 64, b: h - (b.contains('jeu-options') ? (tel ? 400 : 340) : b.contains('jeu-consigne') ? 24 : (tel ? 250 : 210)) };
+    }
     if (b.contains('immersif') || b.contains('vol')) return { l: 0, r: w, t: 0, b: h };
     const rect = (s) => $(s).getBoundingClientRect();
     let l = 0, r = w, t = rect('.barre').bottom + 8, bas = rect('#ruban').top - 8;
@@ -534,25 +548,30 @@ export function creerInterface(D) {
   }
   addEventListener('resize', () => { placerPoints(); if (cur >= 0) ruban(); carte && carte.rafraichirVue(); });
 
-  return {
+  const api = {
     zoneLibre,
     surImage,
     arreterVisite: () => { arreterVisite(); clearTimeout(suiteBataille); },
     choisirLieu: (id) => { arreterVisite(); ficheLieu(id); },
-    demarrer(c) {
+    // Retour du mode histoire : thème de l'utilisateur, puis l'événement du chapitre quitté.
+    ouvrirCarte(idEv) {
+      appliquerTheme(); aidePremiereFois();
+      const i = idEv && idEv in D.INDEX ? D.INDEX[idEv] : cur >= 0 ? cur : D.INDEX.hijra;
+      choisir(i);
+    },
+    demarrer(c, { vue: vueInitiale = true } = {}) {
       carte = c;
       fondMini = carte.apercu();
       if (innerWidth <= 760) miniVisible(false);
       appliquerTheme();
-      let vue = false;
-      try { vue = localStorage.getItem(AIDE_VUE) === '1'; } catch { /* stockage indisponible */ }
-      if (!vue) setTimeout(() => aide(true), 3200);
-      if (lireLien()) return;
-      // Ouverture : vue d'ensemble, puis la Hijra.
+      if (vueInitiale) aidePremiereFois();
+      if (vueInitiale && lireLien()) return;
+      // Ouverture : vue d'ensemble, puis la Hijra (ou l'écran titre du mode histoire, qui prend la main).
       const i = D.INDEX.hijra;
       choisir(i, { sansVol: true, sansLien: true });
       carte.placer(1250, -0.1, 0.72);
-      setTimeout(() => carte.cadrer(EV[i], 2600), 300);
+      if (vueInitiale) setTimeout(() => carte.cadrer(EV[i], 2600), 300);
     },
   };
+  return api;
 }

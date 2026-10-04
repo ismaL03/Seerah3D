@@ -5,7 +5,7 @@ import { Line2 } from 'three/addons/lines/Line2.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { creerTerrain } from './terrain.js';
-import { creerDecor, OASIS } from './decor.js';
+import { creerDecor, OASIS, HARRAT } from './decor.js';
 import { creerBataille } from './bataille.js';
 import { chameau, cheval, bateau, etendard, agiter } from './montures.js';
 import { pointsTrajet, positionLieu } from './donnees.js';
@@ -14,7 +14,7 @@ const R_MIN = 0.08, R_MAX = 1400;
 // Distance de vue au-delà de laquelle un lieu de niveau 2, 3 ou 4 (monument dans une ville) est masqué.
 const PORTEE = { 1: Infinity, 2: 320, 3: 90, 4: 14 };
 // Composition des convois, selon le type de trajet.
-const CONVOIS = { caravane: ['c', 'cc', 'c', 'cc'], armee: ['h', 'ce', 'h', 'c', 'h', 'cc'], mer: ['c', 'cc', 'c'], nuit: [] };
+const CONVOIS = { caravane: ['c', 'cc', 'c', 'cc'], armee: ['h', 'ce', 'h', 'c', 'h', 'cc'], mer: ['c', 'cc', 'c'], nuit: [], poursuite: ['h', 'h', 'h', 'h', 'h'] };
 
 export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, surLieu, surInteraction, zoneLibre, surImage }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -34,9 +34,9 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   soleil.shadow.mapSize.set(mobile ? 1024 : 2048, mobile ? 1024 : 2048);
   const amb = new THREE.AmbientLight(0xffffff, 0.35);
   scene.add(hemi, soleil, soleil.target, amb);
-  const DIR_SOLEIL = new THREE.Vector3(0.52, 0.6, 0.36).normalize(); // lumière assez rasante pour lire le relief
+  const DIR_SOLEIL = new THREE.Vector3(0.52, 0.6, 0.36).normalize(); // lumière assez rasante pour lire le relief (modifiée par l'ambiance)
 
-  const terrain = await creerTerrain(R, { renderer, pas: mobile ? 2 : 1, oasis: OASIS });
+  const terrain = await creerTerrain(R, { renderer, pas: mobile ? 2 : 1, oasis: OASIS, harrat: HARRAT });
   scene.add(terrain.groupe);
   const decor = creerDecor(R, D);
   scene.add(decor.groupe);
@@ -98,17 +98,11 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     return chameau(false);
   }
 
-  function construireTrajet(ev) {
-    if (trajet) {
-      scene.remove(trajet.groupe);
-      trajet.groupe.traverse((o) => o.geometry && o.geometry.dispose());
-      trajet = null;
-    }
-    orbe.visible = false;
-    if (!ev.trajet) return;
-    const pts = pointsTrajet(D, ev.trajet).map(([la, lo]) => { const [x, z] = R.xz(la, lo); return new THREE.Vector3(x, 0, z); });
+  // Points d'un tracé posé sur le relief (arc lumineux pour un voyage de nuit).
+  function echantillonner(etapes, nuit) {
+    const pts = pointsTrajet(D, { etapes }).map(([la, lo]) => { const [x, z] = R.xz(la, lo); return new THREE.Vector3(x, 0, z); });
     const plan = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.3);
-    const longueur = plan.getLength(), nuit = ev.trajet.type === 'nuit';
+    const longueur = plan.getLength();
     const N = Math.min(1500, Math.max(80, Math.round(longueur * 2.5)));
     const suivi = [];
     for (let k = 0; k <= N; k++) {
@@ -118,6 +112,18 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     }
     // évite que la ligne passe sous le relief entre deux échantillons
     if (!nuit) for (let k = 1; k < N; k++) suivi[k].y = Math.max(suivi[k].y, (suivi[k - 1].y + suivi[k + 1].y) / 2);
+    return { suivi, longueur, N };
+  }
+
+  function construireTrajet(ev) {
+    if (trajet) {
+      scene.remove(trajet.groupe);
+      trajet.groupe.traverse((o) => o.geometry && o.geometry.dispose());
+      trajet = null;
+    }
+    orbe.visible = false;
+    if (!ev.trajet) return;
+    const nuit = ev.trajet.type === 'nuit', { suivi, longueur, N } = echantillonner(ev.trajet.etapes, nuit);
     const courbe = new THREE.CatmullRomCurve3(suivi);
     const geo = new LineGeometry(); geo.setPositions(suivi.flatMap((v) => [v.x, v.y, v.z]));
     const ligne = new Line2(geo, matTrajet); ligne.computeLineDistances();
@@ -342,7 +348,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     canvas.setPointerCapture(e.pointerId);
     pointeurs.set(e.pointerId, { x: e.clientX, y: e.clientY });
     appui = { x: e.clientX, y: e.clientY, t: performance.now(), b: e.button, mod: e.shiftKey || e.ctrlKey || e.altKey };
-    transit = null; zoom.r = null; elan.x = elan.z = elan.theta = 0;
+    transit = null; zoom.r = null; elan.x = elan.z = elan.theta = 0; derive = 0;
     if (libre.actif) libre.glisse = null;
     surInteraction(); canvas.classList.add('drag');
     prise = null;
@@ -357,7 +363,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     }
   });
   canvas.addEventListener('pointermove', (e) => {
-    if (!pointeurs.has(e.pointerId)) { if (!libre.actif) canvas.classList.toggle('hover', !!viser(e)); return; }
+    if (!pointeurs.has(e.pointerId)) { if (!libre.actif && !visee) canvas.classList.toggle('hover', !!viser(e)); return; }
     const p = pointeurs.get(e.pointerId), dx = e.clientX - p.x, dy = e.clientY - p.y;
     p.x = e.clientX; p.y = e.clientY;
     if (libre.actif) { // regarder autour de soi
@@ -395,14 +401,20 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     prise = null;
     if (appui && pointeurs.size === 0) {
       const bouge = Math.hypot(e.clientX - appui.x, e.clientY - appui.y);
-      if (bouge < 6) { elan.x = elan.z = elan.theta = 0; if (performance.now() - appui.t < 500 && !libre.actif) { const id = viser(e); if (id) surLieu(id); } }
+      if (bouge < 6) {
+        elan.x = elan.z = elan.theta = 0;
+        if (performance.now() - appui.t < 500 && !libre.actif) {
+          if (visee) { const p = solSous(e.clientX, e.clientY); if (p) { const [lat, lon] = R.latlon(p.x, p.z); visee({ lat, lon }); } }
+          else { const id = viser(e); if (id) surLieu(id); }
+        }
+      }
       appui = null;
     }
   }
   canvas.addEventListener('pointerup', fin);
   canvas.addEventListener('pointercancel', fin);
   canvas.addEventListener('wheel', (e) => {
-    e.preventDefault(); transit = null; elan.x = elan.z = elan.theta = 0;
+    e.preventDefault(); transit = null; elan.x = elan.z = elan.theta = 0; derive = 0;
     surInteraction();
     const f = Math.exp(Math.sign(e.deltaY) * Math.min(0.35, Math.abs(e.deltaY) * 0.0016));
     if (libre.actif) { const h = libre.pos.y - R.sol(libre.pos.x, libre.pos.z), avant = new THREE.Vector3(-Math.sin(libre.lacet), Math.sin(libre.tangage), -Math.cos(libre.lacet)); libre.pos.addScaledVector(avant, -(f - 1) * 4 * (h + 0.2)); return; }
@@ -410,6 +422,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   }, { passive: false });
   // Double-clic : plonger vers le point
   canvas.addEventListener('dblclick', (e) => {
+    if (visee) return; // en visée, un double clic compterait deux essais : pas de plongée
     const p = solSous(e.clientX, e.clientY); if (!p) return;
     surInteraction();
     if (libre.actif) { libre.glisse = { t0: performance.now(), a: libre.pos.clone(), b: new THREE.Vector3(p.x, p.y + Math.max(0.15, (libre.pos.y - p.y) * 0.4), p.z), duree: 1400 }; return; }
@@ -466,14 +479,20 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   // ---------- thème ----------
   const JOUR = { ciel: 0xE6ECEA, hs: 0xF3F6F8, hg: 0xD8C29B, hi: 1.9, sol: 0xFFF2DC, si: 3.4, amb: 0.3, ter: 0xffffff, paroi: 0xB79770, eau: 0x4FAFC6 };
   const NUIT = { ciel: 0x0C1524, hs: 0x6478A8, hg: 0x2A2A34, hi: 1.9, sol: 0xB4C6FF, si: 1.5, amb: 0.25, ter: 0xAEB6D0, paroi: 0x4A4552, eau: 0x1E4E69 };
+  // Aube (ou crépuscule) : soleil bas à l'ouest, lumière chaude, ombres longues.
+  const AUBE = { ciel: 0xEFD3B4, hs: 0xFFE4C8, hg: 0xA7805E, hi: 1.55, sol: 0xFFB872, si: 3.6, amb: 0.26, ter: 0xFFEEDD, paroi: 0xB08462, eau: 0x5C9FB5, dir: [-0.78, 0.3, 0.3] };
+  const AMBIANCES = { jour: JOUR, nuit: NUIT, aube: AUBE };
   function theme(sombre, couleurCategorie) {
-    const S = sombre ? NUIT : JOUR;
+    appliquerAmbiance(sombre ? NUIT : JOUR, sombre);
+    if (couleurCategorie) colorerTrajet(couleurCategorie);
+  }
+  function appliquerAmbiance(S, sombre) {
+    DIR_SOLEIL.set(...(S.dir || [0.52, 0.6, 0.36])).normalize();
     scene.background = new THREE.Color(S.ciel); scene.fog.color.setHex(S.ciel);
     hemi.color.setHex(S.hs); hemi.groundColor.setHex(S.hg); hemi.intensity = S.hi;
     soleil.color.setHex(S.sol); soleil.intensity = S.si; amb.intensity = S.amb;
     terrain.materiaux.forEach((m) => m.color.setHex(S.ter)); terrain.matParoi.color.setHex(S.paroi); terrain.matEau.color.setHex(S.eau);
     decor.nuit(sombre);
-    if (couleurCategorie) colorerTrajet(couleurCategorie);
   }
   function colorerTrajet(couleur) { const c = new THREE.Color(couleur); matTrajet.color.copy(c); matHalo.color.copy(c); }
 
@@ -492,7 +511,8 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
       el._w = 0; // à remesurer
     }
     const p = PINS[id];
-    onde.position.set(p.x, p.base + 0.002, p.z);
+    onde.visible = !!p;
+    if (p) onde.position.set(p.x, p.base + 0.002, p.z);
   }
   function selectionner(ev, index, couleur) {
     decor.ere.forEach((e) => (e.o.visible = e.visible(index)));
@@ -532,6 +552,100 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     return Object.keys(LBL).sort((a, c) => rang(a) - rang(c));
   }
 
+  // ---------- mise en scène (mode histoire) ----------
+  let derive = 0, filtreLieux = null, visee = null;
+  // Caméra vers un lieu (identifiant) ou un point [lat, lon] ; cap = direction du regard en degrés (0 = vers le nord),
+  // incl = inclinaison en degrés (0 = vue de dessus).
+  function viser(cible, r, cap, incl, duree) {
+    majVue();
+    const [la, lo] = typeof cible === 'string' ? positionLieu(D.LIEUX[cible]) : cible;
+    const [x, z] = R.xz(la, lo);
+    volVers(new THREE.Vector3(x, R.sol(x, z), z), Math.min(R_MAX, Math.max(R_MIN, r || cam.r)),
+      cap == null ? cam.theta : -cap * Math.PI / 180, incl == null ? cam.phi : Math.min(phiMax(), incl * Math.PI / 180), duree ?? 2200);
+  }
+  // Marques posées sur la carte : essai (rouge), juste (or, colonne de lumière), indice (cercle qui pulse), éclat (onde qui s'élargit).
+  const marques = new THREE.Group(); scene.add(marques);
+  const geoAnneau = new THREE.RingGeometry(0.75, 1.15, 48), geoColonne = new THREE.CylinderGeometry(0.16, 0.16, 1, 12, 1, true);
+  geoAnneau.rotateX(-Math.PI / 2); geoColonne.translate(0, 0.5, 0);
+  function poserMarque(lat, lon, genre = 'essai') {
+    const [x, z] = R.xz(lat, lon), g = new THREE.Group();
+    g.position.set(x, R.sol(x, z) + 0.001, z);
+    const couleur = genre === 'essai' ? 0xC4533A : 0xE8BC5E;
+    const mat = new THREE.MeshBasicMaterial({ color: couleur, transparent: true, depthWrite: false, side: THREE.DoubleSide });
+    const anneau = new THREE.Mesh(geoAnneau, mat); anneau.renderOrder = 6; g.add(anneau);
+    if (genre === 'juste' || genre === 'essai') {
+      const colonne = new THREE.Mesh(geoColonne, new THREE.MeshBasicMaterial({ color: couleur, transparent: true, opacity: genre === 'juste' ? 0.55 : 0.4, depthWrite: false, blending: THREE.AdditiveBlending }));
+      colonne.renderOrder = 6; g.add(colonne); g.userData.colonne = colonne;
+    }
+    g.userData = { ...g.userData, genre, t0: performance.now(), anneau, mat };
+    marques.add(g);
+    return g;
+  }
+  function animerMarques(now) {
+    for (const g of [...marques.children]) {
+      const u = g.userData, t = (now - u.t0) / 1000, s = camera.position.distanceTo(g.position) / 140;
+      if (u.genre === 'eclat') {
+        g.scale.setScalar(s * (1 + t * 9)); u.mat.opacity = Math.max(0, 1 - t / 1.6);
+        if (t > 1.6) marques.remove(g);
+        continue;
+      }
+      const pouls = u.genre === 'indice' ? 1 + (reduit ? 0.5 : (t % 1.4) / 1.4) * 2.5 : 1 + Math.min(1, t * 3) * 0.2;
+      g.scale.set(s * pouls, s * (u.genre === 'juste' ? Math.min(1, t * 1.5) * 60 : 18), s * pouls);
+      if (u.genre === 'indice') u.mat.opacity = reduit ? 0.8 : 1 - (t % 1.4) / 1.4;
+    }
+  }
+  // Itinéraires candidats : tracés en pointillés, chacun avec sa lettre.
+  const candidats = { groupe: new THREE.Group(), mats: [], lbls: [] };
+  scene.add(candidats.groupe);
+  function itineraires(liste) {
+    effacerItineraires();
+    for (const it of liste || []) {
+      const { suivi } = echantillonner(it.etapes, false);
+      const geo = new LineGeometry(); geo.setPositions(suivi.flatMap((v) => [v.x, v.y + 0.01, v.z]));
+      const m = new LineMaterial({ color: it.couleur, linewidth: 5, dashed: true, dashSize: 1, gapSize: 0.7, transparent: true, opacity: 0.95 });
+      const l = new Line2(geo, m); l.computeLineDistances(); l.renderOrder = 3;
+      candidats.groupe.add(l); candidats.mats.push(m);
+      const el = document.createElement('div');
+      el.className = 'lbl candidat'; el.style.setProperty('--uc', it.couleur);
+      el.innerHTML = `<b>${it.lettre}</b><span></span>`; el.querySelector('span').textContent = it.nom;
+      etiquettes.appendChild(el);
+      candidats.lbls.push({ el, p: suivi[Math.round(suivi.length * (it.ancre ?? 0.55))] });
+    }
+  }
+  function effacerItineraires() {
+    candidats.groupe.clear(); candidats.mats.forEach((m) => m.dispose()); candidats.mats = [];
+    candidats.lbls.forEach((c) => c.el.remove()); candidats.lbls = [];
+  }
+  // Feux de camp (la nuit de Marr az-Zahrân) : flammes qui vacillent, halo additif.
+  let feux = null;
+  function allumerFeux(lat, lon, n, rayon) {
+    eteindreFeux(); if (!n) return;
+    const [cx, cz] = R.xz(lat, lon), geo = new THREE.SphereGeometry(1, 8, 6);
+    const coeur = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial({ color: 0xFFC46B }), n);
+    const halo = new THREE.InstancedMesh(geo, new THREE.MeshBasicMaterial({ color: 0xFF7A1F, transparent: true, opacity: 0.32, depthWrite: false, blending: THREE.AdditiveBlending }), n);
+    coeur.frustumCulled = halo.frustumCulled = false;
+    const pts = [];
+    for (let k = 0; pts.length < n && k < n * 4; k++) {
+      const a = Math.random() * Math.PI * 2, r = Math.sqrt(Math.random()) * rayon, x = cx + Math.cos(a) * r, z = cz + Math.sin(a) * r * 0.7;
+      if (R.y(x, z) > 0.01 && R.pente(x, z) < 0.25) pts.push({ x, y: R.y(x, z), z, ph: Math.random() * 6 });
+    }
+    coeur.count = halo.count = pts.length;
+    scene.add(coeur, halo);
+    feux = { coeur, halo, pts };
+  }
+  function eteindreFeux() { if (!feux) return; scene.remove(feux.coeur, feux.halo); feux.coeur.dispose(); feux.halo.dispose(); feux = null; }
+  const mFeu = new THREE.Matrix4(), qFeu = new THREE.Quaternion(), sFeu = new THREE.Vector3(), pFeu = new THREE.Vector3();
+  function animerFeux(now) {
+    if (!feux) return;
+    const t = now / 1000, s = Math.min(0.06, Math.max(0.0035, camera.position.distanceTo(cam.cible) * 0.0016));
+    feux.pts.forEach((f, i) => {
+      const v = reduit ? 1 : 0.8 + 0.25 * Math.sin(t * 11 + f.ph) + 0.1 * Math.sin(t * 23 + f.ph * 2);
+      mFeu.compose(pFeu.set(f.x, f.y + s * 0.8, f.z), qFeu, sFeu.set(s * v * 0.7, s * v * 1.3, s * v * 0.7)); feux.coeur.setMatrixAt(i, mFeu);
+      mFeu.compose(pFeu, qFeu, sFeu.setScalar(s * v * 2.6)); feux.halo.setMatrixAt(i, mFeu);
+    });
+    feux.coeur.instanceMatrix.needsUpdate = feux.halo.instanceMatrix.needsUpdate = true;
+  }
+
   // ---------- boucle ----------
   const lisse = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const v3 = new THREE.Vector3(), avantV = new THREE.Vector3();
@@ -554,6 +668,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
         if (t >= 1) transit = null;
       }
       if (!transit) piloterOrbite(dt);
+      if (!transit && derive && !pointeurs.size) cam.theta += derive * dt * (reduit ? 0 : 1);
       cam.phi = Math.min(cam.phi, phiMax());
       appliquerCamera();
     }
@@ -574,7 +689,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     decor.majBlocs(camera.position);
     // épingles : taille constante à l'écran
     for (const id in PINS) {
-      const p = PINS[id], sel = marque === id, visible = sel || lieuxTrajet.includes(id) || vue < PORTEE[p.l.niveau];
+      const p = PINS[id], sel = marque === id, visible = filtreLieux ? filtreLieux.includes(id) : sel || lieuxTrajet.includes(id) || vue < PORTEE[p.l.niveau];
       p.g.visible = visible;
       if (!visible) continue;
       const dist = camera.position.distanceTo(v3.set(p.x, p.base, p.z));
@@ -592,7 +707,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
       matTrajet.dashSize = vue * 0.022; matTrajet.gapSize = vue * 0.014;
       if (!reduit) matTrajet.dashOffset -= dt * vue * 0.06;
       // vitesse liée au zoom : de loin le convoi parcourt le trajet en quelques secondes, de près il chemine
-      const kmParS = Math.min(80, Math.max(0.03, vue * 0.12)), duree = Math.max(6, trajet.longueur / kmParS);
+      const kmParS = Math.min(80, Math.max(0.03, vue * 0.12)) * (trajet.type === 'poursuite' ? 1.8 : 1), duree = Math.max(trajet.type === 'poursuite' ? 3.5 : 6, trajet.longueur / kmParS);
       u = reduit ? 0.5 : (u + dt / duree) % 1;
       if (trajet.type === 'nuit') {
         orbe.position.copy(trajet.courbe.getPointAt(u)); orbe.scale.setScalar(ps * 0.9);
@@ -621,6 +736,13 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     }
     const w = canvas.clientWidth, h = canvas.clientHeight;
     bataille.maj(dt, camera, w, h);
+    animerMarques(now); animerFeux(now);
+    for (const m of candidats.mats) { m.resolution.set(w, h); m.dashSize = vue * 0.02; m.gapSize = vue * 0.013; if (!reduit) m.dashOffset -= dt * vue * 0.05; }
+    for (const c of candidats.lbls) {
+      v3.copy(c.p).project(camera);
+      c.el.classList.toggle('off', v3.z >= 1);
+      c.el.style.transform = `translate(${(v3.x * 0.5 + 0.5) * w}px,${(-v3.y * 0.5 + 0.5) * h}px) translate(-50%,-50%)`;
+    }
     renderer.render(scene, camera);
     // étiquettes : les plus importantes d'abord, une étiquette qui en chevauche une autre est masquée
     const placees = [];
@@ -651,6 +773,43 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
 
   return {
     selectionner, cadrer, accueil, vueLieu, montrerLieu, theme,
+    // mode histoire
+    ambiance: (nom) => appliquerAmbiance(AMBIANCES[nom] || JOUR, nom === 'nuit'),
+    viser,
+    derive: (v) => { derive = v || 0; },
+    etiquettes: (mode) => { filtreLieux = mode === 'toutes' || mode == null ? null : mode === 'aucune' ? [] : mode; Object.values(LBL).forEach((el) => (el._w = 0)); },
+    viserSol: (cb) => { visee = cb || null; canvas.classList.toggle('visee', !!cb); canvas.classList.remove('hover'); },
+    marque: (lat, lon, genre) => { poserMarque(lat, lon, genre); },
+    eclat: (lat, lon) => { poserMarque(lat, lon, 'eclat'); },
+    effacerMarques: () => marques.clear(),
+    itineraires, effacerItineraires,
+    // Tout le Hijaz dans la zone libre (cap et inclinaison en degrés).
+    cadrerHijaz(cap = 0, incl = 22, duree) {
+      majVue();
+      const pts = [[b.x0, b.z0], [b.x1, b.z0], [b.x0, b.z1], [b.x1, b.z1]].map(([x, z]) => new THREE.Vector3(x, 0, z));
+      cadrerPoints(pts, -cap * Math.PI / 180, incl * Math.PI / 180, 100, duree ?? 2600);
+    },
+    // Cadre l'ensemble de plusieurs tracés (listes d'étapes) dans la zone libre.
+    cadrerTraces(listes, cap, incl, duree) {
+      const pts = listes.flatMap((et) => { const { suivi } = echantillonner(et, false); return suivi.filter((_, k) => k % 8 === 0 || k === suivi.length - 1); });
+      cadrerPoints(pts, cap == null ? cam.theta : -cap * Math.PI / 180, incl == null ? cam.phi : incl * Math.PI / 180, 2, duree ?? 2400);
+    },
+    trajetLibre(trajet, couleur) {
+      construireTrajet(trajet ? { trajet } : {});
+      if (couleur) colorerTrajet(couleur);
+      lieuxTrajet = [];
+    },
+    surligner: (id, titre) => surligner(id, titre || null),
+    epoque: (i) => decor.ere.forEach((e) => (e.o.visible = e.visible(i))),
+    feux: allumerFeux,
+    vue: () => ({ cible: cam.cible.clone(), r: cam.r, theta: cam.theta, phi: cam.phi }),
+    // Position à l'écran (pixels CSS du canevas) d'un point [lat, lon] posé sur le sol.
+    projeter(lat, lon) {
+      const [x, z] = R.xz(lat, lon), rc = canvas.getBoundingClientRect();
+      v3.set(x, R.sol(x, z), z).project(camera);
+      return { x: rc.left + (v3.x * 0.5 + 0.5) * rc.width, y: rc.top + (-v3.y * 0.5 + 0.5) * rc.height, devant: v3.z < 1 };
+    },
+    revenir: (v, duree) => volVers(v.cible, v.r, v.theta, v.phi, duree ?? 1400),
     altitude: (lat, lon) => R.metres(...R.xz(lat, lon)),
     zoomLieu: (id) => vueLieu(id),
     satellite: (on) => terrain.habillage(on),

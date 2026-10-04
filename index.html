@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Reem+Kufi:wght@500;600;700&family=Amiri:wght@400;700&display=swap">
 <link rel="stylesheet" href="styles/app.css">
+<link rel="stylesheet" href="styles/histoire.css">
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
@@ -35,6 +36,7 @@
       <span id="ctxAge">53 ans</span>
       <span id="ctxPeriode">Médinoise</span>
     </div>
+    <button class="verre histoire-btn" id="histoireBtn" aria-label="Mode histoire : vivre la Sîra chapitre par chapitre"><span data-ic="play"></span><span class="txt">Mode histoire</span></button>
     <div class="espace"></div>
     <div class="aller-zone">
       <button class="verre aller-btn" id="allerBtn" aria-expanded="false" aria-controls="aller"><span class="ico" data-ic="pin"></span><span class="txt">Aller à</span><span class="fl" data-ic="chevD"></span></button>
@@ -84,6 +86,7 @@
       <h2 id="dTitre"></h2>
       <div class="titre-ar" id="dAr" lang="ar"></div>
       <div class="meta"><span id="dDate"></span><span id="dStatut"></span></div>
+      <button class="jouer-chap" id="dJouer" hidden><span data-ic="play"></span>Vivre ce chapitre en mode histoire</button>
     </header>
     <nav class="segments onglets" role="tablist">
       <button data-p="recit" class="on" role="tab" id="ongletRecit">Récit</button>
@@ -146,6 +149,76 @@
 
   <button class="verre sortie" id="sortieImmersif" hidden><span data-ic="shrink"></span>Afficher l'interface</button>
   <div class="toast" id="toast" role="status" hidden></div>
+
+  <!-- Mode histoire : la Sîra en chapitres interactifs -->
+  <section class="jeu" id="jeu" hidden aria-label="Mode histoire">
+    <div class="cine haut"></div><div class="cine bas"></div>
+    <canvas class="j-sable" id="jSable" aria-hidden="true"></canvas>
+
+    <div class="j-titre" id="jTitre" hidden>
+      <div class="j-titre-bloc">
+        <div class="j-ar" lang="ar" id="jtAr"></div>
+        <h1 id="jtTitre"></h1>
+        <p class="j-sous" id="jtSous"></p>
+        <div class="j-actions" id="jtActions"></div>
+        <p class="j-stats" id="jtStats" hidden></p>
+        <p class="j-note">Vous êtes le chroniqueur : à chaque étape, retrouvez ce qui s'est réellement passé. Un mauvais choix brouille l'histoire : il faut alors remonter le temps. Aucun personnage n'est représenté. Textes en brouillon, à vérifier par un enseignant.</p>
+      </div>
+    </div>
+
+    <header class="j-hud" id="jHud" hidden>
+      <div class="j-pastille">
+        <button class="j-rond" id="jMenuBtn" aria-label="Menu du jeu"><span data-ic="list"></span></button>
+        <div class="j-hud-titre"><small id="jLivre"></small><b id="jChap"></b></div>
+      </div>
+      <div class="j-fil" id="jFil" aria-hidden="true"></div>
+      <div class="j-pastille">
+        <span class="j-lum" id="jLumBloc" title="Lumières : bonnes réponses du premier coup"><span class="etoile">✦</span><b id="jLum">0</b></span>
+        <button class="j-rond" id="jCarnetBtn" aria-label="Carnet de route"><span data-ic="book"></span></button>
+        <button class="j-rond" id="jVoixBtn" aria-label="Lecture à voix haute" aria-pressed="false" hidden><span data-ic="voix"></span></button>
+        <button class="j-rond" id="jSonBtn" aria-label="Son"></button>
+      </div>
+    </header>
+
+    <div class="j-chap" id="jChapCarte" hidden>
+      <small id="jcLivre"></small>
+      <div class="j-ar" lang="ar" id="jcAr"></div>
+      <h2 id="jcTitre"></h2>
+      <i class="j-trait"></i>
+      <p id="jcDate"></p>
+    </div>
+
+    <div class="j-consigne" id="jConsigne" hidden>
+      <span class="j-viseur" aria-hidden="true"></span>
+      <div><b id="jcQ"></b><small id="jcRetour"></small></div>
+      <button class="j-btn petit" id="jIndiceBtn">Indice</button>
+    </div>
+
+    <div class="j-dialogue" id="jDialogue" hidden>
+      <div class="j-tag"><span id="jdLieu"></span><span id="jdDate"></span></div>
+      <p class="j-texte" id="jdTexte"></p>
+      <div class="j-options" id="jdOptions"></div>
+      <div class="j-pied"><button class="j-suite" id="jdSuite">Continuer<kbd>Espace</kbd></button></div>
+    </div>
+
+    <div class="j-conseq" id="jConseq" role="alertdialog" aria-labelledby="jqTitre" hidden>
+      <svg class="j-casse" viewBox="0 0 220 24" aria-hidden="true"><path d="M2 12 C40 4 70 20 100 11"/><path d="M120 13 C150 4 180 20 218 12"/><path class="eclat" d="M104 6 l6 6 -6 6 M116 6 l-6 6 6 6"/></svg>
+      <small>Ce n'est pas ce qui s'est passé</small>
+      <h3 id="jqTitre"></h3>
+      <p class="j-hypo"><span>Scénario imaginaire</span><span id="jqTexte"></span></p>
+      <p class="j-indice" id="jqIndice"></p>
+      <button class="j-btn or" id="jqRetour"><span class="tourne">⟲</span>Remonter le temps</button>
+    </div>
+
+    <div class="j-retour" id="jRetour" hidden>
+      <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44"/><path class="aiguille" d="M50 50 L50 14"/><path class="aiguille petite" d="M50 50 L72 50"/></svg>
+      <span>Retour au moment du choix…</span>
+    </div>
+
+    <div class="j-bilan" id="jBilan" hidden></div>
+    <div class="j-panneau" id="jPanneau" hidden></div>
+    <div class="j-vol" id="jVol" aria-hidden="true"></div>
+  </section>
 
   <!-- Aide à la navigation -->
   <div class="aide-nav verre ui" id="aide" role="dialog" aria-labelledby="aideTitre" hidden>

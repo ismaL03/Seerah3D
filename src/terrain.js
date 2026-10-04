@@ -31,7 +31,7 @@ function flou(v, w, h, r) {
 
 // Masque des zones : rouge = champs de lave (zones sombres et peu pentues de l'image satellite,
 // lissées puis seuillées pour des contours francs), vert = oasis historiques.
-function masqueZones(R, image, oasis) {
+function masqueZones(R, image, oasis, harrat = []) {
   const w = image.width, h = image.height, f = w / R.W;
   const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
   const ctx = cv.getContext('2d', { willReadFrequently: true });
@@ -54,6 +54,17 @@ function masqueZones(R, image, oasis) {
   }
   flou(flou(lave, w, h, 3), w, h, 3);
   const zones = oasis.map((o) => ({ px: (o.lon - R.ouest) / R.pas * f, py: (R.nord - o.lat) / R.pas * f, r: o.rayon / (R.pas * R.kz) * f }));
+  // champs de lave dessinés à la main (ellipses aux bords irréguliers)
+  const laves = harrat.map((o) => ({ px: (o.lon - R.ouest) / R.pas * f, py: (R.nord - o.lat) / R.pas * f, rx: o.rx / (R.pas * R.kx) * f, rz: o.rz / (R.pas * R.kz) * f }));
+  for (const z of laves) {
+    for (let py = Math.floor(z.py - z.rz * 1.3); py <= z.py + z.rz * 1.3; py++) for (let px = Math.floor(z.px - z.rx * 1.3); px <= z.px + z.rx * 1.3; px++) {
+      if (px < 0 || py < 0 || px >= w || py >= h) continue;
+      const dx = (px - z.px) / z.rx, dy = (py - z.py) / z.rz, a = Math.atan2(dy, dx);
+      const dd = Math.hypot(dx, dy) * (1 + 0.1 * Math.sin(a * 5 + z.px) + 0.05 * Math.sin(a * 13 + z.py));
+      const i = py * w + px;
+      lave[i] = Math.max(lave[i], 1 - lisse(0.8, 1.05, dd));
+    }
+  }
   for (let py = 0; py < h; py++) for (let px = 0; px < w; px++) {
     const k = (py * w + px) * 4;
     let v = 0;
@@ -219,12 +230,12 @@ function texturGrain() {
   return t;
 }
 
-export async function creerTerrain(RR, { renderer, pas = 1, oasis = [] }) {
+export async function creerTerrain(RR, { renderer, pas = 1, oasis = [], harrat = [] }) {
   const R = RR.R, groupe = new THREE.Group();
   R.pasMaillage = pas;
   RR.encarts.forEach((E) => E.fondre(R));
   const image = await chargerImage(`data/relief/${R.meta.satellite.fichier}`);
-  const masque = masqueZones(R, image, oasis);
+  const masque = masqueZones(R, image, oasis, harrat);
   const texMasque = new THREE.CanvasTexture(masque);
   texMasque.flipY = false; // ligne 0 du masque = bord nord, comme z croissant vers le sud
   const grain = texturGrain();

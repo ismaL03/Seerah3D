@@ -14,6 +14,13 @@ export const OASIS = [
   { nom: 'Marr az-Zahrân', lat: 21.620, lon: 39.690, rayon: 3.0, densite: 90 },
 ];
 
+// Champs de lave qui enserrent Médine à l'est et à l'ouest : contours approximatifs, ajoutés au masque tiré
+// de Sentinel-2 (trop diffus à cette échelle). Le côté nord reste ouvert : c'est là que fut creusé le Fossé.
+export const HARRAT = [
+  { nom: 'Harra orientale (Wâqim)', lat: 24.455, lon: 39.675, rx: 3.7, rz: 8.5 },
+  { nom: 'Harra occidentale (al-Wabra)', lat: 24.465, lon: 39.553, rx: 3.0, rz: 9 },
+];
+
 // Tracé approximatif du Fossé, au nord de Médine, entre les deux champs de lave.
 const FOSSE = [[24.4745, 39.5850], [24.4810, 39.5965], [24.4865, 39.6090], [24.4850, 39.6240], [24.4790, 39.6370]];
 

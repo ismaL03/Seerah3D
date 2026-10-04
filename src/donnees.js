@@ -2,8 +2,8 @@
 
 export async function chargerDonnees(dossier) {
   const lire = async (f) => (await fetch(`${dossier}/${f}`)).json();
-  const [lieux, evenements, hadiths, sources, batailles] = await Promise.all(
-    ['lieux.json', 'evenements.json', 'hadiths.json', 'sources.json', 'batailles.json'].map(lire)
+  const [lieux, evenements, hadiths, sources, batailles, histoire] = await Promise.all(
+    ['lieux.json', 'evenements.json', 'hadiths.json', 'sources.json', 'batailles.json', 'histoire.json'].map(lire)
   );
   const LIEUX = Object.fromEntries(lieux.lieux.map((l) => [l.id, l]));
   const ETAPES = Object.fromEntries(Object.entries(lieux.etapes).filter(([k]) => !k.startsWith('_')));
@@ -16,6 +16,7 @@ export async function chargerDonnees(dossier) {
     JALONS: evenements.jalons.map((j) => ({ ...j, i: INDEX[j.evenement] })),
     OUVRAGES: sources.ouvrages,
     BATAILLES: batailles.batailles,
+    HISTOIRE: histoire,
     DONNEES_CARTE: sources.donnees_carte,
   };
 }

@@ -180,9 +180,61 @@ def main():
         verifier_sources(ou, B, ouvrages)
         verifier_salat(ou, B)
 
+    # Mode histoire : chapitres reliés aux événements, une seule option juste par choix, lieux connus.
+    H = lire("histoire.json")
+    ids_chap = [c.get("evenement") for c in H.get("chapitres", [])]
+    for l in H.get("livres", []):
+        for c in l.get("chapitres", []):
+            if c not in ids_chap:
+                err("histoire", f"livre « {l.get('titre')} » : chapitre « {c} » absent")
+    position = lambda x: isinstance(x, list) and len(x) == 2 and dans_carte(*x)
+    for c in H.get("chapitres", []):
+        ou = f"histoire {c.get('evenement', '?')}"
+        if c.get("evenement") not in ids:
+            err(ou, "aucun événement ne porte cet identifiant")
+        for champ in ("titre", "titre_ar", "a_retenir", "statut", "etapes"):
+            if champ not in c:
+                err(ou, f"champ « {champ} » manquant")
+        for k, e in enumerate(c.get("etapes", []), 1):
+            o = f"{ou}, étape {k}"
+            t = e.get("type")
+            if t not in ("recit", "choix", "trouver", "itineraire", "trajet", "bataille"):
+                err(o, f"type « {t} » inconnu")
+            v = e.get("vue")
+            if v and not (v.get("hijaz") or position(v.get("point")) or v.get("lieu") in lieux):
+                err(o, "vue : lieu inconnu ou point hors de la carte")
+            for x in e.get("etiquettes", []):
+                if x not in lieux:
+                    err(o, f"étiquette « {x} » : lieu inconnu")
+            if t in ("choix", "itineraire"):
+                opts = e.get("options", [])
+                if sum(1 for x in opts if x.get("juste")) != 1:
+                    err(o, "il faut exactement une option « juste »")
+                for x in opts:
+                    if x.get("juste") and not x.get("reponse"):
+                        err(o, "option juste sans « reponse »")
+                    if not x.get("juste") and not x.get("consequence"):
+                        err(o, "option fausse sans « consequence »")
+                    for p in x.get("etapes", []):
+                        if not (position(p) or (isinstance(p, str) and (p in lieux or p in etapes))):
+                            err(o, f"itinéraire : étape « {p} » inconnue")
+            if t == "trouver":
+                if not (position(e.get("cible")) or (isinstance(e.get("cible"), str) and e.get("cible") in lieux)):
+                    err(o, "cible inconnue ou hors de la carte")
+                if not e.get("rayon"):
+                    err(o, "rayon manquant")
+            if t == "trajet" and not next((x for x in evenements if x.get("id") == c.get("evenement") and "trajet" in x), None):
+                err(o, "étape « trajet » pour un événement sans trajet")
+            if t == "bataille":
+                B = lire("batailles.json")["batailles"].get(c.get("evenement"))
+                if not B or not (0 <= e.get("phase", -1) < len(B.get("phases", []))):
+                    err(o, "étape de bataille inconnue")
+        verifier_sources(ou, c, ouvrages)
+        verifier_salat(ou, c)
+
     a_verifier = sum(1 for e in evenements if e.get("statut") != "validé")
     pages = sum(1 for a in avertissements if "page à compléter" in a)
-    print(f"{len(evenements)} événements, {len(lieux)} lieux, {len(hadiths)} hadiths, {len(ouvrages)} ouvrages.")
+    print(f"{len(evenements)} événements, {len(lieux)} lieux, {len(hadiths)} hadiths, {len(ouvrages)} ouvrages, {len(ids_chap)} chapitres du mode histoire.")
     print(f"{a_verifier} événement(s) à vérifier ; {pages} référence(s) sans numéro de page.")
     for a in avertissements:
         if "page à compléter" not in a:
