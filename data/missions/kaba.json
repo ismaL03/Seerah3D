@@ -1772,7 +1772,8 @@
    "actions": [
     {
      "fondu": true,
-     "texte": "Le lendemain"
+     "texte": "Le lendemain",
+     "sous": "Vers 605, le lendemain"
     },
     {
      "cacher": "kaba_ancienne"
@@ -1915,7 +1916,8 @@
     },
     {
      "fondu": true,
-     "texte": "Des semaines plus tard"
+     "texte": "Des semaines plus tard",
+     "sous": "Vers 605, des semaines plus tard"
     },
     {
      "cacher": "fondations"
@@ -2100,7 +2102,8 @@
    "actions": [
     {
      "fondu": true,
-     "texte": "Quelques mois plus tard"
+     "texte": "Quelques mois plus tard",
+     "sous": "Quelques mois plus tard"
     },
     {
      "cacher": [

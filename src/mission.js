@@ -94,6 +94,8 @@ export function creerMissions({ hote, ui }) {
     return W.ou(cible) || null;
   }
   async function action(a, ok) {
+    if (a.lieu) run.lieu = a.lieu;
+    if (a.sous) run.date = a.sous; // le bandeau du dialogue suit le temps qui passe
     if (a.montrer) [].concat(a.montrer).forEach((id) => W.montrer(id, true));
     if (a.cacher) [].concat(a.cacher).forEach((id) => W.montrer(id, false));
     if (a.ambiance) { W.ambiance(a.ambiance); run.ambiance = a.ambiance; }
@@ -297,7 +299,7 @@ export function creerMissions({ hote, ui }) {
     if (!p.snap) return; // point de reprise sur un changement de scène : la scène sera rechargée
     if (p.scene !== run.scene) { W.charger(M.scenes[p.scene]); run.scene = p.scene; }
     W.ambiance(p.ambiance); run.ambiance = p.ambiance;
-    W.restaurer(p.snap); run.sac = new Set(p.sac);
+    W.restaurer(p.snap); run.sac = new Set(p.sac); run.lieu = p.lieu ?? run.lieu; run.date = p.date ?? run.date;
     ui.masquerDialogue();
   }
   const estPoint = (e) => e.point || e.type === 'choix' || e.type === 'scene' || (e.type === 'objectif' && ((e.echecs || []).length > 0 || e.epreuve));
@@ -321,7 +323,7 @@ export function creerMissions({ hote, ui }) {
       while (i < M.sequence.length) {
         const e = M.sequence[i];
         // point de reprise : on y revient après un échec (l'instantané n'est pris qu'au premier passage)
-        if (estPoint(e) && run.point.i !== i) run.point = { i, snap: e.type === 'scene' ? null : W.instantane(), sac: [...run.sac], scene: run.scene, ambiance: run.ambiance };
+        if (estPoint(e) && run.point.i !== i) run.point = { i, snap: e.type === 'scene' ? null : W.instantane(), sac: [...run.sac], scene: run.scene, ambiance: run.ambiance, lieu: run.lieu, date: run.date };
         try {
           await ETAPES[e.type](e, ok); ok();
           i++;

@@ -2353,7 +2353,8 @@
        "actions": [
         {
          "fondu": true,
-         "texte": "Le soir…"
+         "texte": "Le soir…",
+         "sous": "Le soir"
         },
         {
          "ambiance": "soir"
@@ -2854,7 +2855,8 @@
     },
     {
      "fondu": true,
-     "texte": "Le lendemain, à l'aube"
+     "texte": "Le lendemain, à l'aube",
+     "sous": "Le lendemain, à l'aube"
     },
     {
      "ambiance": "aube"

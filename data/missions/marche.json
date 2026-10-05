@@ -760,7 +760,8 @@
     },
     {
      "fondu": true,
-     "texte": "Le lendemain matin"
+     "texte": "Le lendemain matin",
+     "sous": "Le lendemain matin"
     },
     {
      "montrer": "sac_mouille"

@@ -1,13 +1,13 @@
 // Joue une mission à la première personne de bout en bout : à chaque choix une mauvaise option puis la
 // bonne, à chaque objectif qui peut échouer un échec forcé puis la réussite. Captures en option.
-// usage : node mission.mjs <chapitre>[:<mission>] [--captures dossier] [--sans-erreurs] [--anime] [--vp 1440x900]
+// usage : node mission.mjs <chapitre>[:<mission>] [--captures dossier] [--sans-erreurs] [--anime] [--vp 1440x900] [--tel]
 import { ouvrir, images } from './commun.mjs';
 
 const args = process.argv.slice(2), chapitre = args[0] || 'naissance';
 const opt = (n) => (args.includes(n) ? args[args.indexOf(n) + 1] : null);
 const dossier = opt('--captures'), [lw, lh] = (opt('--vp') || '1440x900').split('x').map(Number);
 const avecErreurs = !args.includes('--sans-erreurs'), reduit = !args.includes('--anime');
-const { browser, page, erreurs } = await ouvrir({ reduit, vp: { width: lw, height: lh } });
+const { browser, page, erreurs } = await ouvrir({ reduit, vp: { width: lw, height: lh }, tactile: args.includes('--tel') });
 // <chapitre> : la première mission du chapitre ; <chapitre>:<mission> : cette mission, jouée seule dans ce chapitre
 const [chap, seule] = chapitre.split(':');
 if (seule) await page.evaluate(([c, m]) => { window.__sira.jeu.essai(c, [{ type: 'mission', mission: m, epreuves: 0 }]); }, [chap, seule]);

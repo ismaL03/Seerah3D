@@ -895,7 +895,8 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
     if (!p) { el.hidden = true; if (pilier) pilier.visible = false; return; }
     el.hidden = false;
     const y = sol(p[0], p[1]);
-    if (pilier) { pilier.visible = true; pilier.position.set(p[0], y + 20, p[1]); }
+    const dObj = Math.hypot(p[0] - J.x, p[1] - J.z);
+    if (pilier) { pilier.visible = dObj > 7; pilier.material.opacity = 0.22 * Math.min(1, (dObj - 7) / 15); pilier.position.set(p[0], y + 20, p[1]); } // s'efface quand on y est
     vp.set(p[0], y + 2.2, p[1]).project(camera);
     let x = (vp.x * 0.5 + 0.5) * w, yy = (-vp.y * 0.5 + 0.5) * h;
     const derriere = vp.z > 1;
@@ -918,13 +919,14 @@ export function creerMonde({ hote, reduit = false, mobile = false, pas: bruitPas
   let regarderVers = null;
   function regarder(p, duree = 1.2) {
     const dx = p[0] - J.x, dz = p[2] - J.z, dy = p[1] - (J.y + 1.62);
-    const lacet = Math.atan2(-dx, -dz), tangage = Math.atan2(dy, Math.hypot(dx, dz));
+    const h = Math.hypot(dx, dz), lacet = h < 0.5 ? J.lacet : Math.atan2(-dx, -dz), tangage = Math.max(-0.6, Math.min(0.6, Math.atan2(dy, Math.max(h, 1.5))));
     let dl = lacet - J.lacet; dl = Math.atan2(Math.sin(dl), Math.cos(dl));
     regarderVers = { a: [J.lacet, J.tangage], b: [J.lacet + dl, tangage], t: 0, duree: reduit ? 0.01 : duree };
     return new Promise((ok) => { regarderVers.fin = ok; });
   }
   // cap : degrés de boussole (0 = nord = -z, 90 = est = +x)
-  function teleporter(x, z, cap = null) { J.x = x; J.z = z; if (cap != null) { J.lacet = -cap * RAD; J.tangage = 0; } J.y = sol(x, z); J.dans.clear(); }
+  // (jamais dans un mur : on repousse hors des solides)
+  function teleporter(x, z, cap = null) { [x, z] = resoudre(x, z, 0.35); J.x = x; J.z = z; if (cap != null) { J.lacet = -cap * RAD; J.tangage = 0; } J.y = sol(x, z); J.dans.clear(); }
 
   // ---------- boucle ----------
   let dernier = performance.now(), anim = 0, pasAcc = 0;
