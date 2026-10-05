@@ -1336,7 +1336,7 @@
         },
         {
           "type": "trouver",
-          "vue": {"lieu": "madinah", "r": 7, "cap": 0, "incl": 40},
+          "vue": {"point": [24.448, 39.63], "r": 8, "cap": 0, "incl": 34},
           "consigne": "Touchez le territoire des Banû an-Nadîr, au sud-est de l'oasis.",
           "indice": "Au sud-est de Médine, sur les hauteurs fertiles de l'oasis (al-'Awâlî).",
           "cible": "nadir",
