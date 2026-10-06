@@ -17,8 +17,8 @@ export function creerBataille({ scene, R, etiquettes, reduit }) {
   const groupe = new THREE.Group(); groupe.visible = false; scene.add(groupe);
   const pion = new THREE.CylinderGeometry(0.5, 0.6, 1, 8); pion.translate(0, 0.5, 0);
   const trait = new THREE.BoxGeometry(0.0012, 0.0012, 0.012), matTrait = new THREE.MeshBasicMaterial({ color: 0x2B2420 });
-  const bouffee = new THREE.IcosahedronGeometry(1, 0), CLAIR = new THREE.Color(0xF4ECDD), FONCE = new THREE.Color(0xB8A27F);
-  const matPoussiere = new THREE.MeshStandardMaterial({ flatShading: true, transparent: true, opacity: 0.78, depthWrite: false, roughness: 1 });
+  const bouffee = new THREE.IcosahedronGeometry(1, 2), CLAIR = new THREE.Color(0xF4ECDD), FONCE = new THREE.Color(0xB8A27F);
+  const matPoussiere = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.78, depthWrite: false, roughness: 1 });
   let actuelle = null;   // { B, unites, fleches, traces, chocs, combats, tirs }
   let temps = 0;
   const materiauxLignes = [];

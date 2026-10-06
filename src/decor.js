@@ -519,20 +519,23 @@ export function creerDecor(R, D) {
   // La Mecque
   for (const id of ['safa', 'marwa']) { // collines rocheuses, plus marquées que ne le montre le relief à 100 m
     const xz = site(id); if (!xz) continue;
-    const roc = new THREE.Mesh(new THREE.IcosahedronGeometry(0.014, 1), M(0x9C8468, { flatShading: true }));
+    const roc = new THREE.Mesh(new THREE.IcosahedronGeometry(0.014, 3), M(0x9C8468));
     roc.scale.set(1, 0.55, 0.8); ajoute(roc, xz[0], R.y(...xz) + 0.002, xz[1]);
     reserver(xz[0], xz[1], 0.016);
   }
-  { // le parcours entre as-Safâ et al-Marwa
+  { // le parcours entre as-Safâ et al-Marwa : un ruban de terre battue qui épouse le sol
     const a = site('safa'), c = site('marwa');
     if (a && c) {
-      const L = Math.hypot(c[0] - a[0], c[1] - a[1]), n = 12;
+      const n = 40, w = 0.004, dx = c[0] - a[0], dz = c[1] - a[1], L = Math.hypot(dx, dz), px = -dz / L * w, pz = dx / L * w, pos = [], idx = [];
       for (let k = 0; k <= n; k++) {
-        const x = a[0] + (c[0] - a[0]) * k / n, z = a[1] + (c[1] - a[1]) * k / n;
-        const t = ajoute(new THREE.Mesh(new THREE.BoxGeometry(0.008, 0.0008, L / n + 0.002), M(0xE6D8B8)), x, R.y(x, z) + 0.0005, z);
-        t.rotation.y = Math.atan2(c[0] - a[0], c[1] - a[1]); t.castShadow = false;
+        const x = a[0] + dx * k / n, z = a[1] + dz * k / n;
+        pos.push(x + px, R.y(x + px, z + pz) + 0.0004, z + pz, x - px, R.y(x - px, z - pz) + 0.0004, z - pz);
+        if (k < n) idx.push(2 * k, 2 * k + 2, 2 * k + 1, 2 * k + 1, 2 * k + 2, 2 * k + 3);
         reserver(x, z, 0.008);
       }
+      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+      const ruban = new THREE.Mesh(g, M(0xE6D8B8, { side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2 }));
+      ruban.receiveShadow = true; groupe.add(ruban);
     }
   }
   batisse('arqam', 'cour', 0.03, 0xE0CFAF, 0.2);

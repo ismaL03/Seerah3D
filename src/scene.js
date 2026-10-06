@@ -75,6 +75,16 @@ export function creerMiseEnScene({ scene, R, etiquettes, reduit, surRepere }) {
     }
     return out;
   }
+  // dégradé vertical (opaque au pied, transparent en haut) pour la colonne de lumière
+  let texDegrade = null;
+  function degrade() {
+    if (texDegrade) return texDegrade;
+    const cv = document.createElement('canvas'); cv.width = 4; cv.height = 64;
+    const ctx = cv.getContext('2d'), gr = ctx.createLinearGradient(0, 0, 0, 64);
+    gr.addColorStop(0, '#000'); gr.addColorStop(0.55, '#333'); gr.addColorStop(1, '#fff');
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, 4, 64);
+    return (texDegrade = new THREE.CanvasTexture(cv));
+  }
   const FABRIQUES = {
     tentes(a) {
       const g = new THREE.Group(), mat = M(a.couleur || '#F1E8D6', { side: THREE.DoubleSide });
@@ -128,7 +138,7 @@ export function creerMiseEnScene({ scene, R, etiquettes, reduit, surRepere }) {
     // Présence (le Prophète ﷺ et les Compagnons ne sont jamais montrés) : une colonne de lumière douce.
     lumiere(a) {
       const g = new THREE.Group(), [x, z] = R.xz(a.lat, a.lon), y = R.y(x, z);
-      const col = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0xFFE3A0, transparent: true, opacity: 0.32, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }));
+      const col = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 24, 1, true), new THREE.MeshBasicMaterial({ color: 0xFFE3A0, transparent: true, opacity: 0.5, alphaMap: degrade(), depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }));
       col.geometry.translate(0, 0.5, 0);
       const coeur = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12), new THREE.MeshBasicMaterial({ color: 0xFFF1C9, transparent: true, opacity: 0.85, depthWrite: false, blending: THREE.AdditiveBlending }));
       col.position.set(x, y, z); coeur.position.set(x, y, z); g.add(col, coeur);
@@ -240,7 +250,7 @@ export function creerMiseEnScene({ scene, R, etiquettes, reduit, surRepere }) {
       }
       if (u.lumiere) {
         const L = u.lumiere, r = Math.max(0.003, vue * 0.004), p = reduit ? 1 : 1 + 0.08 * Math.sin(now / 500);
-        L.col.scale.set(r * p, Math.max(0.05, vue * 0.25), r * p); L.coeur.scale.setScalar(r * 1.6 * p); L.coeur.position.y = L.y + r * 2;
+        L.col.scale.set(r * p, Math.max(0.03, vue * 0.12), r * p); L.coeur.scale.setScalar(r * 1.6 * p); L.coeur.position.y = L.y + r * 2;
       }
     }
     const places = [];
