@@ -225,12 +225,12 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     cam.cible.copy(avant.c); cam.r = avant.r; cam.theta = avant.th; cam.phi = avant.ph; appliquerCamera();
     return r;
   }
-  function cadrerPoints(points, theta, phi, rMin, duree) {
+  function cadrerPoints(points, theta, phi, rMin, duree, marge) {
     majVue();
     const bb = new THREE.Box3().setFromPoints(points), c = bb.getCenter(new THREE.Vector3());
     c.y = R.sol(c.x, c.z);
     const r0 = Math.max(rMin, bb.getSize(new THREE.Vector3()).length() * 1.2);
-    volVers(c, Math.max(rMin, distancePour(c, theta, phi, points, r0)), theta, phi, duree);
+    volVers(c, Math.max(rMin, distancePour(c, theta, phi, points, r0, marge)), theta, phi, duree);
   }
   const pointsSol = (ev) => pointsTrajet(D, ev.trajet).map(([la, lo]) => { const [x, z] = R.xz(la, lo); return new THREE.Vector3(x, R.sol(x, z), z); });
   const PRES = { 1: 3.2, 2: 4.5, 3: 2.4, 4: 0.9 }; // distance de vue rapprochée selon le niveau du lieu
@@ -825,9 +825,9 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
       cadrerPoints(pts, -cap * Math.PI / 180, incl * Math.PI / 180, 100, duree ?? 2600);
     },
     // Cadre un ensemble de points [lat, lon] dans la zone libre (cap et inclinaison en degrés, distance minimale en km).
-    cadrerLatLon(points, cap, incl, duree, rMin = 0.25) {
+    cadrerLatLon(points, cap, incl, duree, rMin = 0.25, marge = 0.86) {
       const pts = points.map(([la, lo]) => { const [x, z] = R.xz(la, lo); return new THREE.Vector3(x, R.sol(x, z), z); });
-      cadrerPoints(pts, cap == null ? cam.theta : -cap * Math.PI / 180, incl == null ? cam.phi : incl * Math.PI / 180, rMin, duree ?? 2400);
+      cadrerPoints(pts, cap == null ? cam.theta : -cap * Math.PI / 180, incl == null ? cam.phi : incl * Math.PI / 180, rMin, duree ?? 2400, marge);
     },
     // Cadre l'ensemble de plusieurs tracés (listes d'étapes) dans la zone libre.
     cadrerTraces(listes, cap, incl, duree) {

@@ -285,9 +285,11 @@ export function creerMiseEnScene({ scene, R, etiquettes, reduit, surRepere }) {
         bas = g.bas - hh - 4;
       }
       poses.push({ x: q.x, l: lw, bas });
-      const tige = q.y - bas;
-      q.p.el.style.setProperty('--tige', `${tige}px`);
-      q.p.el.style.transform = `translate(${q.x}px,${bas}px) translate(-50%,-100%)`;
+      // l'étiquette reste dans l'écran ; le trait, lui, part toujours du point du sol
+      const gauche = Math.min(w - lw - 6, Math.max(6, q.x - lw / 2)), decal = q.x - (gauche + lw / 2);
+      q.p.el.style.setProperty('--tige', `${q.y - bas}px`);
+      q.p.el.style.setProperty('--decal', `${decal}px`);
+      q.p.el.style.transform = `translate(${gauche}px,${bas}px) translate(0,-100%)`;
     }
   }
 

@@ -95,7 +95,8 @@ export function creerMissions({ carte, D, ui }) {
   function vue(v, duree) {
     if (!v) return;
     // « auto » : la caméra cadre les repères visibles (et les points « avec »), sous le cap et l'inclinaison donnés
-    if (v.auto) { carte.cadrerLatLon([...S.visibles(), ...(v.avec || []).map((p) => latlon(p))], v.cap, v.incl, reduit ? 0 : (duree ?? v.duree ?? 2200), v.rMin ?? 0.35); return; }
+    // (marge : place pour les étiquettes au-dessus de leurs points, et pour la carte d'objectif)
+    if (v.auto) { carte.cadrerLatLon([...S.visibles(), ...(v.avec || []).map((p) => latlon(p))], v.cap, v.incl, reduit ? 0 : (duree ?? v.duree ?? 2200), v.rMin ?? 0.35, innerWidth < 700 ? 0.62 : 0.74); return; }
     const p = latlon(v.repere ? { repere: v.repere } : v.lieu || v.point ? v : v.x != null ? v : def() && def().vue);
     if (!p) return;
     carte.viser(p, v.r, v.cap, v.incl, reduit ? 0 : (duree ?? v.duree ?? 2200));
