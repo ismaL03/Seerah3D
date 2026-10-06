@@ -12,7 +12,7 @@ const { browser, page, erreurs } = await ouvrir({ hash: `#histoire/${chapitre}`,
 const clic = async (s) => { try { await page.click(s, { timeout: 4000, force: true }); } catch { /* élément déjà masqué */ } };
 const journal = [], tentes = new Set();
 let n = 0;
-const capture = async (nom) => { if (dossier) await page.screenshot({ path: `${dossier}/${chapitre}-${String(++n).padStart(2, '0')}-${nom}.png` }); };
+const capture = async (nom) => { if (dossier) await page.screenshot({ path: `${dossier}/${chapitre}-${String(++n).padStart(2, '0')}-${nom}.png`, timeout: 120000 }); };
 const premiere = (cle) => { const r = avecErreurs && !tentes.has(cle); tentes.add(cle); return r; };
 
 for (let tour = 0; tour < 600; tour++) {
@@ -23,7 +23,7 @@ for (let tour = 0; tour < 600; tour++) {
     const et = e && D.HISTOIRE.chapitres[e.i].etapes[e.k], o = m.etape();
     return {
       carte: v('#jChapCarte'), role: v('#jRole'), conseq: v('#jConseq'), bilan: v('#jBilan'), dlg: v('#jDialogue'), suite: v('#jdSuite'), consigne: v('#jConsigne'), mini: v('#jMini'),
-      opts: v('#jDialogue') ? document.querySelectorAll('#jdOptions .j-opt').length : 0, monde: document.body.classList.contains('jeu-monde'),
+      opts: v('#jDialogue') ? document.querySelectorAll('#jdOptions .j-opt').length : 0, mission: document.body.classList.contains('jeu-mission'),
       choixMission: m.choix(), objectif: o && { texte: o.texte, echecs: (o.echecs || []).length }, scene: m.etat() && m.etat().scene,
       type: et && et.type, cle: e && `${e.i}/${e.k}`, texte: document.getElementById('jdTexte').textContent.slice(0, 70), etat: e,
     };
@@ -33,8 +33,8 @@ for (let tour = 0; tour < 600; tour++) {
   if (st.carte) { await clic('#jChapCarte'); continue; }
   if (st.role) { await capture('role'); journal.push('mission : rôle'); await clic('#jrGo'); continue; }
 
-  // ---------- mission à la première personne ----------
-  if (st.monde) {
+  // ---------- mission (jouée sur la carte) ----------
+  if (st.mission) {
     if (st.opts && st.choixMission) {
       const libres = await page.evaluate(() => [...document.querySelectorAll('#jdOptions .j-opt')].filter((b) => !b.disabled).map((b) => +b.dataset.i));
       const faux = libres.find((i) => i !== st.choixMission.juste), cle = `${st.scene}/${st.texte}`;
@@ -54,7 +54,7 @@ for (let tour = 0; tour < 600; tour++) {
       } else {
         if (!tentes.has(cle)) await capture('mission-objectif');
         tentes.add(cle); journal.push(`  mission, objectif : ${st.objectif.texte}`);
-        await page.evaluate(() => window.__sira.jeu.mission.resoudre());
+        await page.evaluate(() => { window.__sira.jeu.mission.resoudre(); });
       }
     }
     continue;

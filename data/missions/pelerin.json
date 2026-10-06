@@ -1,5 +1,5 @@
 {
- "_lisez_moi": "Mission à la première personne. Coordonnées en mètres : x vers l'est, z vers le sud ; cap en degrés (0 = nord). Brouillon à vérifier ; pratique décrite : celle des agences de Hajj aujourd'hui, à vérifier avec le guide de référence choisi.",
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
  "id": "pelerin",
  "titre": "Pas à pas, le Hajj",
  "statut": "à vérifier",
@@ -29,7 +29,7 @@
   "nom": "Un pèlerin d'aujourd'hui",
   "nom_ar": "حاج",
   "texte": "Vous accomplissez le Hajj, comme des millions de pèlerins chaque année, en suivant pas à pas la manière du Prophète ﷺ décrite par son Compagnon Jâbir. Les pèlerins autour de vous sont vos contemporains.",
-  "regle": "Les pèlerins sont des silhouettes sans visage, d'aujourd'hui. Les règles suivent la pratique courante des agences de Hajj, à vérifier avec le guide de référence. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+  "regle": "Les pèlerins sont des étiquettes sur la carte. La carte montre les lieux tels qu'ils étaient à l'époque du Prophète ﷺ ; la pratique décrite est celle d'aujourd'hui, à vérifier avec le guide de référence. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
  },
  "personnages": {
   "ancien": {
@@ -82,1446 +82,247 @@
    "Un caillou qui n'atteint pas le bassin ne compte pas : il faut en lancer un autre."
   ]
  },
+ "objets": {
+  "ihram": {
+   "nom": "L'ihrâm"
+  }
+ },
+ "objets_scene": {
+  "caillou9": {
+   "faux": {
+    "titre": "Le gros caillou",
+    "consequence": "Et si vous aviez ramassé de grosses pierres : on lance de petits cailloux, de la taille d'un pois chiche. Selon un hadith rapporté par an-Nasâ'î et Ibn Mâja (d'après Ibn 'Abbâs), le Prophète ﷺ montra de tels cailloux et mit en garde contre l'excès en religion.",
+    "indice": "La taille d'un pois chiche : ni plus gros, ni plus petit."
+   }
+  }
+ },
  "scenes": {
   "miqat": {
    "titre": "Dhû al-Hulayfa",
-   "taille": 360,
-   "limites": [
-    -110,
-    -110,
-    110,
-    110
-   ],
+   "sous": "Le mîqât des gens de Médine, aujourd'hui",
    "ambiance": "jour",
-   "depart": {
-    "x": 0,
-    "z": 40,
-    "cap": 0
+   "epoque": "hajj",
+   "origine": "dhul-hulayfa",
+   "vue": {
+    "auto": true,
+    "cap": 330,
+    "incl": 58
    },
-   "elements": [
-    {
-     "type": "boite",
-     "nom": "Mosquée du mîqât",
-     "hauteur": 7,
-     "x": 0,
-     "z": -30,
-     "w": 26,
-     "d": 18,
-     "h": 7,
-     "c": "#EDE6D6"
-    },
-    {
-     "type": "boite",
-     "x": 14,
-     "z": -40,
-     "w": 2.6,
-     "d": 2.6,
-     "h": 22,
-     "c": "#E6DECB"
-    },
-    {
-     "type": "boite",
-     "x": 0,
-     "z": -16,
-     "w": 10,
-     "d": 6,
-     "h": 0.15,
-     "c": "#C9BFA8",
-     "solide": false
-    },
-    {
-     "type": "palmeraie",
-     "x": -70,
-     "z": -20,
-     "r": 30,
-     "n": 30
-    },
-    {
-     "type": "palmeraie",
-     "x": 70,
-     "z": 10,
-     "r": 30,
-     "n": 28
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       90
-      ],
-      [
-       0,
-       -16
-      ]
-     ],
-     "l": 6
-    },
-    {
-     "type": "boite",
-     "id": "banc",
-     "x": -10,
-     "z": 8,
-     "w": 3,
-     "d": 0.8,
-     "h": 0.5,
-     "c": "#8B6A47"
-    },
-    {
-     "type": "panneau",
-     "x": 8,
-     "z": 20,
-     "texte": "Mîqât Dhû al-Hulayfa",
-     "ar": "ميقات ذي الحليفة",
-     "r": 180
-    },
-    {
-     "type": "montagne",
-     "x": 0,
-     "z": -220,
-     "r": 110,
-     "h": 70,
-     "c": "#8A6E54"
-    }
-   ],
-   "pnj": [
-    {
-     "id": "ancien",
-     "nom": "Un pèlerin âgé",
-     "x": 10,
-     "z": 2,
-     "cap": 270,
-     "habit": "#F4F1EA",
-     "tete_nue": true,
-     "accessoire": "baton",
-     "invite": "Parler au pèlerin âgé"
-    }
-   ],
-   "foules": [
-    {
-     "id": "pelerins",
-     "x": 0,
-     "z": -6,
-     "r": 16,
-     "n": 14,
-     "habits": [
-      "#F4F1EA",
-      "#EFEBE2",
-      "#F7F5F0"
-     ],
-     "coiffes": [
-      "#9C7A5E"
-     ],
-     "invite": "Parler",
-     "tete_nue": true
-    },
-    {
-     "id": "pelerines",
-     "x": 24,
-     "z": -2,
-     "r": 8,
-     "n": 5,
-     "habits": [
-      "#F4F1EA",
-      "#2B2524",
-      "#E8E2D2"
-     ],
-     "coiffes": [
-      "#F4F1EA",
-      "#2B2524"
-     ],
-     "invite": "Parler",
-     "voile": "long"
-    }
-   ],
-   "objets": [
+   "reperes": [
     {
      "id": "ihram",
-     "modele": "tissu",
-     "nom": "les deux pièces de tissu",
-     "x": -10,
-     "z": 8,
-     "y": 0.6,
-     "invite": "Prendre les deux pièces de tissu blanc"
-    }
-   ],
-   "lieux": [
+     "genre": "objet",
+     "x": -60,
+     "z": 40,
+     "nom": "L'ihrâm : deux pièces de tissu blanc"
+    },
+    {
+     "id": "ancien",
+     "genre": "personne",
+     "x": 80,
+     "z": 60
+    },
+    {
+     "id": "pelerins",
+     "genre": "personne",
+     "x": -120,
+     "z": -60
+    },
     {
      "id": "niyya",
-     "x": 0,
-     "z": -18,
-     "r": 3.4,
-     "invite": null,
-     "tenir": 5
+     "genre": "lieu",
+     "x": 20,
+     "z": -80,
+     "nom": "Devant la mosquée du mîqât"
     }
    ]
   },
   "arafa": {
    "titre": "'Arafa",
-   "taille": 420,
-   "limites": [
-    -140,
-    -130,
-    150,
-    130
-   ],
+   "sous": "9 Dhû al-Hijja",
    "ambiance": "jour",
-   "depart": {
-    "x": -128,
-    "z": 22,
-    "cap": 90
+   "epoque": "hajj",
+   "origine": "arafat",
+   "vue": {
+    "auto": true,
+    "cap": 280,
+    "incl": 55
    },
-   "elements": [
+   "reperes": [
     {
-     "type": "colline",
-     "id": "rahma",
-     "x": 70,
-     "z": -40,
-     "r": 26,
-     "h": 18
+     "id": "tapisA",
+     "genre": "lieu",
+     "x": -700,
+     "z": 250,
+     "nom": "Une place dans la plaine de 'Arafa"
     },
     {
-     "type": "boite",
-     "nom": "Jabal ar-Rahma",
-     "hauteur": 9,
-     "x": 70,
-     "z": -40,
-     "w": 1.4,
-     "d": 1.4,
-     "h": 7,
-     "c": "#F4F1EA"
-    },
-    {
-     "type": "montagne",
-     "x": 140,
-     "z": -170,
-     "r": 100,
-     "h": 80,
-     "c": "#8A6E54"
-    },
-    {
-     "type": "montagne",
-     "x": -60,
-     "z": -220,
-     "r": 110,
-     "h": 90,
-     "c": "#9A7A5C"
-    },
-    {
-     "type": "boite",
-     "nom": "Mosquée de Namira",
-     "hauteur": 9,
-     "x": -78,
-     "z": -60,
-     "w": 36,
-     "d": 24,
-     "h": 9,
-     "c": "#E6DECB"
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       -140,
-       30
-      ],
-      [
-       -75,
-       22
-      ],
-      [
-       40,
-       18
-      ],
-      [
-       140,
-       20
-      ]
-     ],
-     "l": 7
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       -75,
-       -120
-      ],
-      [
-       -75,
-       120
-      ]
-     ],
-     "l": 14
-    },
-    {
-     "type": "acacia",
-     "x": -80,
-     "z": 0
-    },
-    {
-     "type": "acacia",
-     "x": -70,
-     "z": 34
-    },
-    {
-     "type": "acacia",
-     "x": -84,
-     "z": 52
-    },
-    {
-     "type": "acacia",
-     "x": -72,
-     "z": -8
-    },
-    {
-     "type": "panneau",
-     "x": -55,
-     "z": 26,
-     "texte": "Début de 'Arafa",
-     "ar": "بداية عرفة",
-     "r": 90,
-     "fond": "#2F6B4F",
-     "encre": "#FFFFFF",
-     "bord": "#E6BE6A"
-    },
-    {
-     "type": "panneau",
-     "x": -57,
-     "z": 12,
-     "texte": "Fin de 'Arafa",
-     "ar": "نهاية عرفة",
-     "r": 270,
-     "fond": "#2F6B4F",
-     "encre": "#FFFFFF",
-     "bord": "#E6BE6A"
-    },
-    {
-     "type": "panneau",
-     "x": -55,
-     "z": -6,
-     "texte": "Début de 'Arafa",
-     "ar": "بداية عرفة",
-     "r": 90,
-     "fond": "#2F6B4F",
-     "encre": "#FFFFFF",
-     "bord": "#E6BE6A"
-    },
-    {
-     "type": "panneau",
-     "x": -95,
-     "z": 18,
-     "texte": "Wâdî 'Urana",
-     "ar": "وادي عرنة",
-     "r": 90
-    },
-    {
-     "type": "zone",
-     "id": "urana",
-     "x1": -95,
-     "z1": -120,
-     "x2": -56,
-     "z2": 120
-    },
-    {
-     "type": "boite",
-     "x": -78,
-     "z": 6,
-     "w": 2.2,
-     "d": 1.4,
-     "h": 0.04,
-     "c": "#2E6C8F",
-     "solide": false
-    },
-    {
-     "type": "boite",
-     "x": -72,
-     "z": 40,
-     "w": 2.2,
-     "d": 1.4,
-     "h": 0.04,
-     "c": "#7A2E3A",
-     "solide": false
-    },
-    {
-     "type": "boite",
-     "x": -30,
-     "z": 4,
-     "w": 2.2,
-     "d": 1.4,
-     "h": 0.04,
-     "c": "#4E6B3A",
-     "solide": false
-    },
-    {
-     "type": "boite",
-     "x": 10,
-     "z": 40,
-     "w": 2.2,
-     "d": 1.4,
-     "h": 0.04,
-     "c": "#2E6C8F",
-     "solide": false
-    },
-    {
-     "type": "tente",
-     "x": 51.3,
-     "z": 46.9,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 36.6,
-     "z": 69.2,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 116.7,
-     "z": 71.5,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 114.6,
-     "z": 37.5,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 5.2,
-     "z": 50.6,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 39.4,
-     "z": -5.3,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 11.1,
-     "z": 58.8,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -21.2,
-     "z": -5.0,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 119.2,
-     "z": 79.1,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 80.0,
-     "z": 1.1,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 83.1,
-     "z": 36.2,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -39.0,
-     "z": 37.2,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 48.8,
-     "z": 25.0,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 60.4,
-     "z": 51.5,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 89.3,
-     "z": -9.7,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 4.1,
-     "z": 8.3,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 68.3,
-     "z": 25.0,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 86.4,
-     "z": 43.1,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -28.8,
-     "z": 33.3,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 66.8,
-     "z": 11.9,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 75.7,
-     "z": 68.5,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 105.6,
-     "z": 55.6,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -34.6,
-     "z": -2.1,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 34.0,
-     "z": 28.0,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 1.7,
-     "z": 68.9,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 22.1,
-     "z": 58.3,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -23.1,
-     "z": 6.7,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 59.8,
-     "z": 58.5,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 93.0,
-     "z": 29.1,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 108.1,
-     "z": 68.2,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 96.0,
-     "z": 46.3,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -3.5,
-     "z": -1.7,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 90,
-     "c": "#F2EEE6"
-    }
-   ],
-   "foules": [
-    {
-     "id": "pelerins",
-     "x": 10,
-     "z": 18,
-     "r": 40,
-     "n": 22,
-     "habits": [
-      "#F4F1EA",
-      "#EFEBE2",
-      "#F7F5F0"
-     ],
-     "coiffes": [
-      "#9C7A5E"
-     ],
-     "invite": "Parler",
-     "tete_nue": true
-    },
-    {
-     "id": "pelerines",
-     "x": 40,
-     "z": 30,
-     "r": 20,
-     "n": 8,
-     "habits": [
-      "#F4F1EA",
-      "#2B2524",
-      "#E8E2D2"
-     ],
-     "coiffes": [
-      "#F4F1EA",
-      "#2B2524"
-     ],
-     "invite": "Parler",
-     "voile": "long"
+     "id": "tapisU",
+     "genre": "lieu",
+     "x": -2600,
+     "z": 350,
+     "nom": "Une place à l'ombre, dans le wâdî 'Urana"
     },
     {
      "id": "assis",
-     "x": -78,
-     "z": 20,
-     "r": 10,
-     "n": 6,
-     "habits": [
-      "#F4F1EA",
-      "#EFEBE2",
-      "#F7F5F0"
-     ],
-     "coiffes": [
-      "#9C7A5E"
-     ],
-     "invite": "Parler",
-     "tete_nue": true,
-     "assis": true,
-     "errer": false
-    }
-   ],
-   "lieux": [
-    {
-     "id": "tapisU1",
-     "x": -78,
-     "z": 6,
-     "r": 2,
-     "invite": "S'installer sur ce tapis",
-     "tenir": 1.5
+     "genre": "personne",
+     "x": -2500,
+     "z": 450
     },
     {
-     "id": "tapisU2",
-     "x": -72,
-     "z": 40,
-     "r": 2,
-     "invite": "S'installer sur ce tapis",
-     "tenir": 1.5
-    },
-    {
-     "id": "tapisA1",
-     "x": -30,
-     "z": 4,
-     "r": 2,
-     "invite": "S'installer sur ce tapis",
-     "tenir": 1.5
-    },
-    {
-     "id": "tapisA2",
-     "x": 10,
-     "z": 40,
-     "r": 2,
-     "invite": "S'installer sur ce tapis",
-     "tenir": 1.5
+     "id": "pelerines",
+     "genre": "personne",
+     "x": -500,
+     "z": 100
     },
     {
      "id": "doua",
-     "x": -30,
-     "z": 5,
-     "r": 3.5,
-     "invite": null,
-     "tenir": 6
+     "genre": "lieu",
+     "x": -700,
+     "z": 250,
+     "nom": "Votre place, à 'Arafa",
+     "visible": false
+    }
+   ],
+   "accessoires": [
+    {
+     "type": "tentes",
+     "x": -400,
+     "z": 200,
+     "rayon": 900,
+     "n": 90,
+     "couleur": "#F4EEE2"
     }
    ]
   },
   "muzdalifa": {
    "titre": "Muzdalifa",
-   "taille": 360,
-   "limites": [
-    -80,
-    -80,
-    80,
-    80
-   ],
+   "sous": "La nuit du 10 Dhû al-Hijja",
    "ambiance": "nuit",
-   "depart": {
-    "x": 0,
-    "z": 30,
-    "cap": 0
-   },
-   "elements": [
-    {
-     "type": "montagne",
-     "x": -160,
-     "z": -40,
-     "r": 90,
-     "h": 60,
-     "c": "#7A6450"
-    },
-    {
-     "type": "montagne",
-     "x": 160,
-     "z": 30,
-     "r": 90,
-     "h": 60,
-     "c": "#7A6450"
-    },
-    {
-     "type": "rochers",
-     "x": 0,
-     "z": 0,
-     "r": 30,
-     "n": 30,
-     "s": 0.8
-    },
-    {
-     "type": "lanterne",
-     "x": -20,
-     "z": 10
-    },
-    {
-     "type": "lanterne",
-     "x": 24,
-     "z": -14
-    },
-    {
-     "type": "lanterne",
-     "x": 6,
-     "z": 30
-    },
-    {
-     "type": "panneau",
-     "x": 0,
-     "z": 34,
-     "texte": "Muzdalifa",
-     "ar": "مزدلفة",
-     "r": 180,
-     "fond": "#2F6B4F",
-     "encre": "#FFFFFF",
-     "bord": "#E6BE6A"
-    }
+   "epoque": "hajj",
+   "origine": [
+    21.393,
+    39.936
    ],
-   "objets": [
+   "vue": {
+    "auto": true,
+    "cap": 300,
+    "incl": 58
+   },
+   "reperes": [
+    {
+     "id": "dormeurs",
+     "genre": "personne",
+     "x": -200,
+     "z": 120
+    },
     {
      "id": "caillou0",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": 12.5,
-     "z": -14.9,
-     "invite": "Ramasser ce caillou"
+     "genre": "objet",
+     "x": -120,
+     "z": 40,
+     "nom": "Un petit caillou"
     },
     {
      "id": "caillou1",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": -13.8,
-     "z": 16.5,
-     "invite": "Ramasser ce caillou"
+     "genre": "objet",
+     "x": -60,
+     "z": -80,
+     "nom": "Un petit caillou"
     },
     {
      "id": "caillou2",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": -10.8,
-     "z": 6.4,
-     "invite": "Ramasser ce caillou"
+     "genre": "objet",
+     "x": 30,
+     "z": 90,
+     "nom": "Un petit caillou"
     },
     {
      "id": "caillou3",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": -15.7,
-     "z": 9.2,
-     "invite": "Ramasser ce caillou"
+     "genre": "objet",
+     "x": 110,
+     "z": -30,
+     "nom": "Un petit caillou"
     },
     {
      "id": "caillou4",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": -17.6,
-     "z": -0.6,
-     "invite": "Ramasser ce caillou"
+     "genre": "objet",
+     "x": 150,
+     "z": 70,
+     "nom": "Un petit caillou"
     },
     {
      "id": "caillou5",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": 1.0,
-     "z": -3.1,
-     "invite": "Ramasser ce caillou"
+     "genre": "objet",
+     "x": -160,
+     "z": -40,
+     "nom": "Un petit caillou"
     },
     {
      "id": "caillou6",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": 12.9,
-     "z": -11.8,
-     "invite": "Ramasser ce caillou"
+     "genre": "objet",
+     "x": 60,
+     "z": -120,
+     "nom": "Un petit caillou"
     },
     {
      "id": "caillou7",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": -17.2,
-     "z": -14.4,
-     "invite": "Ramasser ce caillou"
+     "genre": "objet",
+     "x": -20,
+     "z": 150,
+     "nom": "Un petit caillou"
     },
     {
      "id": "caillou8",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": 12.8,
-     "z": 0.3,
-     "invite": "Ramasser ce caillou"
+     "genre": "objet",
+     "x": 190,
+     "z": -110,
+     "nom": "Un petit caillou"
     },
     {
      "id": "caillou9",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": 10.1,
-     "z": 5.5,
-     "invite": "Ramasser ce caillou"
-    },
-    {
-     "id": "caillou10",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": -10.4,
-     "z": 4.3,
-     "invite": "Ramasser ce caillou"
-    },
-    {
-     "id": "caillou11",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": 6.3,
-     "z": -4.6,
-     "invite": "Ramasser ce caillou"
-    },
-    {
-     "id": "caillou12",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": -14.8,
-     "z": 17.7,
-     "invite": "Ramasser ce caillou"
-    },
-    {
-     "id": "caillou13",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": -0.0,
-     "z": -5.6,
-     "invite": "Ramasser ce caillou"
-    },
-    {
-     "id": "caillou14",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": -16.9,
-     "z": 8.9,
-     "invite": "Ramasser ce caillou"
-    },
-    {
-     "id": "caillou15",
-     "modele": "caillou",
-     "nom": "un petit caillou",
-     "x": 14.3,
-     "z": 14.2,
-     "invite": "Ramasser ce caillou"
-    },
-    {
-     "id": "caillou_gros0",
-     "modele": "pierre",
-     "nom": "une grosse pierre",
-     "x": -0.1,
-     "z": -6.4,
-     "invite": "Ramasser cette pierre",
-     "faux": {
-      "titre": "Trop gros",
-      "consequence": "Et si vous aviez pris de grosses pierres : le Prophète ﷺ montra des cailloux de la taille de ceux qu'on lance entre deux doigts, et dit : « Gardez-vous de l'excès dans la religion : c'est l'excès qui a perdu ceux qui étaient avant vous. »",
-      "indice": "De petits cailloux, comme des pois chiches : ni plus, ni moins."
-     }
-    },
-    {
-     "id": "caillou_gros1",
-     "modele": "pierre",
-     "nom": "une grosse pierre",
-     "x": -6.2,
-     "z": 3.0,
-     "invite": "Ramasser cette pierre",
-     "faux": {
-      "titre": "Trop gros",
-      "consequence": "Et si vous aviez pris de grosses pierres : le Prophète ﷺ montra des cailloux de la taille de ceux qu'on lance entre deux doigts, et dit : « Gardez-vous de l'excès dans la religion : c'est l'excès qui a perdu ceux qui étaient avant vous. »",
-      "indice": "De petits cailloux, comme des pois chiches : ni plus, ni moins."
-     }
-    },
-    {
-     "id": "caillou_gros2",
-     "modele": "pierre",
-     "nom": "une grosse pierre",
-     "x": 7.9,
-     "z": -14.1,
-     "invite": "Ramasser cette pierre",
-     "faux": {
-      "titre": "Trop gros",
-      "consequence": "Et si vous aviez pris de grosses pierres : le Prophète ﷺ montra des cailloux de la taille de ceux qu'on lance entre deux doigts, et dit : « Gardez-vous de l'excès dans la religion : c'est l'excès qui a perdu ceux qui étaient avant vous. »",
-      "indice": "De petits cailloux, comme des pois chiches : ni plus, ni moins."
-     }
-    },
-    {
-     "id": "caillou_gros3",
-     "modele": "pierre",
-     "nom": "une grosse pierre",
-     "x": -4.1,
-     "z": 12.1,
-     "invite": "Ramasser cette pierre",
-     "faux": {
-      "titre": "Trop gros",
-      "consequence": "Et si vous aviez pris de grosses pierres : le Prophète ﷺ montra des cailloux de la taille de ceux qu'on lance entre deux doigts, et dit : « Gardez-vous de l'excès dans la religion : c'est l'excès qui a perdu ceux qui étaient avant vous. »",
-      "indice": "De petits cailloux, comme des pois chiches : ni plus, ni moins."
-     }
-    },
-    {
-     "id": "caillou_gros4",
-     "modele": "pierre",
-     "nom": "une grosse pierre",
-     "x": -8.2,
-     "z": 16.7,
-     "invite": "Ramasser cette pierre",
-     "faux": {
-      "titre": "Trop gros",
-      "consequence": "Et si vous aviez pris de grosses pierres : le Prophète ﷺ montra des cailloux de la taille de ceux qu'on lance entre deux doigts, et dit : « Gardez-vous de l'excès dans la religion : c'est l'excès qui a perdu ceux qui étaient avant vous. »",
-      "indice": "De petits cailloux, comme des pois chiches : ni plus, ni moins."
-     }
-    }
-   ],
-   "foules": [
-    {
-     "id": "dormeurs",
-     "x": -30,
-     "z": -10,
-     "r": 16,
-     "n": 12,
-     "habits": [
-      "#F4F1EA",
-      "#EFEBE2",
-      "#F7F5F0"
-     ],
-     "coiffes": [
-      "#9C7A5E"
-     ],
-     "invite": "Parler",
-     "tete_nue": true,
-     "assis": true,
-     "errer": false
-    },
-    {
-     "id": "pelerins",
-     "x": 20,
-     "z": 10,
-     "r": 14,
-     "n": 8,
-     "habits": [
-      "#F4F1EA",
-      "#EFEBE2",
-      "#F7F5F0"
-     ],
-     "coiffes": [
-      "#9C7A5E"
-     ],
-     "invite": "Parler",
-     "tete_nue": true
+     "genre": "objet",
+     "x": 80,
+     "z": 20,
+     "nom": "Une grosse pierre"
     }
    ]
   },
   "mina": {
    "titre": "Minâ",
-   "taille": 360,
-   "limites": [
-    -100,
-    -100,
-    100,
-    100
-   ],
+   "sous": "10 Dhû al-Hijja, le jour du sacrifice",
    "ambiance": "jour",
-   "depart": {
-    "x": 0,
-    "z": -5,
-    "cap": 0
+   "epoque": "hajj",
+   "origine": "aqaba",
+   "vue": {
+    "auto": true,
+    "cap": 270,
+    "incl": 58,
+    "rMin": 0.5
    },
-   "elements": [
+   "reperes": [
     {
-     "type": "montagne",
-     "x": -150,
-     "z": 0,
-     "r": 90,
-     "h": 70,
-     "c": "#8A6E54"
-    },
-    {
-     "type": "montagne",
-     "x": 150,
-     "z": -30,
-     "r": 90,
-     "h": 70,
-     "c": "#8A6E54"
-    },
-    {
-     "type": "boite",
      "id": "jamra",
-     "nom": "Jamrat al-'Aqaba",
-     "hauteur": 6.5,
+     "genre": "lieu",
      "x": 0,
-     "z": -20,
-     "w": 1.6,
-     "d": 22,
-     "h": 6,
-     "c": "#B8B2A6",
-     "r": 90
+     "z": 0,
+     "nom": "Jamrat al-'Aqaba"
     },
-    {
-     "type": "mur",
-     "de": [
-      -14,
-      -15
-     ],
-     "a": [
-      14,
-      -15
-     ],
-     "h": 0.9,
-     "e": 0.5,
-     "c": "#D9D2C2"
-    },
-    {
-     "type": "mur",
-     "de": [
-      -14,
-      -25
-     ],
-     "a": [
-      14,
-      -25
-     ],
-     "h": 0.9,
-     "e": 0.5,
-     "c": "#D9D2C2"
-    },
-    {
-     "type": "mur",
-     "de": [
-      -14,
-      -25
-     ],
-     "a": [
-      -14,
-      -15
-     ],
-     "h": 0.9,
-     "e": 0.5,
-     "c": "#D9D2C2"
-    },
-    {
-     "type": "mur",
-     "de": [
-      14,
-      -25
-     ],
-     "a": [
-      14,
-      -15
-     ],
-     "h": 0.9,
-     "e": 0.5,
-     "c": "#D9D2C2"
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       80
-      ],
-      [
-       0,
-       -10
-      ]
-     ],
-     "l": 14
-    },
-    {
-     "type": "tente",
-     "x": 5.0,
-     "z": 81.9,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -43.5,
-     "z": 48.7,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 5.3,
-     "z": 46.9,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -3.4,
-     "z": 63.2,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -31.7,
-     "z": 76.9,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -88.7,
-     "z": 41.2,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -63.2,
-     "z": 49.3,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 42.5,
-     "z": 51.9,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 20.6,
-     "z": 80.8,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -0.8,
-     "z": 70.0,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 13.1,
-     "z": 87.9,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -41.6,
-     "z": 78.1,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -38.5,
-     "z": 59.7,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -85.1,
-     "z": 44.1,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 57.8,
-     "z": 49.4,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 80.5,
-     "z": 59.2,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": -46.7,
-     "z": 59.0,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "tente",
-     "x": 63.4,
-     "z": 73.6,
-     "w": 5,
-     "d": 6,
-     "h": 2.6,
-     "r": 0,
-     "c": "#F2EEE6"
-    },
-    {
-     "type": "zone",
-     "id": "jamra_zone",
-     "x": 0,
-     "z": -8,
-     "r": 5
-    }
-   ],
-   "foules": [
     {
      "id": "lanceurs",
-     "x": -8,
-     "z": -8,
-     "r": 8,
-     "n": 14,
-     "habits": [
-      "#F4F1EA",
-      "#EFEBE2",
-      "#F7F5F0"
-     ],
-     "coiffes": [
-      "#9C7A5E"
-     ],
-     "invite": "Parler",
-     "tete_nue": true,
-     "errer": false
-    },
+     "genre": "personne",
+     "x": 120,
+     "z": 80
+    }
+   ],
+   "accessoires": [
     {
-     "id": "pelerins",
-     "x": 10,
-     "z": 30,
-     "r": 20,
-     "n": 16,
-     "habits": [
-      "#F4F1EA",
-      "#EFEBE2",
-      "#F7F5F0"
-     ],
-     "coiffes": [
-      "#9C7A5E"
-     ],
-     "invite": "Parler",
-     "tete_nue": true
+     "type": "pierres",
+     "x": 0,
+     "z": 0,
+     "rayon": 3,
+     "n": 1,
+     "couleur": "#8A7E72"
     }
    ]
   }
@@ -1529,9 +330,7 @@
  "sequence": [
   {
    "type": "scene",
-   "scene": "miqat",
-   "titre": "Dhû al-Hulayfa",
-   "sous": "Le mîqât des gens de Médine, aujourd'hui"
+   "scene": "miqat"
   },
   {
    "type": "recit",
@@ -1539,10 +338,10 @@
   },
   {
    "type": "objectif",
-   "texte": "Prenez les deux pièces de tissu blanc de l'ihrâm, posées sur le banc.",
-   "cible": "objet:ihram",
+   "texte": "Prenez les deux pièces de tissu blanc de l'ihrâm.",
    "quand": {
-    "prendre": "ihram"
+    "prendre": "ihram",
+    "porter": "ihram"
    }
   },
   {
@@ -1555,6 +354,9 @@
     },
     {
      "texte": "Garder la calotte et les chaussettes sous les deux pièces de tissu : le matin est encore frais.",
+     "titre": "Tête couverte",
+     "consequence": "Et si vous étiez entré en ihrâm ainsi : selon le hadith d'Ibn 'Umar, celui qui est en ihrâm ne porte ni chemise, ni turban, ni pantalon, ni burnous, ni chaussons montants. L'erreur se répare, mais la règle est simple : deux pièces de tissu, tête nue.",
+     "indice": "Pour l'homme : deux pièces de tissu non cousu, et la tête découverte.",
      "suite": [
       {
        "type": "recit",
@@ -1565,8 +367,13 @@
        "actions": [
         {
          "aller": "ancien",
-         "vers": "joueur",
-         "vitesse": 1.2
+         "vers": [
+          {
+           "x": -20,
+           "z": 30
+          }
+         ],
+         "duree": 2
         }
        ]
       },
@@ -1575,21 +382,26 @@
        "qui": "ancien",
        "texte": "Mon frère, en ihrâm, l'homme garde la tête nue et ne porte ni chaussettes ni vêtement cousu. Sinon, il lui faut une compensation."
       }
-     ],
-     "titre": "Tête couverte",
-     "consequence": "Et si vous étiez entré en ihrâm ainsi : selon le hadith d'Ibn 'Umar, celui qui est en ihrâm ne porte ni chemise, ni turban, ni pantalon, ni burnous, ni chaussons montants. L'erreur se répare, mais la règle est simple : deux pièces de tissu, tête nue.",
-     "indice": "Pour l'homme : deux pièces de tissu non cousu, et la tête découverte."
+     ]
     },
     {
      "texte": "Formuler l'intention d'abord, puis vous parfumer abondamment le corps et les deux tissus.",
+     "titre": "Le parfum de trop",
+     "consequence": "Et si vous vous étiez parfumé après l'intention : le parfum est permis sur le corps avant l'ihrâm, puis interdit. 'Â'isha rapporte qu'elle parfumait le Prophète ﷺ juste avant son entrée en ihrâm.",
+     "indice": "Ce qui est permis avant l'intention ne l'est plus après.",
      "suite": [
       {
        "type": "faire",
        "actions": [
         {
          "aller": "ancien",
-         "vers": "joueur",
-         "vitesse": 1.2
+         "vers": [
+          {
+           "x": -20,
+           "z": 30
+          }
+         ],
+         "duree": 2
         }
        ]
       },
@@ -1598,41 +410,36 @@
        "qui": "ancien",
        "texte": "Le parfum, c'est avant l'intention, sur le corps. Une fois en ihrâm, on ne se parfume plus."
       }
-     ],
-     "titre": "Le parfum de trop",
-     "consequence": "Et si vous vous étiez parfumé après l'intention : le parfum est permis sur le corps avant l'ihrâm, puis interdit. 'Â'isha rapporte qu'elle parfumait le Prophète ﷺ juste avant son entrée en ihrâm.",
-     "indice": "Ce qui est permis avant l'intention ne l'est plus après."
-    }
-   ]
-  },
-  {
-   "type": "faire",
-   "actions": [
-    {
-     "inviter": "niyya",
-     "texte": "Formuler l'intention et dire la talbiya"
+     ]
     }
    ]
   },
   {
    "type": "objectif",
-   "texte": "Devant la mosquée, entrez en ihrâm : formulez l'intention et prononcez la talbiya (maintenez E).",
-   "cible": "lieu:niyya",
+   "texte": "Devant la mosquée, entrez en ihrâm : rendez-vous devant la mosquée du mîqât.",
    "quand": {
-    "tenir": "niyya",
-    "invocation": {
-     "titre": "La talbiya",
-     "ar": "لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لَا شَرِيكَ لَكَ",
-     "fr": "« Me voici, ô Allah, me voici. Me voici : Tu n'as pas d'associé, me voici. La louange, le bienfait et la royauté sont à Toi ; Tu n'as pas d'associé. »",
-     "source": "Talbiya du Prophète ﷺ, Sahîh al-Bukhârî et Sahîh Muslim (hadith d'Ibn 'Umar) · traduction du sens"
+    "aller": "niyya"
+   }
+  },
+  {
+   "type": "objectif",
+   "texte": "Formulez l'intention et prononcez la talbiya : maintenez le bouton (ou la barre d'espace).",
+   "quand": {
+    "tenir": {
+     "bouton": "Prononcer la talbiya",
+     "duree": 4,
+     "invocation": {
+      "titre": "La talbiya",
+      "ar": "لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لَا شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لَا شَرِيكَ لَكَ",
+      "fr": "« Me voici, ô Allah, me voici. Me voici : Tu n'as pas d'associé, me voici. La louange, le bienfait et la royauté sont à Toi ; Tu n'as pas d'associé. »",
+      "source": "Talbiya du Prophète ﷺ, Sahîh al-Bukhârî et Sahîh Muslim (hadith d'Ibn 'Umar) · traduction du sens"
+     }
     }
    }
   },
   {
    "type": "scene",
-   "scene": "arafa",
-   "titre": "'Arafa",
-   "sous": "9 Dhû al-Hijja"
+   "scene": "arafa"
   },
   {
    "type": "recit",
@@ -1640,48 +447,67 @@
   },
   {
    "type": "objectif",
-   "epreuve": true,
-   "texte": "Trouvez une place pour l'après-midi et installez-vous sur un tapis (maintenez E). Lisez bien les panneaux verts.",
+   "texte": "Trouvez une place pour l'après-midi : les panneaux verts marquent les limites de 'Arafa.",
    "quand": {
-    "tenir": "tapisA"
+    "aller": "tapisA"
    },
-   "reussite": "Vous êtes à 'Arafa",
    "echecs": [
     {
-     "tenu": "tapisU",
+     "repere": "tapisU",
      "titre": "Hors de 'Arafa",
+     "consequence": "Et si vous étiez resté dans le wâdî 'Urana : il ne fait pas partie de 'Arafa, et celui qui ne se tient pas à 'Arafa manque le pilier du pèlerinage. Le hadith dit : « Tout 'Arafa est lieu de station, et écartez-vous du fond de 'Urana. »",
+     "indice": "Le wadi ombragé, à l'ouest, est hors des limites : franchissez les panneaux « Début de 'Arafa ».",
      "suite": [
       {
        "type": "recit",
        "texte": "Vous voilà bien installé, à l'ombre des acacias du wadi. Les heures passent dans l'invocation… Au coucher du soleil, en vous levant, vous lisez enfin le panneau derrière vous : « Début de 'Arafa »."
       }
-     ],
-     "consequence": "Et si vous étiez resté dans le wâdî 'Urana : il ne fait pas partie de 'Arafa, et celui qui ne se tient pas à 'Arafa manque le pilier du pèlerinage. Le hadith dit : « Tout 'Arafa est lieu de station, et écartez-vous du fond de 'Urana. »",
-     "indice": "Le wadi ombragé, à l'ouest, est hors des limites : franchissez les panneaux « Début de 'Arafa »."
+     ]
     }
-   ]
+   ],
+   "epreuve": true,
+   "reussite": "Vous êtes à 'Arafa"
   },
   {
    "type": "faire",
    "actions": [
     {
-     "inviter": "doua",
-     "texte": "Invoquer, tourné vers la qibla"
+     "cacher": [
+      "tapisA",
+      "tapisU",
+      "assis"
+     ]
+    },
+    {
+     "montrer": "doua"
+    },
+    {
+     "vue": {
+      "x": -700,
+      "z": 250,
+      "r": 1.2,
+      "cap": 90,
+      "incl": 58,
+      "avec": [
+       "arafat"
+      ]
+     }
     }
    ]
   },
   {
    "type": "objectif",
-   "texte": "Consacrez l'après-midi à l'invocation (maintenez E).",
-   "cible": "lieu:doua",
-   "guider": false,
+   "texte": "Consacrez l'après-midi à l'invocation : maintenez le bouton.",
    "quand": {
-    "tenir": "doua",
-    "invocation": {
-     "titre": "L'invocation du jour de 'Arafa",
-     "ar": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
-     "fr": "« Nulle divinité sauf Allah, Seul, sans associé. À Lui la royauté, à Lui la louange, et Il est capable de toute chose. »",
-     "source": "« La meilleure invocation est celle du jour de 'Arafa » : at-Tirmidhî, hadith jugé bon · traduction du sens"
+    "tenir": {
+     "bouton": "Invoquer jusqu'au coucher du soleil",
+     "duree": 5,
+     "invocation": {
+      "titre": "L'invocation du jour de 'Arafa",
+      "ar": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+      "fr": "« Nulle divinité sauf Allah, Seul, sans associé. À Lui la royauté, à Lui la louange, et Il est capable de toute chose. »",
+      "source": "« La meilleure invocation est celle du jour de 'Arafa » : at-Tirmidhî, hadith jugé bon · traduction du sens"
+     }
     }
    }
   },
@@ -1689,22 +515,11 @@
    "type": "faire",
    "actions": [
     {
-     "inviter": "doua",
-     "texte": null
+     "ambiance": "aube",
+     "sous": "Au coucher du soleil"
     },
     {
-     "fondu": true,
-     "texte": "Quelques heures plus tard",
-     "sous": "9 Dhû al-Hijja, au coucher du soleil"
-    },
-    {
-     "ambiance": "soir"
-    },
-    {
-     "pause": 500
-    },
-    {
-     "fondu": false
+     "pause": 900
     }
    ]
   },
@@ -1718,35 +533,56 @@
     },
     {
      "texte": "Une heure avant le coucher du soleil, pour éviter la foule et les embouteillages du retour.",
+     "titre": "Parti trop tôt",
+     "consequence": "Et si vous étiez parti avant le coucher du soleil : selon le hadith de Jâbir, le Prophète ﷺ resta à 'Arafa jusqu'à ce que le soleil soit couché et son disque disparu. Pour beaucoup de savants, partir avant oblige à revenir ou à une compensation.",
+     "indice": "Jâbir précise : jusqu'à ce que le disque du soleil ait disparu.",
      "suite": [
       {
        "type": "recit",
        "texte": "Le car démarre. Derrière vous, la plaine est encore couverte de pèlerins debout, les mains levées, quand le soleil disparaît."
       }
-     ],
-     "titre": "Parti trop tôt",
-     "consequence": "Et si vous étiez parti avant le coucher du soleil : selon le hadith de Jâbir, le Prophète ﷺ resta à 'Arafa jusqu'à ce que le soleil soit couché et son disque disparu. Pour beaucoup de savants, partir avant oblige à revenir ou à une compensation.",
-     "indice": "Jâbir précise : jusqu'à ce que le disque du soleil ait disparu."
+     ]
     },
     {
      "texte": "Le lendemain seulement : passer la nuit à 'Arafa pour prolonger les invocations.",
+     "titre": "La nuit au mauvais endroit",
+     "consequence": "Et si vous étiez resté la nuit à 'Arafa : la nuit du 10 se passe à Muzdalifa. Selon Jâbir, le Prophète ﷺ s'y rendit après le coucher du soleil, y pria le maghrib et le 'ishâ', puis y dormit jusqu'à l'aube.",
+     "indice": "Jâbir décrit la nuit suivante à Muzdalifa.",
      "suite": [
       {
        "type": "recit",
        "texte": "La nuit tombe. Autour de vous, les tentes se vident ; les cars partent un à un vers Muzdalifa."
       }
-     ],
-     "titre": "La nuit au mauvais endroit",
-     "consequence": "Et si vous étiez resté la nuit à 'Arafa : la nuit du 10 se passe à Muzdalifa. Selon Jâbir, le Prophète ﷺ s'y rendit après le coucher du soleil, y pria le maghrib et le 'ishâ', puis y dormit jusqu'à l'aube.",
-     "indice": "Jâbir décrit la nuit suivante à Muzdalifa."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "convoi": {
+      "type": "caravane",
+      "etapes": [
+       "arafat",
+       [
+        21.393,
+        39.936
+       ]
+      ]
+     }
+    },
+    {
+     "pause": 1500
+    },
+    {
+     "convoi": null
     }
    ]
   },
   {
    "type": "scene",
-   "scene": "muzdalifa",
-   "titre": "Muzdalifa",
-   "sous": "La nuit du 10 Dhû al-Hijja"
+   "scene": "muzdalifa"
   },
   {
    "type": "recit",
@@ -1754,7 +590,6 @@
   },
   {
    "type": "objectif",
-   "epreuve": true,
    "texte": "Ramassez sept petits cailloux, de la taille d'un pois chiche.",
    "quand": {
     "ramasser": {
@@ -1762,13 +597,12 @@
      "n": 7,
      "nom": "Cailloux"
     }
-   }
+   },
+   "epreuve": true
   },
   {
    "type": "scene",
-   "scene": "mina",
-   "titre": "Minâ",
-   "sous": "10 Dhû al-Hijja, le jour du sacrifice"
+   "scene": "mina"
   },
   {
    "type": "recit",
@@ -1776,38 +610,14 @@
   },
   {
    "type": "objectif",
-   "texte": "Lancez vos sept cailloux dans le bassin de la stèle : visez, puis E (ou clic, souris capturée).",
-   "cible": "zone:jamra_zone",
+   "texte": "Lancez vos sept cailloux, l'un après l'autre : cliquez sept fois sur la stèle.",
    "quand": {
     "lancer": {
-     "cibles": [
-      {
-       "id": "jamra",
-       "x": -7,
-       "z": -20,
-       "r": 4,
-       "h": 6
-      },
-      {
-       "id": "jamra",
-       "x": 0,
-       "z": -20,
-       "r": 4,
-       "h": 6
-      },
-      {
-       "id": "jamra",
-       "x": 7,
-       "z": -20,
-       "r": 4,
-       "h": 6
-      }
-     ],
-     "touches": 7,
+     "repere": "jamra",
+     "n": 7,
      "nom": "Cailloux lancés",
      "dire": "الله أكبر",
-     "ar": true,
-     "vitesse": 12
+     "ar": true
     }
    }
   },

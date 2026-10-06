@@ -8,6 +8,7 @@ import { creerTerrain } from './terrain.js';
 import { creerDecor, OASIS, HARRAT } from './decor.js';
 import { creerBataille } from './bataille.js';
 import { chameau, cheval, bateau, etendard, agiter } from './montures.js';
+import { creerMiseEnScene } from './scene.js';
 import { pointsTrajet, positionLieu } from './donnees.js';
 
 const R_MIN = 0.08, R_MAX = 1400;
@@ -18,29 +19,52 @@ const CONVOIS = { caravane: ['c', 'cc', 'c', 'cc'], armee: ['h', 'ce', 'h', 'c',
 
 export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, surLieu, surInteraction, zoneLibre, surImage }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.toneMapping = THREE.NeutralToneMapping; // hautes lumières adoucies, couleurs préservées
+  renderer.toneMappingExposure = 1.05;
   const DPR_MAX = Math.min(devicePixelRatio, mobile ? 1.5 : 2);
   let dpr = DPR_MAX;
   renderer.setPixelRatio(dpr);
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap; // ombres douces
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(32, 1, 0.002, 8000);
   camera.rotation.order = 'YXZ';
   scene.fog = new THREE.Fog(0xE6ECEA, 1000, 4000);
 
-  const hemi = new THREE.HemisphereLight(0xF3F6F8, 0xD8C29B, 2.4);
-  const soleil = new THREE.DirectionalLight(0xFFF2DC, 3);
+  const hemi = new THREE.HemisphereLight(0xDCE8F2, 0xC9A57C, 1.2);
+  const soleil = new THREE.DirectionalLight(0xFFF0D8, 3.6);
   soleil.castShadow = true;
   soleil.shadow.mapSize.set(mobile ? 1024 : 2048, mobile ? 1024 : 2048);
   const amb = new THREE.AmbientLight(0xffffff, 0.35);
   scene.add(hemi, soleil, soleil.target, amb);
-  const DIR_SOLEIL = new THREE.Vector3(0.52, 0.6, 0.36).normalize(); // lumière assez rasante pour lire le relief (modifiée par l'ambiance)
+  const DIR_SOLEIL = new THREE.Vector3(0.62, 0.5, 0.42).normalize(); // lumière assez rasante pour lire le relief (modifiée par l'ambiance)
+  // Ciel : dôme en dégradé (zénith, horizon voilé de poussière, halo du soleil), dessiné derrière tout le reste.
+  const ciel = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 24), new THREE.ShaderMaterial({
+    uniforms: { haut: { value: new THREE.Color() }, horizon: { value: new THREE.Color() }, bas: { value: new THREE.Color() }, dirSoleil: { value: DIR_SOLEIL }, halo: { value: new THREE.Color() } },
+    vertexShader: 'varying vec3 vDir; void main() { vDir = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: `uniform vec3 haut, horizon, bas, dirSoleil, halo; varying vec3 vDir;
+      void main() {
+        vec3 d = normalize(vDir);
+        vec3 c = d.y > 0.0 ? mix(horizon, haut, pow(d.y, 0.55)) : mix(horizon, bas, pow(-d.y, 0.4));
+        float s = max(0.0, dot(d, normalize(dirSoleil)));
+        c += halo * (pow(s, 8.0) * 0.25 + pow(s, 200.0) * 0.6);
+        gl_FragColor = vec4(c, 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
+    side: THREE.BackSide, depthWrite: false, depthTest: false, fog: false,
+  }));
+  ciel.frustumCulled = false; ciel.renderOrder = -10;
+  scene.add(ciel);
 
-  const terrain = await creerTerrain(R, { renderer, pas: mobile ? 2 : 1, oasis: OASIS, harrat: HARRAT });
+  const terrain = await creerTerrain(R, { renderer, mobile, oasis: OASIS, harrat: HARRAT });
   scene.add(terrain.groupe);
   const decor = creerDecor(R, D);
   scene.add(decor.groupe);
   const bataille = creerBataille({ scene, R, etiquettes, reduit });
+  // missions : repères cliquables, accessoires et effets posés sur la carte
+  let surRepere = () => {};
+  const mise = creerMiseEnScene({ scene, R, etiquettes, reduit, surRepere: (id) => surRepere(id) });
   const b = R.bornes;
 
   // ---------- épingles ----------
@@ -437,7 +461,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   // Clavier (hors vol libre) : flèches pour se déplacer, Maj + flèches pour tourner et incliner, + et − pour zoomer
   const TOUCHES_ORBITE = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Equal', 'Minus', 'NumpadAdd', 'NumpadSubtract', 'ShiftLeft', 'ShiftRight'];
   addEventListener('keydown', (e) => {
-    if (libre.actif || enPause || ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
+    if (libre.actif || ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
     if (TOUCHES_ORBITE.includes(e.code)) { clavier.add(e.code); if (!e.code.startsWith('Shift')) { e.preventDefault(); transit = null; surInteraction(); } }
   });
   addEventListener('keyup', (e) => clavier.delete(e.code));
@@ -482,18 +506,21 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   }
 
   // ---------- thème ----------
-  const JOUR = { ciel: 0xE6ECEA, hs: 0xF3F6F8, hg: 0xD8C29B, hi: 1.9, sol: 0xFFF2DC, si: 3.4, amb: 0.3, ter: 0xffffff, paroi: 0xB79770, eau: 0x4FAFC6 };
-  const NUIT = { ciel: 0x0C1524, hs: 0x6478A8, hg: 0x2A2A34, hi: 1.9, sol: 0xB4C6FF, si: 1.5, amb: 0.25, ter: 0xAEB6D0, paroi: 0x4A4552, eau: 0x1E4E69 };
+  // ciel : horizon (et brume) ; zenith, sous : haut et bas du dôme ; halo : autour du soleil
+  const JOUR = { ciel: 0xEDE3D0, zenith: 0x8FB6D3, sous: 0xE3D6BE, halo: 0xFFF1D6, hs: 0xDCE8F2, hg: 0xC9A57C, hi: 1.15, sol: 0xFFF0D8, si: 3.7, amb: 0.12, ter: 0xffffff, paroi: 0xB79770, eau: 0x4FAFC6 };
+  const NUIT = { ciel: 0x1A2438, zenith: 0x060B16, sous: 0x141A28, halo: 0x3A4C78, hs: 0x6478A8, hg: 0x2A2A34, hi: 1.6, sol: 0xB4C6FF, si: 1.4, amb: 0.2, ter: 0xAEB6D0, paroi: 0x4A4552, eau: 0x1E4E69 };
   // Aube (ou crépuscule) : soleil bas à l'ouest, lumière chaude, ombres longues.
-  const AUBE = { ciel: 0xEFD3B4, hs: 0xFFE4C8, hg: 0xA7805E, hi: 1.55, sol: 0xFFB872, si: 3.6, amb: 0.26, ter: 0xFFEEDD, paroi: 0xB08462, eau: 0x5C9FB5, dir: [-0.78, 0.3, 0.3] };
+  const AUBE = { ciel: 0xF2CDA4, zenith: 0x7C93B4, sous: 0xD9B892, halo: 0xFFC488, hs: 0xFFE4C8, hg: 0xA7805E, hi: 1.1, sol: 0xFFC490, si: 3.7, amb: 0.12, ter: 0xFFEEDD, paroi: 0xB08462, eau: 0x5C9FB5, dir: [-0.78, 0.3, 0.3] };
   const AMBIANCES = { jour: JOUR, nuit: NUIT, aube: AUBE };
   function theme(sombre, couleurCategorie) {
     appliquerAmbiance(sombre ? NUIT : JOUR, sombre);
     if (couleurCategorie) colorerTrajet(couleurCategorie);
   }
   function appliquerAmbiance(S, sombre) {
-    DIR_SOLEIL.set(...(S.dir || [0.52, 0.6, 0.36])).normalize();
+    DIR_SOLEIL.set(...(S.dir || [0.62, 0.5, 0.42])).normalize();
     scene.background = new THREE.Color(S.ciel); scene.fog.color.setHex(S.ciel);
+    const u = ciel.material.uniforms;
+    u.haut.value.setHex(S.zenith); u.horizon.value.setHex(S.ciel); u.bas.value.setHex(S.sous); u.halo.value.setHex(S.halo);
     hemi.color.setHex(S.hs); hemi.groundColor.setHex(S.hg); hemi.intensity = S.hi;
     soleil.color.setHex(S.sol); soleil.intensity = S.si; amb.intensity = S.amb;
     terrain.materiaux.forEach((m) => m.color.setHex(S.ter)); terrain.matParoi.color.setHex(S.paroi); terrain.matEau.color.setHex(S.eau);
@@ -654,10 +681,9 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   // ---------- boucle ----------
   const lisse = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
   const v3 = new THREE.Vector3(), avantV = new THREE.Vector3();
-  let dernier = performance.now(), u = 0, enPause = false;
+  let dernier = performance.now(), u = 0;
   function boucle(now) {
     const dtReel = Math.max(0, (now - dernier) / 1000), dt = Math.min(0.05, dtReel); dernier = now;
-    if (enPause) { requestAnimationFrame(boucle); return; } // une scène à la première personne occupe l'écran
     adapter(dtReel);
     let infoVol = null;
     majVue();
@@ -743,12 +769,15 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     const w = canvas.clientWidth, h = canvas.clientHeight;
     bataille.maj(dt, camera, w, h);
     animerMarques(now); animerFeux(now);
+    mise.maj(dt, now, camera, w, h, vue);
     for (const m of candidats.mats) { m.resolution.set(w, h); m.dashSize = vue * 0.02; m.gapSize = vue * 0.013; if (!reduit) m.dashOffset -= dt * vue * 0.05; }
     for (const c of candidats.lbls) {
       v3.copy(c.p).project(camera);
       c.el.classList.toggle('off', v3.z >= 1);
       c.el.style.transform = `translate(${(v3.x * 0.5 + 0.5) * w}px,${(-v3.y * 0.5 + 0.5) * h}px) translate(-50%,-50%)`;
     }
+    ciel.position.copy(camera.position); ciel.scale.setScalar((camera.near + camera.far) / 2);
+    camera.updateMatrixWorld(); terrain.maj(camera); // tuiles du relief, plus fines près de la caméra
     renderer.render(scene, camera);
     // étiquettes : les plus importantes d'abord, une étiquette qui en chevauche une autre est masquée
     const placees = [];
@@ -795,6 +824,11 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
       const pts = [[b.x0, b.z0], [b.x1, b.z0], [b.x0, b.z1], [b.x1, b.z1]].map(([x, z]) => new THREE.Vector3(x, 0, z));
       cadrerPoints(pts, -cap * Math.PI / 180, incl * Math.PI / 180, 100, duree ?? 2600);
     },
+    // Cadre un ensemble de points [lat, lon] dans la zone libre (cap et inclinaison en degrés, distance minimale en km).
+    cadrerLatLon(points, cap, incl, duree, rMin = 0.25) {
+      const pts = points.map(([la, lo]) => { const [x, z] = R.xz(la, lo); return new THREE.Vector3(x, R.sol(x, z), z); });
+      cadrerPoints(pts, cap == null ? cam.theta : -cap * Math.PI / 180, incl == null ? cam.phi : incl * Math.PI / 180, rMin, duree ?? 2400);
+    },
     // Cadre l'ensemble de plusieurs tracés (listes d'étapes) dans la zone libre.
     cadrerTraces(listes, cap, incl, duree) {
       const pts = listes.flatMap((et) => { const { suivi } = echantillonner(et, false); return suivi.filter((_, k) => k % 8 === 0 || k === suivi.length - 1); });
@@ -823,9 +857,11 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
     nord: () => { if (libre.actif) libre.lacet = 0; else volVers(cam.cible, cam.r, 0, cam.phi, 700); },
     placer: (r, theta, phi) => { cam.r = r; cam.theta = theta; cam.phi = phi; },
     rafraichirVue: () => { cleVue = ''; },
-    // Suspend le rendu et le clavier de la carte (scène à la première personne au premier plan).
-    pause(on) { enPause = !!on; clavier.clear(); if (!on) dernier = performance.now(); },
+    // Missions : repères (personnes, lieux, objets), accessoires (tentes, bêtes, feux…), effets.
+    mission: { ...mise, surRepere: (f) => { surRepere = f || (() => {}); } },
     apercu: () => terrain.apercu,
+    // mesures de rendu (essais de performance)
+    statistiques: () => ({ tuiles: terrain.tuiles(), dessins: renderer.info.render.calls, triangles: renderer.info.render.triangles, dpr }),
     emprise: () => R.meta.emprise,
     teleporter(lat, lon) {
       const [x, z] = R.xz(lat, lon), y = R.sol(x, z);

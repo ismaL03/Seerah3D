@@ -1,41 +1,61 @@
-// Missions à la première personne : interprète des fichiers data/missions/<id>.json, joués dans le monde
-// de src/monde.js. Une mission est une suite d'étapes (scène, récit, parole, choix, objectif, faire).
-// Un mauvais choix ne se révèle pas tout de suite : sa « suite » se joue (on continue un peu, parfois en
-// marchant), puis vient la conséquence imaginaire et le retour au dernier point de reprise.
-// Le Prophète ﷺ, les prophètes, les Compagnons et sa famille restent hors champ : jamais de silhouette,
-// aucune parole inventée.
-import { creerMonde } from './monde.js';
+// Missions : interprète des fichiers data/missions/<id>.json, jouées sur la carte 3D elle-même, sans
+// vue subjective ni déplacement d'un personnage. La caméra cadre chaque scène ; le joueur agit en
+// cliquant sur les repères (personnes, lieux, objets), en choisissant ses réponses, en portant et en
+// remettant des objets, en maintenant une invocation. Une mission est une suite d'étapes (scène, récit,
+// parole, choix, objectif, faire). Un mauvais choix ne se révèle pas tout de suite : sa « suite » se joue
+// d'abord, puis viennent la conséquence imaginaire et le retour au dernier point de reprise.
+// Aucune silhouette humaine : les personnes sont des étiquettes ; le Prophète ﷺ, les prophètes, les
+// Compagnons et sa famille restent hors champ (une lumière tout au plus), sans aucune parole inventée.
 
 const $ = (s) => document.querySelector(s);
 const melanger = (t) => { t = [...t]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
 class Echec { constructor(o) { this.o = o; } }
 
-export function creerMissions({ hote, ui }) {
-  const { reduit, mobile } = ui;
+export function creerMissions({ carte, D, ui }) {
+  const { reduit, mobile } = ui, S = carte.mission;
   const cache = new Map();
-  let W = null, M = null, run = null;
+  let M = null, run = null;
 
   const charger = (id) => {
     if (!cache.has(id)) cache.set(id, fetch(`data/missions/${id}.json`).then((r) => { if (!r.ok) throw new Error(`Mission introuvable : ${id}`); return r.json(); }));
     return cache.get(id);
   };
-  function monde() {
-    if (!W) W = creerMonde({ hote, reduit, mobile, pas: (c) => ui.son.pas(c) });
-    return W;
+
+  // ---------- coordonnées ----------
+  // Un point se donne par un lieu de la carte (« lieu »), un point [lat, lon] (« point »), ou un décalage
+  // en mètres (« x » vers l'est, « z » vers le sud) depuis l'origine de la scène.
+  const KM_LAT = 110.57;
+  function origine(sc) {
+    const o = sc && sc.origine;
+    if (!o) return null;
+    if (typeof o === 'string') { const l = D.LIEUX[o] || D.ETAPES[o]; return [l.lat, l.lon]; }
+    return o;
   }
+  function latlon(p, sc = def()) {
+    if (!p) return null;
+    if (Array.isArray(p)) return p;
+    if (typeof p === 'string') { const l = D.LIEUX[p] || D.ETAPES[p]; return l ? [l.lat, l.lon] : S.ouRepere(p); }
+    if (p.lieu) return latlon(p.lieu, sc);
+    if (p.point) return p.point;
+    if (p.x != null) { const [la, lo] = origine(sc); return [la - p.z / 1000 / KM_LAT, lo + p.x / 1000 / (111.32 * Math.cos(la * Math.PI / 180))]; }
+    if (p.repere) return S.ouRepere(p.repere);
+    return null;
+  }
+  const def = () => (run && run.scene ? M.scenes[run.scene] : null);
 
   // ---------- interface ----------
-  function hudObjectif(texte, compteur) {
+  function hudObjectif(texte) {
     $('#joMission').textContent = M.titre;
     $('#joTexte').textContent = texte;
-    $('#joCompteur').hidden = compteur == null; if (compteur != null) $('#joCompteur').textContent = compteur;
+    compteur(null);
     $('#jObjectif').hidden = !texte;
     $('#jObjectif').classList.remove('neuf'); void $('#jObjectif').offsetWidth; $('#jObjectif').classList.add('neuf');
   }
   const compteur = (t) => { $('#joCompteur').hidden = t == null; $('#joCompteur').textContent = t ?? ''; };
-  function commandes(on) {
-    const el = $('#jCommandes'); el.hidden = !on || mobile;
-    if (on && !el.innerHTML) el.innerHTML = '<span><kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> marcher</span><span><kbd>Maj</kbd> courir</span><span>souris : regarder</span><span><kbd>E</kbd> agir</span><span><kbd>Échap</kbd> menu</span>';
+  function sac() {
+    const el = $('#joSac'), objets = [...run.sac].filter((k) => M.objets && M.objets[k]);
+    el.hidden = !objets.length;
+    el.innerHTML = objets.map((k) => `<span class="j-objet">${M.objets[k].nom}</span>`).join('');
   }
   function flottant(texte, ar) {
     if (reduit) return;
@@ -45,9 +65,6 @@ export function creerMissions({ hote, ui }) {
   function role(R) {
     $('#jrNom').textContent = R.nom; $('#jrAr').textContent = R.nom_ar || ''; $('#jrTexte').textContent = R.texte || '';
     $('#jrRegle').textContent = R.regle || ''; $('#jrRegle').hidden = !R.regle;
-    $('#jrTouches').innerHTML = mobile
-      ? '<dt>Joystick (gauche)</dt><dd>marcher</dd><dt>Glisser à droite</dt><dd>regarder</dd><dt>Bouton Agir</dt><dd>parler, prendre, invoquer</dd>'
-      : '<dt><kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> ou flèches</dt><dd>marcher (<kbd>Maj</kbd> pour courir)</dd><dt>Souris</dt><dd>regarder (cliquez dans la scène pour la capturer)</dd><dt><kbd>E</kbd></dt><dd>parler, prendre, agir — maintenir pour invoquer</dd>';
     $('#jRole').hidden = false;
     return new Promise((ok) => {
       const fin = () => { removeEventListener('keydown', clavier); $('#jRole').hidden = true; ok(); };
@@ -56,7 +73,7 @@ export function creerMissions({ hote, ui }) {
       run.nettoyer.push(() => removeEventListener('keydown', clavier));
     });
   }
-  // Carte d'invocation : le texte apparaît pendant que le joueur maintient la touche.
+  // Carte d'invocation : le texte s'illumine pendant que le joueur maintient le bouton (ou Espace).
   function invocation(inv, p) {
     const el = $('#jInvoc');
     if (p == null) { el.hidden = true; el.classList.remove('exaucee'); return; }
@@ -70,61 +87,75 @@ export function creerMissions({ hote, ui }) {
   }
 
   // ---------- étiquettes du dialogue ----------
-  const nomDe = (id) => { const s = M.personnages && M.personnages[id]; return s ? s.nom : id; };
-  const tagPnj = (id) => { const s = (M.personnages && M.personnages[id]) || {}; return { lieu: s.nom || id, date: s.qualite || '' }; };
+  const perso = (id) => (M.personnages && M.personnages[id]) || {};
+  const tagPnj = (id) => ({ lieu: perso(id).nom || id, date: perso(id).qualite || '' });
   const tagRecit = (e) => ({ lieu: e.qui || run.lieu || M.titre, date: e.sous || run.date || '' });
 
+  // ---------- caméra ----------
+  function vue(v, duree) {
+    if (!v) return;
+    // « auto » : la caméra cadre les repères visibles (et les points « avec »), sous le cap et l'inclinaison donnés
+    if (v.auto) { carte.cadrerLatLon([...S.visibles(), ...(v.avec || []).map((p) => latlon(p))], v.cap, v.incl, reduit ? 0 : (duree ?? v.duree ?? 2200), v.rMin ?? 0.35); return; }
+    const p = latlon(v.repere ? { repere: v.repere } : v.lieu || v.point ? v : v.x != null ? v : def() && def().vue);
+    if (!p) return;
+    carte.viser(p, v.r, v.cap, v.incl, reduit ? 0 : (duree ?? v.duree ?? 2200));
+  }
+  // Regard vers une personne pendant qu'elle parle : la caméra se recentre doucement sur son repère.
+  function regarder(id) {
+    if (!id || !S.ouRepere(id)) return;
+    carte.viser(S.ouRepere(id), null, null, null, reduit ? 0 : 1100);
+  }
+
   // ---------- scènes ----------
+  // Met en place les repères et les accessoires d'une scène (sans mouvement de caméra).
+  function monter(id) {
+    const sc = M.scenes[id];
+    if (!sc) throw new Error(`Scène inconnue : ${id}`);
+    run.scene = id;
+    if (sc.epoque) carte.epoque(D.INDEX[sc.epoque]);
+    carte.etiquettes(sc.etiquettes || 'aucune'); carte.surligner(null); carte.trajetLibre(null);
+    S.reperes((sc.reperes || []).map((r) => {
+      const [lat, lon] = latlon(r, sc), P = perso(r.id);
+      return { id: r.id, lat, lon, genre: r.genre || 'personne', nom: r.nom ?? P.nom ?? r.id, qualite: r.qualite ?? P.qualite ?? '', visible: r.visible !== false, h: r.h };
+    }));
+    S.accessoires((sc.accessoires || []).map((a) => { const [lat, lon] = latlon(a, sc); return { ...a, lat, lon }; }));
+    return sc;
+  }
   async function scene(e, ok) {
-    const def = M.scenes[e.scene];
-    if (!def) throw new Error(`Scène inconnue : ${e.scene}`);
-    run.lieu = e.titre || def.titre || run.lieu; run.date = e.sous || def.sous || run.date;
-    await W.fondu(true, [run.lieu, run.date].filter(Boolean).join(' · ')); ok();
-    W.charger(def); run.scene = e.scene; run.ambiance = def.ambiance || 'jour';
-    if (e.ambiance) { W.ambiance(e.ambiance); run.ambiance = e.ambiance; }
-    if (e.depart) W.teleporter(...e.depart);
-    await ui.pause(reduit ? 0 : 900); ok();
-    W.fondu(false);
+    const sc = monter(e.scene);
+    run.lieu = e.titre || sc.titre || run.lieu; run.date = e.sous || sc.sous || run.date;
+    run.ambiance = e.ambiance || sc.ambiance || 'jour';
+    carte.ambiance(run.ambiance);
+    vue(sc.vue, e.duree ?? 2600);
+    await ui.pause(reduit ? 0 : 1200); ok();
   }
 
   // ---------- actions ----------
-  function point(cible) {
-    if (Array.isArray(cible)) return cible;
-    if (cible === 'joueur') { const p = W.position(); return [p.x, p.z]; }
-    return W.ou(cible) || null;
-  }
   async function action(a, ok) {
     if (a.lieu) run.lieu = a.lieu;
     if (a.sous) run.date = a.sous; // le bandeau du dialogue suit le temps qui passe
-    if (a.montrer) [].concat(a.montrer).forEach((id) => W.montrer(id, true));
-    if (a.cacher) [].concat(a.cacher).forEach((id) => W.montrer(id, false));
-    if (a.ambiance) { W.ambiance(a.ambiance); run.ambiance = a.ambiance; }
-    if (a.inviter) W.inviter(a.inviter, a.texte ?? null);
-    if ('porter' in a) W.porter(a.porter);
-    if (a.teleporter) W.teleporter(...a.teleporter);
-    if (a.suivre) W.suivre(a.suivre, true, a.ecart || 2.5);
-    if (a.lacher) W.suivre(a.lacher, false);
-    if (a.tourner) W.tourner(a.tourner, a.cap || 0);
-    if (a.geste) W.geste(a.geste);
-    if (a.placer) W.placer(a.placer, a.en, a.rayon);
-    if (a.champ) W.champ(a.champ, a.duree);
-    if (a.garde) W.garde(a.garde, !!a.on);
+    if (a.montrer) [].concat(a.montrer).forEach((id) => { S.repere(id, { visible: true }); S.accessoire(id, true); });
+    if (a.cacher) [].concat(a.cacher).forEach((id) => { S.repere(id, { visible: false }); S.accessoire(id, false); });
+    if (a.renommer) S.repere(a.renommer, { nom: a.nom, qualite: a.qualite || '' });
+    if (a.ambiance) { carte.ambiance(a.ambiance); run.ambiance = a.ambiance; }
     if (a.drapeau) run.sac.add(a.drapeau);
-    if ('bateau' in a) W.vehicule(a.bateau ? 'bateau' : null, a);
+    if (a.porter) { run.sac.add(a.porter); sac(); }
+    if (a.deposer) { run.sac.delete(a.deposer); sac(); }
     if (a.flottant) flottant(a.flottant, a.ar);
     if (a.son) ui.son[a.son] && ui.son[a.son]();
-    if (a.fondu != null) { await W.fondu(!!a.fondu, a.texte || ''); ok(); }
-    if (a.aller) {
-      // « vers le joueur » : on s'arrête à deux pas de lui, face à lui
-      const devant = () => { const j = W.position(), n = W.pnj(a.aller) || { x: j.x, z: j.z + 1 }, d = Math.hypot(n.x - j.x, n.z - j.z) || 1; return [j.x + (n.x - j.x) / d * 1.9, j.z + (n.z - j.z) / d * 1.9]; };
-      // trop loin du joueur : on le rapproche d'abord (hors de sa vue, le plus souvent)
-      if (a.vers === 'joueur') { const j = W.position(), n = W.pnj(a.aller); if (n && Math.hypot(n.x - j.x, n.z - j.z) > 24) { const d = Math.hypot(n.x - j.x, n.z - j.z); W.placer(a.aller, [j.x + (n.x - j.x) / d * 12, j.z + (n.z - j.z) / d * 12], 0); } }
-      const vers = a.vers === 'joueur' ? [devant()] : a.vers.map((p) => point(p));
-      const fin = W.aller(a.aller, vers, a.vitesse);
-      if (a.attendre !== false) { await Promise.race([fin, ui.pause(a.max || 12000)]); ok(); }
+    if ('convoi' in a) carte.trajetLibre(a.convoi ? { type: a.convoi.type || 'caravane', etapes: a.convoi.etapes.map((p) => (typeof p === 'string' && (D.LIEUX[p] || D.ETAPES[p]) ? p : latlon(p))) } : null, a.convoi && a.convoi.couleur);
+    if (a.vue) vue(a.vue, a.duree);
+    if (a.regarder) regarder(a.regarder);
+    if (a.aller) { // un repère se déplace (une personne, une caravane…)
+      const fin = S.deplacer(a.aller, a.vers.map((p) => latlon(p)), a.duree ?? 4);
+      if (a.attendre !== false) { await fin; ok(); }
     }
-    if (a.regarder) { const p = typeof a.regarder === 'string' && a.regarder.startsWith('pnj:') ? W.tete(a.regarder.slice(4)) : a.regarder.length === 2 ? [a.regarder[0], 1.6, a.regarder[1]] : a.regarder; if (p) { await W.regarder(p, a.duree || 1.2); ok(); } }
-    if (a.effet) { const fin = W.effet(a.effet, a); if (a.attendre !== false) { await fin; ok(); } }
+    if (a.effet) {
+      const o = { ...a }; if (a.ou) [o.lat, o.lon] = latlon(a.ou);
+      const fin = S.effet(a.effet, o);
+      if (a.attendre !== false) { await fin; ok(); }
+    }
+    if (a.eclat) { const [la, lo] = latlon(a.eclat); carte.eclat(la, lo); }
     if (a.pause) { await ui.pause(reduit ? 0 : a.pause); ok(); }
   }
 
@@ -132,27 +163,23 @@ export function creerMissions({ hote, ui }) {
   const ETAPES = {
     scene,
     async recit(e, ok) {
-      W.bloquer(true); commandes(false);
-      if (e.regarder) await action({ regarder: e.regarder, duree: 1 }, ok);
+      if (e.vue) vue(e.vue);
       await ui.dire(e.texte, tagRecit(e)); ok();
     },
     async parole(e, ok) {
-      W.bloquer(true); commandes(false);
-      W.faireFace(e.qui);
-      if (!e.sansRegard) { const t = W.tete(e.qui); if (t) { await W.regarder(t, 0.7); ok(); } }
-      if (e.geste !== false) W.geste(e.qui);
-      await ui.dire(e.texte, tagPnj(e.qui)); ok();
-      W.faireFace(e.qui, false);
+      if (e.regarder !== false) regarder(e.qui);
+      S.repere(e.qui, { cible: true });
+      try { await ui.dire(e.texte, tagPnj(e.qui)); ok(); } finally { S.repere(e.qui, { cible: false }); }
     },
     // Dialogue à choix : l'option fausse n'est pas signalée, sa suite se joue d'abord.
     async choix(e, ok) {
-      W.bloquer(true); commandes(false);
-      if (e.qui) { W.faireFace(e.qui); const t = W.tete(e.qui); if (t) { await W.regarder(t, 0.7); ok(); } }
+      if (e.qui) { regarder(e.qui); S.repere(e.qui, { cible: true }); }
       const ordre = e._ordre || (e._ordre = melanger(e.options.map((_, k) => k)));
       const tentes = e._tentes || (e._tentes = new Set());
       run.choix = e;
       const i = await ui.proposer(e.question, ordre.map((k) => e.options[k]), tentes, e.qui ? tagPnj(e.qui) : tagRecit(e), tentes.size > 0); ok();
       run.choix = null;
+      if (e.qui) S.repere(e.qui, { cible: false });
       const o = e.options[ordre[i]];
       if (o.juste) {
         const b = ui.boutonOption(i); b.classList.add('juste');
@@ -165,116 +192,137 @@ export function creerMissions({ hote, ui }) {
       tentes.add(i);
       throw new Echec(o);
     },
-    // Le joueur se déplace librement jusqu'à remplir la condition « quand » ; les « echecs » guettent.
+    // Objectif : le joueur agit sur la carte (cliquer un repère, en écouter plusieurs, ramasser, remettre
+    // un objet, maintenir une invocation) jusqu'à remplir la condition « quand » ; les « echecs » guettent.
     async objectif(e, ok) {
-      ui.masquerDialogue(); W.bloquer(false); commandes(true);
+      ui.masquerDialogue();
       const q = e.quand || {};
-      hudObjectif(e.texte, null);
-      W.cibler(e.cible || null);
-      $('#joGuider').hidden = !e.cible || e.guider === false;
+      hudObjectif(e.texte);
+      if (e.vue) vue(e.vue);
+      const actifs = new Set([q.parler, q.aller, q.prendre, q.utiliser, ...(q.tous || []), ...(q.donner ? [q.donner.a] : []), ...(e.echecs || []).map((f) => f.repere)].filter(Boolean));
+      if (q.ramasser) S.liste().filter((id) => id.startsWith(q.ramasser.groupe)).forEach((id) => actifs.add(id));
+      if (q.lancer) actifs.add(q.lancer.repere);
+      if (M.dialogues) Object.keys(M.dialogues).forEach((id) => actifs.add(id)); // les passants répondent toujours
+      actifs.forEach((id) => S.repere(id, { actif: true }));
+      $('#joGuider').hidden = e.guider === false || !(q.parler || q.aller || q.prendre || q.utiliser || q.donner || q.tous || q.lancer);
       run.objectif = e;
-      const r = run, abos = [], on = (t, f) => abos.push(W.on(t, f));
+      const r = run, abos = [];
       try {
         await new Promise((fini, rate) => {
           r.resoudre = fini; r.rater = rate;
           const ech = (f) => rate(new Echec(f));
-          if (q.parler || q.utiliser || q.prendre) {
-            const id = q.parler || q.utiliser || q.prendre;
-            on('agir', (d) => { if (d.id !== id) return; if (q.prendre) { W.montrer(id, false); if (q.porter) W.porter(q.porter); } fini(); });
-          }
-          if (q.zone) { on('zone', (d) => d.id === q.zone && fini()); if (W.dans(q.zone)) fini(); }
-          if (q.tous) { // parler à chacun (leurs paroles sont dans « dialogues »)
-            const vus = new Set(); compteur(`${q.nom || 'Écoutés'} : 0 / ${q.tous.length}`);
-            on('agir', async (d) => {
-              if (!q.tous.includes(d.id)) return;
-              await parlerLibre(d.id, M.dialogues[d.id] || ['…'], true);
+          // un clic sur un repère
+          r.clic = async (id) => {
+            if (r.occupe) return;
+            const f = (e.echecs || []).find((x) => x.repere === id);
+            if (f) { ech(f); return; }
+            if (id === q.parler || id === q.aller || id === q.utiliser) { fini(); return; }
+            if (id === q.prendre) { S.repere(id, { visible: false }); if (q.porter) { run.sac.add(q.porter); sac(); } ui.son.page(); fini(); return; }
+            if (q.donner && id === q.donner.a) {
+              if (run.sac.has(q.donner.objet)) { run.sac.delete(q.donner.objet); sac(); fini(); }
+              else await parlerLibre(id, [q.donner.sans || 'Il vous manque encore quelque chose.']);
+              return;
+            }
+            if (q.tous && q.tous.includes(id)) {
+              await parlerLibre(id, M.dialogues[id] || ['…'], true);
               if (run !== r) return;
-              vus.add(d.id); compteur(`${q.nom || 'Écoutés'} : ${vus.size} / ${q.tous.length}`);
-              if (vus.size === q.tous.length) fini();
+              r.vus.add(id); S.repere(id, { vu: true });
+              compteur(`${q.nom || 'Écoutés'} : ${r.vus.size} / ${q.tous.length}`);
+              if (r.vus.size === q.tous.length) fini();
+              return;
+            }
+            if (q.lancer && id === q.lancer.repere) { // cliquer plusieurs fois (lancer des cailloux, frapper…)
+              r.k++; ui.son.page(); if (q.lancer.dire) flottant(q.lancer.dire, q.lancer.ar);
+              compteur(`${q.lancer.nom || 'Fait'} : ${r.k} / ${q.lancer.n}`);
+              if (r.k >= q.lancer.n) fini();
+              return;
+            }
+            if (q.ramasser && id.startsWith(q.ramasser.groupe)) {
+              const o = (M.objets_scene || {})[id] || {};
+              S.repere(id, { visible: false }); ui.son.page();
+              if (o.faux) { ech(o.faux); return; }
+              r.k++; compteur(`${q.ramasser.nom || 'Ramassés'} : ${r.k} / ${q.ramasser.n}`);
+              if (r.k >= q.ramasser.n) fini();
+              return;
+            }
+            const dl = M.dialogues && M.dialogues[id];
+            if (dl) await parlerLibre(id, dl);
+          };
+          r.vus = new Set(); r.k = 0;
+          if (q.tous) compteur(`${q.nom || 'Écoutés'} : 0 / ${q.tous.length}`);
+          if (q.ramasser) compteur(`${q.ramasser.nom || 'Ramassés'} : 0 / ${q.ramasser.n}`);
+          if (q.lancer) compteur(`${q.lancer.nom || 'Fait'} : 0 / ${q.lancer.n}`);
+          if (q.tenir) { // maintenir le bouton (ou la barre d'espace) jusqu'au bout
+            const b = $('#joTenir'); b.hidden = false; b.querySelector('span').textContent = q.tenir.bouton || 'Maintenir pour invoquer';
+            let p = 0, appui = false, t0 = 0, raf = 0;
+            const duree = (q.tenir.duree || 4) * (reduit ? 0.2 : 1);
+            const pas = (now) => {
+              const dt = Math.min(0.1, (now - t0) / 1000); t0 = now;
+              p = Math.max(0, Math.min(1, p + (appui ? dt / duree : -dt / 1.5)));
+              b.style.setProperty('--p', p); if (q.tenir.invocation) invocation(q.tenir.invocation, p > 0 || appui ? p : null);
+              if (p >= 1) { b.hidden = true; ui.succes(b); fini(); return; }
+              raf = requestAnimationFrame(pas);
+            };
+            const debut = (ev) => { ev && ev.preventDefault(); if (!appui) { appui = true; } };
+            const fin = () => { appui = false; };
+            const clavier = (ev) => { if ((ev.key === ' ' || ev.key === 'e' || ev.key === 'E') && !ev.repeat && !ev.target.closest('input')) { ev.preventDefault(); debut(); } };
+            const relache = (ev) => { if (ev.key === ' ' || ev.key === 'e' || ev.key === 'E') fin(); };
+            b.addEventListener('pointerdown', debut); b.addEventListener('pointerup', fin); b.addEventListener('pointerleave', fin); b.addEventListener('pointercancel', fin);
+            addEventListener('keydown', clavier); addEventListener('keyup', relache);
+            t0 = performance.now(); raf = requestAnimationFrame(pas);
+            r.tenir = () => { appui = true; p = 1; };
+            abos.push(() => {
+              cancelAnimationFrame(raf); b.hidden = true;
+              b.removeEventListener('pointerdown', debut); b.removeEventListener('pointerup', fin); b.removeEventListener('pointerleave', fin); b.removeEventListener('pointercancel', fin);
+              removeEventListener('keydown', clavier); removeEventListener('keyup', relache);
             });
-          }
-          if (q.tenir) {
-            // « tenir » : un identifiant, ou le début d'identifiants (plusieurs tapis, par exemple)
-            on('tenir', (d) => d.id.startsWith(q.tenir) && q.invocation && invocation(q.invocation, d.p));
-            on('tenir-stop', (d) => d.id.startsWith(q.tenir) && invocation(null));
-            on('tenu', (d) => { if (!d.id.startsWith(q.tenir)) return; if (q.invocation) invocation(q.invocation, 1); ui.succes(null); fini(); });
-          }
-          if (q.ramasser) {
-            const { groupe, n } = q.ramasser; let k = 0; compteur(`${q.ramasser.nom || 'Ramassés'} : 0 / ${n}`);
-            on('agir', (d) => {
-              if (!d.id.startsWith(groupe)) return;
-              W.montrer(d.id, false); k++; compteur(`${q.ramasser.nom || 'Ramassés'} : ${k} / ${n}`); ui.son.page();
-              const def = run.def().objets?.find((o) => o.id === d.id);
-              if (def && def.faux) ech(def.faux);
-              else if (k >= n) fini();
-            });
-          }
-          if (q.lancer) {
-            const L = q.lancer; let k = 0; compteur(`${L.nom || 'Touchés'} : 0 / ${L.touches}`);
-            W.lancer({ cibles: L.cibles, nombre: L.nombre || 99, vitesse: L.vitesse });
-            on('lance', () => { if (L.dire) flottant(L.dire, L.ar); ui.son.page(); });
-            on('impact', () => { k++; compteur(`${L.nom || 'Touchés'} : ${k} / ${L.touches}`); if (k >= L.touches) fini(); });
           }
           if (q.attendre) { const t = setTimeout(fini, reduit ? 10 : q.attendre * 1000); abos.push(() => clearTimeout(t)); }
           for (const f of e.echecs || []) {
-            if (f.zone) { on('zone', (d) => d.id === f.zone && ech(f)); if (W.dans(f.zone)) ech(f); }
-            if (f.repere) on('repere', (d) => d.id.startsWith(f.repere) && ech(f));
-            if (f.chute) on('chute', (d) => (f.chute === true || d.id === f.chute) && ech(f));
-            if (f.recif) on('recif', (d) => (f.recif === true || d.id === f.recif) && ech(f));
-            if (f.echoue) on('echoue', () => ech(f));
-            if (f.tenu) on('tenu', (d) => d.id.startsWith(f.tenu) && ech(f));
             if (f.chrono) {
               const t0 = performance.now(), it = setInterval(() => {
-                const r = Math.max(0, f.chrono - (performance.now() - t0) / 1000);
-                if (!q.ramasser && !q.lancer) compteur(`${Math.floor(r / 60)}:${String(Math.ceil(r % 60) % 60).padStart(2, '0')}`);
-                if (r <= 0) ech(f);
+                if (r.occupe) return;
+                const reste = Math.max(0, f.chrono - (performance.now() - t0) / 1000);
+                if (!q.ramasser && !q.tous) compteur(`${Math.floor(reste / 60)}:${String(Math.ceil(reste % 60) % 60).padStart(2, '0')}`);
+                if (reste <= 0) ech(f);
               }, 250);
               abos.push(() => clearInterval(it));
             }
           }
-          // Interactions libres pendant l'objectif : paroles des passants, objets du décor.
-          on('agir', (d) => {
-            if ([q.parler, q.utiliser, q.prendre].includes(d.id) || (q.tous && q.tous.includes(d.id)) || (q.ramasser && d.id.startsWith(q.ramasser.groupe))) return;
-            const dl = M.dialogues && M.dialogues[d.id.split('#')[0]];
-            if (dl) parlerLibre(d.id, dl);
-          });
         });
       } finally {
         abos.forEach((f) => f());
+        actifs.forEach((id) => S.repere(id, { actif: false, cible: false }));
         if (run === r) {
-          r.resoudre = r.rater = null; r.objectif = null;
-          W.cibler(null); W.lancer(null); compteur(null); $('#joGuider').hidden = true;
+          r.resoudre = r.rater = r.clic = r.tenir = null; r.objectif = null;
+          compteur(null); $('#joGuider').hidden = true;
           if (q.tenir) setTimeout(() => { if (run === r && !r.objectif) invocation(null); }, reduit ? 0 : 1800);
         }
       }
-      W.bloquer(true); commandes(false);
       $('#jObjectif').hidden = true;
       if (e.reussite) { ui.succes(null); flottant(e.reussite); }
       if (e.epreuve) reussir(null);
     },
     async faire(e, ok) {
       if (!e.garder) ui.masquerDialogue();
-      W.bloquer(true);
       for (const a of e.actions) await action(a, ok);
     },
   };
 
-  // Paroles d'un passant pendant un objectif : le joueur s'arrête, écoute, puis reprend.
-  let parleEnCours = false;
+  // Paroles d'une personne cliquée pendant un objectif.
   async function parlerLibre(id, lignes, tout = false) {
-    if (parleEnCours || !run.objectif) return;
-    parleEnCours = true; const r = run;
-    W.bloquer(true); W.faireFace(id); const t = W.tete(id); if (t) await W.regarder(t, 0.5);
-    W.geste(id);
-    if (tout) { for (const texte of lignes) { await ui.dire(texte, tagPnj(id.split('#')[0])); if (run !== r) return; } }
-    else {
-      const k = (r.dits[id] = ((r.dits[id] ?? -1) + 1) % lignes.length);
-      await ui.dire(lignes[k], tagPnj(id.split('#')[0]));
-    }
-    if (run !== r) return;
-    W.faireFace(id, false); ui.masquerDialogue(); parleEnCours = false;
-    if (run.objectif) W.bloquer(false);
+    const r = run; if (r.occupe) return;
+    r.occupe = true; S.repere(id, { cible: true });
+    try {
+      if (tout) { for (const texte of lignes) { await ui.dire(texte, tagPnj(id)); if (run !== r) return; } }
+      else {
+        const k = (r.dits[id] = ((r.dits[id] ?? -1) + 1) % lignes.length);
+        await ui.dire(lignes[k], tagPnj(id));
+      }
+      if (run === r) ui.masquerDialogue();
+    } finally { r.occupe = false; S.repere(id, { cible: false }); }
   }
+  carte.mission.surRepere((id) => { if (run && run.clic) run.clic(id); });
 
   // Une épreuve réussie du premier coup donne une lumière.
   function reussir(el) {
@@ -291,15 +339,18 @@ export function creerMissions({ hote, ui }) {
   async function echouer(o, ok) {
     try { if (o.suite) await executer(o.suite, ok); }
     catch (x) { if (x instanceof Echec) return echouer(x.o, ok); throw x; }
-    W.bloquer(true); $('#jObjectif').hidden = true; commandes(false); invocation(null);
+    $('#jObjectif').hidden = true; invocation(null);
     await ui.consequence(o, ok, () => reprendre()); ok();
   }
+  // Retour au dernier point de reprise : scène, repères, accessoires, objets portés, caméra.
   function reprendre() {
     const p = run.point;
-    if (!p.snap) return; // point de reprise sur un changement de scène : la scène sera rechargée
-    if (p.scene !== run.scene) { W.charger(M.scenes[p.scene]); run.scene = p.scene; }
-    W.ambiance(p.ambiance); run.ambiance = p.ambiance;
-    W.restaurer(p.snap); run.sac = new Set(p.sac); run.lieu = p.lieu ?? run.lieu; run.date = p.date ?? run.date;
+    if (p.scene !== run.scene) monter(p.scene); // la suite d'un mauvais choix a pu changer de scène
+    carte.ambiance(p.ambiance); run.ambiance = p.ambiance;
+    if (p.snap) S.restaurer(p.snap);
+    carte.trajetLibre(null);
+    run.sac = new Set(p.sac); sac(); run.lieu = p.lieu ?? run.lieu; run.date = p.date ?? run.date;
+    if (p.vue) carte.revenir(p.vue, reduit ? 0 : 1200);
     ui.masquerDialogue();
   }
   const estPoint = (e) => e.point || e.type === 'choix' || e.type === 'scene' || (e.type === 'objectif' && ((e.echecs || []).length > 0 || e.epreuve));
@@ -307,23 +358,23 @@ export function creerMissions({ hote, ui }) {
   // ---------- partie ----------
   async function jouer(id, ok) {
     M = await charger(id); ok();
-    const W0 = monde();
-    run = { sac: new Set(), dits: {}, nettoyer: [], epreuves: new Set(), ratees: new Set(), erreurs: 0, point: null, scene: null, objectif: null, lieu: '', date: '', def: () => M.scenes[run.scene] };
+    run = { sac: new Set(), dits: {}, nettoyer: [], epreuves: new Set(), ratees: new Set(), erreurs: 0, point: null, scene: null, objectif: null, lieu: '', date: '' };
     // remise à zéro des choix déjà tentés (nouvelle partie)
     const raz = (l) => (l || []).forEach((e) => { delete e._ordre; delete e._tentes; (e.options || []).forEach((o) => raz(o.suite)); (e.echecs || []).forEach((f) => raz(f.suite)); });
     raz(M.sequence);
-    ui.entrerMonde(true);
-    W0.demarrer(); W0.bloquer(true);
+    ui.entrerMission(true); sac();
     try {
       const premiere = M.sequence.find((e) => e.type === 'scene');
       await scene(premiere, ok);
       await role(M.role); ok();
       let i = M.sequence.indexOf(premiere) + 1;
-      run.point = { i, snap: W.instantane(), sac: [], scene: run.scene, ambiance: run.ambiance };
+      const point = (k) => ({ i: k, snap: S.instantane(), sac: [...run.sac], scene: run.scene, ambiance: run.ambiance, lieu: run.lieu, date: run.date, vue: carte.vue() });
+      run.point = point(i);
       while (i < M.sequence.length) {
         const e = M.sequence[i];
-        // point de reprise : on y revient après un échec (l'instantané n'est pris qu'au premier passage)
-        if (estPoint(e) && run.point.i !== i) run.point = { i, snap: e.type === 'scene' ? null : W.instantane(), sac: [...run.sac], scene: run.scene, ambiance: run.ambiance, lieu: run.lieu, date: run.date };
+        // point de reprise : on y revient après un échec (l'instantané n'est pris qu'au premier passage ;
+        // pour une scène, on la rejoue : elle remet ses repères et ses accessoires en place)
+        if (estPoint(e) && run.point.i !== i) run.point = point(i);
         try {
           await ETAPES[e.type](e, ok); ok();
           i++;
@@ -334,10 +385,10 @@ export function creerMissions({ hote, ui }) {
           i = run.point.i;
         }
       }
-      await W.fondu(true, M.fin || ''); ok();
+      if (M.fin) flottant(M.fin);
       await ui.pause(reduit ? 0 : 900); ok();
     } finally {
-      arreter();
+      arreter(); run.fini = true;
     }
     return { erreurs: run.erreurs, lumieres: run.epreuves.size };
   }
@@ -346,43 +397,40 @@ export function creerMissions({ hote, ui }) {
       run.nettoyer.forEach((f) => f()); run.nettoyer = [];
       if (run.rater) { const f = run.rater; run.rater = null; f(ui.ANNULE); } // l'objectif en cours se termine
     }
-    $('#jObjectif').hidden = $('#jRole').hidden = true; commandes(false); invocation(null); parleEnCours = false;
-    if (W) { W.fondu(false); W.arreter(); }
-    ui.entrerMonde(false);
+    $('#jObjectif').hidden = $('#jRole').hidden = $('#joTenir').hidden = true; $('#joSac').hidden = true; invocation(null);
+    S.vider(); ui.entrerMission(false);
   }
 
-  // Bouton « Me guider » : on rejoint l'objectif (sans lumière pour cette épreuve).
-  $('#joGuider').onclick = async () => {
+  // Bouton « Me guider » : la caméra montre le repère à atteindre (sans lumière pour cette épreuve).
+  $('#joGuider').onclick = () => {
     if (!run || !run.objectif) return;
-    const e = run.objectif, q = e.quand || {}, p = point(e.cible);
-    if (!p) return;
+    const q = run.objectif.quand || {};
+    const id = q.parler || q.aller || q.prendre || q.utiliser || (q.donner && q.donner.a) || (q.lancer && q.lancer.repere) || (q.tous || []).find((x) => !run.vus.has(x));
+    if (!id || !S.ouRepere(id)) return;
     run.ratees.add(run.point ? run.point.i : -1);
-    await W.fondu(true, '');
-    const pos = W.position(), d = Math.hypot(p[0] - pos.x, p[1] - pos.z) || 1, r = q.zone ? 0 : 2.2;
-    W.teleporter(p[0] - (p[0] - pos.x) / d * r, p[1] - (p[1] - pos.z) / d * r);
-    W.regarder([p[0], 1.5, p[1]], 0.01);
-    W.fondu(false);
+    carte.viser(S.ouRepere(id), null, null, null, reduit ? 0 : 1200);
+    S.repere(id, { cible: true });
   };
 
   return {
     jouer, arreter, precharger: charger,
-    pause(on) { if (W && run && !W.racine.hidden) W.pause(on); },
-    actif: () => !!(run && W && !W.racine.hidden),
+    actif: () => !!run && !$('#jRole').hidden,
     // essais automatisés : état de l'étape, résolution ou échec forcés
     test: {
-      etat: () => run && { scene: run.scene, objectif: run.objectif, point: run.point && run.point.i, erreurs: run.erreurs, lumieres: run.epreuves.size, role: !$('#jRole').hidden },
+      etat: () => run && { scene: run.scene, objectif: run.objectif, point: run.point && run.point.i, erreurs: run.erreurs, lumieres: run.epreuves.size, role: !$('#jRole').hidden, fini: !!run.fini },
       etape: () => run && run.objectif,
       choix: () => run && run.choix && { juste: run.choix._ordre.findIndex((k) => run.choix.options[k].juste), n: run.choix.options.length },
-      resoudre() {
-        const e = run && run.objectif; if (!e) return false;
-        const q = e.quand || {};
-        if (q.parler || q.utiliser || q.prendre) W._test.agirSur(q.parler || q.utiliser || q.prendre);
-        else if (q.tenir) { const it = W._test.interactifs().find((x) => x.id.startsWith(q.tenir)); if (it) W._test.agirSur(it.id); }
-        else if (q.zone) { const p = point('zone:' + q.zone); W.teleporter(p[0], p[1]); }
-        else if (q.tous) { run.resoudre(); }
-        else if (q.ramasser) W._test.interactifs().filter((it) => it.id.startsWith(q.ramasser.groupe) && !(run.def().objets.find((o) => o.id === it.id) || {}).faux).slice(0, q.ramasser.n).forEach((it) => W._test.emettre('agir', { id: it.id, type: 'objet' }));
-        else if (q.lancer) for (let k = 0; k < q.lancer.touches; k++) W._test.emettre('impact', { id: q.lancer.cibles[0].id });
-        else if (run.resoudre) run.resoudre();
+      async resoudre() {
+        const e = run && run.objectif; if (!e || !run.clic) return false;
+        const q = e.quand || {}, r = run;
+        if (q.tenir) { r.tenir(); return true; }
+        if (q.donner && !r.sac.has(q.donner.objet)) { r.sac.add(q.donner.objet); }
+        const id = q.parler || q.aller || q.prendre || q.utiliser || (q.donner && q.donner.a);
+        if (id) { await r.clic(id); return true; }
+        if (q.tous) { r.resoudre(); return true; }
+        if (q.lancer) { for (let k = 0; k < q.lancer.n && r.objectif; k++) await r.clic(q.lancer.repere); return true; }
+        if (q.ramasser) { const bons = S.liste().filter((x) => x.startsWith(q.ramasser.groupe) && !((M.objets_scene || {})[x] || {}).faux); for (const x of bons.slice(0, q.ramasser.n)) await r.clic(x); return true; }
+        if (r.resoudre) r.resoudre();
         return true;
       },
       echouer() {

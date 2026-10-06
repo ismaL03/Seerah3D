@@ -1,5 +1,5 @@
-// Joue une mission à la première personne de bout en bout : à chaque choix une mauvaise option puis la
-// bonne, à chaque objectif qui peut échouer un échec forcé puis la réussite. Captures en option.
+// Joue une mission (sur la carte) de bout en bout : à chaque choix une mauvaise option puis la bonne,
+// à chaque objectif qui peut échouer un échec forcé puis la réussite. Captures en option.
 // usage : node mission.mjs <chapitre>[:<mission>] [--captures dossier] [--sans-erreurs] [--anime] [--vp 1440x900] [--tel]
 import { ouvrir, images } from './commun.mjs';
 
@@ -22,14 +22,14 @@ else {
 const clic = async (s) => { try { await page.click(s, { timeout: 4000, force: true }); } catch { /* déjà masqué */ } };
 const journal = [], tentes = new Set();
 let n = 0, fin = false;
-const capture = async (nom) => { if (dossier) await page.screenshot({ path: `${dossier}/${chapitre.replace(':', '-')}-${String(++n).padStart(2, '0')}-${nom}.png` }); };
+const capture = async (nom) => { if (dossier) await page.screenshot({ path: `${dossier}/${chapitre.replace(':', '-')}-${String(++n).padStart(2, '0')}-${nom}.png`, timeout: 120000 }); };
 for (let tour = 0; tour < 400 && !fin; tour++) {
   await page.waitForTimeout(reduit ? 500 : 1200);
   const st = await page.evaluate(() => {
     const v = (s) => { const e = document.querySelector(s); return !!e && !e.hidden; };
     const m = window.__sira.jeu.mission, e = m.etat(), o = m.etape();
     return { carte: v('#jChapCarte'), role: v('#jRole'), conseq: v('#jConseq'), bilan: v('#jBilan'), dlg: v('#jDialogue'), suite: v('#jdSuite'),
-      opts: v('#jDialogue') ? document.querySelectorAll('#jdOptions .j-opt').length : 0, choix: m.choix(), monde: document.body.classList.contains('jeu-monde'),
+      opts: v('#jDialogue') ? document.querySelectorAll('#jdOptions .j-opt').length : 0, choix: m.choix(), fini: !!(e && e.fini),
       objectif: o && { texte: o.texte, echecs: (o.echecs || []).length, quand: o.quand }, scene: e && e.scene, texte: document.getElementById('jdTexte').textContent.slice(0, 80),
       etat: window.__sira.jeu.etat() };
   });
@@ -63,11 +63,11 @@ for (let tour = 0; tour < 400 && !fin; tour++) {
       if (!tentes.has(cle)) await capture('objectif');
       tentes.add(cle);
       journal.push(`objectif : ${st.objectif.texte}`);
-      await page.evaluate(() => window.__sira.jeu.mission.resoudre());
+      await page.evaluate(() => { window.__sira.jeu.mission.resoudre(); });
     }
     continue;
   }
-  if (!st.monde && !st.dlg) { /* étape de carte suivante (trouver…) : on s'arrête là */ if (tour > 5) { journal.push('sortie de la mission'); fin = true; } }
+  if (st.fini) { journal.push('fin de la mission'); fin = true; }
 }
 await capture('fin');
 console.log(journal.join('\n'));

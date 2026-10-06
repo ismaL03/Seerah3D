@@ -9,7 +9,7 @@ const SOCLE = -7; // fond de la maquette (unités de scène)
 // Teintes d'altitude (mètres) : sable clair des plaines côtières jusqu'au brun des hauts plateaux.
 const PALIERS = [0, 120, 350, 650, 950, 1300, 1800, 2400];
 const TEINTES = ['#F2E7C9', '#EAD9AF', '#DFC896', '#D3B47E', '#C5A06C', '#B38D61', '#9F7C5A', '#8C6E57'];
-const COULEURS = { roche: '#A47E5C', rocheSombre: '#7A5F4B', basalte: '#514843', vert: '#86A35A', rivage: '#F4EBD2', merHaut: '#9FDCD3', merFond: '#2A5F7A' };
+const COULEURS = { roche: '#9A7354', rocheSombre: '#7A5E4A', basalte: '#5A4D46', vert: '#7E9E50', rivage: '#F4EBD2', sable: '#E6D0A2', merHaut: '#9FDCD3', merFond: '#2A5F7A' };
 
 function hexRgb(h) { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
 const lisse = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -29,8 +29,27 @@ function flou(v, w, h, r) {
   return v;
 }
 
-// Masque des zones : rouge = champs de lave (zones sombres et peu pentues de l'image satellite,
-// lissées puis seuillées pour des contours francs), vert = oasis historiques.
+// Grands champs de lave (harrât) de l'emprise, en ellipses approximatives aux bords irréguliers : hors de
+// ces régions, une zone sombre de l'image satellite (granite patiné, par exemple autour de Tâ'if) n'est pas
+// prise pour de la lave.
+const REGIONS_HARRA = [
+  { nom: 'Harrat Rahat', lat: 23.2, lon: 39.95, rlat: 1.55, rlon: 0.75 },
+  { nom: 'Harrat Khaybar et Ithnayn', lat: 25.7, lon: 40.1, rlat: 0.95, rlon: 0.95 },
+  { nom: 'Harrat Lunayyir', lat: 25.3, lon: 37.85, rlat: 0.45, rlon: 0.4 },
+  { nom: "Harrat 'Uwayrid", lat: 26.3, lon: 37.6, rlat: 0.6, rlon: 0.9 },
+];
+function dansHarra(lat, lon) {
+  let v = 0;
+  for (const z of REGIONS_HARRA) {
+    const dy = (lat - z.lat) / z.rlat, dx = (lon - z.lon) / z.rlon, a = Math.atan2(dy, dx);
+    const d = Math.hypot(dx, dy) * (1 + 0.08 * Math.sin(a * 5 + z.lat) + 0.05 * Math.sin(a * 11 + z.lon));
+    v = Math.max(v, 1 - lisse(0.75, 1.05, d));
+  }
+  return v;
+}
+
+// Masque des zones : rouge = champs de lave (zones sombres et peu pentues de l'image satellite, dans les
+// régions de harrât, lissées puis seuillées pour des contours francs), vert = oasis historiques.
 function masqueZones(R, image, oasis, harrat = []) {
   const w = image.width, h = image.height, f = w / R.W;
   const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
@@ -50,7 +69,7 @@ function masqueZones(R, image, oasis, harrat = []) {
     const m = alt(px, py); if (m <= 0) continue;
     const k = (py * w + px) * 4, L = (0.299 * d[k] + 0.587 * d[k + 1] + 0.114 * d[k + 2] - lo) / (hi - lo);
     const pente = Math.hypot(alt(px + 1, py) - alt(px - 1, py), alt(px, py + 1) - alt(px, py - 1)) / (2 * kmPx);
-    lave[py * w + px] = (1 - lisse(0.16, 0.30, L)) * (1 - lisse(90, 220, pente));
+    lave[py * w + px] = (1 - lisse(0.16, 0.30, L)) * (1 - lisse(90, 220, pente)) * dansHarra(R.nord - (py + 0.5) / f * R.pas, R.ouest + (px + 0.5) / f * R.pas);
   }
   flou(flou(lave, w, h, 3), w, h, 3);
   const zones = oasis.map((o) => ({ px: (o.lon - R.ouest) / R.pas * f, py: (R.nord - o.lat) / R.pas * f, r: o.rayon / (R.pas * R.kz) * f }));
@@ -135,77 +154,139 @@ function texture(source, renderer) {
   return t;
 }
 
-// Position (scène) du sommet (colonne c, ligne r) de la grille.
-function sommet(R, c, r) {
-  const [x, z] = R.xz(R.latLig(r), R.lonCol(c));
-  return [x, R.sommet(c, r) * R.exag, z];
+// ---------- normales et occlusion, précalculées ----------
+// Pour chaque relief, une texture RGBA : normale du sol (exagération comprise) en RGB, occlusion ambiante
+// en alpha (fonds de vallée assombris, d'après l'écart à l'altitude moyenne des alentours, à trois échelles).
+// Elle est échantillonnée « facteur » fois plus finement que la grille, et lue avec filtrage : l'éclairage
+// est lisse, sans facettes, quelle que soit la finesse du maillage affiché.
+function champSol(Rl, metres, facteur) {
+  const F = facteur, nw = (Rl.W - 1) * F + 1, nh = (Rl.H - 1) * F + 1, km = Math.max(Rl.bx, Rl.bz) / F;
+  const ECHELLES = [0.7, 2.4, 8]; // km
+  const P = Math.ceil(ECHELLES[2] / km) + 2, lw = nw + 2 * P, lh = nh + 2 * P;
+  const h = new Float32Array(lw * lh);
+  for (let j = 0; j < lh; j++) for (let i = 0; i < lw; i++) {
+    const c = (i - P) / F, r = (j - P) / F;
+    h[j * lw + i] = metres(Rl.ax + Rl.bx * c, Rl.az + Rl.bz * r);
+  }
+  const occl = new Float32Array(nw * nh).fill(1);
+  ECHELLES.forEach((e, k) => {
+    const b = flou(Float32Array.from(h), lw, lh, Math.max(1, Math.round(e / km / 1.7)));
+    const poids = [0.3, 0.35, 0.3][k];
+    for (let j = 0; j < nh; j++) for (let i = 0; i < nw; i++) {
+      const q = (j + P) * lw + i + P, d = (b[q] - h[q]) * Rl.exag / e;
+      occl[j * nw + i] -= poids * lisse(0, 0.45, d);
+    }
+  });
+  const data = new Uint8Array(nw * nh * 4), ex = Rl.exag, dx = 2 * Rl.bx / F, dz = 2 * Rl.bz / F;
+  for (let j = 0; j < nh; j++) for (let i = 0; i < nw; i++) {
+    const q = (j + P) * lw + i + P;
+    const gx = (h[q + 1] - h[q - 1]) * ex / dx, gz = (h[q + lw] - h[q - lw]) * ex / dz, l = Math.hypot(gx, 1, gz);
+    const k = (j * nw + i) * 4, mer = h[q] <= 0;
+    data[k] = Math.round((-gx / l * 0.5 + 0.5) * 255); data[k + 1] = Math.round((1 / l * 0.5 + 0.5) * 255);
+    data[k + 2] = Math.round((-gz / l * 0.5 + 0.5) * 255); data[k + 3] = Math.round((mer ? 1 : Math.max(0.2, occl[j * nw + i])) * 255);
+  }
+  const t = new THREE.DataTexture(data, nw, nh, THREE.RGBAFormat);
+  t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter; t.generateMipmaps = true;
+  t.needsUpdate = true;
+  return { texture: t, dims: new THREE.Vector2(nw, nh) };
 }
 
-// Morceau de maillage : sommets (i0..i1, j0..j1) de la grille, un sur « pas » pixels.
-// Les normales viennent du relief lui-même (et non des triangles du morceau) : deux tuiles
-// voisines ont donc exactement les mêmes normales sur leur bord commun, sans couture visible.
-// Les cases recouvertes par un encart (trous, en indices de la grille) ne sont pas dessinées.
-function maillage(R, pas, trous, i0, j0, i1, j1) {
-  const W = R.W, H = R.H, nx = i1 - i0 + 1, n = nx * (j1 - j0 + 1);
-  const pos = new Float32Array(n * 3), nor = new Float32Array(n * 3), uv = new Float32Array(n * 2);
-  const derniere = (k, max) => Math.min(max, Math.max(0, k));
-  for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
-    const c = i * pas, r = j * pas, v = (j - j0) * nx + (i - i0);
-    const p = sommet(R, c, r);
-    pos.set(p, v * 3);
-    const ca = derniere(c - pas, (W - 1) - (W - 1) % pas), cb = derniere(c + pas, (W - 1) - (W - 1) % pas);
-    const ra = derniere(r - pas, (H - 1) - (H - 1) % pas), rb = derniere(r + pas, (H - 1) - (H - 1) % pas);
-    const A = sommet(R, ca, r), B = sommet(R, cb, r), C = sommet(R, c, ra), Dd = sommet(R, c, rb);
-    const gx = (B[1] - A[1]) / Math.max(1e-6, B[0] - A[0]), gz = (Dd[1] - C[1]) / Math.max(1e-6, Dd[2] - C[2]);
-    const l = Math.hypot(gx, 1, gz);
-    nor[v * 3] = -gx / l; nor[v * 3 + 1] = 1 / l; nor[v * 3 + 2] = -gz / l;
-    uv[v * 2] = R.encart ? c / (W - 1) : (c + 0.5) / W;
-    uv[v * 2 + 1] = 1 - (R.encart ? r / (H - 1) : (r + 0.5) / H);
+// Altitudes de la grille, lues point par point (texelFetch) par le shader pour l'interpolation cubique ;
+// et une copie en demi-flottants, filtrée, pour la couleur du sol (teintes, rivage, courbes de niveau) :
+// elle ne dépend pas de la finesse des tuiles, si bien qu'une tuile lointaine et grossière garde un rivage net.
+function texHauteurs(Rl) {
+  const t = new THREE.DataTexture(Float32Array.from(Rl.grille()), Rl.W, Rl.H, THREE.RedFormat, THREE.FloatType);
+  t.minFilter = t.magFilter = THREE.NearestFilter; t.generateMipmaps = false;
+  t.needsUpdate = true;
+  return t;
+}
+function texAltitudes(Rl) {
+  const g = Rl.grille(), d = new Uint16Array(g.length);
+  for (let k = 0; k < g.length; k++) d[k] = THREE.DataUtils.toHalfFloat(g[k]);
+  const t = new THREE.DataTexture(d, Rl.W, Rl.H, THREE.RedFormat, THREE.HalfFloatType);
+  t.minFilter = t.magFilter = THREE.LinearFilter; t.generateMipmaps = false;
+  t.needsUpdate = true;
+  return t;
+}
+
+// ---------- tuiles à niveaux de détail ----------
+// Toutes les tuiles partagent une même grille de N × N cases ; le shader la place (origine et taille
+// en cases de la grille du relief) et lui donne son altitude. Un arbre quaternaire choisit, à chaque
+// image, des tuiles d'autant plus fines qu'elles sont proches de la caméra. Une « jupe » (bord replié
+// vers le bas) masque les fentes entre deux tuiles de finesses différentes.
+const N = 32, MAX_TUILES = 2500;
+function grilleTuile() {
+  const pos = [], jupe = [], idx = [], bord = [];
+  for (let j = 0; j <= N; j++) for (let i = 0; i <= N; i++) { pos.push(i / N, 0, j / N); jupe.push(0); }
+  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+    const a = j * (N + 1) + i, b = a + 1, c = a + N + 1, d = c + 1;
+    idx.push(a, c, b, b, c, d);
   }
-  const idx = [];
-  for (let j = j0; j < j1; j++) for (let i = i0; i < i1; i++) {
-    const c = i * pas, r = j * pas;
-    if (trous.some((t) => c >= t.c0 && c + pas <= t.c1 && r >= t.r0 && r + pas <= t.r1)) continue;
-    const a = (j - j0) * nx + (i - i0), b = a + 1, cc = a + nx, d = cc + 1;
-    idx.push(a, cc, b, b, cc, d);
+  // contour (dans l'ordre) et sa copie abaissée ; triangles dans les deux sens (visibles de part et d'autre)
+  for (let i = 0; i < N; i++) bord.push(i);
+  for (let j = 0; j < N; j++) bord.push(j * (N + 1) + N);
+  for (let i = N; i > 0; i--) bord.push(N * (N + 1) + i);
+  for (let j = N; j > 0; j--) bord.push(j * (N + 1));
+  const n0 = pos.length / 3;
+  bord.forEach((v) => { pos.push(pos[v * 3], 0, pos[v * 3 + 2]); jupe.push(1); });
+  for (let k = 0; k < bord.length; k++) {
+    const a = bord[k], b = bord[(k + 1) % bord.length], sa = n0 + k, sb = n0 + (k + 1) % bord.length;
+    idx.push(a, b, sa, b, sb, sa, a, sa, b, b, sa, sb);
   }
-  if (!idx.length) return null;
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  g.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
-  g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
-  g.setIndex(new THREE.BufferAttribute(n > 65535 ? new Uint32Array(idx) : new Uint16Array(idx), 1));
-  g.computeBoundingSphere();
+  const g = new THREE.InstancedBufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('jupe', new THREE.Float32BufferAttribute(jupe, 1));
+  g.setIndex(idx);
   return g;
 }
 
-// Tuiles du maillage : seules celles qui sont à l'écran sont dessinées.
-function tuiles(R, pas, trous, taille = 64) {
-  const nx = Math.floor((R.W - 1) / pas), nz = Math.floor((R.H - 1) / pas), out = [];
-  for (let j = 0; j < nz; j += taille) for (let i = 0; i < nx; i += taille) {
-    const g = maillage(R, pas, trous, i, j, Math.min(nx, i + taille), Math.min(nz, j + taille));
-    if (g) out.push(g);
+class Arbre {
+  constructor(Rl, { pasMin, K, pasRivage, trous = [] }) {
+    this.R = Rl; this.pasMin = pasMin; this.K = K; this.pasRivage = pasRivage; this.trous = trous;
+    this.S = 2 ** Math.ceil(Math.log2(Math.max(Rl.W - 1, Rl.H - 1)));
+    this.memo = new Map(); this.boite = new THREE.Box3();
   }
-  return out;
-}
-
-// Parois du socle, sous le bord du terrain.
-function parois(R, pas) {
-  const cMax = (R.W - 1) - (R.W - 1) % pas, rMax = (R.H - 1) - (R.H - 1) % pas;
-  const pasDe = (max) => Array.from({ length: max / pas + 1 }, (_, k) => k * pas);
-  const bords = [
-    pasDe(cMax).map((c) => [c, 0]), pasDe(rMax).map((r) => [cMax, r]),
-    pasDe(cMax).reverse().map((c) => [c, rMax]), pasDe(rMax).reverse().map((r) => [0, r]),
-  ];
-  const p = [];
-  for (const bord of bords) for (let k = 0; k < bord.length - 1; k++) {
-    const [ax, ay, az] = sommet(R, ...bord[k]), [bx, by, bz] = sommet(R, ...bord[k + 1]);
-    p.push(ax, ay, az, ax, SOCLE, az, bx, by, bz, bx, by, bz, ax, SOCLE, az, bx, SOCLE, bz);
+  // Altitudes extrêmes (m) des points de la grille couverts par un nœud.
+  extremes(c0, r0, s) {
+    const cle = `${c0},${r0},${s}`, m = this.memo.get(cle);
+    if (m) return m;
+    const Rl = this.R, W = Rl.W, H = Rl.H, g = Rl.grille();
+    let lo = Infinity, hi = -Infinity;
+    if (s <= 16) {
+      for (let r = r0; r <= Math.min(H - 1, r0 + s); r++) for (let c = c0; c <= Math.min(W - 1, c0 + s); c++) { const v = g[r * W + c]; if (v < lo) lo = v; if (v > hi) hi = v; }
+    } else {
+      const d = s / 2;
+      for (const [a, b] of [[0, 0], [d, 0], [0, d], [d, d]]) {
+        if (c0 + a > W - 1 || r0 + b > H - 1) continue;
+        const [l, h] = this.extremes(c0 + a, r0 + b, d); lo = Math.min(lo, l); hi = Math.max(hi, h);
+      }
+    }
+    const v = [lo, hi]; this.memo.set(cle, v);
+    return v;
   }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(p), 3));
-  g.computeVertexNormals();
-  return g;
+  choisir(cam, frustum, sortie) {
+    this.cam = cam; this.frustum = frustum; this.sortie = sortie;
+    this.visiter(0, 0, this.S);
+  }
+  visiter(c0, r0, s) {
+    const Rl = this.R, W = Rl.W, H = Rl.H;
+    if (c0 >= W - 1 || r0 >= H - 1 || this.sortie.length >= MAX_TUILES * 3) return;
+    const c1 = Math.min(W - 1, c0 + s), r1 = Math.min(H - 1, r0 + s);
+    const x0 = Rl.ax + Rl.bx * c0, x1 = Rl.ax + Rl.bx * c1, z0 = Rl.az + Rl.bz * r0, z1 = Rl.az + Rl.bz * r1;
+    if (this.trous.some((t) => x0 >= t.x0 && x1 <= t.x1 && z0 >= t.z0 && z1 <= t.z1)) return; // entièrement couvert par un encart
+    const [lo, hi] = this.extremes(c0, r0, s), marge = (hi - lo) * 0.08 + 5, pasMonde = s / N * Math.max(Rl.bx, Rl.bz);
+    const b = this.boite;
+    b.min.set(x0, Math.max(-7, (lo - marge) * Rl.exag - pasMonde * 0.6), z0); b.max.set(x1, (hi + marge) * Rl.exag, z1);
+    if (!this.frustum.intersectsBox(b)) return;
+    const taille = s * Math.max(Rl.bx, Rl.bz);
+    // le rivage (une tuile à cheval sur le niveau de la mer) est toujours affiné : sinon la surface de l'eau
+    // couperait des triangles trop grands et le littoral prendrait une allure en escalier
+    const rivage = lo < 0 && hi > 0 && s / N > this.pasRivage;
+    if (s / N > this.pasMin && (rivage || b.distanceToPoint(this.cam) < this.K * taille)) {
+      const d = s / 2;
+      this.visiter(c0, r0, d); this.visiter(c0 + d, r0, d); this.visiter(c0, r0 + d, d); this.visiter(c0 + d, r0 + d, d);
+    } else this.sortie.push(c0, r0, s);
+  }
 }
 
 // Grain du sol, visible de près : bruit périodique (mosaïque sans couture) en coordonnées du monde.
@@ -230,10 +311,52 @@ function texturGrain() {
   return t;
 }
 
-export async function creerTerrain(RR, { renderer, pas = 1, oasis = [], harrat = [] }) {
+// Parois du socle, sous le bord du terrain (le bord suit l'interpolation cubique).
+function parois(R) {
+  const W = R.W, H = R.H, n = 4, pts = [];
+  const bord = (c, r) => [R.ax + R.bx * c, R.metres(R.ax + R.bx * c, R.az + R.bz * r) * R.exag, R.az + R.bz * r];
+  for (let k = 0; k <= (W - 1) * n; k++) pts.push(bord(k / n, 0));
+  for (let k = 1; k <= (H - 1) * n; k++) pts.push(bord(W - 1, k / n));
+  for (let k = (W - 1) * n - 1; k >= 0; k--) pts.push(bord(k / n, H - 1));
+  for (let k = (H - 1) * n - 1; k >= 0; k--) pts.push(bord(0, k / n));
+  const p = [];
+  for (let k = 0; k < pts.length - 1; k++) {
+    const [ax, ay, az] = pts[k], [bx, by, bz] = pts[k + 1];
+    p.push(ax, ay, az, ax, SOCLE, az, bx, by, bz, bx, by, bz, ax, SOCLE, az, bx, SOCLE, bz);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(p), 3));
+  g.computeVertexNormals();
+  return g;
+}
+
+const VERTEX = `
+  attribute vec4 tuile; attribute float jupe;
+  uniform sampler2D hauteurs; uniform vec2 dims; uniform vec4 geo; uniform float exag, lissage, pasTuile;
+  varying vec3 vMonde; varying vec2 vGrille;
+  vec4 poidsCubiques(float t) {
+    float t2 = t * t, t3 = t2 * t, u = 1.0 - t;
+    vec4 cr = 0.5 * vec4(-t3 + 2.0 * t2 - t, 3.0 * t3 - 5.0 * t2 + 2.0, -3.0 * t3 + 4.0 * t2 + t, t3 - t2);
+    vec4 bs = vec4(u * u * u, 3.0 * t3 - 6.0 * t2 + 4.0, -3.0 * t3 + 3.0 * t2 + 3.0 * t + 1.0, t3) / 6.0;
+    return mix(cr, bs, lissage);
+  }
+  float hauteurGrille(vec2 g) {
+    ivec2 n = ivec2(dims);
+    vec2 i0 = min(floor(g), dims - 2.0), t = g - i0;
+    vec4 wx = poidsCubiques(t.x), wz = poidsCubiques(t.y);
+    int c = int(i0.x), r = int(i0.y);
+    float s = 0.0;
+    for (int j = 0; j < 4; j++) {
+      int rr = clamp(r - 1 + j, 0, n.y - 1);
+      vec4 l = vec4(texelFetch(hauteurs, ivec2(clamp(c - 1, 0, n.x - 1), rr), 0).r, texelFetch(hauteurs, ivec2(c, rr), 0).r,
+                    texelFetch(hauteurs, ivec2(c + 1, rr), 0).r, texelFetch(hauteurs, ivec2(clamp(c + 2, 0, n.x - 1), rr), 0).r);
+      s += wz[j] * dot(wx, l);
+    }
+    return s;
+  }`;
+
+export async function creerTerrain(RR, { renderer, mobile = false, oasis = [], harrat = [] }) {
   const R = RR.R, groupe = new THREE.Group();
-  R.pasMaillage = pas;
-  RR.encarts.forEach((E) => E.fondre(R));
   const image = await chargerImage(`data/relief/${R.meta.satellite.fichier}`);
   const masque = masqueZones(R, image, oasis, harrat);
   const texMasque = new THREE.CanvasTexture(masque);
@@ -241,83 +364,150 @@ export async function creerTerrain(RR, { renderer, pas = 1, oasis = [], harrat =
   const grain = texturGrain();
   const b = R.bornes;
   const lin = (hex) => new THREE.Color(hex); // converti en linéaire pour le shader
-  const uniformes = {
+  // Trous de la carte générale sous les encarts, un peu plus petits que les encarts : sur une bande de
+  // recouvrement, les deux surfaces sont dessinées (l'encart l'emporte à égalité), si bien qu'aucune fente
+  // n'apparaît quand la carte générale, au loin, est dessinée plus grossièrement que l'encart voisin.
+  const RECOUVREMENT = 0.7; // km
+  const trous = RR.encarts.map((E) => ({ x0: E.bornes.x0 + RECOUVREMENT, x1: E.bornes.x1 - RECOUVREMENT, z0: E.bornes.z0 + RECOUVREMENT, z1: E.bornes.z1 - RECOUVREMENT }));
+  const communs = {
     masque: { value: texMasque }, grain: { value: grain }, exag: { value: R.exag },
     emprise: { value: new THREE.Vector4(b.x0, b.z0, b.x1, b.z1) },
     paliers: { value: PALIERS }, teintes: { value: TEINTES.map(lin) },
+    trous: { value: trous.map((t) => new THREE.Vector4(t.x0, t.z0, t.x1, t.z1)) },
     ...Object.fromEntries(Object.entries(COULEURS).map(([k, v]) => ['c_' + k, { value: lin(v) }])),
   };
-  const materiaux = [], habillages = [];
-  function poser(geos, texSat) {
-    const mat = new THREE.MeshStandardMaterial({ flatShading: true, roughness: 1, metalness: 0 });
-    mat.defines = { STYLE: '' };
+  const base = grilleTuile();
+  const materiaux = [], habillages = [], couches = [];
+
+  function poser(Rl, texSat, { trou, facteur }) {
+    const champ = champSol(Rl, (x, z) => RR.metres(x, z), facteur);
+    const uniformes = {
+      ...communs, hauteurs: { value: texHauteurs(Rl) }, altitudes: { value: texAltitudes(Rl) }, dims: { value: new THREE.Vector2(Rl.W, Rl.H) },
+      geo: { value: new THREE.Vector4(Rl.ax, Rl.bx, Rl.az, Rl.bz) }, lissage: { value: Rl.lissage },
+      pasTuile: { value: Math.max(Rl.bx, Rl.bz) / N },
+      normales: { value: champ.texture }, dimsN: { value: champ.dims }, facteurN: { value: facteur },
+      sat: { value: texSat },
+      uvSat: { value: Rl.encart ? new THREE.Vector4(0, 1 / (Rl.W - 1), 1, -1 / (Rl.H - 1)) : new THREE.Vector4(0.5 / Rl.W, 1 / Rl.W, 1 - 0.5 / Rl.H, -1 / Rl.H) },
+    };
+    const mat = new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 });
+    if (trou) Object.assign(mat, { polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 4 });
+    const fixes = trou ? { TROUS: trous.length, BORD_EXT: '' } : {};
+    mat.defines = { STYLE: '', ...fixes };
     mat.onBeforeCompile = (sh) => {
       Object.assign(sh.uniforms, uniformes);
       sh.vertexShader = sh.vertexShader
-        .replace('#include <common>', '#include <common>\nvarying vec3 vMonde;\nvarying vec3 vNormMonde;')
-        .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvMonde = (modelMatrix * vec4(transformed, 1.0)).xyz;\nvNormMonde = normalize(mat3(modelMatrix) * objectNormal);');
+        .replace('#include <common>', '#include <common>\n' + VERTEX)
+        .replace('#include <beginnormal_vertex>', 'vec3 objectNormal = vec3(0.0, 1.0, 0.0);')
+        .replace('#include <begin_vertex>', `
+          vec2 g = clamp(tuile.xy + position.xz * tuile.z, vec2(0.0), dims - 1.0);
+          vec3 transformed = vec3(geo.x + geo.y * g.x, hauteurGrille(g) * exag, geo.z + geo.w * g.y);
+          // jupe : abaissée sous les fentes possibles, sauf au bord extérieur de la carte (contre les parois du socle)
+          #ifdef BORD_EXT
+          bool bordExt = g.x <= 0.0 || g.y <= 0.0 || g.x >= dims.x - 1.0 || g.y >= dims.y - 1.0;
+          #else
+          bool bordExt = false;
+          #endif
+          if (jupe > 0.5 && !bordExt) transformed.y = max(-6.9, transformed.y - tuile.z * pasTuile * 0.6 - 0.004);
+          vGrille = g; vMonde = transformed;`);
       sh.fragmentShader = sh.fragmentShader
         .replace('#include <common>', `#include <common>
-          varying vec3 vMonde; varying vec3 vNormMonde;
-          uniform sampler2D masque; uniform sampler2D grain; uniform vec4 emprise; uniform float exag;
+          varying vec3 vMonde; varying vec2 vGrille;
+          uniform sampler2D masque, grain, normales, sat, altitudes; uniform vec4 emprise, uvSat; uniform vec2 dimsN, dims; uniform float exag, facteurN;
           uniform float paliers[8]; uniform vec3 teintes[8];
-          uniform vec3 c_roche, c_rocheSombre, c_basalte, c_vert, c_rivage, c_merHaut, c_merFond;
+          uniform vec3 c_roche, c_rocheSombre, c_basalte, c_vert, c_rivage, c_sable, c_merHaut, c_merFond;
+          #ifdef TROUS
+          uniform vec4 trous[TROUS];
+          #endif
           // trait d'une courbe de niveau, d'épaisseur constante à l'écran, effacé quand les courbes se serrent
           float courbe(float v, float epaisseur) {
             float l = fwidth(v);
             return (1.0 - smoothstep(0.0, l * epaisseur, abs(fract(v - 0.5) - 0.5))) * (1.0 - smoothstep(0.14, 0.32, l));
           }`)
-        .replace('#include <map_fragment>', `#include <map_fragment>
+        .replace('#include <map_fragment>', `
+          #ifdef TROUS
+          for (int i = 0; i < TROUS; i++) { vec4 t = trous[i]; if (vMonde.x > t.x && vMonde.x < t.z && vMonde.z > t.y && vMonde.z < t.w) discard; }
+          #endif
+          vec4 nnSol = texture2D(normales, (vGrille * facteurN + 0.5) / dimsN);
+          vec3 nSol = normalize(nnSol.xyz * 2.0 - 1.0);
+          float aoSol = nnSol.a, dCam = length(vMonde - cameraPosition);
+          // relief de détail (rochers, ravines) : bruit en coordonnées du monde, plus marqué sur les pentes
+          float penteBase = 1.0 - nSol.y;
+          vec2 pd = vMonde.xz * 1.1;
+          float nd = texture2D(grain, pd).r, ndx = texture2D(grain, pd + vec2(0.004, 0.0)).r, ndz = texture2D(grain, pd + vec2(0.0, 0.004)).r;
+          float ampD = (0.15 + 0.85 * smoothstep(0.05, 0.3, penteBase)) * (1.0 - smoothstep(6.0, 30.0, dCam));
+          nSol = normalize(nSol + vec3(nd - ndx, 0.0, nd - ndz) * ampD * 10.0);
+          if (dCam < 5.0) { // de près, un second grain plus fin (pierrailles)
+            vec2 pf = vMonde.xz * 5.3;
+            float nf = texture2D(grain, pf).r, nfx = texture2D(grain, pf + vec2(0.004, 0.0)).r, nfz = texture2D(grain, pf + vec2(0.0, 0.004)).r;
+            nSol = normalize(nSol + vec3(nf - nfx, 0.0, nf - nfz) * ampD * 12.0 * (1.0 - smoothstep(1.0, 5.0, dCam)));
+          }
           #ifdef STYLE
           {
-            float m = vMonde.y / exag; // altitude (m), négative en mer
+            float m = texture2D(altitudes, (vGrille + 0.5) / dims).r; // altitude (m), négative en mer
             vec3 c;
             if (m <= 0.5) {
               c = mix(c_merHaut, c_merFond, smoothstep(0.0, 600.0, -m));
             } else {
               c = teintes[0];
               for (int i = 1; i < 8; i++) c = mix(c, teintes[i], smoothstep(paliers[i - 1], paliers[i], m));
-              float pente = 1.0 - normalize(vNormMonde).y;
-              c = mix(c, c_roche, smoothstep(0.12, 0.32, pente) * 0.75);
-              c = mix(c, c_rocheSombre, smoothstep(0.32, 0.55, pente) * 0.8);
+              // variations lentes de teinte (sables plus clairs, plus ocres), pour casser l'uniformité
+              float v = texture2D(grain, vMonde.xz * 0.013).r * 0.6 + texture2D(grain, vMonde.xz * 0.061).r * 0.4;
+              c *= vec3(0.93, 0.94, 0.97) + vec3(0.14, 0.12, 0.07) * v;
+              float pente = 1.0 - nSol.y;
+              c = mix(c, c_roche * (0.93 + 0.14 * nd), smoothstep(0.08, 0.28, pente) * 0.8);
+              c = mix(c, c_rocheSombre, smoothstep(0.28, 0.55, pente) * 0.8);
+              // le sable s'accumule au fond des oueds : fonds plats et creux plus clairs
+              c = mix(c, c_sable, (1.0 - smoothstep(0.03, 0.12, pente)) * smoothstep(0.98, 0.8, aoSol) * 0.3);
               vec4 z = texture2D(masque, (vMonde.xz - emprise.xy) / (emprise.zw - emprise.xy));
-              c = mix(c, c_basalte, z.r * 0.92);
-              c = mix(c, c_vert, z.g);
+              // champs de lave : bord net et irrégulier, roche sombre et grenue
+              float lave = smoothstep(0.3, 0.7, z.r + (nd - 0.5) * 0.35);
+              c = mix(c, c_basalte * (0.9 + 0.2 * nd), lave * 0.85);
+              c = mix(c, c_vert * (0.86 + 0.28 * nd), z.g * (0.7 + 0.3 * smoothstep(0.35, 0.65, nd)));
               c = mix(c, c_rivage, 1.0 - smoothstep(2.0, 14.0, m));
-              c *= 1.0 - 0.2 * courbe(m / 100.0, 1.5) - 0.32 * courbe(m / 500.0, 2.2);
+              // courbes de niveau discrètes, qui s'effacent quand on s'approche du sol
+              float k = smoothstep(3.0, 30.0, dCam);
+              c *= 1.0 - k * (0.10 * courbe(m / 100.0, 1.3) + 0.18 * courbe(m / 500.0, 1.8));
+              c *= mix(0.5, 1.0, aoSol);
             }
             diffuseColor.rgb *= c;
           }
+          #else
+          diffuseColor.rgb *= texture2D(sat, vec2(uvSat.x + uvSat.y * vGrille.x, uvSat.z + uvSat.w * vGrille.y)).rgb;
           #endif
-          float dGrain = length(vMonde - cameraPosition);
-          if (dGrain < 9.0) {
-            float g = texture2D(grain, vMonde.xz * 9.0).r * 0.6 + texture2D(grain, vMonde.xz * 41.0).r * 0.4;
-            diffuseColor.rgb *= mix(1.0, 0.86 + g * 0.28, 1.0 - smoothstep(1.5, 9.0, dGrain));
-          }`);
+          // grain du sol, visible de près
+          if (dCam < 9.0) {
+            float gr = texture2D(grain, vMonde.xz * 9.0).r * 0.6 + texture2D(grain, vMonde.xz * 41.0).r * 0.4;
+            diffuseColor.rgb *= mix(1.0, 0.88 + gr * 0.24, 1.0 - smoothstep(1.5, 9.0, dCam));
+          }`)
+        .replace('#include <normal_fragment_begin>', `
+          float faceDirection = 1.0;
+          vec3 normal = normalize((viewMatrix * vec4(nSol, 0.0)).xyz);
+          vec3 nonPerturbedNormal = normal;`);
     };
-    for (const geo of geos) {
-      const sol = new THREE.Mesh(geo, mat);
-      sol.receiveShadow = true; // le relief ne projette pas d'ombre (trop coûteux), les objets si
-      groupe.add(sol);
-    }
+    const geo = new THREE.InstancedBufferGeometry();
+    geo.index = base.index; geo.setAttribute('position', base.getAttribute('position')); geo.setAttribute('jupe', base.getAttribute('jupe'));
+    const tuiles = new THREE.InstancedBufferAttribute(new Float32Array(MAX_TUILES * 4), 4);
+    tuiles.setUsage(THREE.DynamicDrawUsage);
+    geo.setAttribute('tuile', tuiles); geo.instanceCount = 0;
+    const sol = new THREE.Mesh(geo, mat);
+    sol.frustumCulled = false;
+    sol.receiveShadow = true; // le relief ne projette pas d'ombre, les objets si
+    groupe.add(sol);
     materiaux.push(mat);
-    habillages.push((satellite) => {
-      mat.map = satellite ? texSat : null;
-      mat.defines = satellite ? {} : { STYLE: '' };
-      mat.needsUpdate = true;
-    });
+    habillages.push((satellite) => { mat.defines = { ...(satellite ? {} : { STYLE: '' }), ...fixes }; mat.needsUpdate = true; });
+    couches.push({ arbre: new Arbre(Rl, { pasMin: mobile ? 0.5 : 0.25, K: mobile ? 2.8 : 4.2, pasRivage: mobile ? 2 : 1, trous: trou ? trous : [] }), tuiles, geo, sortie: [] });
   }
-  poser(tuiles(R, pas, RR.encarts.map((E) => E.meta.grille_hijaz)), texture(image, renderer));
-
-  // Encarts détaillés ; en vue satellite, leur image est fondue dans celle du Hijaz près des bords.
+  // Carte générale (trouée là où sont les encarts), puis encarts détaillés ; en vue satellite, l'image d'un
+  // encart est fondue dans celle du Hijaz près de ses bords.
   const satHijaz = pixels(image);
+  poser(R, texture(satHijaz.cv, renderer), { trou: true, facteur: 1 });
   for (const E of RR.encarts) {
     const img = await chargerImage(`data/relief/${E.meta.satellite.fichier}`);
-    poser(tuiles(E, 1, [], 64), texture(fondreTexture(E, R, img, satHijaz), renderer));
+    poser(E, texture(fondreTexture(E, R, img, satHijaz), renderer), { trou: false, facteur: mobile ? 1 : 2 });
   }
 
   const matParoi = new THREE.MeshStandardMaterial({ color: 0xB79770, roughness: 1, side: THREE.DoubleSide });
-  const paroi = new THREE.Mesh(parois(R, pas), matParoi);
+  const paroi = new THREE.Mesh(parois(R), matParoi);
   paroi.receiveShadow = true;
   groupe.add(paroi);
 
@@ -330,8 +520,28 @@ export async function creerTerrain(RR, { renderer, pas = 1, oasis = [], harrat =
   eau.renderOrder = 2;
   groupe.add(eau);
 
+  // Choix des tuiles, à chaque image (seulement si la caméra a bougé).
+  const frustum = new THREE.Frustum(), pv = new THREE.Matrix4(), derniere = new THREE.Matrix4(), cam = new THREE.Vector3();
+  function maj(camera) {
+    pv.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    if (pv.equals(derniere)) return;
+    derniere.copy(pv);
+    frustum.setFromProjectionMatrix(pv);
+    camera.getWorldPosition(cam);
+    for (const c of couches) {
+      c.sortie.length = 0;
+      c.arbre.choisir(cam, frustum, c.sortie);
+      const n = c.sortie.length / 3, a = c.tuiles.array;
+      for (let k = 0; k < n; k++) { a[k * 4] = c.sortie[k * 3]; a[k * 4 + 1] = c.sortie[k * 3 + 1]; a[k * 4 + 2] = c.sortie[k * 3 + 2]; a[k * 4 + 3] = 0; }
+      c.tuiles.clearUpdateRanges(); c.tuiles.addUpdateRange(0, n * 4); c.tuiles.needsUpdate = true;
+      c.geo.instanceCount = n;
+    }
+  }
+
   return {
-    groupe, materiaux, matParoi, matEau, apercu: apercuCarte(R, masque),
+    groupe, materiaux, matParoi, matEau, apercu: apercuCarte(R, masque), maj,
     habillage(satellite) { habillages.forEach((f) => f(satellite)); },
+    tuiles: () => couches.reduce((s, c) => s + c.geo.instanceCount, 0),
   };
 }
+

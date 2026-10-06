@@ -1,5 +1,5 @@
 {
- "_lisez_moi": "Mission à la première personne. Coordonnées en mètres : x vers l'est, z vers le sud ; cap en degrés (0 = nord). Brouillon à vérifier.",
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
  "id": "marche",
  "titre": "La juste mesure",
  "statut": "à vérifier",
@@ -19,7 +19,7 @@
   "nom": "Un marchand nabatéen",
   "nom_ar": "تاجر نبطي",
   "texte": "Vous venez du Shâm vendre votre orge à Médine, comme beaucoup de marchands nabatéens. Vous ne connaissez pas encore les usages de ce marché : vous allez les apprendre.",
-  "regle": "Les personnes croisées sont des silhouettes sans visage ; le Prophète ﷺ et les Compagnons ne sont jamais montrés. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+  "regle": "Les personnes sont des étiquettes sur la carte ; le Prophète ﷺ et les Compagnons ne sont jamais montrés. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
  },
  "personnages": {
   "bedouin": {
@@ -62,533 +62,95 @@
    "Les gens d'ici disent que la tromperie est un grand péché. Drôle de marché… mais on y vend bien."
   ]
  },
+ "objets": {
+  "mouille": {
+   "nom": "Le grain mouillé"
+  }
+ },
  "scenes": {
   "souk": {
    "titre": "Le marché de Médine",
-   "taille": 360,
-   "limites": [
-    -110,
-    -110,
-    110,
-    110
-   ],
+   "sous": "Vers l'an 2 de l'Hégire",
    "ambiance": "jour",
-   "depart": {
-    "x": 0,
-    "z": 40,
-    "cap": 0
+   "epoque": "masjid",
+   "origine": "souq",
+   "vue": {
+    "auto": true,
+    "cap": 200,
+    "incl": 60
    },
-   "elements": [
+   "reperes": [
     {
-     "type": "palmeraie",
-     "x": -90,
-     "z": -60,
-     "r": 40,
-     "n": 40
-    },
-    {
-     "type": "palmeraie",
-     "x": 95,
-     "z": 70,
-     "r": 45,
-     "n": 45
-    },
-    {
-     "type": "palmeraie",
-     "x": 100,
-     "z": -80,
-     "r": 35,
-     "n": 30
-    },
-    {
-     "type": "palmeraie",
-     "x": -100,
-     "z": 90,
-     "r": 40,
-     "n": 35
-    },
-    {
-     "type": "montagne",
-     "x": 0,
-     "z": -260,
-     "r": 120,
-     "h": 70,
-     "c": "#8A6E54"
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       -120,
-       0
-      ],
-      [
-       120,
-       0
-      ]
-     ],
-     "l": 5
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       -120
-      ],
-      [
-       0,
-       120
-      ]
-     ],
-     "l": 5
-    },
-    {
-     "type": "etal",
      "id": "etal",
-     "nom": "Votre étal",
+     "genre": "lieu",
      "x": 0,
-     "z": 6,
-     "r": 0,
-     "c": "#C9A043",
-     "marchandises": [
-      "#C9A86A",
-      "#C9A86A",
-      "#B89C6E"
-     ]
-    },
-    {
-     "type": "etal",
-     "x": -16,
-     "z": -8,
-     "r": 30,
-     "c": "#4E6B3A",
-     "marchandises": [
-      "#5A2E1C",
-      "#7A4A2A"
-     ]
-    },
-    {
-     "type": "etal",
-     "x": 18,
-     "z": -10,
-     "r": -20,
-     "c": "#7A2E3A",
-     "marchandises": [
-      "#E8E2D2",
-      "#B5552F",
-      "#2E4A6B"
-     ]
-    },
-    {
-     "type": "etal",
-     "x": -22,
-     "z": 20,
-     "r": 60,
-     "c": "#2E4A6B",
-     "marchandises": [
-      "#8E8A84",
-      "#6E6458"
-     ]
-    },
-    {
-     "type": "etal",
-     "x": 24,
-     "z": 22,
-     "r": -60,
-     "c": "#B5552F",
-     "marchandises": [
-      "#C9A043",
-      "#4E6B3A"
-     ]
-    },
-    {
-     "type": "jarre",
-     "x": 2.5,
-     "z": 9
-    },
-    {
-     "type": "jarre",
-     "x": 3.3,
-     "z": 9.6
-    },
-    {
-     "type": "boite",
-     "id": "orge",
-     "x": -2.6,
-     "z": 9.4,
-     "w": 1.4,
-     "d": 1.0,
-     "h": 0.6,
-     "c": "#C9A86A"
-    },
-    {
-     "type": "zone",
-     "id": "place",
-     "x": 0,
-     "z": 11,
-     "r": 3.2
-    },
-    {
-     "type": "enclos",
-     "x": -8,
-     "z": 30,
-     "w": 9,
-     "d": 7,
-     "ouverture": "n"
-    },
-    {
-     "type": "maison",
-     "x": 13.4,
-     "z": 56.5,
-     "w": 5.4,
-     "d": 7.6,
-     "h": 3.0,
-     "r": 167,
-     "etage": false
-    },
-    {
-     "type": "maison",
-     "x": -29.9,
-     "z": -40.3,
-     "w": 6.7,
-     "d": 6.8,
-     "h": 3.1,
-     "r": 323,
-     "etage": false
-    },
-    {
-     "type": "maison",
-     "x": -57.7,
-     "z": 17.3,
-     "w": 7.2,
-     "d": 5.5,
-     "h": 3.4,
-     "r": 253,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -37.1,
-     "z": 58.1,
-     "w": 6.2,
-     "d": 7.2,
-     "h": 3.2,
-     "r": 213,
-     "etage": false
-    },
-    {
-     "type": "maison",
-     "x": -60.1,
-     "z": 31.0,
-     "w": 6.3,
-     "d": 5.3,
-     "h": 3.4,
-     "r": 243,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 68.5,
-     "z": 13.6,
-     "w": 5.6,
-     "d": 7.7,
-     "h": 4.4,
-     "r": 101,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 42.3,
-     "z": 44.4,
-     "w": 5.1,
-     "d": 6.3,
-     "h": 4.5,
-     "r": 136,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -29.3,
-     "z": 42.1,
-     "w": 6.7,
-     "d": 7.7,
-     "h": 3.3,
-     "r": 215,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 31.3,
-     "z": -54.2,
-     "w": 5.1,
-     "d": 5.3,
-     "h": 3.8,
-     "r": 30,
-     "etage": false
-    },
-    {
-     "type": "maison",
-     "x": 28.3,
-     "z": 51.5,
-     "w": 6.9,
-     "d": 5.3,
-     "h": 3.9,
-     "r": 151,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -46.7,
-     "z": 57.2,
-     "w": 5.2,
-     "d": 6.7,
-     "h": 4.0,
-     "r": 219,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 74.4,
-     "z": 8.6,
-     "w": 8.0,
-     "d": 5.4,
-     "h": 4.1,
-     "r": 97,
-     "etage": false
-    },
-    {
-     "type": "maison",
-     "x": 15.5,
-     "z": -55.8,
-     "w": 7.0,
-     "d": 6.8,
-     "h": 4.2,
-     "r": 15,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 58.4,
-     "z": 40.9,
-     "w": 6.8,
-     "d": 6.4,
-     "h": 3.6,
-     "r": 125,
-     "etage": false
-    },
-    {
-     "type": "maison",
-     "x": -21.9,
-     "z": 43.3,
-     "w": 7.4,
-     "d": 6.0,
-     "h": 3.7,
-     "r": 207,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 19.6,
-     "z": 53.3,
-     "w": 5.3,
-     "d": 6.9,
-     "h": 3.2,
-     "r": 160,
-     "etage": false
-    },
-    {
-     "type": "maison",
-     "x": 11.0,
-     "z": -68.2,
-     "w": 7.4,
-     "d": 6.5,
-     "h": 4.1,
-     "r": 9,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 73.5,
-     "z": -8.8,
-     "w": 6.2,
-     "d": 6.1,
-     "h": 4.4,
-     "r": 83,
-     "etage": false
-    },
-    {
-     "type": "maison",
-     "x": -45.7,
-     "z": 26.1,
-     "w": 7.5,
-     "d": 5.8,
-     "h": 3.1,
-     "r": 240,
-     "etage": false
-    },
-    {
-     "type": "maison",
-     "x": 65.1,
-     "z": -34.3,
-     "w": 8.0,
-     "d": 6.8,
-     "h": 3.0,
-     "r": 62,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 56.5,
-     "z": -15.0,
-     "w": 6.8,
-     "d": 7.9,
-     "h": 3.6,
-     "r": 75,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -19.6,
-     "z": 47.8,
-     "w": 5.3,
-     "d": 6.7,
-     "h": 4.1,
-     "r": 202,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 20.1,
-     "z": 63.9,
-     "w": 7.3,
-     "d": 6.1,
-     "h": 4.4,
-     "r": 163,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -67.2,
-     "z": 14.8,
-     "w": 7.6,
-     "d": 6.5,
-     "h": 3.2,
-     "r": 258,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -9.5,
-     "z": 51.8,
-     "w": 6.9,
-     "d": 5.3,
-     "h": 4.2,
-     "r": 190,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 17.0,
-     "z": 60.8,
-     "w": 6.2,
-     "d": 5.5,
-     "h": 3.8,
-     "r": 164,
-     "etage": false
-    }
-   ],
-   "pnj": [
-    {
-     "id": "chameau",
-     "modele": "chameau",
-     "charge": true,
-     "x": -8,
-     "z": 30,
-     "cap": 90
-    },
-    {
-     "id": "bedouin",
-     "nom": "Un Bédouin",
-     "x": -30,
-     "z": -40,
-     "cap": 160,
-     "habit": "#8C6F4E",
-     "coiffe": "#E2D6BF",
-     "accessoire": "baton"
-    },
-    {
-     "id": "client2",
-     "nom": "Un acheteur",
-     "x": 40,
-     "z": -40,
-     "cap": 220,
-     "habit": "#4E5A63"
-    },
-    {
-     "id": "veuve",
-     "nom": "Une veuve",
-     "x": -40,
-     "z": 10,
-     "cap": 90,
-     "habit": "#3B3330",
-     "coiffe": "#3B3330",
-     "voile": "long",
-     "visible": false
+     "z": 0,
+     "nom": "Votre étal, au centre de la place"
     },
     {
      "id": "voisin",
-     "nom": "Le marchand voisin",
-     "x": -14,
-     "z": -5,
-     "cap": 160,
-     "habit": "#5E4B3B",
-     "invite": "Parler au marchand voisin"
-    }
-   ],
-   "foules": [
+     "genre": "personne",
+     "x": 70,
+     "z": -30
+    },
     {
      "id": "clients",
-     "x": 0,
-     "z": -24,
-     "r": 18,
-     "n": 14,
-     "invite": "Parler"
+     "genre": "personne",
+     "x": -80,
+     "z": 60
     },
     {
      "id": "nabateens",
-     "x": 30,
-     "z": 14,
-     "r": 6,
-     "n": 3,
-     "invite": "Parler",
-     "habits": [
-      "#4E5A63",
-      "#5E4B3B"
-     ],
-     "coiffes": [
-      "#E2D6BF"
-     ]
-    }
-   ],
-   "objets": [
+     "genre": "personne",
+     "x": 140,
+     "z": 110
+    },
+    {
+     "id": "bedouin",
+     "genre": "personne",
+     "x": -260,
+     "z": 180,
+     "visible": false
+    },
+    {
+     "id": "client2",
+     "genre": "personne",
+     "x": 220,
+     "z": -150,
+     "visible": false
+    },
+    {
+     "id": "veuve",
+     "genre": "personne",
+     "x": -200,
+     "z": -120,
+     "visible": false
+    },
     {
      "id": "sac_mouille",
-     "modele": "sac",
-     "nom": "le sac de grain mouillé",
-     "x": -3.6,
-     "z": 11.2,
-     "visible": false,
-     "invite": "Prendre le grain mouillé"
+     "genre": "objet",
+     "x": 30,
+     "z": 40,
+     "nom": "Le sac de grain mouillé",
+     "visible": false
     }
    ],
-   "lieux": [
+   "accessoires": [
     {
-     "id": "etal_dessus",
+     "type": "troupeau",
+     "x": 160,
+     "z": 130,
+     "rayon": 40,
+     "n": 6,
+     "charge": true
+    },
+    {
+     "type": "tentes",
      "x": 0,
-     "z": 8.6,
-     "r": 2.6,
-     "invite": null
+     "z": 0,
+     "rayon": 90,
+     "n": 8,
+     "couleur": "#D9C7A2"
     }
    ]
   }
@@ -596,9 +158,7 @@
  "sequence": [
   {
    "type": "scene",
-   "scene": "souk",
-   "titre": "Le marché de Médine",
-   "sous": "Vers l'an 2 de l'Hégire"
+   "scene": "souk"
   },
   {
    "type": "recit",
@@ -607,27 +167,25 @@
   {
    "type": "objectif",
    "texte": "Installez-vous à votre étal, au centre de la place.",
-   "cible": "zone:place",
    "quand": {
-    "zone": "place"
+    "aller": "etal"
    }
   },
   {
    "type": "faire",
    "actions": [
     {
-     "aller": "bedouin",
-     "vers": [
-      [
-       0,
-       3.2
-      ]
-     ],
-     "vitesse": 1.4
+     "montrer": "bedouin"
     },
     {
-     "tourner": "bedouin",
-     "cap": 180
+     "aller": "bedouin",
+     "vers": [
+      {
+       "x": -40,
+       "z": 30
+      }
+     ],
+     "duree": 2.5
     }
    ]
   },
@@ -638,22 +196,17 @@
   },
   {
    "type": "choix",
-   "qui": "bedouin",
    "question": "Comment remplissez-vous la mesure ?",
    "options": [
     {
      "texte": "La remplir à ras bord et l'égaliser du plat de la main, sous les yeux de l'acheteur.",
-     "juste": true,
-     "suite": [
-      {
-       "type": "parole",
-       "qui": "bedouin",
-       "texte": "Une mesure pleine ! Qu'Allah bénisse ton commerce. Je reviendrai chez toi."
-      }
-     ]
+     "juste": true
     },
     {
      "texte": "La remplir sans tasser, en la tenant un peu penchée : il n'y verra que du feu.",
+     "titre": "La mesure trichée",
+     "consequence": "Et si vous aviez triché sur la mesure : votre nom aurait couru tout le marché. Selon Ibn 'Abbâs, la sourate al-Mutaffifîn fut révélée à l'arrivée du Prophète ﷺ à Médine, dont les gens trichaient sur la mesure ; ils devinrent ensuite les plus honnêtes.",
+     "indice": "La sourate al-Mutaffifîn s'ouvre sur : « Malheur aux fraudeurs ! »",
      "suite": [
       {
        "type": "parole",
@@ -666,26 +219,20 @@
         {
          "aller": "bedouin",
          "vers": [
-          [
-           -30,
-           -50
-          ]
+          {
+           "x": -300,
+           "z": 220
+          }
          ],
-         "vitesse": 1.4,
+         "duree": 2,
          "attendre": false
         },
         {
-         "fondu": true,
-         "texte": "Le soir…"
+         "ambiance": "aube",
+         "sous": "Le soir"
         },
         {
-         "ambiance": "soir"
-        },
-        {
-         "pause": 500
-        },
-        {
-         "fondu": false
+         "pause": 900
         }
        ]
       },
@@ -693,18 +240,18 @@
        "type": "recit",
        "texte": "La journée a été bonne : à chaque mesure, vous avez gardé un peu d'orge. Le soir, un vieil homme s'arrête devant votre étal et récite à voix haute : « Malheur aux fraudeurs, qui exigent la pleine mesure quand ils achètent, et la diminuent quand ils vendent ! »"
       }
-     ],
-     "titre": "La mesure trichée",
-     "consequence": "Et si vous aviez triché sur la mesure : votre nom aurait couru tout le marché. Selon Ibn 'Abbâs, la sourate al-Mutaffifîn fut révélée à l'arrivée du Prophète ﷺ à Médine, dont les gens trichaient sur la mesure ; ils devinrent ensuite les plus honnêtes.",
-     "indice": "La sourate al-Mutaffifîn s'ouvre sur : « Malheur aux fraudeurs ! »"
+     ]
     },
     {
      "texte": "Mesurer large pour ce premier client, puis un peu moins pour les suivants, une fois connu.",
+     "titre": "Deux poids, deux mesures",
+     "consequence": "Et si vous aviez varié la mesure selon les clients : la fraude finit toujours par se voir. Selon Ibn 'Abbâs, la sourate al-Mutaffifîn fut révélée à l'arrivée du Prophète ﷺ à Médine, dont les gens trichaient sur la mesure.",
+     "indice": "La sourate al-Mutaffifîn s'ouvre sur : « Malheur aux fraudeurs ! »",
      "suite": [
       {
        "type": "parole",
        "qui": "bedouin",
-       "texte": "Une mesure pleine ! Je dirai à tous les miens de venir chez toi."
+       "texte": "Une mesure pleine ! Qu'Allah bénisse ton commerce. Je reviendrai chez toi."
       },
       {
        "type": "faire",
@@ -712,23 +259,26 @@
         {
          "aller": "bedouin",
          "vers": [
-          [
-           -30,
-           -50
-          ]
+          {
+           "x": -300,
+           "z": 220
+          }
          ],
-         "vitesse": 1.4,
+         "duree": 2,
          "attendre": false
+        },
+        {
+         "montrer": "client2"
         },
         {
          "aller": "client2",
          "vers": [
-          [
-           0,
-           3.2
-          ]
+          {
+           "x": 40,
+           "z": -30
+          }
          ],
-         "vitesse": 1.4
+         "duree": 2.5
         }
        ]
       },
@@ -737,12 +287,10 @@
        "qui": "client2",
        "texte": "Tiens, ta mesure est moins pleine que celle du Bédouin, tout à l'heure. Tu me prends pour un sot ?"
       }
-     ],
-     "titre": "Deux poids, deux mesures",
-     "consequence": "Et si vous aviez varié la mesure selon les clients : la fraude finit toujours par se voir. Selon Ibn 'Abbâs, la sourate al-Mutaffifîn fut révélée à l'arrivée du Prophète ﷺ à Médine, dont les gens trichaient sur la mesure.",
-     "indice": "La sourate al-Mutaffifîn s'ouvre sur : « Malheur aux fraudeurs ! »"
+     ]
     }
-   ]
+   ],
+   "qui": "bedouin"
   },
   {
    "type": "faire",
@@ -750,34 +298,22 @@
     {
      "aller": "bedouin",
      "vers": [
-      [
-       -30,
-       -50
-      ]
+      {
+       "x": -300,
+       "z": 220
+      }
      ],
-     "vitesse": 1.4,
+     "duree": 2,
      "attendre": false
     },
     {
-     "fondu": true,
-     "texte": "Le lendemain matin",
+     "cacher": "bedouin"
+    },
+    {
      "sous": "Le lendemain matin"
     },
     {
      "montrer": "sac_mouille"
-    },
-    {
-     "teleporter": [
-      0,
-      12,
-      0
-     ]
-    },
-    {
-     "pause": 500
-    },
-    {
-     "fondu": false
     }
    ]
   },
@@ -795,19 +331,25 @@
     },
     {
      "texte": "Le laisser au fond, sous le grain sec : personne ne remue un tas d'orge jusqu'en bas.",
+     "titre": "Le défaut caché",
+     "consequence": "Et si vous aviez caché le grain mouillé : selon Muslim, le Prophète ﷺ passa près d'un tas de grain, y plongea la main et trouva de l'humidité. Il dit : « Pourquoi ne l'as-tu pas mis au-dessus, pour que les gens le voient ? Celui qui trompe n'est pas des miens. »",
+     "indice": "Un défaut se montre ; on ne le cache pas sous la bonne marchandise.",
      "suite": [
       {
        "type": "faire",
        "actions": [
         {
+         "montrer": "client2"
+        },
+        {
          "aller": "client2",
          "vers": [
-          [
-           0,
-           3.2
-          ]
+          {
+           "x": 40,
+           "z": -30
+          }
          ],
-         "vitesse": 1.4
+         "duree": 2.5
         }
        ]
       },
@@ -822,33 +364,25 @@
         {
          "aller": "client2",
          "vers": [
-          [
-           40,
-           -40
-          ]
+          {
+           "x": 220,
+           "z": -150
+          }
          ],
-         "vitesse": 1.4,
-         "attendre": false
+         "duree": 2
         },
         {
-         "fondu": true,
-         "texte": "Le soir…"
-        },
-        {
-         "pause": 400
-        },
-        {
-         "fondu": false
+         "sous": "Le lendemain"
         },
         {
          "aller": "client2",
          "vers": [
-          [
-           0,
-           3.2
-          ]
+          {
+           "x": 40,
+           "z": -30
+          }
          ],
-         "vitesse": 2.6
+         "duree": 2
         }
        ]
       },
@@ -857,73 +391,55 @@
        "qui": "client2",
        "texte": "Ton orge était pourrie au fond du sac ! Rends-moi mon argent, tricheur !"
       }
-     ],
-     "titre": "Le défaut caché",
-     "consequence": "Et si vous aviez caché le grain mouillé : selon Muslim, le Prophète ﷺ passa près d'un tas de grain, y plongea la main et trouva de l'humidité. Il dit : « Pourquoi ne l'as-tu pas mis au-dessus, pour que les gens le voient ? Celui qui trompe n'est pas des miens. »",
-     "indice": "Un défaut se montre ; on ne le cache pas sous la bonne marchandise."
+     ]
     },
     {
      "texte": "Le mélanger soigneusement au grain sec, pour que l'humidité passe inaperçue à la vente.",
+     "titre": "Tout le tas gâté",
+     "consequence": "Et si vous aviez mélangé le grain mouillé au bon : vous auriez trompé chaque acheteur, et gâté toute votre marchandise. Selon Muslim, le Prophète ﷺ dit à un vendeur qui cachait du grain mouillé : « Celui qui trompe n'est pas des miens. »",
+     "indice": "Un défaut se montre ; on ne le cache pas sous la bonne marchandise.",
      "suite": [
       {
        "type": "recit",
        "texte": "Le mélange est fait. À midi, le tas entier sent le moisi : tout le grain s'est gâté au contact de l'humidité."
       }
-     ],
-     "titre": "Tout le tas gâté",
-     "consequence": "Et si vous aviez mélangé le grain mouillé au bon : vous auriez trompé chaque acheteur, et gâté toute votre marchandise. Selon Muslim, le Prophète ﷺ dit à un vendeur qui cachait du grain mouillé : « Celui qui trompe n'est pas des miens. »",
-     "indice": "Un défaut se montre ; on ne le cache pas sous la bonne marchandise."
-    }
-   ]
-  },
-  {
-   "type": "faire",
-   "actions": [
-    {
-     "inviter": "etal_dessus",
-     "texte": "Poser le grain mouillé en évidence"
+     ]
     }
    ]
   },
   {
    "type": "objectif",
    "texte": "Prenez le sac de grain mouillé, à côté de l'étal.",
-   "cible": "objet:sac_mouille",
    "quand": {
     "prendre": "sac_mouille",
-    "porter": "sac"
+    "porter": "mouille"
    }
   },
   {
    "type": "objectif",
-   "texte": "Posez-le bien en vue, sur l'étal.",
-   "cible": "lieu:etal_dessus",
+   "texte": "Posez-le bien en vue sur l'étal : cliquez sur votre étal.",
    "quand": {
-    "utiliser": "etal_dessus"
+    "donner": {
+     "objet": "mouille",
+     "a": "etal"
+    }
    }
   },
   {
    "type": "faire",
    "actions": [
     {
-     "porter": null
-    },
-    {
-     "inviter": "etal_dessus",
-     "texte": null
-    },
-    {
      "montrer": "veuve"
     },
     {
      "aller": "veuve",
      "vers": [
-      [
-       1.5,
-       3.4
-      ]
+      {
+       "x": -30,
+       "z": -30
+      }
      ],
-     "vitesse": 1.2
+     "duree": 2.5
     }
    ]
   },

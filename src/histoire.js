@@ -31,11 +31,10 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
   const son = creerSon(() => sauve.son !== false);
   const voix = creerVoix(() => !!sauve.voix);
   const sable = creerSable($('#jSable'), reduit);
-  const mobile = matchMedia('(pointer: coarse)').matches;
   const missions = creerMissions({
-    hote: $('#jMonde'),
+    carte, D,
     ui: {
-      reduit, mobile, son, ANNULE,
+      reduit, son, ANNULE,
       dire: (t, g) => dire(t, g),
       proposer: (q, o, t, g, i) => proposer(q, o, t, g, i),
       boutonOption: (i) => boutonOption(i),
@@ -45,8 +44,8 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
       masquerDialogue: () => masquerDialogue(),
       pause,
       erreur: () => { if (etat) etat.erreurs++; },
-      // la scène à la première personne remplace la carte (rendu de la carte suspendu)
-      entrerMonde(on) { corps.classList.toggle('jeu-monde', on); carte.pause(on); if (on) { cinema(false); disposition(null); } },
+      // pendant une mission, la carte reste au premier plan : pas de bandes de cinéma
+      entrerMission(on) { corps.classList.toggle('jeu-mission', on); if (on) { cinema(false); disposition(null); } },
     },
   });
 
@@ -178,9 +177,9 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
   addEventListener('keydown', (e) => {
     if (!actif || e.ctrlKey || e.metaKey || e.altKey || e.target.tagName === 'INPUT') return;
     const k = e.key;
-    if (k === 'Escape') { e.preventDefault(); if (!$('#jPanneau').hidden && etat) { $('#jPanneau').hidden = true; missions.pause(false); } else if (etat && $('#jTitre').hidden) panneauMenu(); return; }
+    if (k === 'Escape') { e.preventDefault(); if (!$('#jPanneau').hidden && etat) $('#jPanneau').hidden = true; else if (etat && $('#jTitre').hidden) panneauMenu(); return; }
     if (!$('#jPanneau').hidden) return;
-    const valider = k === ' ' || k === 'Enter' || (corps.classList.contains('jeu-monde') && (k === 'e' || k === 'E'));
+    const valider = k === ' ' || k === 'Enter';
     if (!attente) return;
     if (attente.type === 'vf') {
       if ('vV1'.includes(k)) { e.preventDefault(); resoudre(true); } else if ('fF2'.includes(k)) { e.preventDefault(); resoudre(false); }
@@ -416,7 +415,7 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
       carte.etiquettes([...new Set([ev.lieu, ...(ev.trajet ? ev.trajet.etapes.filter((x) => typeof x === 'string' && LIEUX[x]) : [])])]);
       await dire(e.texte, tag(e)); ok();
     },
-    // Mission à la première personne (data/missions/<id>.json)
+    // Mission jouée sur la carte (data/missions/<id>.json)
     async mission(e, ok) {
       cinema(false); disposition(null); masquerDialogue();
       await missions.jouer(e.mission, ok); ok();
@@ -642,8 +641,8 @@ export function creerHistoire({ D, carte, ouvrirCarte, reduit }) {
   // ---------- panneaux ----------
   function panneau(html) {
     const p = $('#jPanneau'); p.innerHTML = html; p.hidden = false; p.scrollTop = 0;
-    remplirIcones(p); missions.pause(true);
-    p.querySelectorAll('[data-fermer]').forEach((b) => (b.onclick = () => { p.hidden = true; missions.pause(false); if (!etat && $('#jTitre').hidden) accueil(); }));
+    remplirIcones(p);
+    p.querySelectorAll('[data-fermer]').forEach((b) => (b.onclick = () => { p.hidden = true; if (!etat && $('#jTitre').hidden) accueil(); }));
     return p;
   }
   function panneauMenu() {

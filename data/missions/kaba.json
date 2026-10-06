@@ -1,5 +1,5 @@
 {
- "_lisez_moi": "Mission à la première personne. Coordonnées en mètres : x vers l'est, z vers le sud ; cap en degrés (0 = nord). Brouillon à vérifier.",
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
  "id": "kaba",
  "titre": "La part des clans",
  "statut": "à vérifier",
@@ -24,7 +24,7 @@
   "nom": "Un homme de Quraysh",
   "nom_ar": "رجل من قريش",
   "texte": "Vous êtes un Mecquois parmi d'autres, membre d'un des clans qui gardent la Maison. La Ka'ba doit être rebâtie : à vous d'y apporter votre part, et de garder la tête froide quand les clans s'affronteront.",
-  "regle": "Le Prophète ﷺ n'est jamais montré : une lumière marque sa présence, et seules les paroles rapportées par les sources lui sont attribuées. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+  "regle": "Le Prophète ﷺ n'est jamais montré : une lumière marque sa présence, et seules les paroles rapportées par les sources sont citées. Les personnes sont des étiquettes sur la carte. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
  },
  "personnages": {
   "walid": {
@@ -32,8 +32,8 @@
    "qualite": "notable de Quraysh"
   },
   "ancien": {
-   "nom": "Le plus âgé de Quraysh",
-   "qualite": "Abû Umayya ibn al-Mughîra, selon Ibn Ishâq"
+   "nom": "Un ancien de Quraysh",
+   "qualite": "chef des bâtisseurs"
   },
   "preteur": {
    "nom": "Un prêteur",
@@ -54,6 +54,10 @@
   "passants": {
    "nom": "Un Mecquois",
    "qualite": "passant"
+  },
+  "presence": {
+   "nom": "Porte des Banû Shayba",
+   "qualite": ""
   }
  },
  "dialogues": {
@@ -72,1649 +76,129 @@
    "Chaque clan a reçu une partie des murs à construire. Gare à qui voudra la part d'un autre !"
   ]
  },
+ "objets": {
+  "usure": {
+   "nom": "L'argent du prêteur"
+  },
+  "or": {
+   "nom": "L'or de l'homme puissant"
+  },
+  "pierre": {
+   "nom": "Une pierre"
+  }
+ },
  "scenes": {
   "makka": {
    "titre": "La Mecque",
-   "taille": 420,
-   "limites": [
-    -150,
-    -150,
-    150,
-    150
-   ],
+   "sous": "Vers 605, cinq ans avant la révélation",
    "ambiance": "jour",
-   "depart": {
-    "x": 0,
-    "z": 40,
-    "cap": 0
+   "epoque": "kaba",
+   "origine": "makkah",
+   "vue": {
+    "auto": true,
+    "cap": 200,
+    "incl": 58
    },
-   "elements": [
-    {
-     "type": "kaba",
-     "id": "kaba_ancienne",
-     "h": 4.6,
-     "reconstruite": false,
-     "x": 0,
-     "z": 0,
-     "r": -135
-    },
-    {
-     "type": "puits",
-     "id": "zamzam",
-     "x": 18,
-     "z": 2
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       0
-      ],
-      [
-       0,
-       -160
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       0
-      ],
-      [
-       0,
-       160
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       0
-      ],
-      [
-       -160,
-       0
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       0
-      ],
-      [
-       160,
-       0
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "montagne",
-     "x": 205,
-     "z": -95,
-     "r": 85,
-     "h": 105
-    },
-    {
-     "type": "montagne",
-     "x": 175,
-     "z": 165,
-     "r": 70,
-     "h": 60,
-     "c": "#A3825F"
-    },
-    {
-     "type": "montagne",
-     "x": -215,
-     "z": -20,
-     "r": 95,
-     "h": 115
-    },
-    {
-     "type": "montagne",
-     "x": -40,
-     "z": -245,
-     "r": 110,
-     "h": 85,
-     "c": "#9E7E5E"
-    },
-    {
-     "type": "montagne",
-     "x": -70,
-     "z": 235,
-     "r": 100,
-     "h": 70,
-     "c": "#A3825F"
-    },
-    {
-     "type": "acacia",
-     "x": -60,
-     "z": 70
-    },
-    {
-     "type": "acacia",
-     "x": 95,
-     "z": 60
-    },
-    {
-     "type": "acacia",
-     "x": -90,
-     "z": -60
-    },
-    {
-     "type": "jarre",
-     "x": 21,
-     "z": 4
-    },
-    {
-     "type": "jarre",
-     "x": 21.6,
-     "z": 5.2
-    },
-    {
-     "type": "boite",
-     "id": "fondations",
-     "x": 0,
-     "z": 0,
-     "w": 11.5,
-     "d": 12.5,
-     "h": 0.7,
-     "c": "#6F7F68",
-     "r": -135,
-     "visible": false
-    },
-    {
-     "type": "kaba",
-     "id": "kaba_chantier",
-     "h": 1.9,
-     "reconstruite": false,
-     "pierre": true,
-     "chantier": true,
-     "visible": false,
-     "x": 0,
-     "z": 0,
-     "r": -135
-    },
-    {
-     "type": "kaba",
-     "id": "kaba_neuve",
-     "h": 9,
-     "reconstruite": true,
-     "visible": false,
-     "x": 0,
-     "z": 0,
-     "r": -135
-    },
-    {
-     "type": "boite",
-     "x": 17.5,
-     "z": -21.5,
-     "w": 0.7,
-     "d": 0.7,
-     "h": 3.4,
-     "c": "#A08A6A"
-    },
-    {
-     "type": "boite",
-     "x": 22.5,
-     "z": -16.5,
-     "w": 0.7,
-     "d": 0.7,
-     "h": 3.4,
-     "c": "#A08A6A"
-    },
-    {
-     "type": "boite",
-     "x": 20,
-     "z": -19,
-     "w": 7.6,
-     "d": 0.8,
-     "h": 0.5,
-     "dy": 3.2,
-     "r": 45,
-     "c": "#8C7457",
-     "solide": false
-    },
-    {
-     "type": "lumiere",
-     "id": "presence",
-     "x": 20,
-     "z": -19,
-     "r": 1.0,
-     "h": 7,
-     "visible": false
-    },
-    {
-     "type": "zone",
-     "id": "bab",
-     "x": 20,
-     "z": -19,
-     "r": 3
-    },
-    {
-     "type": "etal",
-     "x": -36,
-     "z": 28,
-     "r": 10,
-     "c": "#B5552F"
-    },
-    {
-     "type": "etal",
-     "x": -46,
-     "z": 36,
-     "r": 40,
-     "c": "#4E6B3A",
-     "marchandises": [
-      "#7A4A2A",
-      "#5A3A22",
-      "#8C6A4A"
-     ]
-    },
-    {
-     "type": "etal",
-     "x": -30,
-     "z": 42,
-     "r": -15,
-     "c": "#7A2E3A",
-     "marchandises": [
-      "#C9A043",
-      "#B0723F"
-     ]
-    },
-    {
-     "type": "zone",
-     "id": "souk",
-     "x": -38,
-     "z": 36,
-     "r": 9
-    },
-    {
-     "type": "rochers",
-     "x": -108,
-     "z": 10,
-     "r": 12,
-     "n": 18,
-     "s": 1.6
-    },
-    {
-     "type": "rocher",
-     "x": -100,
-     "z": 2,
-     "s": 2.2
-    },
-    {
-     "type": "zone",
-     "id": "chantier",
-     "x": -9,
-     "z": 13,
-     "r": 4
-    },
-    {
-     "type": "jarre",
-     "x": -12,
-     "z": 10
-    },
-    {
-     "type": "boite",
-     "x": -10,
-     "z": 17,
-     "w": 2.4,
-     "d": 1.2,
-     "h": 0.6,
-     "c": "#8E7F6E"
-    },
-    {
-     "type": "manteau",
-     "id": "manteau",
-     "x": -2.5,
-     "z": 9.5,
-     "visible": false
-    },
-    {
-     "type": "maison",
-     "x": 11.5,
-     "z": -27.7,
-     "w": 6.4,
-     "d": 6.5,
-     "h": 3.8,
-     "r": 22
-    },
-    {
-     "type": "maison",
-     "x": 29.8,
-     "z": 3.7,
-     "w": 7.4,
-     "d": 7.1,
-     "h": 3.1,
-     "r": 97
-    },
-    {
-     "type": "maison",
-     "x": 26.7,
-     "z": 13.8,
-     "w": 7.9,
-     "d": 7.0,
-     "h": 3.9,
-     "r": 117,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 19.9,
-     "z": 22.5,
-     "w": 5.0,
-     "d": 6.6,
-     "h": 3.1,
-     "r": 139
-    },
-    {
-     "type": "maison",
-     "x": 13.0,
-     "z": 27.0,
-     "w": 5.7,
-     "d": 5.1,
-     "h": 3.6,
-     "r": 154
-    },
-    {
-     "type": "maison",
-     "x": -15.5,
-     "z": 25.7,
-     "w": 7.0,
-     "d": 6.4,
-     "h": 3.4,
-     "r": 211
-    },
-    {
-     "type": "maison",
-     "x": -23.2,
-     "z": 19.1,
-     "w": 8.0,
-     "d": 7.5,
-     "h": 4.0,
-     "r": 231
-    },
-    {
-     "type": "maison",
-     "x": -29.0,
-     "z": -7.8,
-     "w": 6.2,
-     "d": 7.5,
-     "h": 3.5,
-     "r": 285
-    },
-    {
-     "type": "maison",
-     "x": -25.2,
-     "z": -16.3,
-     "w": 7.5,
-     "d": 5.0,
-     "h": 3.3,
-     "r": 303
-    },
-    {
-     "type": "maison",
-     "x": -17.9,
-     "z": -24.1,
-     "w": 6.4,
-     "d": 7.9,
-     "h": 3.6,
-     "r": 323,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -9.4,
-     "z": -28.5,
-     "w": 6.9,
-     "d": 7.3,
-     "h": 3.4,
-     "r": 342,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 12.9,
-     "z": -42.1,
-     "w": 5.4,
-     "d": 5.7,
-     "h": 3.1,
-     "r": 17,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 20.8,
-     "z": -38.8,
-     "w": 7.4,
-     "d": 5.5,
-     "h": 3.8,
-     "r": 28
-    },
-    {
-     "type": "maison",
-     "x": 29.5,
-     "z": -32.7,
-     "w": 5.6,
-     "d": 7.2,
-     "h": 3.2,
-     "r": 42
-    },
-    {
-     "type": "maison",
-     "x": 35.4,
-     "z": -26.2,
-     "w": 5.3,
-     "d": 6.3,
-     "h": 3.3,
-     "r": 53
-    },
-    {
-     "type": "maison",
-     "x": 39.7,
-     "z": -18.9,
-     "w": 7.9,
-     "d": 7.4,
-     "h": 3.4,
-     "r": 65
-    },
-    {
-     "type": "maison",
-     "x": 42.6,
-     "z": 11.1,
-     "w": 5.3,
-     "d": 8.0,
-     "h": 3.3,
-     "r": 105
-    },
-    {
-     "type": "maison",
-     "x": 39.7,
-     "z": 19.0,
-     "w": 7.3,
-     "d": 6.0,
-     "h": 3.4,
-     "r": 116,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 34.0,
-     "z": 27.9,
-     "w": 5.3,
-     "d": 6.7,
-     "h": 3.3,
-     "r": 129
-    },
-    {
-     "type": "maison",
-     "x": 28.1,
-     "z": 33.9,
-     "w": 6.1,
-     "d": 6.4,
-     "h": 4.3,
-     "r": 140
-    },
-    {
-     "type": "maison",
-     "x": 20.3,
-     "z": 39.0,
-     "w": 6.7,
-     "d": 7.6,
-     "h": 3.3,
-     "r": 153,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 11.1,
-     "z": 42.6,
-     "w": 7.7,
-     "d": 7.5,
-     "h": 3.3,
-     "r": 165
-    },
-    {
-     "type": "maison",
-     "x": -10.1,
-     "z": 42.8,
-     "w": 5.6,
-     "d": 7.9,
-     "h": 4.2,
-     "r": 193
-    },
-    {
-     "type": "maison",
-     "x": -18.4,
-     "z": 40.0,
-     "w": 6.3,
-     "d": 5.3,
-     "h": 3.1,
-     "r": 205
-    },
-    {
-     "type": "maison",
-     "x": -38.2,
-     "z": 21.8,
-     "w": 6.8,
-     "d": 5.9,
-     "h": 3.2,
-     "r": 240
-    },
-    {
-     "type": "maison",
-     "x": -41.3,
-     "z": -15.2,
-     "w": 7.8,
-     "d": 5.6,
-     "h": 3.0,
-     "r": 290
-    },
-    {
-     "type": "maison",
-     "x": -36.3,
-     "z": -24.9,
-     "w": 6.3,
-     "d": 5.2,
-     "h": 3.2,
-     "r": 304
-    },
-    {
-     "type": "maison",
-     "x": -30.1,
-     "z": -32.1,
-     "w": 6.7,
-     "d": 5.4,
-     "h": 3.5,
-     "r": 317
-    },
-    {
-     "type": "maison",
-     "x": -22.2,
-     "z": -38.0,
-     "w": 7.9,
-     "d": 7.0,
-     "h": 4.0,
-     "r": 330
-    },
-    {
-     "type": "maison",
-     "x": -11.9,
-     "z": -42.4,
-     "w": 5.4,
-     "d": 5.1,
-     "h": 3.0,
-     "r": 344
-    },
-    {
-     "type": "maison",
-     "x": 10.2,
-     "z": -57.1,
-     "w": 7.2,
-     "d": 6.0,
-     "h": 4.4,
-     "r": 10,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 20.2,
-     "z": -54.4,
-     "w": 6.6,
-     "d": 7.2,
-     "h": 4.3,
-     "r": 20
-    },
-    {
-     "type": "maison",
-     "x": 29.1,
-     "z": -50.2,
-     "w": 7.1,
-     "d": 7.4,
-     "h": 4.3,
-     "r": 30
-    },
-    {
-     "type": "maison",
-     "x": 37.5,
-     "z": -44.2,
-     "w": 7.1,
-     "d": 7.7,
-     "h": 4.2,
-     "r": 40
-    },
-    {
-     "type": "maison",
-     "x": 44.7,
-     "z": -36.9,
-     "w": 7.4,
-     "d": 7.6,
-     "h": 3.8,
-     "r": 50
-    },
-    {
-     "type": "maison",
-     "x": 50.7,
-     "z": -28.2,
-     "w": 6.1,
-     "d": 6.7,
-     "h": 3.9,
-     "r": 61,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 54.5,
-     "z": -19.7,
-     "w": 6.9,
-     "d": 8.0,
-     "h": 4.2,
-     "r": 70
-    },
-    {
-     "type": "maison",
-     "x": 57.3,
-     "z": 9.3,
-     "w": 7.5,
-     "d": 5.3,
-     "h": 4.1,
-     "r": 99,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 54.6,
-     "z": 19.6,
-     "w": 6.8,
-     "d": 6.4,
-     "h": 3.3,
-     "r": 110
-    },
-    {
-     "type": "maison",
-     "x": 50.4,
-     "z": 28.7,
-     "w": 6.5,
-     "d": 6.8,
-     "h": 4.3,
-     "r": 120
-    },
-    {
-     "type": "maison",
-     "x": 44.9,
-     "z": 36.7,
-     "w": 5.0,
-     "d": 5.9,
-     "h": 3.9,
-     "r": 129
-    },
-    {
-     "type": "maison",
-     "x": 39.3,
-     "z": 42.7,
-     "w": 5.5,
-     "d": 7.7,
-     "h": 3.9,
-     "r": 137
-    },
-    {
-     "type": "maison",
-     "x": 32.4,
-     "z": 48.1,
-     "w": 7.7,
-     "d": 6.0,
-     "h": 3.9,
-     "r": 146
-    },
-    {
-     "type": "maison",
-     "x": 22.9,
-     "z": 53.3,
-     "w": 6.3,
-     "d": 7.4,
-     "h": 4.3,
-     "r": 157
-    },
-    {
-     "type": "maison",
-     "x": 13.9,
-     "z": 56.3,
-     "w": 6.2,
-     "d": 6.7,
-     "h": 3.4,
-     "r": 166,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -15.5,
-     "z": 55.9,
-     "w": 7.9,
-     "d": 5.8,
-     "h": 3.2,
-     "r": 196
-    },
-    {
-     "type": "maison",
-     "x": -25.8,
-     "z": 51.9,
-     "w": 5.8,
-     "d": 5.6,
-     "h": 3.6,
-     "r": 206
-    },
-    {
-     "type": "maison",
-     "x": -33.6,
-     "z": 47.3,
-     "w": 6.5,
-     "d": 5.9,
-     "h": 4.2,
-     "r": 215
-    },
-    {
-     "type": "maison",
-     "x": -51.5,
-     "z": 26.7,
-     "w": 5.1,
-     "d": 7.1,
-     "h": 3.8,
-     "r": 243
-    },
-    {
-     "type": "maison",
-     "x": -54.8,
-     "z": 19.1,
-     "w": 7.4,
-     "d": 5.1,
-     "h": 3.2,
-     "r": 251
-    },
-    {
-     "type": "maison",
-     "x": -55.6,
-     "z": -16.4,
-     "w": 6.3,
-     "d": 6.9,
-     "h": 3.9,
-     "r": 286
-    },
-    {
-     "type": "maison",
-     "x": -52.2,
-     "z": -25.3,
-     "w": 7.9,
-     "d": 7.1,
-     "h": 3.3,
-     "r": 296
-    },
-    {
-     "type": "maison",
-     "x": -46.4,
-     "z": -34.8,
-     "w": 5.5,
-     "d": 5.0,
-     "h": 3.7,
-     "r": 307
-    },
-    {
-     "type": "maison",
-     "x": -40.7,
-     "z": -41.3,
-     "w": 5.5,
-     "d": 5.8,
-     "h": 3.5,
-     "r": 315
-    },
-    {
-     "type": "maison",
-     "x": -34.0,
-     "z": -47.0,
-     "w": 6.6,
-     "d": 6.8,
-     "h": 4.1,
-     "r": 324
-    },
-    {
-     "type": "maison",
-     "x": -25.7,
-     "z": -52.0,
-     "w": 7.4,
-     "d": 7.7,
-     "h": 3.1,
-     "r": 334
-    },
-    {
-     "type": "maison",
-     "x": -15.8,
-     "z": -55.8,
-     "w": 7.2,
-     "d": 5.4,
-     "h": 3.6,
-     "r": 344
-    },
-    {
-     "type": "maison",
-     "x": 16.4,
-     "z": -70.1,
-     "w": 7.8,
-     "d": 6.4,
-     "h": 3.9,
-     "r": 13
-    },
-    {
-     "type": "maison",
-     "x": 26.9,
-     "z": -66.8,
-     "w": 7.2,
-     "d": 7.5,
-     "h": 3.9,
-     "r": 22
-    },
-    {
-     "type": "maison",
-     "x": 36.2,
-     "z": -62.2,
-     "w": 5.6,
-     "d": 7.7,
-     "h": 4.4,
-     "r": 30
-    },
-    {
-     "type": "maison",
-     "x": 43.6,
-     "z": -57.3,
-     "w": 6.6,
-     "d": 7.4,
-     "h": 3.4,
-     "r": 37
-    },
-    {
-     "type": "maison",
-     "x": 51.0,
-     "z": -50.9,
-     "w": 7.6,
-     "d": 6.0,
-     "h": 3.1,
-     "r": 45
-    },
-    {
-     "type": "maison",
-     "x": 58.0,
-     "z": -42.7,
-     "w": 6.7,
-     "d": 7.3,
-     "h": 3.7,
-     "r": 54,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 63.2,
-     "z": -34.4,
-     "w": 7.4,
-     "d": 5.2,
-     "h": 4.1,
-     "r": 61,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 67.6,
-     "z": -24.7,
-     "w": 6.0,
-     "d": 7.4,
-     "h": 3.2,
-     "r": 70,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 70.3,
-     "z": 15.3,
-     "w": 7.8,
-     "d": 5.3,
-     "h": 3.3,
-     "r": 102
-    },
-    {
-     "type": "maison",
-     "x": 67.2,
-     "z": 25.9,
-     "w": 5.9,
-     "d": 7.2,
-     "h": 3.9,
-     "r": 111
-    },
-    {
-     "type": "maison",
-     "x": 63.4,
-     "z": 34.2,
-     "w": 7.5,
-     "d": 6.7,
-     "h": 3.4,
-     "r": 118
-    },
-    {
-     "type": "maison",
-     "x": 57.6,
-     "z": 43.2,
-     "w": 7.5,
-     "d": 7.7,
-     "h": 3.3,
-     "r": 127
-    },
-    {
-     "type": "maison",
-     "x": 50.6,
-     "z": 51.3,
-     "w": 7.9,
-     "d": 6.6,
-     "h": 3.8,
-     "r": 135
-    },
-    {
-     "type": "maison",
-     "x": 42.1,
-     "z": 58.4,
-     "w": 6.6,
-     "d": 6.5,
-     "h": 3.8,
-     "r": 144,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 33.8,
-     "z": 63.6,
-     "w": 7.9,
-     "d": 6.5,
-     "h": 3.6,
-     "r": 152
-    },
-    {
-     "type": "maison",
-     "x": 23.6,
-     "z": 68.0,
-     "w": 6.7,
-     "d": 6.5,
-     "h": 4.0,
-     "r": 161,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -15.6,
-     "z": 70.3,
-     "w": 5.4,
-     "d": 6.3,
-     "h": 4.1,
-     "r": 193
-    },
-    {
-     "type": "maison",
-     "x": -23.9,
-     "z": 67.9,
-     "w": 6.4,
-     "d": 6.0,
-     "h": 3.3,
-     "r": 199
-    },
-    {
-     "type": "maison",
-     "x": -32.7,
-     "z": 64.1,
-     "w": 7.8,
-     "d": 5.4,
-     "h": 4.1,
-     "r": 207,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -42.1,
-     "z": 58.4,
-     "w": 5.6,
-     "d": 5.7,
-     "h": 4.0,
-     "r": 216
-    },
-    {
-     "type": "maison",
-     "x": -48.9,
-     "z": 52.9,
-     "w": 6.1,
-     "d": 6.9,
-     "h": 3.1,
-     "r": 223
-    },
-    {
-     "type": "maison",
-     "x": -55.3,
-     "z": 46.2,
-     "w": 5.4,
-     "d": 6.5,
-     "h": 3.4,
-     "r": 230
-    },
-    {
-     "type": "maison",
-     "x": -60.3,
-     "z": 39.3,
-     "w": 6.6,
-     "d": 6.3,
-     "h": 3.5,
-     "r": 237
-    },
-    {
-     "type": "maison",
-     "x": -65.1,
-     "z": 30.7,
-     "w": 6.6,
-     "d": 5.5,
-     "h": 3.3,
-     "r": 245
-    },
-    {
-     "type": "maison",
-     "x": -68.7,
-     "z": 21.6,
-     "w": 6.9,
-     "d": 6.6,
-     "h": 4.2,
-     "r": 253
-    },
-    {
-     "type": "maison",
-     "x": -69.2,
-     "z": -20.0,
-     "w": 5.9,
-     "d": 7.8,
-     "h": 3.3,
-     "r": 286
-    },
-    {
-     "type": "maison",
-     "x": -66.1,
-     "z": -28.6,
-     "w": 7.7,
-     "d": 5.4,
-     "h": 3.3,
-     "r": 293
-    },
-    {
-     "type": "maison",
-     "x": -61.0,
-     "z": -38.2,
-     "w": 5.8,
-     "d": 5.3,
-     "h": 4.2,
-     "r": 302
-    },
-    {
-     "type": "maison",
-     "x": -55.8,
-     "z": -45.5,
-     "w": 7.4,
-     "d": 5.4,
-     "h": 3.6,
-     "r": 309
-    },
-    {
-     "type": "maison",
-     "x": -48.6,
-     "z": -53.2,
-     "w": 5.1,
-     "d": 5.6,
-     "h": 4.0,
-     "r": 318
-    },
-    {
-     "type": "maison",
-     "x": -42.2,
-     "z": -58.4,
-     "w": 7.9,
-     "d": 5.3,
-     "h": 3.7,
-     "r": 324
-    },
-    {
-     "type": "maison",
-     "x": -32.7,
-     "z": -64.2,
-     "w": 6.5,
-     "d": 7.1,
-     "h": 3.3,
-     "r": 333,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -23.8,
-     "z": -68.0,
-     "w": 5.3,
-     "d": 5.1,
-     "h": 3.8,
-     "r": 341
-    },
-    {
-     "type": "maison",
-     "x": -15.6,
-     "z": -70.3,
-     "w": 6.7,
-     "d": 5.4,
-     "h": 3.3,
-     "r": 348
-    },
-    {
-     "type": "maison",
-     "x": 19.4,
-     "z": -83.8,
-     "w": 7.9,
-     "d": 6.4,
-     "h": 4.1,
-     "r": 13
-    },
-    {
-     "type": "maison",
-     "x": 30.0,
-     "z": -80.6,
-     "w": 6.4,
-     "d": 6.5,
-     "h": 3.6,
-     "r": 20
-    },
-    {
-     "type": "maison",
-     "x": 38.8,
-     "z": -76.7,
-     "w": 5.0,
-     "d": 7.1,
-     "h": 4.2,
-     "r": 27
-    },
-    {
-     "type": "maison",
-     "x": 46.0,
-     "z": -72.7,
-     "w": 6.4,
-     "d": 7.2,
-     "h": 3.6,
-     "r": 32
-    },
-    {
-     "type": "maison",
-     "x": 53.8,
-     "z": -67.1,
-     "w": 5.5,
-     "d": 6.5,
-     "h": 3.0,
-     "r": 39
-    },
-    {
-     "type": "maison",
-     "x": 60.3,
-     "z": -61.4,
-     "w": 7.4,
-     "d": 7.1,
-     "h": 4.2,
-     "r": 44
-    },
-    {
-     "type": "maison",
-     "x": 67.3,
-     "z": -53.5,
-     "w": 6.2,
-     "d": 6.8,
-     "h": 3.7,
-     "r": 52
-    },
-    {
-     "type": "maison",
-     "x": 72.8,
-     "z": -45.8,
-     "w": 7.4,
-     "d": 5.8,
-     "h": 4.3,
-     "r": 58
-    },
-    {
-     "type": "maison",
-     "x": 77.9,
-     "z": -36.5,
-     "w": 7.3,
-     "d": 7.4,
-     "h": 3.6,
-     "r": 65
-    },
-    {
-     "type": "maison",
-     "x": 81.7,
-     "z": -26.7,
-     "w": 7.6,
-     "d": 7.1,
-     "h": 4.1,
-     "r": 72
-    },
-    {
-     "type": "maison",
-     "x": 85.3,
-     "z": 11.1,
-     "w": 6.1,
-     "d": 6.9,
-     "h": 3.9,
-     "r": 97
-    },
-    {
-     "type": "maison",
-     "x": 83.6,
-     "z": 20.2,
-     "w": 7.8,
-     "d": 7.0,
-     "h": 3.5,
-     "r": 104
-    },
-    {
-     "type": "maison",
-     "x": 80.3,
-     "z": 30.7,
-     "w": 6.7,
-     "d": 6.6,
-     "h": 3.5,
-     "r": 111
-    },
-    {
-     "type": "maison",
-     "x": 76.3,
-     "z": 39.8,
-     "w": 6.9,
-     "d": 7.1,
-     "h": 4.1,
-     "r": 118
-    },
-    {
-     "type": "maison",
-     "x": 71.1,
-     "z": 48.4,
-     "w": 5.1,
-     "d": 6.8,
-     "h": 4.0,
-     "r": 124
-    },
-    {
-     "type": "maison",
-     "x": 66.1,
-     "z": 55.0,
-     "w": 6.2,
-     "d": 5.2,
-     "h": 3.3,
-     "r": 130
-    },
-    {
-     "type": "maison",
-     "x": 59.7,
-     "z": 61.9,
-     "w": 5.3,
-     "d": 5.8,
-     "h": 4.3,
-     "r": 136
-    },
-    {
-     "type": "maison",
-     "x": 53.3,
-     "z": 67.5,
-     "w": 6.5,
-     "d": 7.9,
-     "h": 3.8,
-     "r": 142
-    },
-    {
-     "type": "maison",
-     "x": 45.3,
-     "z": 73.1,
-     "w": 6.9,
-     "d": 7.4,
-     "h": 3.1,
-     "r": 148
-    },
-    {
-     "type": "maison",
-     "x": 36.4,
-     "z": 77.9,
-     "w": 7.3,
-     "d": 5.1,
-     "h": 4.3,
-     "r": 155,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 26.7,
-     "z": 81.8,
-     "w": 6.4,
-     "d": 5.5,
-     "h": 3.7,
-     "r": 162
-    },
-    {
-     "type": "maison",
-     "x": -19.2,
-     "z": 83.8,
-     "w": 6.7,
-     "d": 5.9,
-     "h": 4.0,
-     "r": 193
-    },
-    {
-     "type": "maison",
-     "x": -28.7,
-     "z": 81.1,
-     "w": 5.0,
-     "d": 5.7,
-     "h": 3.1,
-     "r": 199,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -36.3,
-     "z": 78.0,
-     "w": 7.3,
-     "d": 6.2,
-     "h": 4.3,
-     "r": 205
-    },
-    {
-     "type": "maison",
-     "x": -45.5,
-     "z": 73.0,
-     "w": 5.2,
-     "d": 8.0,
-     "h": 4.3,
-     "r": 212,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -52.4,
-     "z": 68.2,
-     "w": 7.7,
-     "d": 6.3,
-     "h": 3.7,
-     "r": 218
-    },
-    {
-     "type": "maison",
-     "x": -60.6,
-     "z": 61.0,
-     "w": 5.7,
-     "d": 6.6,
-     "h": 4.3,
-     "r": 225
-    },
-    {
-     "type": "maison",
-     "x": -66.6,
-     "z": 54.4,
-     "w": 6.4,
-     "d": 7.9,
-     "h": 4.1,
-     "r": 231
-    },
-    {
-     "type": "maison",
-     "x": -72.2,
-     "z": 46.7,
-     "w": 5.3,
-     "d": 6.9,
-     "h": 3.6,
-     "r": 237
-    },
-    {
-     "type": "maison",
-     "x": -76.5,
-     "z": 39.3,
-     "w": 5.2,
-     "d": 6.6,
-     "h": 3.2,
-     "r": 243
-    },
-    {
-     "type": "maison",
-     "x": -80.0,
-     "z": 31.7,
-     "w": 7.0,
-     "d": 6.4,
-     "h": 3.4,
-     "r": 248
-    },
-    {
-     "type": "maison",
-     "x": -83.1,
-     "z": 22.0,
-     "w": 6.3,
-     "d": 7.3,
-     "h": 3.7,
-     "r": 255
-    },
-    {
-     "type": "maison",
-     "x": -84.1,
-     "z": -17.9,
-     "w": 6.9,
-     "d": 6.1,
-     "h": 3.4,
-     "r": 282
-    },
-    {
-     "type": "maison",
-     "x": -81.4,
-     "z": -27.6,
-     "w": 6.7,
-     "d": 6.8,
-     "h": 3.9,
-     "r": 289
-    },
-    {
-     "type": "maison",
-     "x": -77.7,
-     "z": -36.8,
-     "w": 5.6,
-     "d": 5.7,
-     "h": 4.4,
-     "r": 295
-    },
-    {
-     "type": "maison",
-     "x": -73.6,
-     "z": -44.5,
-     "w": 7.6,
-     "d": 5.1,
-     "h": 3.1,
-     "r": 301
-    },
-    {
-     "type": "maison",
-     "x": -67.4,
-     "z": -53.4,
-     "w": 6.3,
-     "d": 6.9,
-     "h": 3.1,
-     "r": 308
-    },
-    {
-     "type": "maison",
-     "x": -61.1,
-     "z": -60.5,
-     "w": 5.2,
-     "d": 5.3,
-     "h": 3.9,
-     "r": 315
-    },
-    {
-     "type": "maison",
-     "x": -54.9,
-     "z": -66.2,
-     "w": 6.9,
-     "d": 6.1,
-     "h": 3.7,
-     "r": 320
-    },
-    {
-     "type": "maison",
-     "x": -46.8,
-     "z": -72.2,
-     "w": 6.0,
-     "d": 7.2,
-     "h": 4.2,
-     "r": 327,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -38.8,
-     "z": -76.8,
-     "w": 5.4,
-     "d": 7.4,
-     "h": 3.9,
-     "r": 333
-    },
-    {
-     "type": "maison",
-     "x": -31.0,
-     "z": -80.2,
-     "w": 5.6,
-     "d": 6.3,
-     "h": 3.4,
-     "r": 339
-    },
-    {
-     "type": "maison",
-     "x": -22.6,
-     "z": -83.0,
-     "w": 6.1,
-     "d": 7.0,
-     "h": 4.4,
-     "r": 345
-    }
-   ],
-   "pnj": [
+   "reperes": [
     {
      "id": "walid",
-     "nom": "al-Walîd ibn al-Mughîra",
-     "x": -16,
-     "z": 22,
-     "cap": 30,
-     "accessoire": "baton",
-     "habit": "#5E3A2E",
-     "riche": true,
-     "taille": 1.8
+     "genre": "personne",
+     "x": 25,
+     "z": 30
     },
     {
      "id": "ancien",
-     "nom": "Le plus âgé de Quraysh",
-     "x": 9,
-     "z": 17,
-     "cap": 300,
-     "accessoire": "baton",
-     "habit": "#8A7A62",
-     "coiffe": "#EDE4D3"
+     "genre": "personne",
+     "x": -45,
+     "z": 40,
+     "nom": "Un ancien de Quraysh",
+     "qualite": "chef des bâtisseurs",
+     "visible": false
+    },
+    {
+     "id": "chantier",
+     "genre": "lieu",
+     "x": 0,
+     "z": 18,
+     "nom": "Le chantier de la Ka'ba",
+     "visible": false
     },
     {
      "id": "preteur",
-     "nom": "Un prêteur",
-     "x": -35,
-     "z": 31,
-     "cap": 200,
-     "habit": "#5B2333",
-     "riche": true,
-     "invite": "Écouter le prêteur"
+     "genre": "personne",
+     "x": 180,
+     "z": 210,
+     "visible": false
     },
     {
      "id": "tanneur",
-     "nom": "Un marchand de cuir",
-     "x": -44,
-     "z": 33,
-     "cap": 120,
-     "habit": "#7A5A3C",
-     "invite": "Écouter le marchand de cuir"
+     "genre": "personne",
+     "x": 240,
+     "z": 160,
+     "visible": false
     },
     {
      "id": "fort",
-     "nom": "Un homme puissant",
-     "x": -31,
-     "z": 39,
-     "cap": 240,
-     "habit": "#2F3A2E",
-     "taille": 1.9,
-     "invite": "Écouter l'homme puissant"
+     "genre": "personne",
+     "x": 130,
+     "z": 260,
+     "visible": false
+    },
+    {
+     "id": "pierre1",
+     "genre": "objet",
+     "x": 520,
+     "z": -120,
+     "nom": "Une pierre de la carrière",
+     "visible": false
     },
     {
      "id": "clan1",
-     "nom": "Un homme des Banû 'Abd ad-Dâr",
-     "x": -6,
-     "z": 13,
-     "cap": 20,
-     "habit": "#7A2E3A",
+     "genre": "personne",
+     "x": -60,
+     "z": -50,
+     "visible": false
+    },
+    {
+     "id": "clan2",
+     "genre": "personne",
+     "x": 70,
+     "z": -60,
+     "nom": "Un autre clan",
+     "qualite": "Quraysh",
+     "visible": false
+    },
+    {
+     "id": "passants",
+     "genre": "personne",
+     "x": 150,
+     "z": 90
+    },
+    {
+     "id": "presence",
+     "genre": "presence",
+     "x": -30,
+     "z": -95,
+     "nom": "Porte des Banû Shayba",
+     "qualite": "un homme entre…",
+     "visible": false
+    },
+    {
+     "id": "pan",
+     "genre": "objet",
+     "x": 15,
+     "z": -25,
+     "nom": "Votre pan du manteau",
      "visible": false
     }
    ],
-   "foules": [
+   "accessoires": [
     {
-     "id": "passants",
-     "x": -20,
-     "z": 50,
-     "r": 14,
-     "n": 8,
-     "invite": "Parler"
-    },
-    {
-     "id": "clans",
-     "x": 2,
-     "z": 12,
-     "r": 7,
-     "n": 16,
-     "visible": false,
-     "errer": false,
-     "habits": [
-      "#7A2E3A",
-      "#2E4A6B",
-      "#4E6B3A",
-      "#8C6A2E",
-      "#5A4632"
-     ]
-    }
-   ],
-   "objets": [
-    {
-     "id": "pierre1",
-     "modele": "pierre",
-     "nom": "une pierre",
-     "x": -99,
-     "z": 6,
-     "invite": "Prendre une pierre"
-    }
-   ],
-   "lieux": [
-    {
-     "id": "pan",
-     "x": -4.1,
-     "z": 11.3,
-     "r": 2.2,
-     "invite": null,
-     "tenir": 3
+     "type": "lumiere",
+     "id": "lumiere",
+     "x": -30,
+     "z": -95,
+     "visible": false
     }
    ]
   }
@@ -1722,9 +206,7 @@
  "sequence": [
   {
    "type": "scene",
-   "scene": "makka",
-   "titre": "La Mecque",
-   "sous": "Vers 605, cinq ans avant la révélation"
+   "scene": "makka"
   },
   {
    "type": "recit",
@@ -1734,27 +216,7 @@
    "type": "faire",
    "actions": [
     {
-     "aller": "walid",
-     "vers": [
-      [
-       -6,
-       10
-      ]
-     ],
-     "vitesse": 1.2
-    },
-    {
-     "regarder": "pnj:walid",
-     "duree": 0.8
-    },
-    {
-     "geste": "walid"
-    },
-    {
-     "effet": "poussiere",
-     "x": -4,
-     "z": 6,
-     "s": 2
+     "regarder": "walid"
     }
    ]
   },
@@ -1768,45 +230,31 @@
    "texte": "Les gens attendent toute la nuit : s'il ne lui arrive rien, ils démoliront eux aussi. Au matin, al-Walîd est indemne. On abat les murs jusqu'aux fondations d'Ibrâhîm : de grosses pierres verdâtres, serrées comme des bosses de chameaux."
   },
   {
-   "type": "faire",
-   "actions": [
-    {
-     "fondu": true,
-     "texte": "Le lendemain",
-     "sous": "Vers 605, le lendemain"
-    },
-    {
-     "cacher": "kaba_ancienne"
-    },
-    {
-     "montrer": "fondations"
-    },
-    {
-     "aller": "walid",
-     "vers": [
-      [
-       -20,
-       26
-      ]
-     ],
-     "attendre": false
-    },
-    {
-     "pause": 500
-    },
-    {
-     "fondu": false
-    }
-   ]
-  },
-  {
    "type": "recit",
    "texte": "Selon Ibn Ishâq, Abû Wahb ibn 'Amr lance alors un avertissement : « Ô Quraysh, ne faites entrer dans sa construction que des biens purs : ni gain de prostitution, ni usure, ni bien arraché à quelqu'un. »"
   },
   {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": [
+      "preteur",
+      "tanneur",
+      "fort"
+     ]
+    },
+    {
+     "vue": {
+      "auto": true,
+      "cap": 200,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
    "type": "objectif",
-   "texte": "Votre clan doit fournir sa part. Au marché, trois hommes proposent leur argent : écoutez chacun d'eux.",
-   "cible": "zone:souk",
+   "texte": "Votre clan doit fournir sa part. Au marché, trois hommes proposent leur argent : écoutez chacun d'eux (cliquez sur leurs étiquettes).",
    "quand": {
     "tous": [
      "preteur",
@@ -1822,32 +270,36 @@
    "options": [
     {
      "texte": "Celui du marchand de cuir : un gain modeste, fait en vendant ses peaux au juste prix.",
-     "juste": true,
-     "suite": [
-      {
-       "type": "parole",
-       "qui": "tanneur",
-       "texte": "« Prends-le, et qu'il serve la Maison. Il n'est pas grand, mais il est propre. »"
-      }
-     ]
+     "juste": true
     },
     {
      "texte": "Celui du prêteur : son argent a doublé grâce aux intérêts réclamés aux pèlerins.",
+     "titre": "Un bien impur",
+     "consequence": "Et si l'on avait bâti la Maison avec l'argent de l'usure : Quraysh s'y était interdit. Faute de réunir assez de biens purs, les bâtisseurs laissèrent même une partie de l'ancienne Ka'ba hors des murs : le Hijr.",
+     "indice": "Selon Ibn Ishâq, Quraysh s'était engagé à ne bâtir la Maison qu'avec des biens purs.",
      "suite": [
       {
        "type": "faire",
        "actions": [
         {
-         "porter": "sac"
+         "porter": "usure"
+        },
+        {
+         "montrer": [
+          "ancien",
+          "chantier"
+         ]
         }
        ]
       },
       {
        "type": "objectif",
-       "texte": "Portez l'argent du prêteur aux bâtisseurs, près de la Ka'ba.",
-       "cible": "zone:chantier",
+       "texte": "Portez l'argent du prêteur aux bâtisseurs : remettez-le à l'ancien, près de la Ka'ba.",
        "quand": {
-        "zone": "chantier"
+        "donner": {
+         "objet": "usure",
+         "a": "ancien"
+        }
        }
       },
       {
@@ -1855,28 +307,36 @@
        "qui": "ancien",
        "texte": "D'où vient cet argent ? De l'usure ? Nous avons juré de ne bâtir la Maison qu'avec des biens purs. Remporte-le."
       }
-     ],
-     "titre": "Un bien impur",
-     "consequence": "Et si l'on avait bâti la Maison avec l'argent de l'usure : Quraysh s'y était interdit. Faute de réunir assez de biens purs, les bâtisseurs laissèrent même une partie de l'ancienne Ka'ba hors des murs : le Hijr.",
-     "indice": "Selon Ibn Ishâq, Quraysh s'était engagé à ne bâtir la Maison qu'avec des biens purs."
+     ]
     },
     {
      "texte": "Celui de l'homme puissant : il a pris la récolte d'un voisin trop faible pour la défendre.",
+     "titre": "Un bien arraché",
+     "consequence": "Et si l'on avait bâti la Maison avec un bien volé : même avant l'islam, Quraysh refusa d'y employer un bien pris par la force. La Maison ne se construit pas avec l'injustice.",
+     "indice": "Selon Ibn Ishâq, Quraysh s'était engagé à ne bâtir la Maison qu'avec des biens purs.",
      "suite": [
       {
        "type": "faire",
        "actions": [
         {
-         "porter": "sac"
+         "porter": "or"
+        },
+        {
+         "montrer": [
+          "ancien",
+          "chantier"
+         ]
         }
        ]
       },
       {
        "type": "objectif",
-       "texte": "Portez l'or de l'homme puissant aux bâtisseurs, près de la Ka'ba.",
-       "cible": "zone:chantier",
+       "texte": "Portez l'or de l'homme puissant aux bâtisseurs : remettez-le à l'ancien, près de la Ka'ba.",
        "quand": {
-        "zone": "chantier"
+        "donner": {
+         "objet": "or",
+         "a": "ancien"
+        }
        }
       },
       {
@@ -1884,17 +344,39 @@
        "qui": "ancien",
        "texte": "Cet or a été arraché à un faible. Il ne touchera pas une seule pierre de la Maison. Rends-le à celui qu'on a dépouillé."
       }
-     ],
-     "titre": "Un bien arraché",
-     "consequence": "Et si l'on avait bâti la Maison avec un bien volé : même avant l'islam, Quraysh refusa d'y employer un bien pris par la force. La Maison ne se construit pas avec l'injustice.",
-     "indice": "Selon Ibn Ishâq, Quraysh s'était engagé à ne bâtir la Maison qu'avec des biens purs."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": [
+      "preteur",
+      "tanneur",
+      "fort"
+     ]
+    },
+    {
+     "montrer": [
+      "ancien",
+      "chantier",
+      "pierre1"
+     ]
+    },
+    {
+     "vue": {
+      "auto": true,
+      "cap": 250,
+      "incl": 58
+     }
     }
    ]
   },
   {
    "type": "objectif",
-   "texte": "Les bâtisseurs manquent de pierres : allez en chercher une à la carrière, au pied de la montagne, à l'ouest.",
-   "cible": "objet:pierre1",
+   "texte": "Les bâtisseurs manquent de pierres : prenez-en une à la carrière, au pied de la montagne.",
    "quand": {
     "prendre": "pierre1",
     "porter": "pierre"
@@ -1902,45 +384,37 @@
   },
   {
    "type": "objectif",
-   "texte": "Portez la pierre jusqu'au chantier, près de la Ka'ba.",
-   "cible": "zone:chantier",
+   "texte": "Portez la pierre au chantier : remettez-la à l'ancien qui dirige les bâtisseurs.",
    "quand": {
-    "zone": "chantier"
-   }
+    "donner": {
+     "objet": "pierre",
+     "a": "ancien",
+     "sans": "Il nous faut des pierres : va d'abord à la carrière."
+    }
+   },
+   "reussite": "Une pierre de plus"
   },
   {
    "type": "faire",
    "actions": [
     {
-     "porter": null
-    },
-    {
-     "fondu": true,
-     "texte": "Des semaines plus tard",
-     "sous": "Vers 605, des semaines plus tard"
-    },
-    {
-     "cacher": "fondations"
+     "cacher": [
+      "pierre1"
+     ]
     },
     {
      "montrer": [
-      "kaba_chantier",
-      "clans",
-      "clan1"
+      "clan1",
+      "clan2"
      ]
     },
     {
-     "teleporter": [
-      -8,
-      22,
-      0
-     ]
-    },
-    {
-     "pause": 400
-    },
-    {
-     "fondu": false
+     "vue": {
+      "lieu": "makkah",
+      "r": 0.45,
+      "cap": 200,
+      "incl": 60
+     }
     }
    ]
   },
@@ -1963,29 +437,25 @@
    "options": [
     {
      "texte": "Soutenir l'idée du plus âgé de Quraysh : que le premier à franchir la porte des Banû Shayba départage les clans.",
-     "juste": true,
-     "suite": [
-      {
-       "type": "parole",
-       "qui": "ancien",
-       "texte": "« Prenez pour arbitre, dans ce qui vous divise, le premier qui entrera par cette porte. »"
-      }
-     ]
+     "juste": true
     },
     {
      "texte": "Plonger vous aussi la main dans le bol de sang, et jurer avec votre clan de ne jamais céder la Pierre.",
+     "titre": "Le sang au pied de la Maison",
+     "consequence": "Et si la dispute avait tourné au combat : une guerre entre clans, au pied de la Maison qu'on venait de rebâtir. Selon Ibn Ishâq, ce fut le conseil d'un ancien qui évita le sang.",
+     "indice": "Selon Ibn Ishâq, un ancien proposa de s'en remettre à un arbitre : le premier qui franchirait la porte.",
      "suite": [
       {
        "type": "recit",
        "texte": "Les clans se font face devant la Maison inachevée, la main sur la garde de l'épée. Un cri, une bousculade…"
       }
-     ],
-     "titre": "Le sang au pied de la Maison",
-     "consequence": "Et si la dispute avait tourné au combat : une guerre entre clans, au pied de la Maison qu'on venait de rebâtir. Selon Ibn Ishâq, ce fut le conseil d'un ancien qui évita le sang.",
-     "indice": "Selon Ibn Ishâq, un ancien proposa de s'en remettre à un arbitre : le premier qui franchirait la porte."
+     ]
     },
     {
      "texte": "Profiter de la nuit pour poser vous-même la Pierre à sa place, avant que les autres clans ne s'éveillent.",
+     "titre": "L'honneur volé",
+     "consequence": "Et si un clan avait pris l'honneur par la ruse : les autres y auraient vu une trahison, et la guerre aurait éclaté. Ce fut au contraire un arbitrage accepté de tous.",
+     "indice": "Selon Ibn Ishâq, un ancien proposa de s'en remettre à un arbitre : le premier qui franchirait la porte.",
      "suite": [
       {
        "type": "faire",
@@ -1998,19 +468,15 @@
       {
        "type": "objectif",
        "texte": "Approchez du chantier dans l'obscurité.",
-       "cible": "zone:chantier",
        "quand": {
-        "zone": "chantier"
+        "aller": "chantier"
        }
       },
       {
        "type": "recit",
        "texte": "Au matin, la Pierre est en place… Mais tout le monde a compris. Les autres clans crient à la trahison et l'arrachent du mur."
       }
-     ],
-     "titre": "L'honneur volé",
-     "consequence": "Et si un clan avait pris l'honneur par la ruse : les autres y auraient vu une trahison, et la guerre aurait éclaté. Ce fut au contraire un arbitrage accepté de tous.",
-     "indice": "Selon Ibn Ishâq, un ancien proposa de s'en remettre à un arbitre : le premier qui franchirait la porte."
+     ]
     }
    ]
   },
@@ -2018,15 +484,13 @@
    "type": "faire",
    "actions": [
     {
-     "regarder": [
-      20,
-      2.2,
-      -19
-     ],
-     "duree": 1.4
+     "montrer": [
+      "presence",
+      "lumiere"
+     ]
     },
     {
-     "montrer": "presence"
+     "regarder": "presence"
     },
     {
      "pause": 1200
@@ -2035,9 +499,8 @@
   },
   {
    "type": "recit",
-   "qui": "Quraysh",
-   "sous": "à la porte des Banû Shayba",
-   "texte": "Le premier à entrer est Muhammad ﷺ. « C'est al-Amîn ! s'écrient-ils. Nous l'acceptons : c'est Muhammad ! »"
+   "texte": "Le premier à entrer est Muhammad ﷺ. « C'est al-Amîn ! s'écrient-ils. Nous l'acceptons : c'est Muhammad ! »",
+   "qui": "Quraysh"
   },
   {
    "type": "recit",
@@ -2047,49 +510,37 @@
    "type": "faire",
    "actions": [
     {
-     "montrer": "manteau"
+     "montrer": "pan"
     },
     {
-     "inviter": "pan",
-     "texte": "Tenir votre pan du manteau"
-    },
-    {
-     "regarder": [
-      -2.5,
-      0.5,
-      9.5
-     ],
-     "duree": 1
+     "regarder": "pan"
     }
    ]
   },
   {
    "type": "objectif",
-   "texte": "Prenez votre pan du manteau et soulevez-le en même temps que les autres (maintenez E).",
-   "cible": "lieu:pan",
+   "texte": "Chaque clan tient un pan du manteau : maintenez le bouton pour soulever la Pierre en même temps que les autres.",
    "quand": {
-    "tenir": "pan",
-    "invocation": {
-     "titre": "Tous ensemble",
-     "fr": "Chaque clan tient un pan : personne ne porte la Pierre seul, et personne n'en est privé."
+    "tenir": {
+     "bouton": "Soulever votre pan du manteau",
+     "duree": 3.5,
+     "invocation": {
+      "titre": "Tous ensemble",
+      "fr": "Chaque clan tient un pan : personne ne porte la Pierre seul, et personne n'en est privé."
+     }
     }
-   }
+   },
+   "epreuve": true
   },
   {
    "type": "faire",
    "actions": [
     {
-     "inviter": "pan",
-     "texte": null
-    },
-    {
-     "effet": "monter",
-     "id": "manteau",
-     "dy": 1.1,
-     "duree": 2.5
-    },
-    {
-     "pause": 600
+     "cacher": [
+      "pan",
+      "clan1",
+      "clan2"
+     ]
     }
    ]
   },
@@ -2101,34 +552,10 @@
    "type": "faire",
    "actions": [
     {
-     "fondu": true,
-     "texte": "Quelques mois plus tard",
-     "sous": "Quelques mois plus tard"
-    },
-    {
      "cacher": [
-      "kaba_chantier",
-      "manteau",
       "presence",
-      "clans",
-      "clan1"
+      "lumiere"
      ]
-    },
-    {
-     "montrer": "kaba_neuve"
-    },
-    {
-     "teleporter": [
-      0,
-      32,
-      0
-     ]
-    },
-    {
-     "pause": 500
-    },
-    {
-     "fondu": false
     }
    ]
   },

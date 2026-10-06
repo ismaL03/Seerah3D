@@ -152,7 +152,6 @@
 
   <!-- Mode histoire : la Sîra en chapitres interactifs -->
   <section class="jeu" id="jeu" hidden aria-label="Mode histoire">
-    <div class="j-monde" id="jMonde"></div>
     <div class="cine haut"></div><div class="cine bas"></div>
     <canvas class="j-sable" id="jSable" aria-hidden="true"></canvas>
 
@@ -163,7 +162,7 @@
         <p class="j-sous" id="jtSous"></p>
         <div class="j-actions" id="jtActions"></div>
         <p class="j-stats" id="jtStats" hidden></p>
-        <p class="j-note">Vous êtes le chroniqueur : à chaque étape, retrouvez ce qui s'est réellement passé. Un mauvais choix brouille l'histoire : il faut alors remonter le temps. Dans les scènes à la première personne, les passants et les adversaires apparaissent en silhouettes sans visage ; le Prophète ﷺ, les prophètes, les Compagnons et sa famille ne sont jamais représentés. Textes en brouillon, à vérifier par un enseignant.</p>
+        <p class="j-note">Vous êtes le chroniqueur : à chaque étape, retrouvez ce qui s'est réellement passé. Un mauvais choix brouille l'histoire : il faut alors remonter le temps. Dans les missions, les personnes sont de simples étiquettes sur la carte : aucun personnage n'est représenté, et le Prophète ﷺ, les prophètes, les Compagnons et sa famille restent hors champ. Textes en brouillon, à vérifier par un enseignant.</p>
       </div>
     </div>
 
@@ -195,21 +194,22 @@
       <button class="j-btn petit" id="jIndiceBtn">Indice</button>
     </div>
 
-    <!-- scènes à la première personne -->
+    <!-- missions, jouées sur la carte -->
     <div class="j-objectif" id="jObjectif" hidden>
       <small id="joMission"></small>
       <b id="joTexte"></b>
       <span class="j-compteur" id="joCompteur" hidden></span>
+      <div class="j-sac" id="joSac" hidden></div>
+      <button class="j-tenir" id="joTenir" hidden><i></i><span>Maintenir pour invoquer</span><kbd>Espace</kbd></button>
       <button class="j-guider" id="joGuider" hidden>Me guider</button>
     </div>
-    <div class="j-commandes" id="jCommandes" hidden></div>
     <div class="j-role" id="jRole" hidden>
       <small>Vous incarnez</small>
       <h3 id="jrNom"></h3>
       <div class="j-ar" lang="ar" id="jrAr"></div>
       <p id="jrTexte"></p>
       <p class="j-regle" id="jrRegle"></p>
-      <dl class="j-touches" id="jrTouches"></dl>
+      <p class="j-touches">Cliquez sur les étiquettes de la carte pour parler à une personne, vous rendre en un lieu ou prendre un objet. La caméra suit la scène ; vous pouvez aussi la tourner et zoomer.</p>
       <button class="j-btn or" id="jrGo">Commencer</button>
     </div>
     <div class="j-invoc" id="jInvoc" hidden>

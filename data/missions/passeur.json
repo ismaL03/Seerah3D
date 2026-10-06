@@ -1,5 +1,5 @@
 {
- "_lisez_moi": "Mission à la première personne. Coordonnées en mètres : x vers l'est, z vers le sud ; cap en degrés (0 = nord). Brouillon à vérifier.",
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
  "id": "passeur",
  "titre": "Le passeur de Shu'ayba",
  "statut": "à vérifier",
@@ -19,7 +19,7 @@
   "nom": "Un patron de navire",
   "nom_ar": "صاحب سفينة",
   "texte": "Vous commandez un navire marchand qui fait la traversée vers l'Abyssinie. Ce matin, des passagers inhabituels sont montés à bord. Ils vous ont payé, ils vous font confiance : à vous d'en être digne.",
-  "regle": "Les voyageurs, des Compagnons, ne sont jamais montrés : ils restent sous la toile, hors champ. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+  "regle": "Les émigrés, Compagnons du Prophète ﷺ, ne sont jamais montrés : ils restent sous la toile. Les personnes sont des étiquettes sur la carte. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
  },
  "personnages": {
   "marin": {
@@ -33,6 +33,10 @@
   "pecheurs": {
    "nom": "Un pêcheur",
    "qualite": "Shu'ayba"
+  },
+  "poursuivants": {
+   "nom": "Des hommes de Quraysh",
+   "qualite": "à cheval"
   }
  },
  "dialogues": {
@@ -45,352 +49,125 @@
    "Tout est prêt, patron. Il ne manque que l'eau douce."
   ]
  },
+ "objets": {
+  "outre": {
+   "nom": "L'outre d'eau douce"
+  }
+ },
  "scenes": {
   "port": {
-   "titre": "Shu'ayba",
-   "taille": 560,
-   "limites": [
-    -290,
-    -150,
-    140,
-    150
-   ],
+   "titre": "Shu'ayba, sur la mer Rouge",
+   "sous": "Rajab, an 5 de la mission (vers 615)",
    "ambiance": "aube",
-   "depart": {
-    "x": 12,
-    "z": 4,
-    "cap": 270
+   "epoque": "habasha",
+   "origine": [
+    20.85,
+    39.398
+   ],
+   "vue": {
+    "auto": true,
+    "cap": 260,
+    "incl": 58
    },
-   "elements": [
+   "reperes": [
     {
-     "type": "mer",
-     "x1": -600,
-     "z1": -400,
-     "x2": -20,
-     "z2": 400,
-     "pente": 12
-    },
-    {
-     "type": "colline",
-     "x": 120,
-     "z": -60,
-     "r": 50,
-     "h": 18
-    },
-    {
-     "type": "colline",
-     "x": 140,
-     "z": 70,
-     "r": 60,
-     "h": 22
-    },
-    {
-     "type": "montagne",
-     "x": 260,
-     "z": 0,
-     "r": 90,
-     "h": 90,
-     "c": "#A3825F"
-    },
-    {
-     "type": "bateau",
-     "id": "navire",
-     "x": -36,
-     "z": 0,
-     "r": 90,
-     "s": 2.4
-    },
-    {
-     "type": "bateau",
-     "x": -40,
-     "z": 24,
-     "r": 80,
-     "s": 2.4
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       80,
-       4
-      ],
-      [
-       20,
-       2
-      ],
-      [
-       -14,
-       0
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "maison",
-     "x": 14,
-     "z": -18,
-     "w": 6,
-     "d": 5,
-     "h": 3,
-     "r": 90
-    },
-    {
-     "type": "maison",
-     "x": 22,
-     "z": 20,
-     "w": 7,
-     "d": 6,
-     "h": 3.2,
-     "r": 90
-    },
-    {
-     "type": "maison",
-     "x": 34,
-     "z": -30,
-     "w": 5,
-     "d": 5,
-     "h": 3,
-     "r": 120
-    },
-    {
-     "type": "tente",
-     "x": 6,
-     "z": 26,
-     "w": 4,
-     "d": 5,
-     "h": 2.3,
-     "r": 90,
-     "c": "#D6C39C"
-    },
-    {
-     "type": "jarre",
-     "x": -6,
-     "z": -6
-    },
-    {
-     "type": "jarre",
-     "x": -5.2,
-     "z": -6.8
-    },
-    {
-     "type": "jarre",
-     "x": -6.6,
-     "z": -7.6
-    },
-    {
-     "type": "boite",
-     "x": -4,
-     "z": 8,
-     "w": 1.2,
-     "d": 1.2,
-     "h": 0.9,
-     "c": "#8B6A47"
-    },
-    {
-     "type": "boite",
-     "x": -2.6,
-     "z": 8.4,
-     "w": 1,
-     "d": 1,
-     "h": 0.8,
-     "c": "#7A5634"
-    },
-    {
-     "type": "palmier",
-     "x": 8,
-     "z": -30
-    },
-    {
-     "type": "palmier",
-     "x": 18,
+     "id": "marin",
+     "genre": "personne",
+     "x": -260,
      "z": 40
     },
     {
-     "type": "palmier",
-     "x": 30,
-     "z": 8
+     "id": "outre",
+     "genre": "objet",
+     "x": 120,
+     "z": -60,
+     "nom": "Une outre d'eau douce"
     },
     {
-     "type": "palmier",
-     "x": 40,
-     "z": 30
-    },
-    {
-     "type": "zone",
-     "id": "greve",
-     "x": -16,
-     "z": 0,
-     "r": 5
-    },
-    {
-     "type": "zone",
-     "id": "large",
-     "x": -250,
-     "z": 0,
-     "r": 40
-    },
-    {
-     "type": "recif",
-     "id": "recif0",
-     "x": -70,
-     "z": -16,
-     "r": 8.868705084669106
-    },
-    {
-     "type": "recif",
-     "id": "recif1",
-     "x": -74,
-     "z": 18,
-     "r": 9.225360967782187
-    },
-    {
-     "type": "recif",
-     "id": "recif2",
-     "x": -104,
-     "z": -30,
-     "r": 9.38558069669709
-    },
-    {
-     "type": "recif",
-     "id": "recif3",
-     "x": -110,
-     "z": 4,
-     "r": 9.82735085133115
-    },
-    {
-     "type": "recif",
-     "id": "recif4",
-     "x": -118,
-     "z": 26,
-     "r": 9.219695724219793
-    },
-    {
-     "type": "recif",
-     "id": "recif5",
-     "x": -142,
-     "z": -10,
-     "r": 9.766974989996251
-    },
-    {
-     "type": "recif",
-     "id": "recif6",
-     "x": -150,
+     "id": "navire",
+     "genre": "lieu",
+     "x": -520,
      "z": 30,
-     "r": 7.0870156848508445
-    },
-    {
-     "type": "recif",
-     "id": "recif7",
-     "x": -176,
-     "z": -34,
-     "r": 8.396867963134316
-    },
-    {
-     "type": "recif",
-     "id": "recif8",
-     "x": -184,
-     "z": 8,
-     "r": 9.830070150994942
-    },
-    {
-     "type": "recif",
-     "id": "recif9",
-     "x": -206,
-     "z": -20,
-     "r": 8.946923659410773
-    },
-    {
-     "type": "recif",
-     "id": "recif10",
-     "x": -210,
-     "z": 34,
-     "r": 9.702701475251867
-    }
-   ],
-   "pnj": [
-    {
-     "id": "marin",
-     "nom": "Votre marin",
-     "x": -10,
-     "z": 3,
-     "cap": 90,
-     "habit": "#4E5A63",
-     "coiffe": "#E2D6BF",
-     "invite": "Parler au marin"
-    },
-    {
-     "id": "chef",
-     "nom": "Un homme de Quraysh",
-     "x": 70,
-     "z": 6,
-     "cap": 270,
-     "habit": "#5B2333",
-     "visible": false
-    },
-    {
-     "id": "cheval1",
-     "modele": "cheval",
-     "x": 74,
-     "z": 10,
-     "cap": 270,
-     "visible": false,
-     "robe": 0
-    },
-    {
-     "id": "cheval2",
-     "modele": "cheval",
-     "x": 76,
-     "z": 2,
-     "cap": 270,
-     "visible": false,
-     "robe": 1
-    }
-   ],
-   "foules": [
-    {
-     "id": "poursuivants",
-     "x": 74,
-     "z": 6,
-     "r": 3,
-     "n": 3,
-     "visible": false,
-     "errer": false,
-     "habits": [
-      "#3A3F4A",
-      "#5E4B3B",
-      "#4A3A30"
-     ]
+     "nom": "Votre navire"
     },
     {
      "id": "pecheurs",
-     "x": 0,
-     "z": -20,
-     "r": 8,
-     "n": 4,
-     "invite": "Parler",
-     "habits": [
-      "#8A7A62",
-      "#6B5A48"
-     ]
+     "genre": "personne",
+     "x": 60,
+     "z": 160
+    },
+    {
+     "id": "toile",
+     "genre": "lieu",
+     "x": -560,
+     "z": 60,
+     "nom": "La toile, à bord",
+     "visible": false
+    },
+    {
+     "id": "chef",
+     "genre": "personne",
+     "x": 900,
+     "z": -200,
+     "visible": false
+    },
+    {
+     "id": "poursuivants",
+     "genre": "personne",
+     "x": 980,
+     "z": -150,
+     "nom": "Des hommes de Quraysh",
+     "qualite": "à cheval",
+     "visible": false
+    },
+    {
+     "id": "chenal",
+     "genre": "lieu",
+     "x": -1300,
+     "z": -200,
+     "nom": "Le chenal d'eau sombre",
+     "visible": false
+    },
+    {
+     "id": "recifs",
+     "genre": "lieu",
+     "x": -1150,
+     "z": 250,
+     "nom": "Au ras de l'écume blanche",
+     "visible": false
     }
    ],
-   "objets": [
+   "accessoires": [
     {
-     "id": "outre",
-     "modele": "outre",
-     "nom": "l'outre",
-     "x": -5,
-     "z": -8.5,
-     "invite": "Prendre l'outre d'eau douce"
-    }
-   ],
-   "lieux": [
+     "type": "bateau",
+     "id": "bateau",
+     "x": -520,
+     "z": 30,
+     "cap": 270
+    },
     {
-     "id": "bord",
-     "x": -18,
-     "z": 0,
-     "r": 3.4,
-     "invite": null
+     "type": "bateau",
+     "x": -640,
+     "z": -160,
+     "cap": 250
+    },
+    {
+     "type": "troupeau",
+     "id": "chevaux",
+     "x": 900,
+     "z": -180,
+     "rayon": 60,
+     "n": 5,
+     "chevaux": true,
+     "visible": false
+    },
+    {
+     "type": "tentes",
+     "x": 160,
+     "z": 60,
+     "rayon": 120,
+     "n": 6,
+     "couleur": "#C9B48C"
     }
    ]
   }
@@ -398,9 +175,7 @@
  "sequence": [
   {
    "type": "scene",
-   "scene": "port",
-   "titre": "Shu'ayba, sur la mer Rouge",
-   "sous": "Rajab, an 5 de la mission (vers 615)"
+   "scene": "port"
   },
   {
    "type": "recit",
@@ -408,8 +183,7 @@
   },
   {
    "type": "objectif",
-   "texte": "Allez voir votre marin, près du navire.",
-   "cible": "pnj:marin",
+   "texte": "Allez voir votre marin, près du navire : cliquez sur son étiquette.",
    "quand": {
     "parler": "marin"
    }
@@ -422,7 +196,6 @@
   {
    "type": "objectif",
    "texte": "Prenez l'outre d'eau douce, près des jarres.",
-   "cible": "objet:outre",
    "quand": {
     "prendre": "outre",
     "porter": "outre"
@@ -430,71 +203,66 @@
   },
   {
    "type": "objectif",
-   "texte": "Portez-la jusqu'au navire, sur la grève.",
-   "cible": "zone:greve",
+   "texte": "Portez-la au navire : cliquez sur votre navire.",
    "quand": {
-    "zone": "greve"
+    "donner": {
+     "objet": "outre",
+     "a": "navire",
+     "sans": "Il manque encore l'eau douce."
+    }
    }
   },
   {
    "type": "faire",
    "actions": [
     {
-     "porter": null
-    },
-    {
      "montrer": [
       "chef",
       "poursuivants",
-      "cheval1",
-      "cheval2"
+      "chevaux"
      ]
     },
     {
-     "regarder": [
-      60,
-      1.6,
-      6
-     ],
-     "duree": 1
+     "convoi": {
+      "type": "poursuite",
+      "etapes": [
+       [
+        21.0,
+        39.62
+       ],
+       [
+        20.86,
+        39.45
+       ],
+       [
+        20.85,
+        39.398
+       ]
+      ]
+     }
     },
     {
-     "aller": "poursuivants",
-     "vers": [
-      [
-       -2,
-       10
-      ]
-     ],
-     "vitesse": 3.2,
-     "attendre": false
+     "vue": {
+      "auto": true,
+      "cap": 260,
+      "incl": 55
+     }
     },
     {
-     "aller": "cheval1",
-     "vers": [
-      [
-       2,
-       14
-      ]
-     ],
-     "vitesse": 3.2,
-     "attendre": false
+     "pause": 2200
     },
     {
-     "aller": "cheval2",
-     "vers": [
-      [
-       3,
-       8
-      ]
-     ],
-     "vitesse": 3.2,
-     "attendre": false
+     "convoi": null
     },
     {
      "aller": "chef",
-     "vers": "joueur",
-     "vitesse": 3.2
+     "vers": [
+      {
+       "x": -150,
+       "z": -20
+      }
+     ],
+     "duree": 2.5
     }
    ]
   },
@@ -505,100 +273,33 @@
   },
   {
    "type": "choix",
-   "qui": "chef",
    "question": "Que répondez-vous ?",
    "options": [
     {
      "texte": "« Ceux qui montent sur mon navire ont payé leur passage et se sont confiés à moi. Je ne livre personne. »",
-     "juste": true,
-     "suite": [
-      {
-       "type": "parole",
-       "qui": "chef",
-       "texte": "Nous les trouverons bien, avec ou sans toi ! Fouillez la côte vers le sud !"
-      },
-      {
-       "type": "faire",
-       "actions": [
-        {
-         "aller": "poursuivants",
-         "vers": [
-          [
-           10,
-           60
-          ],
-          [
-           20,
-           140
-          ]
-         ],
-         "vitesse": 2.6,
-         "attendre": false
-        },
-        {
-         "aller": "chef",
-         "vers": [
-          [
-           12,
-           60
-          ],
-          [
-           22,
-           140
-          ]
-         ],
-         "vitesse": 2.6,
-         "attendre": false
-        },
-        {
-         "aller": "cheval1",
-         "vers": [
-          [
-           14,
-           60
-          ],
-          [
-           24,
-           140
-          ]
-         ],
-         "vitesse": 2.6,
-         "attendre": false
-        },
-        {
-         "aller": "cheval2",
-         "vers": [
-          [
-           16,
-           60
-          ],
-          [
-           26,
-           140
-          ]
-         ],
-         "vitesse": 2.6,
-         "attendre": false
-        }
-       ]
-      }
-     ]
+     "juste": true
     },
     {
      "texte": "Prendre la récompense, et désigner d'un signe de tête la toile sous laquelle se cachent les voyageurs.",
+     "titre": "Le passeur a vendu ses passagers",
+     "consequence": "Et si le passeur les avait livrés : ramenés de force à La Mecque, ils auraient subi de nouveau la persécution. L'histoire fut autre : selon Ibn Sa'd, les hommes de Quraysh arrivèrent au rivage quand les navires avaient déjà pris la mer.",
+     "indice": "Un marin honnête ne livre pas ceux qui se sont confiés à lui.",
      "suite": [
       {
        "type": "faire",
        "actions": [
         {
+         "montrer": "toile"
+        },
+        {
          "aller": "poursuivants",
          "vers": [
-          [
-           -17,
-           2
-          ]
+          {
+           "x": -480,
+           "z": 50
+          }
          ],
-         "vitesse": 3.2
+         "duree": 2.5
         }
        ]
       },
@@ -607,13 +308,13 @@
        "qui": "chef",
        "texte": "Les voilà ! Faites-les descendre, ils rentrent à La Mecque avec nous !"
       }
-     ],
-     "titre": "Le passeur a vendu ses passagers",
-     "consequence": "Et si le passeur les avait livrés : ramenés de force à La Mecque, ils auraient subi de nouveau la persécution. L'histoire fut autre : selon Ibn Sa'd, les hommes de Quraysh arrivèrent au rivage quand les navires avaient déjà pris la mer.",
-     "indice": "Un marin honnête ne livre pas ceux qui se sont confiés à lui."
+     ]
     },
     {
      "texte": "Faire monter les enchères : « Combien, pour ce renseignement ? » et attendre de voir qui paiera le plus.",
+     "titre": "L'hésitation qui trahit",
+     "consequence": "Et si le passeur avait marchandé : son hésitation l'aurait trahi, et les voyageurs auraient été découverts. Selon Ibn Sa'd, ils partirent au contraire sans être rattrapés : Quraysh arriva trop tard.",
+     "indice": "Un marin honnête ne livre pas ceux qui se sont confiés à lui.",
      "suite": [
       {
        "type": "parole",
@@ -626,81 +327,125 @@
         {
          "aller": "poursuivants",
          "vers": [
-          [
-           -17,
-           2
-          ]
+          {
+           "x": -480,
+           "z": 50
+          }
          ],
-         "vitesse": 3.2
+         "duree": 2.5
         }
        ]
       }
-     ],
-     "titre": "L'hésitation qui trahit",
-     "consequence": "Et si le passeur avait marchandé : son hésitation l'aurait trahi, et les voyageurs auraient été découverts. Selon Ibn Sa'd, ils partirent au contraire sans être rattrapés : Quraysh arriva trop tard.",
-     "indice": "Un marin honnête ne livre pas ceux qui se sont confiés à lui."
+     ]
     }
-   ]
+   ],
+   "qui": "chef"
   },
   {
    "type": "faire",
    "actions": [
     {
-     "inviter": "bord",
-     "texte": "Monter à bord"
+     "cacher": [
+      "pecheurs"
+     ]
     }
    ]
   },
   {
    "type": "objectif",
-   "texte": "Montez à bord et larguez les amarres.",
-   "cible": "lieu:bord",
+   "texte": "Montez à bord et larguez les amarres : cliquez sur votre navire.",
    "quand": {
-    "utiliser": "bord"
+    "aller": "navire"
    }
   },
   {
    "type": "faire",
    "actions": [
     {
-     "inviter": "bord",
-     "texte": null
-    },
-    {
-     "cacher": "navire"
-    },
-    {
-     "teleporter": [
-      -31.5,
-      0,
-      270
+     "montrer": [
+      "chenal",
+      "recifs"
      ]
     },
     {
-     "bateau": true,
-     "vitesse": 7
+     "vue": {
+      "auto": true,
+      "cap": 270,
+      "incl": 52
+     }
     }
    ]
   },
   {
    "type": "recit",
-   "texte": "Vous tenez la barre. Z pour gonfler la voile, S pour ralentir, Q et D pour tourner. Les récifs affleurent : l'écume blanche les trahit. Gardez le chenal d'eau sombre."
+   "texte": "Les récifs affleurent à la sortie du port : l'écume blanche les trahit, l'eau sombre est sûre. Il faut choisir son passage."
   },
   {
    "type": "objectif",
-   "epreuve": true,
-   "texte": "Sortez vers le large, à l'ouest, sans heurter les récifs.",
-   "cible": "zone:large",
+   "texte": "Sortez vers le large, à l'ouest : choisissez le passage.",
    "quand": {
-    "zone": "large"
+    "aller": "chenal"
    },
-   "reussite": "Au large !",
    "echecs": [
     {
-     "recif": true,
+     "repere": "recifs",
      "titre": "Le récif",
      "consequence": "Et si le navire avait heurté un récif : coque ouverte, passagers à l'eau, et les poursuivants sur la grève. Les marins de la mer Rouge connaissaient ses récifs ; ce jour-là, les deux navires passèrent.",
-     "indice": "Ralentissez (S) avant les passages étroits et visez l'eau sombre, entre les écumes."
+     "indice": "L'écume blanche trahit les récifs ; l'eau sombre est sûre.",
+     "suite": [
+      {
+       "type": "recit",
+       "texte": "Un raclement sourd sous la coque. Le navire s'immobilise, penché, à deux encablures du rivage. Sur la grève, les cavaliers mettent pied à terre."
+      }
+     ]
+    }
+   ],
+   "epreuve": true,
+   "reussite": "Au large !"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": [
+      "chenal",
+      "recifs",
+      "navire",
+      "toile",
+      "marin",
+      "bateau"
+     ]
+    },
+    {
+     "convoi": {
+      "type": "mer",
+      "etapes": [
+       [
+        20.85,
+        39.398
+       ],
+       [
+        20.8,
+        38.6
+       ],
+       "habasha"
+      ]
+     }
+    },
+    {
+     "vue": {
+      "point": [
+       20.8,
+       39.1
+      ],
+      "r": 120,
+      "cap": 260,
+      "incl": 40
+     },
+     "duree": 3000
+    },
+    {
+     "pause": 2600
     }
    ]
   },
@@ -711,6 +456,14 @@
   {
    "type": "recit",
    "texte": "Ce furent les premiers émigrés de l'islam. En Abyssinie, auprès du Négus, un roi chrétien réputé pour sa justice, ils trouvèrent la sécurité qu'on leur refusait à La Mecque."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "convoi": null
+    }
+   ]
   }
  ],
  "fin": "Cap sur l'Abyssinie"

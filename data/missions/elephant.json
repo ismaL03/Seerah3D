@@ -1,5 +1,5 @@
 {
- "_lisez_moi": "Mission à la première personne (moteur src/monde.js, interprète src/mission.js). Coordonnées en mètres : x vers l'est, z vers le sud ; cap en degrés de boussole (0 = nord). Statut : brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
  "id": "elephant",
  "titre": "Le maître des chameaux",
  "statut": "à vérifier",
@@ -19,7 +19,7 @@
   "nom": "'Abd al-Muttalib",
   "nom_ar": "عبد المطلب",
   "texte": "Seigneur de Quraysh et gardien du puits de Zamzam, vous êtes le grand-père de celui qui naîtra cette année. Une armée venue du Yémen campe aux portes de la ville : à vous de réclamer votre bien avec dignité, puis de protéger les vôtres.",
-  "regle": "Vous jouez un personnage réel, sans jamais le voir. Les personnes croisées sont des silhouettes sans visage. Les paroles des personnages historiques suivent les récits d'Ibn Ishâq ; les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+  "regle": "Vous jouez un personnage réel, sans jamais le voir : les personnes sont des étiquettes sur la carte. Les paroles des personnages historiques suivent les récits d'Ibn Ishâq ; les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
  },
  "personnages": {
   "hunata": {
@@ -84,7 +84,11 @@
   },
   "chameaux": {
    "nom": "Vos chameaux",
-   "qualite": ""
+   "qualite": "deux cents bêtes"
+  },
+  "mahmud": {
+   "nom": "Mahmûd",
+   "qualite": "l'éléphant d'Abraha"
   }
  },
  "dialogues": {
@@ -104,2130 +108,293 @@
   ],
   "chameaux": [
    "Vos bêtes, marquées à votre nom. Il faut obtenir l'accord du roi pour les reprendre."
+  ],
+  "mahmud": [
+   "Un éléphant ! Aucun Arabe n'en avait jamais vu. On dit qu'il s'appelle Mahmûd et qu'il marche en tête de l'armée."
   ]
  },
  "scenes": {
   "makka": {
    "titre": "La Mecque",
-   "taille": 420,
-   "limites": [
-    -150,
-    -150,
-    150,
-    150
-   ],
+   "sous": "L'année de l'Éléphant · vers 570",
    "ambiance": "jour",
-   "depart": {
-    "x": 0,
-    "z": 40,
-    "cap": 0
+   "epoque": "naissance",
+   "origine": "makkah",
+   "vue": {
+    "auto": true,
+    "cap": 160,
+    "incl": 58
    },
-   "elements": [
+   "reperes": [
     {
-     "type": "kaba",
-     "id": "kaba",
-     "x": 0,
-     "z": 0,
-     "h": 4.6,
-     "reconstruite": false,
-     "r": -135
+     "id": "berger",
+     "genre": "personne",
+     "x": -260,
+     "z": 380
     },
     {
-     "type": "puits",
-     "id": "zamzam",
-     "x": 18,
-     "z": 2
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       0
-      ],
-      [
-       0,
-       -160
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       0
-      ],
-      [
-       0,
-       160
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       0
-      ],
-      [
-       -160,
-       0
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       0
-      ],
-      [
-       160,
-       0
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "montagne",
-     "x": 205,
-     "z": -95,
-     "r": 85,
-     "h": 105
-    },
-    {
-     "type": "montagne",
-     "x": 175,
-     "z": 165,
-     "r": 70,
-     "h": 60,
-     "c": "#A3825F"
-    },
-    {
-     "type": "montagne",
-     "x": -215,
-     "z": -20,
-     "r": 95,
-     "h": 115
-    },
-    {
-     "type": "montagne",
-     "x": -40,
-     "z": -245,
-     "r": 110,
-     "h": 85,
-     "c": "#9E7E5E"
-    },
-    {
-     "type": "montagne",
-     "x": -70,
-     "z": 235,
-     "r": 100,
-     "h": 70,
-     "c": "#A3825F"
-    },
-    {
-     "type": "acacia",
-     "x": -60,
-     "z": 70
-    },
-    {
-     "type": "acacia",
-     "x": 95,
-     "z": 60
-    },
-    {
-     "type": "acacia",
-     "x": -90,
+     "id": "hunata",
+     "genre": "personne",
+     "x": 70,
      "z": -60
     },
     {
-     "type": "jarre",
-     "x": 21,
-     "z": 4
-    },
-    {
-     "type": "jarre",
-     "x": 21.6,
-     "z": 5.2
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       0
-      ],
-      [
-       40,
-       -4
-      ],
-      [
-       66,
-       -10
-      ],
-      [
-       76,
-       -34
-      ],
-      [
-       74,
-       -60
-      ],
-      [
-       70,
-       -82
-      ]
-     ],
-     "l": 3
-    },
-    {
-     "type": "chemin",
-     "points": [
-      [
-       40,
-       -4
-      ],
-      [
-       100,
-       18
-      ],
-      [
-       170,
-       30
-      ]
-     ],
-     "l": 4
-    },
-    {
-     "type": "cairn",
-     "x": 60,
-     "z": -6
-    },
-    {
-     "type": "cairn",
-     "x": 78,
-     "z": -32
-    },
-    {
-     "type": "cairn",
-     "x": 77,
-     "z": -58
-    },
-    {
-     "type": "colline",
-     "x": 70,
-     "z": -85,
-     "r": 26,
-     "h": 18
-    },
-    {
-     "type": "colline",
-     "x": -40,
-     "z": 120,
-     "r": 30,
-     "h": 10
-    },
-    {
-     "type": "ravin",
-     "id": "ravin",
-     "de": [
-      12,
-      -58
-     ],
-     "a": [
-      55,
-      -22
-     ],
-     "largeur": 8,
-     "profondeur": 9
-    },
-    {
-     "type": "rochers",
-     "x": 22,
-     "z": -52,
-     "r": 6,
-     "n": 8,
-     "s": 1.0
-    },
-    {
-     "type": "rochers",
-     "x": 46,
-     "z": -28,
-     "r": 6,
-     "n": 8,
-     "s": 1.0
-    },
-    {
-     "type": "rochers",
-     "x": 64,
-     "z": -100,
-     "r": 14,
-     "n": 14,
-     "s": 1.3
-    },
-    {
-     "type": "feu",
-     "id": "feu1",
-     "x": -14,
-     "z": 17
-    },
-    {
-     "type": "feu",
-     "id": "feu2",
-     "x": 15,
-     "z": 19
-    },
-    {
-     "type": "zone",
-     "id": "refuge",
-     "x": 70,
-     "z": -85,
-     "r": 8
-    },
-    {
-     "type": "maison",
-     "x": 9.8,
-     "z": -28.3,
-     "w": 5.2,
-     "d": 6.6,
-     "h": 3.5,
-     "r": 19,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 17.3,
-     "z": -24.5,
-     "w": 6.5,
-     "d": 5.1,
-     "h": 3.6,
-     "r": 35,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 24.2,
-     "z": -17.7,
-     "w": 5.3,
-     "d": 6.3,
-     "h": 4.2,
-     "r": 54,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 28.5,
-     "z": 9.3,
-     "w": 6.2,
-     "d": 7.9,
-     "h": 3.1,
-     "r": 108
-    },
-    {
-     "type": "maison",
-     "x": 24.3,
-     "z": 17.6,
-     "w": 5.9,
-     "d": 5.4,
-     "h": 3.2,
-     "r": 126
-    },
-    {
-     "type": "maison",
-     "x": 18.0,
-     "z": 24.0,
-     "w": 7.4,
-     "d": 5.5,
-     "h": 3.8,
-     "r": 143
-    },
-    {
-     "type": "maison",
-     "x": 8.5,
-     "z": 28.8,
-     "w": 6.1,
-     "d": 6.6,
-     "h": 3.1,
-     "r": 164,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -9.4,
-     "z": 28.5,
-     "w": 6.3,
-     "d": 5.9,
-     "h": 3.8,
-     "r": 198
-    },
-    {
-     "type": "maison",
-     "x": -17.8,
-     "z": 24.2,
-     "w": 5.9,
-     "d": 7.4,
-     "h": 4.0,
-     "r": 216
-    },
-    {
-     "type": "maison",
-     "x": -24.2,
-     "z": 17.8,
-     "w": 6.7,
-     "d": 6.6,
-     "h": 4.2,
-     "r": 234
-    },
-    {
-     "type": "maison",
-     "x": -28.6,
-     "z": 9.0,
-     "w": 5.9,
-     "d": 7.9,
-     "h": 3.2,
-     "r": 253
-    },
-    {
-     "type": "maison",
-     "x": -28.2,
-     "z": -10.2,
-     "w": 6.5,
-     "d": 5.1,
-     "h": 3.9,
-     "r": 290
-    },
-    {
-     "type": "maison",
-     "x": -23.5,
-     "z": -18.6,
-     "w": 6.7,
-     "d": 7.6,
-     "h": 3.4,
-     "r": 308
-    },
-    {
-     "type": "maison",
-     "x": -16.2,
-     "z": -25.3,
-     "w": 6.8,
-     "d": 6.7,
-     "h": 3.6,
-     "r": 327
-    },
-    {
-     "type": "maison",
-     "x": -7.0,
-     "z": -29.2,
-     "w": 7.8,
-     "d": 6.4,
-     "h": 3.9,
-     "r": 346,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 14.2,
-     "z": -41.6,
-     "w": 7.5,
-     "d": 5.9,
-     "h": 3.5,
-     "r": 19
-    },
-    {
-     "type": "maison",
-     "x": 36.0,
-     "z": -25.4,
-     "w": 5.2,
-     "d": 7.3,
-     "h": 3.2,
-     "r": 55
-    },
-    {
-     "type": "maison",
-     "x": 40.1,
-     "z": -18.1,
-     "w": 6.2,
-     "d": 7.6,
-     "h": 3.1,
-     "r": 66
-    },
-    {
-     "type": "maison",
-     "x": 42.6,
-     "z": 11.1,
-     "w": 5.8,
-     "d": 6.2,
-     "h": 3.5,
-     "r": 105
-    },
-    {
-     "type": "maison",
-     "x": 39.4,
-     "z": 19.6,
-     "w": 7.9,
-     "d": 5.5,
-     "h": 3.2,
-     "r": 116
-    },
-    {
-     "type": "maison",
-     "x": 33.3,
-     "z": 28.8,
-     "w": 5.7,
-     "d": 6.5,
-     "h": 3.8,
-     "r": 131
-    },
-    {
-     "type": "maison",
-     "x": 26.8,
-     "z": 34.9,
-     "w": 5.0,
-     "d": 6.3,
-     "h": 3.5,
-     "r": 142
-    },
-    {
-     "type": "maison",
-     "x": 19.9,
-     "z": 39.2,
-     "w": 7.9,
-     "d": 7.1,
-     "h": 3.7,
-     "r": 153
-    },
-    {
-     "type": "maison",
-     "x": 9.5,
-     "z": 43.0,
-     "w": 7.0,
-     "d": 5.2,
-     "h": 4.3,
-     "r": 167
-    },
-    {
-     "type": "maison",
-     "x": -11.3,
-     "z": 42.5,
-     "w": 6.2,
-     "d": 6.2,
-     "h": 3.1,
-     "r": 195
-    },
-    {
-     "type": "maison",
-     "x": -20.1,
-     "z": 39.2,
-     "w": 5.2,
-     "d": 5.2,
-     "h": 3.3,
-     "r": 207,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -27.1,
-     "z": 34.7,
-     "w": 6.0,
-     "d": 5.2,
-     "h": 3.0,
-     "r": 218,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -33.7,
-     "z": 28.3,
-     "w": 5.3,
-     "d": 6.1,
-     "h": 3.0,
-     "r": 230
-    },
-    {
-     "type": "maison",
-     "x": -38.5,
-     "z": 21.3,
-     "w": 6.8,
-     "d": 5.4,
-     "h": 3.4,
-     "r": 241
-    },
-    {
-     "type": "maison",
-     "x": -42.3,
-     "z": 12.0,
-     "w": 6.1,
-     "d": 5.4,
-     "h": 4.2,
-     "r": 254
-    },
-    {
-     "type": "maison",
-     "x": -41.4,
-     "z": -14.9,
-     "w": 6.0,
-     "d": 5.8,
-     "h": 4.2,
-     "r": 290,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -37.4,
-     "z": -23.2,
-     "w": 5.1,
-     "d": 7.9,
-     "h": 3.7,
-     "r": 302,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -32.4,
-     "z": -29.8,
-     "w": 6.6,
-     "d": 5.1,
-     "h": 3.7,
-     "r": 313
-    },
-    {
-     "type": "maison",
-     "x": -25.0,
-     "z": -36.2,
-     "w": 7.6,
-     "d": 7.1,
-     "h": 3.4,
-     "r": 325
-    },
-    {
-     "type": "maison",
-     "x": -15.5,
-     "z": -41.2,
-     "w": 5.5,
-     "d": 7.3,
-     "h": 3.7,
-     "r": 339
-    },
-    {
-     "type": "maison",
-     "x": 56.1,
-     "z": 14.8,
-     "w": 5.7,
-     "d": 5.6,
-     "h": 3.3,
-     "r": 105
-    },
-    {
-     "type": "maison",
-     "x": 53.1,
-     "z": 23.2,
-     "w": 7.7,
-     "d": 7.5,
-     "h": 3.7,
-     "r": 114
-    },
-    {
-     "type": "maison",
-     "x": 47.9,
-     "z": 32.7,
-     "w": 7.4,
-     "d": 5.3,
-     "h": 3.9,
-     "r": 124
-    },
-    {
-     "type": "maison",
-     "x": 41.1,
-     "z": 40.9,
-     "w": 7.3,
-     "d": 7.3,
-     "h": 3.7,
-     "r": 135,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 33.1,
-     "z": 47.7,
-     "w": 7.4,
-     "d": 6.0,
-     "h": 4.1,
-     "r": 145
-    },
-    {
-     "type": "maison",
-     "x": 23.9,
-     "z": 52.9,
-     "w": 6.2,
-     "d": 6.2,
-     "h": 4.3,
-     "r": 156
-    },
-    {
-     "type": "maison",
-     "x": 15.0,
-     "z": 56.0,
-     "w": 5.5,
-     "d": 5.4,
-     "h": 3.2,
-     "r": 165
-    },
-    {
-     "type": "maison",
-     "x": -14.6,
-     "z": 56.1,
-     "w": 7.0,
-     "d": 6.1,
-     "h": 3.8,
-     "r": 195,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -24.2,
-     "z": 52.7,
-     "w": 5.0,
-     "d": 7.9,
-     "h": 3.9,
-     "r": 205
-    },
-    {
-     "type": "maison",
-     "x": -31.4,
-     "z": 48.7,
-     "w": 7.8,
-     "d": 6.3,
-     "h": 4.2,
-     "r": 213
-    },
-    {
-     "type": "maison",
-     "x": -40.1,
-     "z": 41.9,
-     "w": 5.6,
-     "d": 5.8,
-     "h": 3.4,
-     "r": 224
-    },
-    {
-     "type": "maison",
-     "x": -46.0,
-     "z": 35.4,
-     "w": 6.8,
-     "d": 5.8,
-     "h": 3.6,
-     "r": 232,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -51.3,
-     "z": 27.0,
-     "w": 7.7,
-     "d": 6.1,
-     "h": 3.6,
-     "r": 242
-    },
-    {
-     "type": "maison",
-     "x": -55.5,
-     "z": 16.9,
-     "w": 7.7,
-     "d": 6.3,
-     "h": 4.3,
-     "r": 253
-    },
-    {
-     "type": "maison",
-     "x": -54.4,
-     "z": -20.1,
-     "w": 7.4,
-     "d": 5.5,
-     "h": 3.7,
-     "r": 290
-    },
-    {
-     "type": "maison",
-     "x": -49.8,
-     "z": -29.7,
-     "w": 6.7,
-     "d": 6.0,
-     "h": 3.7,
-     "r": 301
-    },
-    {
-     "type": "maison",
-     "x": -44.1,
-     "z": -37.7,
-     "w": 7.4,
-     "d": 5.3,
-     "h": 3.8,
-     "r": 311
-    },
-    {
-     "type": "maison",
-     "x": -36.5,
-     "z": -45.0,
-     "w": 5.8,
-     "d": 7.3,
-     "h": 3.7,
-     "r": 321
-    },
-    {
-     "type": "maison",
-     "x": -29.1,
-     "z": -50.2,
-     "w": 7.3,
-     "d": 7.7,
-     "h": 3.6,
-     "r": 330
-    },
-    {
-     "type": "maison",
-     "x": -19.6,
-     "z": -54.6,
-     "w": 6.5,
-     "d": 6.5,
-     "h": 4.0,
-     "r": 340
-    },
-    {
-     "type": "maison",
-     "x": -10.3,
-     "z": -57.1,
-     "w": 6.6,
-     "d": 6.4,
-     "h": 4.3,
-     "r": 350
-    },
-    {
-     "type": "maison",
-     "x": 22.8,
-     "z": -68.3,
-     "w": 5.4,
-     "d": 6.3,
-     "h": 3.1,
-     "r": 18
-    },
-    {
-     "type": "maison",
-     "x": 30.8,
-     "z": -65.1,
-     "w": 5.2,
-     "d": 7.0,
-     "h": 4.1,
-     "r": 25
-    },
-    {
-     "type": "maison",
-     "x": 38.1,
-     "z": -61.1,
-     "w": 5.5,
-     "d": 7.1,
-     "h": 3.9,
-     "r": 32,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 45.2,
-     "z": -56.1,
-     "w": 7.6,
-     "d": 7.9,
-     "h": 3.3,
-     "r": 39
-    },
-    {
-     "type": "maison",
-     "x": 53.1,
-     "z": -48.6,
-     "w": 6.2,
-     "d": 6.5,
-     "h": 4.4,
-     "r": 48
-    },
-    {
-     "type": "maison",
-     "x": 59.0,
-     "z": -41.3,
-     "w": 5.5,
-     "d": 6.3,
-     "h": 3.7,
-     "r": 55
-    },
-    {
-     "type": "maison",
-     "x": 63.5,
-     "z": -33.9,
-     "w": 5.6,
-     "d": 6.0,
-     "h": 4.0,
-     "r": 62,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 67.2,
-     "z": -25.9,
-     "w": 6.7,
-     "d": 6.3,
-     "h": 3.0,
-     "r": 69
-    },
-    {
-     "type": "maison",
-     "x": 69.0,
-     "z": 20.6,
-     "w": 5.1,
-     "d": 7.3,
-     "h": 3.4,
-     "r": 107,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 66.2,
-     "z": 28.4,
-     "w": 6.3,
-     "d": 7.7,
-     "h": 4.1,
-     "r": 113
-    },
-    {
-     "type": "maison",
-     "x": 61.9,
-     "z": 36.8,
-     "w": 5.4,
-     "d": 7.8,
-     "h": 3.8,
-     "r": 121
-    },
-    {
-     "type": "maison",
-     "x": 57.0,
-     "z": 44.0,
-     "w": 5.3,
-     "d": 5.2,
-     "h": 4.0,
-     "r": 128
-    },
-    {
-     "type": "maison",
-     "x": 51.5,
-     "z": 50.4,
-     "w": 5.2,
-     "d": 7.8,
-     "h": 3.9,
-     "r": 134
-    },
-    {
-     "type": "maison",
-     "x": 45.2,
-     "z": 56.0,
-     "w": 5.3,
-     "d": 7.6,
-     "h": 3.1,
-     "r": 141
-    },
-    {
-     "type": "maison",
-     "x": 38.4,
-     "z": 60.9,
-     "w": 6.4,
-     "d": 6.0,
-     "h": 3.8,
-     "r": 148
-    },
-    {
-     "type": "maison",
-     "x": 29.9,
-     "z": 65.5,
-     "w": 5.8,
-     "d": 5.4,
-     "h": 3.7,
-     "r": 155
-    },
-    {
-     "type": "maison",
-     "x": 21.5,
-     "z": 68.7,
-     "w": 5.3,
-     "d": 5.5,
-     "h": 3.1,
-     "r": 163
-    },
-    {
-     "type": "maison",
-     "x": -15.8,
-     "z": 70.2,
-     "w": 6.0,
-     "d": 5.1,
-     "h": 3.4,
-     "r": 193,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -24.7,
-     "z": 67.6,
-     "w": 7.2,
-     "d": 6.7,
-     "h": 3.3,
-     "r": 200
-    },
-    {
-     "type": "maison",
-     "x": -34.2,
-     "z": 63.4,
-     "w": 7.8,
-     "d": 5.3,
-     "h": 4.1,
-     "r": 208
-    },
-    {
-     "type": "maison",
-     "x": -43.4,
-     "z": 57.4,
-     "w": 6.5,
-     "d": 7.5,
-     "h": 3.6,
-     "r": 217
-    },
-    {
-     "type": "maison",
-     "x": -50.7,
-     "z": 51.1,
-     "w": 7.1,
-     "d": 7.9,
-     "h": 3.5,
-     "r": 225
-    },
-    {
-     "type": "maison",
-     "x": -57.5,
-     "z": 43.4,
-     "w": 7.1,
-     "d": 6.9,
-     "h": 3.6,
-     "r": 233
-    },
-    {
-     "type": "maison",
-     "x": -63.1,
-     "z": 34.7,
-     "w": 5.2,
-     "d": 5.4,
-     "h": 3.1,
-     "r": 241
-    },
-    {
-     "type": "maison",
-     "x": -66.7,
-     "z": 27.2,
-     "w": 5.8,
-     "d": 5.5,
-     "h": 3.1,
-     "r": 248
-    },
-    {
-     "type": "maison",
-     "x": -69.5,
-     "z": 18.7,
-     "w": 7.6,
-     "d": 7.0,
-     "h": 3.4,
-     "r": 255
-    },
-    {
-     "type": "maison",
-     "x": -69.6,
-     "z": -18.5,
-     "w": 7.9,
-     "d": 6.6,
-     "h": 3.3,
-     "r": 285
-    },
-    {
-     "type": "maison",
-     "x": -65.9,
-     "z": -28.9,
-     "w": 5.9,
-     "d": 6.1,
-     "h": 3.0,
-     "r": 294
-    },
-    {
-     "type": "maison",
-     "x": -61.7,
-     "z": -37.0,
-     "w": 6.4,
-     "d": 6.5,
-     "h": 3.3,
-     "r": 301
-    },
-    {
-     "type": "maison",
-     "x": -56.3,
-     "z": -44.9,
-     "w": 5.0,
-     "d": 5.8,
-     "h": 3.1,
-     "r": 309
-    },
-    {
-     "type": "maison",
-     "x": -50.8,
-     "z": -51.0,
-     "w": 5.1,
-     "d": 5.1,
-     "h": 3.4,
-     "r": 315
-    },
-    {
-     "type": "maison",
-     "x": -44.5,
-     "z": -56.6,
-     "w": 6.8,
-     "d": 6.6,
-     "h": 4.1,
-     "r": 322
-    },
-    {
-     "type": "maison",
-     "x": -36.3,
-     "z": -62.2,
-     "w": 7.1,
-     "d": 7.6,
-     "h": 3.5,
-     "r": 330
-    },
-    {
-     "type": "maison",
-     "x": -27.0,
-     "z": -66.7,
-     "w": 8.0,
-     "d": 5.4,
-     "h": 4.0,
-     "r": 338
-    },
-    {
-     "type": "maison",
-     "x": -16.4,
-     "z": -70.1,
-     "w": 5.1,
-     "d": 7.5,
-     "h": 4.2,
-     "r": 347
-    },
-    {
-     "type": "maison",
-     "x": 21.9,
-     "z": -83.2,
-     "w": 7.5,
-     "d": 6.8,
-     "h": 4.2,
-     "r": 15
-    },
-    {
-     "type": "maison",
-     "x": 32.0,
-     "z": -79.8,
-     "w": 7.1,
-     "d": 5.7,
-     "h": 3.0,
-     "r": 22,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 41.3,
-     "z": -75.4,
-     "w": 6.1,
-     "d": 5.3,
-     "h": 4.2,
-     "r": 29
-    },
-    {
-     "type": "maison",
-     "x": 69.5,
-     "z": -50.7,
-     "w": 7.2,
-     "d": 6.5,
-     "h": 3.7,
-     "r": 54
-    },
-    {
-     "type": "maison",
-     "x": 75.1,
-     "z": -41.9,
-     "w": 5.2,
-     "d": 7.2,
-     "h": 3.4,
-     "r": 61,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 78.8,
-     "z": -34.3,
-     "w": 5.8,
-     "d": 7.2,
-     "h": 3.3,
-     "r": 66
-    },
-    {
-     "type": "maison",
-     "x": 82.0,
-     "z": -25.9,
-     "w": 7.9,
-     "d": 6.5,
-     "h": 3.5,
-     "r": 72
-    },
-    {
-     "type": "maison",
-     "x": 83.1,
-     "z": 22.2,
-     "w": 5.9,
-     "d": 6.7,
-     "h": 3.0,
-     "r": 105,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 80.3,
-     "z": 30.9,
-     "w": 5.8,
-     "d": 7.0,
-     "h": 4.0,
-     "r": 111
-    },
-    {
-     "type": "maison",
-     "x": 76.6,
-     "z": 39.1,
-     "w": 5.9,
-     "d": 6.5,
-     "h": 3.7,
-     "r": 117
-    },
-    {
-     "type": "maison",
-     "x": 72.0,
-     "z": 47.0,
-     "w": 5.4,
-     "d": 7.7,
-     "h": 3.3,
-     "r": 123
-    },
-    {
-     "type": "maison",
-     "x": 67.0,
-     "z": 53.9,
-     "w": 7.8,
-     "d": 5.1,
-     "h": 3.6,
-     "r": 129
-    },
-    {
-     "type": "maison",
-     "x": 59.6,
-     "z": 62.0,
-     "w": 7.9,
-     "d": 6.3,
-     "h": 3.4,
-     "r": 136
-    },
-    {
-     "type": "maison",
-     "x": 51.1,
-     "z": 69.2,
-     "w": 7.8,
-     "d": 5.6,
-     "h": 3.8,
-     "r": 144,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": 41.8,
-     "z": 75.1,
-     "w": 6.6,
-     "d": 7.9,
-     "h": 3.2,
-     "r": 151
-    },
-    {
-     "type": "maison",
-     "x": 33.0,
-     "z": 79.4,
-     "w": 6.5,
-     "d": 7.7,
-     "h": 4.0,
-     "r": 157
-    },
-    {
-     "type": "maison",
-     "x": 23.9,
-     "z": 82.6,
-     "w": 7.7,
-     "d": 6.5,
-     "h": 3.0,
-     "r": 164,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -25.1,
-     "z": 82.3,
-     "w": 7.3,
-     "d": 7.5,
-     "h": 3.2,
-     "r": 197
-    },
-    {
-     "type": "maison",
-     "x": -34.9,
-     "z": 78.6,
-     "w": 7.1,
-     "d": 7.7,
-     "h": 3.4,
-     "r": 204
-    },
-    {
-     "type": "maison",
-     "x": -44.0,
-     "z": 73.9,
-     "w": 6.2,
-     "d": 8.0,
-     "h": 3.8,
-     "r": 211
-    },
-    {
-     "type": "maison",
-     "x": -51.8,
-     "z": 68.6,
-     "w": 6.3,
-     "d": 5.8,
-     "h": 3.1,
-     "r": 217,
-     "etage": true
-    },
-    {
-     "type": "maison",
-     "x": -59.0,
-     "z": 62.5,
-     "w": 7.5,
-     "d": 5.9,
-     "h": 4.3,
-     "r": 223
-    },
-    {
-     "type": "maison",
-     "x": -66.4,
-     "z": 54.7,
-     "w": 5.8,
-     "d": 6.5,
-     "h": 3.3,
-     "r": 230
-    },
-    {
-     "type": "maison",
-     "x": -71.7,
-     "z": 47.5,
-     "w": 7.9,
-     "d": 7.7,
-     "h": 4.1,
-     "r": 236
-    },
-    {
-     "type": "maison",
-     "x": -77.2,
-     "z": 37.9,
-     "w": 7.7,
-     "d": 7.8,
-     "h": 3.8,
-     "r": 244
-    },
-    {
-     "type": "maison",
-     "x": -81.4,
-     "z": 27.8,
-     "w": 5.1,
-     "d": 7.2,
-     "h": 3.6,
-     "r": 251
-    },
-    {
-     "type": "maison",
-     "x": -83.7,
-     "z": 19.8,
-     "w": 6.9,
-     "d": 5.9,
-     "h": 3.1,
-     "r": 257
-    },
-    {
-     "type": "maison",
-     "x": -84.0,
-     "z": -18.3,
-     "w": 5.8,
-     "d": 7.0,
-     "h": 3.4,
-     "r": 282
-    },
-    {
-     "type": "maison",
-     "x": -81.7,
-     "z": -26.9,
-     "w": 6.2,
-     "d": 5.5,
-     "h": 3.2,
-     "r": 288
-    },
-    {
-     "type": "maison",
-     "x": -78.3,
-     "z": -35.7,
-     "w": 7.7,
-     "d": 6.5,
-     "h": 3.3,
-     "r": 295
-    },
-    {
-     "type": "maison",
-     "x": -73.1,
-     "z": -45.3,
-     "w": 8.0,
-     "d": 6.3,
-     "h": 3.2,
-     "r": 302
-    },
-    {
-     "type": "maison",
-     "x": -66.6,
-     "z": -54.4,
-     "w": 5.3,
-     "d": 6.0,
-     "h": 3.1,
-     "r": 309
-    },
-    {
-     "type": "maison",
-     "x": -60.9,
-     "z": -60.7,
-     "w": 5.8,
-     "d": 6.7,
-     "h": 4.2,
-     "r": 315
-    },
-    {
-     "type": "maison",
-     "x": -54.3,
-     "z": -66.7,
-     "w": 6.2,
-     "d": 6.2,
-     "h": 3.7,
-     "r": 321
-    },
-    {
-     "type": "maison",
-     "x": -46.7,
-     "z": -72.2,
-     "w": 6.0,
-     "d": 5.2,
-     "h": 3.4,
-     "r": 327
-    },
-    {
-     "type": "maison",
-     "x": -38.7,
-     "z": -76.8,
-     "w": 5.4,
-     "d": 6.5,
-     "h": 3.9,
-     "r": 333
-    },
-    {
-     "type": "maison",
-     "x": -30.8,
-     "z": -80.3,
-     "w": 5.6,
-     "d": 5.8,
-     "h": 3.3,
-     "r": 339
-    },
-    {
-     "type": "maison",
-     "x": -22.4,
-     "z": -83.0,
-     "w": 6.3,
-     "d": 7.9,
-     "h": 4.2,
-     "r": 345
-    }
-   ],
-   "pnj": [
-    {
-     "id": "hunata",
-     "nom": "Hunâta al-Himyarî",
-     "x": -4,
-     "z": 15,
-     "cap": 180,
-     "habit": "#3E4A5A",
-     "coiffe": "#D9CFB8",
-     "invite": "Parler à Hunâta"
-    },
-    {
-     "id": "berger",
-     "nom": "Un berger",
-     "x": -55,
-     "z": 70,
-     "cap": 60,
-     "accessoire": "baton",
-     "habit": "#6B5A48"
-    },
-    {
      "id": "chef",
-     "nom": "Un chef de clan",
-     "x": -14,
-     "z": 5,
-     "cap": 120,
-     "habit": "#5E4B3B",
-     "riche": false
-    },
-    {
-     "id": "armee_tete",
-     "x": 132,
-     "z": 27,
-     "cap": 270,
-     "visible": false,
-     "accessoire": "lance",
-     "habit": "#3A3F4A"
-    },
-    {
-     "id": "mahmud",
-     "nom": "L'éléphant Mahmûd",
-     "modele": "elephant",
-     "x": 128,
-     "z": 23,
-     "cap": 270,
+     "genre": "personne",
+     "x": -110,
+     "z": 40,
      "visible": false
-    }
-   ],
-   "foules": [
+    },
     {
      "id": "mecquois",
-     "x": -26,
-     "z": -8,
-     "r": 9,
-     "n": 7,
-     "invite": "Parler"
+     "genre": "personne",
+     "x": 150,
+     "z": 140
     },
     {
      "id": "quraysh",
-     "x": -6,
-     "z": 20,
-     "r": 5,
-     "n": 10,
-     "visible": false,
-     "errer": false
+     "genre": "personne",
+     "x": -60,
+     "z": -150,
+     "visible": false
     },
     {
-     "id": "armee",
-     "x": 152,
-     "z": 30,
-     "r": 14,
-     "n": 26,
-     "visible": false,
-     "accessoire": "lance",
-     "habits": [
-      "#3A3F4A",
-      "#4A3A30",
-      "#2F3A2E",
-      "#5A4632"
-     ],
-     "errer": false
-    }
-   ],
-   "lieux": [
-    {
      "id": "porte",
-     "x": 7.4,
-     "z": -4.6,
-     "r": 2.8,
-     "invite": null,
-     "tenir": 5
+     "genre": "lieu",
+     "x": 6,
+     "z": 6,
+     "nom": "La porte de la Ka'ba",
+     "visible": false
+    },
+    {
+     "id": "crete",
+     "genre": "lieu",
+     "x": 620,
+     "z": -260,
+     "nom": "Le sentier des crêtes",
+     "visible": false
+    },
+    {
+     "id": "ravin",
+     "genre": "lieu",
+     "x": 420,
+     "z": 120,
+     "nom": "Le raccourci du ravin",
+     "visible": false
     }
    ]
   },
   "camp": {
    "titre": "Le camp d'Abraha",
-   "taille": 300,
-   "limites": [
-    -110,
-    -110,
-    110,
-    115
+   "sous": "Al-Mughammas, sur la route de Tâ'if (emplacement discuté)",
+   "ambiance": "jour",
+   "epoque": "naissance",
+   "origine": [
+    21.405,
+    39.905
    ],
-   "ambiance": "soir",
-   "depart": {
-    "x": 0,
-    "z": 96,
-    "cap": 0
+   "vue": {
+    "auto": true,
+    "cap": 20,
+    "incl": 55
    },
-   "elements": [
+   "reperes": [
     {
-     "type": "colline",
-     "x": -90,
-     "z": -40,
-     "r": 40,
-     "h": 12
+     "id": "hunata",
+     "genre": "personne",
+     "x": -520,
+     "z": 60
     },
     {
-     "type": "colline",
-     "x": 100,
-     "z": 30,
-     "r": 45,
-     "h": 14
+     "id": "entree",
+     "genre": "lieu",
+     "x": -330,
+     "z": 40,
+     "nom": "L'entrée du camp"
     },
     {
-     "type": "colline",
-     "x": 20,
-     "z": -120,
-     "r": 50,
-     "h": 16
+     "id": "garde1",
+     "genre": "personne",
+     "x": -300,
+     "z": 10
     },
     {
-     "type": "montagne",
-     "x": -180,
-     "z": 60,
-     "r": 70,
-     "h": 70
+     "id": "garde2",
+     "genre": "personne",
+     "x": -300,
+     "z": 90,
+     "visible": false
     },
     {
-     "type": "montagne",
+     "id": "arriere",
+     "genre": "lieu",
+     "x": 120,
+     "z": -360,
+     "nom": "L'arrière du camp",
+     "visible": false
+    },
+    {
+     "id": "sentinelle",
+     "genre": "personne",
+     "x": 160,
+     "z": -330,
+     "visible": false
+    },
+    {
+     "id": "dhunafar",
+     "genre": "personne",
+     "x": -120,
+     "z": 160
+    },
+    {
+     "id": "mahmud",
+     "genre": "animal",
+     "x": 60,
+     "z": -80,
+     "nom": "Mahmûd",
+     "qualite": "l'éléphant d'Abraha"
+    },
+    {
+     "id": "unays",
+     "genre": "personne",
+     "x": 90,
+     "z": -40
+    },
+    {
+     "id": "tente",
+     "genre": "lieu",
+     "x": 160,
+     "z": 40,
+     "nom": "La tente du roi"
+    },
+    {
+     "id": "abraha",
+     "genre": "personne",
      "x": 190,
-     "z": -90,
-     "r": 80,
-     "h": 80
+     "z": 30,
+     "visible": false
     },
     {
-     "type": "montagne",
-     "x": 30,
-     "z": -230,
-     "r": 90,
-     "h": 75,
-     "c": "#A3825F"
+     "id": "interprete",
+     "genre": "personne",
+     "x": 150,
+     "z": 70,
+     "visible": false
     },
     {
-     "type": "chemin",
-     "points": [
-      [
-       0,
-       120
-      ],
-      [
-       0,
-       48
-      ],
-      [
-       0,
-       -20
-      ]
-     ],
-     "l": 4
+     "id": "soldats",
+     "genre": "personne",
+     "x": -150,
+     "z": -60
     },
     {
-     "type": "mur",
-     "de": [
-      -55,
-      48
-     ],
-     "a": [
-      -4,
-      48
-     ],
-     "h": 1.3,
-     "e": 0.9,
-     "c": "#7B6B45"
+     "id": "soldats2",
+     "genre": "personne",
+     "x": 0,
+     "z": 220
     },
     {
-     "type": "mur",
-     "de": [
-      4,
-      48
-     ],
-     "a": [
-      55,
-      48
-     ],
-     "h": 1.3,
-     "e": 0.9,
-     "c": "#7B6B45"
-    },
+     "id": "chameaux",
+     "genre": "animal",
+     "x": 320,
+     "z": 260,
+     "nom": "Vos chameaux",
+     "qualite": "deux cents bêtes",
+     "visible": false
+    }
+   ],
+   "accessoires": [
     {
-     "type": "mur",
-     "de": [
-      -55,
-      48
-     ],
-     "a": [
-      -55,
-      -55
-     ],
-     "h": 1.3,
-     "e": 0.9,
-     "c": "#7B6B45"
-    },
-    {
-     "type": "mur",
-     "de": [
-      55,
-      48
-     ],
-     "a": [
-      55,
-      -55
-     ],
-     "h": 1.3,
-     "e": 0.9,
-     "c": "#7B6B45"
-    },
-    {
-     "type": "mur",
-     "de": [
-      -55,
-      -55
-     ],
-     "a": [
-      55,
-      -55
-     ],
-     "h": 1.3,
-     "e": 0.9,
-     "c": "#7B6B45"
+     "type": "tentes",
+     "x": 0,
+     "z": 0,
+     "rayon": 420,
+     "n": 70,
+     "couleur": "#8C5A44"
     },
     {
      "type": "tente",
      "id": "tente_roi",
-     "x": 0,
-     "z": -36,
-     "w": 10,
-     "d": 11,
-     "h": 4.6,
-     "c": "#E4D3AE",
-     "riche": true,
-     "fanion": "#7A2E3A"
+     "x": 170,
+     "z": 40,
+     "couleur": "#9E3B2E"
     },
     {
-     "type": "boite",
-     "id": "trone",
-     "x": 0,
-     "z": -27.5,
-     "w": 1.7,
-     "d": 1.3,
-     "h": 1.15,
-     "c": "#8E6B2E"
+     "type": "elephant",
+     "x": 60,
+     "z": -80,
+     "cap": 250
     },
     {
-     "type": "boite",
-     "id": "tapis",
-     "x": 0,
-     "z": -23,
-     "w": 6,
-     "d": 5,
-     "h": 0.05,
-     "c": "#7A2E3A",
-     "solide": false
+     "type": "troupeau",
+     "x": -200,
+     "z": -200,
+     "rayon": 120,
+     "n": 10,
+     "chevaux": true
     },
     {
-     "type": "tente",
-     "x": -14,
-     "z": 21,
-     "w": 3,
-     "d": 3.4,
-     "h": 2,
-     "c": "#B9A27A"
-    },
-    {
-     "type": "enclos",
-     "x": -24,
-     "z": -8,
-     "w": 14,
-     "d": 10,
-     "ouverture": "e"
-    },
-    {
-     "type": "feu",
-     "x": 12,
-     "z": 18
-    },
-    {
-     "type": "feu",
-     "x": -30,
-     "z": 26
-    },
-    {
-     "type": "jarre",
-     "x": 8,
-     "z": -26
-    },
-    {
-     "type": "jarre",
-     "x": 8.8,
-     "z": -25.2
-    },
-    {
-     "type": "zone",
-     "id": "entree",
-     "x": 0,
-     "z": 55,
-     "r": 4
-    },
-    {
-     "type": "zone",
-     "id": "tente",
-     "x": 0,
-     "z": -16,
-     "r": 4.5
-    },
-    {
-     "type": "zone",
-     "id": "arriere",
-     "x": -30,
-     "z": -66,
-     "r": 7
-    },
-    {
-     "type": "zone",
-     "id": "sortie",
-     "x": 0,
-     "z": 104,
-     "r": 9
-    },
-    {
-     "type": "tente",
-     "x": 39.5,
-     "z": 9.4,
-     "w": 4,
-     "d": 5,
-     "h": 2.4,
-     "r": 70,
-     "c": "#D6C39C"
-    },
-    {
-     "type": "tente",
-     "x": 27.0,
-     "z": 27.2,
-     "w": 4,
-     "d": 5,
-     "h": 2.4,
-     "r": 40,
-     "c": "#D6C39C"
-    },
-    {
-     "type": "tente",
-     "x": -27.0,
-     "z": 27.2,
-     "w": 4,
-     "d": 5,
-     "h": 2.4,
-     "r": -40,
-     "c": "#BFA67C"
-    },
-    {
-     "type": "tente",
-     "x": -39.5,
-     "z": 9.4,
-     "w": 4,
-     "d": 5,
-     "h": 2.4,
-     "r": -70,
-     "c": "#BFA67C"
-    },
-    {
-     "type": "tente",
-     "x": -39.5,
-     "z": -19.4,
-     "w": 4,
-     "d": 5,
-     "h": 2.4,
-     "r": -110,
-     "c": "#D6C39C"
-    },
-    {
-     "type": "tente",
-     "x": -27.0,
-     "z": -37.2,
-     "w": 4,
-     "d": 5,
-     "h": 2.4,
-     "r": -140,
-     "c": "#D6C39C"
-    },
-    {
-     "type": "tente",
-     "x": 27.0,
-     "z": -37.2,
-     "w": 4,
-     "d": 5,
-     "h": 2.4,
-     "r": -220,
-     "c": "#BFA67C"
-    },
-    {
-     "type": "tente",
-     "x": 39.5,
-     "z": -19.4,
-     "w": 4,
-     "d": 5,
-     "h": 2.4,
-     "r": -250,
-     "c": "#BFA67C"
-    },
-    {
-     "type": "acacia",
-     "x": -75,
-     "z": 70
-    },
-    {
-     "type": "acacia",
-     "x": 70,
-     "z": 75
-    },
-    {
-     "type": "acacia",
-     "x": -80,
-     "z": -70
-    },
-    {
-     "type": "acacia",
-     "x": 85,
-     "z": -60
-    },
-    {
-     "type": "acacia",
-     "x": 30,
-     "z": 95
-    },
-    {
-     "type": "acacia",
-     "x": -35,
-     "z": 100
-    },
-    {
-     "type": "rochers",
-     "x": -70,
-     "z": 20,
-     "r": 10,
-     "n": 8
-    },
-    {
-     "type": "rochers",
-     "x": 75,
-     "z": 0,
-     "r": 10,
-     "n": 8
+     "type": "troupeau",
+     "id": "chameaux",
+     "x": 320,
+     "z": 260,
+     "rayon": 90,
+     "n": 14,
+     "visible": false
     }
-   ],
-   "pnj": [
+   ]
+  },
+  "vallee": {
+   "titre": "La vallée de La Mecque",
+   "sous": "Le lendemain, à l'aube",
+   "ambiance": "aube",
+   "epoque": "naissance",
+   "origine": "makkah",
+   "vue": {
+    "point": [
+     21.41,
+     39.87
+    ],
+    "r": 9,
+    "cap": 75,
+    "incl": 62
+   },
+   "reperes": [
     {
-     "id": "hunata",
-     "nom": "Hunâta al-Himyarî",
-     "x": 2,
-     "z": 88,
-     "cap": 0,
-     "habit": "#3E4A5A",
-     "coiffe": "#D9CFB8"
-    },
-    {
-     "id": "garde1",
-     "nom": "Un garde",
-     "x": -3,
-     "z": 50,
-     "cap": 180,
-     "accessoire": "lance",
-     "habit": "#3A3F4A",
-     "coiffe": "#E9E1D2"
-    },
-    {
-     "id": "garde2",
-     "nom": "Un garde",
-     "x": 3,
-     "z": 50,
-     "cap": 180,
-     "accessoire": "lance",
-     "habit": "#3A3F4A",
-     "coiffe": "#E9E1D2"
-    },
-    {
-     "id": "dhunafar",
-     "nom": "Dhû Nafar",
-     "x": -14,
-     "z": 25,
-     "cap": 180,
-     "assis": true,
-     "habit": "#6E5A3A",
-     "invite": "Parler à Dhû Nafar"
-    },
-    {
-     "id": "unays",
-     "nom": "Unays",
-     "x": 18,
-     "z": -3,
-     "cap": 230,
-     "accessoire": "baton",
-     "habit": "#5A4632",
-     "invite": "Parler à Unays"
+     "id": "refuge",
+     "genre": "lieu",
+     "x": 620,
+     "z": -260,
+     "nom": "Les habitants, sur les hauteurs"
     },
     {
      "id": "mahmud",
-     "nom": "L'éléphant Mahmûd",
-     "modele": "elephant",
-     "x": 24,
-     "z": -8,
-     "cap": 270
-    },
-    {
-     "id": "abraha",
-     "nom": "Abraha",
-     "x": 0,
-     "z": -25.5,
-     "cap": 180,
-     "riche": true,
-     "habit": "#5B2333",
-     "coiffe": "#E8DDC4",
-     "taille": 1.82
-    },
-    {
-     "id": "interprete",
-     "nom": "L'interprète",
-     "x": -2.6,
-     "z": -22.5,
-     "cap": 150,
-     "habit": "#6B5A48"
-    },
-    {
-     "id": "garde3",
-     "x": -5.5,
-     "z": -28,
-     "cap": 180,
-     "accessoire": "lance",
-     "habit": "#3A3F4A",
-     "coiffe": "#E9E1D2"
-    },
-    {
-     "id": "garde4",
-     "x": 5.5,
-     "z": -28,
-     "cap": 180,
-     "accessoire": "lance",
-     "habit": "#3A3F4A",
-     "coiffe": "#E9E1D2"
-    },
-    {
-     "id": "sentinelle",
-     "nom": "Une sentinelle",
-     "x": -63,
-     "z": 40,
-     "cap": 0,
-     "accessoire": "lance",
-     "habit": "#2F3A2E",
-     "coiffe": "#E9E1D2",
-     "chemin": [
-      [
-       -63,
-       40
-      ],
-      [
-       -63,
-       -63
-      ],
-      [
-       40,
-       -63
-      ],
-      [
-       -63,
-       -63
-      ]
-     ],
-     "boucle": true,
-     "vitesse": 1.3,
-     "pause": 1.5,
-     "garde": {
-      "portee": 16,
-      "angle": 100,
-      "delai": 0.6
-     }
-    },
-    {
-     "id": "sentinelle2",
-     "nom": "Une sentinelle",
-     "x": -18,
-     "z": -64,
-     "cap": 0,
-     "accessoire": "lance",
-     "habit": "#2F3A2E",
-     "coiffe": "#E9E1D2",
-     "garde": {
-      "portee": 18,
-      "angle": 110,
-      "delai": 0.5
-     }
+     "genre": "animal",
+     "x": 7300,
+     "z": 1300,
+     "nom": "Mahmûd",
+     "qualite": "l'éléphant d'Abraha",
+     "visible": false
     }
    ],
-   "foules": [
+   "accessoires": [
     {
-     "id": "soldats",
-     "x": 10,
-     "z": 22,
-     "r": 5,
-     "n": 6,
-     "assis": true,
-     "invite": "Parler",
-     "habits": [
-      "#3A3F4A",
-      "#4A3A30",
-      "#2F3A2E"
-     ],
-     "coiffes": [
-      "#E9E1D2",
-      "#D4C3A3"
-     ]
+     "type": "elephant",
+     "id": "elephant",
+     "x": 7300,
+     "z": 1300,
+     "cap": 290,
+     "visible": false
     },
     {
-     "id": "soldats2",
-     "x": -32,
-     "z": 30,
-     "r": 5,
-     "n": 5,
-     "invite": "Parler",
-     "habits": [
-      "#3A3F4A",
-      "#4A3A30",
-      "#2F3A2E"
-     ]
-    }
-   ],
-   "troupeaux": [
-    {
-     "id": "chameaux",
-     "modele": "chameau",
-     "x": -24,
-     "z": -8,
-     "r": 4,
-     "n": 8,
-     "invite": "Vos chameaux"
+     "type": "tentes",
+     "point": [
+      21.405,
+      39.905
+     ],
+     "rayon": 420,
+     "n": 70,
+     "couleur": "#8C5A44"
     }
    ]
   }
@@ -2235,9 +402,7 @@
  "sequence": [
   {
    "type": "scene",
-   "scene": "makka",
-   "titre": "La Mecque",
-   "sous": "L'année de l'Éléphant · vers 570"
+   "scene": "makka"
   },
   {
    "type": "recit",
@@ -2248,8 +413,13 @@
    "actions": [
     {
      "aller": "berger",
-     "vers": "joueur",
-     "vitesse": 3.6
+     "vers": [
+      {
+       "x": -60,
+       "z": 120
+      }
+     ],
+     "duree": 3
     }
    ]
   },
@@ -2260,8 +430,7 @@
   },
   {
    "type": "objectif",
-   "texte": "Un envoyé d'Abraha vous attend près de la Ka'ba. Allez lui parler.",
-   "cible": "pnj:hunata",
+   "texte": "Un envoyé d'Abraha vous attend près de la Ka'ba : cliquez sur son étiquette pour lui parler.",
    "quand": {
     "parler": "hunata"
    }
@@ -2273,7 +442,6 @@
   },
   {
    "type": "choix",
-   "qui": "hunata",
    "question": "Que répondez-vous à l'envoyé d'Abraha ?",
    "options": [
     {
@@ -2289,6 +457,9 @@
     },
     {
      "texte": "« Dis à ton roi que Quraysh défendra la Maison par les armes. Nous l'attendrons dans la vallée, jusqu'au dernier homme. »",
+     "titre": "Une bataille perdue d'avance",
+     "consequence": "Et si Quraysh avait pris les armes : face à cette armée, la ville aurait été écrasée et la Maison livrée malgré tout. Selon Ibn Ishâq, 'Abd al-Muttalib refusa ce combat impossible et laissa la Maison à son Maître.",
+     "indice": "'Abd al-Muttalib savait qu'il n'avait pas la force de combattre l'armée : il s'en remit au Maître de la Maison.",
      "suite": [
       {
        "type": "parole",
@@ -2301,27 +472,22 @@
         {
          "aller": "hunata",
          "vers": [
-          [
-           -4,
-           60
-          ],
-          [
-           -10,
-           160
-          ]
+          {
+           "x": 200,
+           "z": 600
+          }
          ],
+         "duree": 3,
          "attendre": false
         },
         {
-         "inviter": "chef",
-         "texte": "Parler au chef de clan"
+         "montrer": "chef"
         }
        ]
       },
       {
        "type": "objectif",
        "texte": "Rassemblez les hommes : allez convaincre le chef de clan, près de la Ka'ba.",
-       "cible": "pnj:chef",
        "quand": {
         "parler": "chef"
        }
@@ -2335,13 +501,13 @@
        "type": "recit",
        "texte": "Un à un, les hommes baissent les yeux et s'éloignent. À la nuit tombée, vous êtes presque seul devant la Maison."
       }
-     ],
-     "titre": "Une bataille perdue d'avance",
-     "consequence": "Et si Quraysh avait pris les armes : face à cette armée, la ville aurait été écrasée et la Maison livrée malgré tout. Selon Ibn Ishâq, 'Abd al-Muttalib refusa ce combat impossible et laissa la Maison à son Maître.",
-     "indice": "'Abd al-Muttalib savait qu'il n'avait pas la force de combattre l'armée : il s'en remit au Maître de la Maison."
+     ]
     },
     {
      "texte": "« Proposons au roi le tiers de toutes les richesses de la Tihâma, s'il accepte de rebrousser chemin et de laisser la Maison. »",
+     "titre": "Une offre refusée",
+     "consequence": "Et si 'Abd al-Muttalib avait marchandé la Maison : selon Ibn Ishâq, des chefs de tribus venus avec lui firent réellement cette offre, et Abraha la refusa. La Maison n'était pas à vendre.",
+     "indice": "'Abd al-Muttalib savait qu'il n'avait pas la force de combattre l'armée : il s'en remit au Maître de la Maison.",
      "suite": [
       {
        "type": "parole",
@@ -2352,18 +518,17 @@
        "type": "faire",
        "actions": [
         {
-         "fondu": true,
-         "texte": "Le soir…",
+         "cacher": "hunata"
+        },
+        {
+         "ambiance": "aube",
          "sous": "Le soir"
         },
         {
-         "ambiance": "soir"
+         "pause": 1200
         },
         {
-         "pause": 600
-        },
-        {
-         "fondu": false
+         "montrer": "hunata"
         }
        ]
       },
@@ -2372,18 +537,49 @@
        "qui": "hunata",
        "texte": "Le roi a ri de ton offre. Il ne veut ni or ni bétail : il veut la Maison. Et tes chameaux restent au camp."
       }
-     ],
-     "titre": "Une offre refusée",
-     "consequence": "Et si 'Abd al-Muttalib avait marchandé la Maison : selon Ibn Ishâq, des chefs de tribus venus avec lui firent réellement cette offre, et Abraha la refusa. La Maison n'était pas à vendre.",
-     "indice": "'Abd al-Muttalib savait qu'il n'avait pas la force de combattre l'armée : il s'en remit au Maître de la Maison."
+     ]
+    }
+   ],
+   "qui": "hunata"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "convoi": {
+      "type": "caravane",
+      "etapes": [
+       "makkah",
+       [
+        21.405,
+        39.905
+       ]
+      ]
+     }
+    },
+    {
+     "vue": {
+      "point": [
+       21.414,
+       39.866
+      ],
+      "r": 7,
+      "cap": 80,
+      "incl": 50
+     },
+     "duree": 2600
+    },
+    {
+     "pause": 2600
+    },
+    {
+     "convoi": null
     }
    ]
   },
   {
    "type": "scene",
-   "scene": "camp",
-   "titre": "Le camp d'Abraha",
-   "sous": "Al-Mughammas, aux portes de La Mecque"
+   "scene": "camp"
   },
   {
    "type": "faire",
@@ -2391,26 +587,21 @@
     {
      "aller": "hunata",
      "vers": [
-      [
-       1,
-       62
-      ],
-      [
-       0,
-       57
-      ]
+      {
+       "x": -360,
+       "z": 50
+      }
      ],
-     "vitesse": 1.4,
+     "duree": 2.5,
      "attendre": false
     }
    ]
   },
   {
    "type": "objectif",
-   "texte": "Suivez Hunâta jusqu'à l'entrée du camp.",
-   "cible": "zone:entree",
+   "texte": "Suivez Hunâta jusqu'à l'entrée du camp : cliquez sur « L'entrée du camp ».",
    "quand": {
-    "zone": "entree"
+    "aller": "entree"
    }
   },
   {
@@ -2424,20 +615,13 @@
     {
      "aller": "hunata",
      "vers": [
-      [
-       0,
-       40
-      ],
-      [
-       2,
-       -12
-      ]
+      {
+       "x": 140,
+       "z": 50
+      }
      ],
-     "vitesse": 1.6,
+     "duree": 3,
      "attendre": false
-    },
-    {
-     "pause": 900
     }
    ]
   },
@@ -2447,131 +631,79 @@
   },
   {
    "type": "choix",
-   "qui": "garde1",
    "question": "Le garde vous barre le passage, la lance en travers. Que faites-vous ?",
    "options": [
     {
      "texte": "Le saluer avec calme : « Je suis le seigneur de La Mecque. Je viens voir Dhû Nafar, puis le roi, au sujet de mes biens. »",
-     "juste": true,
+     "juste": true
+    },
+    {
+     "texte": "Faire mine de repartir, puis contourner le camp par l'arrière, là où la haie d'épines semble moins gardée.",
+     "titre": "Pris pour un espion",
+     "consequence": "Et si 'Abd al-Muttalib s'était glissé dans le camp comme un voleur : saisi par les sentinelles, il n'aurait jamais été reçu comme un chef. Selon les récits, il se présenta ouvertement, et Abraha l'honora.",
+     "indice": "Un chef se présente à visage découvert, avec calme et franchise.",
      "suite": [
       {
-       "type": "parole",
-       "qui": "garde1",
-       "texte": "Dhû Nafar ? Il est sous la petite tente, à gauche du feu. Passe, et ne t'écarte pas du chemin."
+       "type": "faire",
+       "actions": [
+        {
+         "montrer": [
+          "arriere",
+          "sentinelle"
+         ]
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Faites le tour : rendez-vous à l'arrière du camp, là où la haie d'épines semble plus basse.",
+       "quand": {
+        "aller": "arriere"
+       }
       },
       {
        "type": "faire",
        "actions": [
         {
-         "aller": "garde1",
+         "aller": "sentinelle",
          "vers": [
-          [
-           -6,
-           50
-          ]
+          {
+           "x": 130,
+           "z": -350
+          }
          ],
-         "vitesse": 1.2
-        },
-        {
-         "tourner": "garde1",
-         "cap": 90
+         "duree": 1.5
         }
        ]
+      },
+      {
+       "type": "parole",
+       "qui": "sentinelle",
+       "texte": "Halte ! Que fais-tu à rôder derrière les tentes du roi ?"
       }
      ]
     },
     {
-     "texte": "Faire mine de repartir, puis contourner le camp par l'arrière, là où la haie d'épines semble moins gardée.",
-     "suite": [
-      {
-       "type": "objectif",
-       "texte": "Contournez le camp sans vous faire voir des sentinelles.",
-       "cible": "zone:arriere",
-       "quand": {
-        "zone": "arriere"
-       },
-       "echecs": [
-        {
-         "repere": "sentinelle",
-         "suite": [
-          {
-           "type": "faire",
-           "actions": [
-            {
-             "aller": "sentinelle",
-             "vers": "joueur",
-             "vitesse": 3.5
-            }
-           ]
-          },
-          {
-           "type": "parole",
-           "qui": "sentinelle",
-           "texte": "Halte ! Un espion de Quraysh rôde autour du camp !"
-          }
-         ],
-         "titre": "Pris pour un espion",
-         "consequence": "Et si 'Abd al-Muttalib s'était glissé dans le camp comme un voleur : saisi par les sentinelles, il n'aurait jamais été reçu comme un chef. Selon les récits, il se présenta ouvertement, et Abraha l'honora.",
-         "indice": "Un chef se présente à visage découvert, avec calme et franchise."
-        },
-        {
-         "repere": "sentinelle2",
-         "suite": [
-          {
-           "type": "faire",
-           "actions": [
-            {
-             "aller": "sentinelle2",
-             "vers": "joueur",
-             "vitesse": 3.5
-            }
-           ]
-          },
-          {
-           "type": "parole",
-           "qui": "sentinelle2",
-           "texte": "Halte ! Que fais-tu à rôder derrière les tentes du roi ?"
-          }
-         ],
-         "titre": "Pris pour un espion",
-         "consequence": "Et si 'Abd al-Muttalib s'était glissé dans le camp comme un voleur : saisi par les sentinelles, il n'aurait jamais été reçu comme un chef. Selon les récits, il se présenta ouvertement, et Abraha l'honora.",
-         "indice": "Un chef se présente à visage découvert, avec calme et franchise."
-        }
-       ]
-      },
-      {
-       "type": "faire",
-       "actions": [
-        {
-         "aller": "sentinelle2",
-         "vers": "joueur",
-         "vitesse": 3.2
-        }
-       ]
-      },
-      {
-       "type": "parole",
-       "qui": "sentinelle2",
-       "texte": "Halte ! Que fais-tu à rôder derrière les tentes du roi ? Tu viens espionner pour Quraysh ?"
-      }
-     ],
-     "titre": "Pris pour un espion",
-     "consequence": "Et si 'Abd al-Muttalib s'était glissé dans le camp comme un voleur : saisi par les sentinelles, il n'aurait jamais été reçu comme un chef. Selon les récits, il se présenta ouvertement, et Abraha l'honora.",
-     "indice": "Un chef se présente à visage découvert, avec calme et franchise."
-    },
-    {
      "texte": "Écarter la lance d'un revers de main et entrer de force : le seigneur de La Mecque n'a pas à attendre un soldat.",
+     "titre": "La force contre la force",
+     "consequence": "Et si 'Abd al-Muttalib avait forcé l'entrée : les gardes l'auraient jeté hors du camp, et ses chameaux seraient restés aux mains de l'armée.",
+     "indice": "Un chef se présente à visage découvert, avec calme et franchise.",
      "suite": [
       {
        "type": "faire",
        "actions": [
         {
-         "geste": "garde1"
+         "montrer": "garde2"
         },
         {
          "aller": "garde2",
-         "vers": "joueur",
-         "vitesse": 3
+         "vers": [
+          {
+           "x": -315,
+           "z": 40
+          }
+         ],
+         "duree": 1.2
         }
        ]
       },
@@ -2580,17 +712,14 @@
        "qui": "garde2",
        "texte": "Saisissez-le ! Qu'on le jette hors du camp !"
       }
-     ],
-     "titre": "La force contre la force",
-     "consequence": "Et si 'Abd al-Muttalib avait forcé l'entrée : les gardes l'auraient jeté hors du camp, et ses chameaux seraient restés aux mains de l'armée.",
-     "indice": "Un chef se présente à visage découvert, avec calme et franchise."
+     ]
     }
-   ]
+   ],
+   "qui": "garde1"
   },
   {
    "type": "objectif",
-   "texte": "Trouvez Dhû Nafar, assis près de la petite tente.",
-   "cible": "pnj:dhunafar",
+   "texte": "Trouvez Dhû Nafar, le prisonnier himyarite : cliquez sur son étiquette.",
    "quand": {
     "parler": "dhunafar"
    }
@@ -2603,7 +732,6 @@
   {
    "type": "objectif",
    "texte": "Allez trouver Unays, le cornac, près de l'éléphant.",
-   "cible": "pnj:unays",
    "quand": {
     "parler": "unays"
    }
@@ -2619,48 +747,33 @@
     {
      "aller": "unays",
      "vers": [
-      [
-       8,
-       -14
-      ],
-      [
-       3,
-       -19
-      ]
+      {
+       "x": 140,
+       "z": 20
+      }
      ],
-     "vitesse": 1.5,
-     "attendre": false
-    },
-    {
-     "inviter": "unays",
-     "texte": null
+     "duree": 2
     }
    ]
   },
   {
    "type": "objectif",
-   "texte": "Présentez-vous devant le roi, sur le tapis, devant sa tente.",
-   "cible": "zone:tente",
+   "texte": "Présentez-vous devant le roi : rendez-vous à sa tente.",
    "quand": {
-    "zone": "tente"
+    "aller": "tente"
    }
   },
   {
    "type": "faire",
    "actions": [
     {
-     "regarder": "pnj:abraha",
-     "duree": 1
+     "montrer": [
+      "abraha",
+      "interprete"
+     ]
     },
     {
-     "aller": "abraha",
-     "vers": [
-      [
-       0,
-       -22.5
-      ]
-     ],
-     "vitesse": 0.8
+     "regarder": "abraha"
     }
    ]
   },
@@ -2684,26 +797,17 @@
   },
   {
    "type": "choix",
-   "qui": "abraha",
    "question": "Que répondez-vous au roi ?",
    "options": [
     {
      "texte": "« Je suis le maître des chameaux. La Maison, elle, a un Maître qui la protégera. »",
-     "juste": true,
-     "suite": [
-      {
-       "type": "parole",
-       "qui": "interprete",
-       "texte": "Le roi dit : « Il ne la protégera pas de moi. »"
-      },
-      {
-       "type": "recit",
-       "texte": "« Cela vous regarde, Lui et toi », répondez-vous. Abraha ordonne qu'on vous rende vos chameaux."
-      }
-     ]
+     "juste": true
     },
     {
      "texte": "« Épargne la Maison, ô roi, et je marcherai devant ton armée pour lui montrer les puits et les chemins. »",
+     "titre": "Le guide de l'armée",
+     "consequence": "Et si 'Abd al-Muttalib avait guidé l'armée : un homme tint réellement ce rôle, Abû Righâl. Selon Ibn Ishâq, il conduisit Abraha jusqu'à al-Mughammas et y mourut, et les Arabes lapidèrent longtemps sa tombe.",
+     "indice": "Selon Ibn Ishâq, 'Abd al-Muttalib ne réclama que ses chameaux : la Maison, dit-il, a un Maître qui la protégera.",
      "suite": [
       {
        "type": "parole",
@@ -2714,13 +818,13 @@
        "type": "recit",
        "texte": "Vous sortez de la tente. Les soldats vous regardent passer : voici celui qui conduira l'armée vers la Maison."
       }
-     ],
-     "titre": "Le guide de l'armée",
-     "consequence": "Et si 'Abd al-Muttalib avait guidé l'armée : un homme tint réellement ce rôle, Abû Righâl. Selon Ibn Ishâq, il conduisit Abraha jusqu'à al-Mughammas et y mourut, et les Arabes lapidèrent longtemps sa tombe.",
-     "indice": "Il ne réclama que ce qui lui appartenait, et laissa la Maison à son Maître."
+     ]
     },
     {
      "texte": "« Cette Maison n'est qu'un bâtiment de pierres. Fais-en ce que tu voudras, mais rends-moi mes chameaux. »",
+     "titre": "La Maison reniée",
+     "consequence": "Et si 'Abd al-Muttalib avait renié la Ka'ba : il aurait récupéré ses bêtes, mais perdu son rang et la confiance des siens. Selon les récits, il affirma au contraire que la Maison avait un Maître qui la protégerait.",
+     "indice": "Selon Ibn Ishâq, 'Abd al-Muttalib ne réclama que ses chameaux : la Maison, dit-il, a un Maître qui la protégera.",
      "suite": [
       {
        "type": "parole",
@@ -2731,45 +835,78 @@
        "type": "recit",
        "texte": "Sur le chemin du retour, la nouvelle vous précède : le seigneur de Quraysh a renié la Maison de ses pères. À l'entrée de la vallée, on vous tourne le dos."
       }
-     ],
-     "titre": "La Maison reniée",
-     "consequence": "Et si 'Abd al-Muttalib avait renié la Ka'ba : il aurait récupéré ses bêtes, mais perdu son rang et la confiance des siens. Selon les récits, il affirma au contraire que la Maison avait un Maître qui la protégerait.",
-     "indice": "Il ne réclama que ce qui lui appartenait, et laissa la Maison à son Maître."
+     ]
     }
-   ]
+   ],
+   "qui": "abraha"
+  },
+  {
+   "type": "parole",
+   "qui": "interprete",
+   "texte": "Le roi dit : « Qu'on lui rende ses chameaux. »"
   },
   {
    "type": "faire",
    "actions": [
     {
-     "suivre": "chameaux",
-     "ecart": 3.5
+     "montrer": "chameaux"
     },
     {
-     "inviter": "chameaux",
-     "texte": null
+     "regarder": "chameaux"
     }
    ]
   },
   {
    "type": "objectif",
-   "texte": "Ramenez vos chameaux : sortez du camp par le sud, vers La Mecque.",
-   "cible": "zone:sortie",
+   "texte": "Reprenez vos chameaux : cliquez sur votre troupeau.",
    "quand": {
-    "zone": "sortie"
-   }
+    "parler": "chameaux"
+   },
+   "reussite": "Deux cents chameaux"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": "chameaux"
+    },
+    {
+     "convoi": {
+      "type": "caravane",
+      "etapes": [
+       [
+        21.405,
+        39.905
+       ],
+       "makkah"
+      ]
+     }
+    },
+    {
+     "vue": {
+      "point": [
+       21.414,
+       39.866
+      ],
+      "r": 7,
+      "cap": 260,
+      "incl": 50
+     },
+     "duree": 2600
+    },
+    {
+     "pause": 2600
+    },
+    {
+     "convoi": null
+    }
+   ]
   },
   {
    "type": "scene",
    "scene": "makka",
-   "titre": "La Mecque",
    "sous": "Le soir même",
-   "ambiance": "soir",
-   "depart": [
-    0,
-    38,
-    0
-   ]
+   "ambiance": "aube"
   },
   {
    "type": "faire",
@@ -2793,107 +930,81 @@
    "type": "faire",
    "actions": [
     {
-     "inviter": "porte",
-     "texte": "Tenir l'anneau de la porte et invoquer"
+     "montrer": "porte"
     }
    ]
   },
   {
    "type": "objectif",
-   "texte": "Avant de partir, allez tenir l'anneau de la porte de la Ka'ba et invoquez Allah (maintenez E).",
-   "cible": "lieu:porte",
+   "texte": "Avant de partir, rendez-vous à la porte de la Ka'ba.",
    "quand": {
-    "tenir": "porte",
-    "invocation": {
-     "titre": "L'invocation de 'Abd al-Muttalib",
-     "ar": "لاهُمَّ إنَّ العَبْدَ يَمْنَعُ رَحْلَهُ فامْنَعْ حِلالَكْ ۞ لا يَغْلِبَنَّ صَلِيبُهُمْ ومِحالُهُمْ غَدْوًا مِحالَكْ",
-     "fr": "« Ô Allah, l'homme défend sa demeure : défends donc la Tienne. Que leur croix et leur force ne l'emportent jamais, demain, sur Ta force. »",
-     "source": "Ibn Hishâm, as-Sîra an-Nabawiyya, d'après Ibn Ishâq · traduction du sens, à vérifier"
-    }
+    "aller": "porte"
    }
   },
   {
-   "type": "faire",
-   "actions": [
-    {
-     "inviter": "porte",
-     "texte": null
-    },
-    {
-     "suivre": "quraysh",
-     "ecart": 3
+   "type": "objectif",
+   "texte": "Tenez l'anneau de la porte et invoquez Allah : maintenez le bouton (ou la barre d'espace).",
+   "quand": {
+    "tenir": {
+     "bouton": "Maintenir l'anneau et invoquer",
+     "duree": 4,
+     "invocation": {
+      "titre": "L'invocation de 'Abd al-Muttalib",
+      "ar": "لاهُمَّ إنَّ العَبْدَ يَمْنَعُ رَحْلَهُ فامْنَعْ حِلالَكْ ۞ لا يَغْلِبَنَّ صَلِيبُهُمْ ومِحالُهُمْ غَدْوًا مِحالَكْ",
+      "fr": "« Ô Allah, l'homme défend sa demeure : défends donc la Tienne. Que leur croix et leur force ne l'emportent jamais, demain, sur Ta force. »",
+      "source": "Ibn Hishâm, as-Sîra an-Nabawiyya, d'après Ibn Ishâq · traduction du sens, à vérifier"
+     }
     }
-   ]
+   },
+   "epreuve": true
   },
   {
    "type": "recit",
    "texte": "Puis vous lâchez l'anneau. Il faut maintenant conduire les vôtres sur les hauteurs, à l'est de la vallée, avant que la nuit ne tombe tout à fait."
   },
   {
-   "type": "objectif",
-   "epreuve": true,
-   "texte": "Conduisez les habitants sur la hauteur, à l'est. Le sentier balisé de cairns contourne le ravin.",
-   "cible": "zone:refuge",
-   "quand": {
-    "zone": "refuge"
-   },
-   "reussite": "Tous à l'abri",
-   "echecs": [
+   "type": "faire",
+   "actions": [
     {
-     "chute": "ravin",
-     "titre": "Le raccourci du ravin",
-     "consequence": "Et si, dans la hâte, vous aviez entraîné les vôtres au bord du ravin, dans la pénombre : une chute, des blessés, la panique dans la montagne. Celui qui guide les siens choisit le chemin sûr, même s'il est plus long.",
-     "indice": "Suivez le sentier clair et les cairns : ils contournent le ravin par le sud-est."
+     "montrer": [
+      "crete",
+      "ravin"
+     ]
+    },
+    {
+     "vue": {
+      "lieu": "makkah",
+      "r": 1.8,
+      "cap": 95,
+      "incl": 58
+     }
     }
    ]
   },
   {
-   "type": "faire",
-   "actions": [
+   "type": "objectif",
+   "texte": "Conduisez les habitants sur les hauteurs, à l'est : choisissez votre chemin.",
+   "quand": {
+    "aller": "crete"
+   },
+   "echecs": [
     {
-     "lacher": "quraysh"
-    },
-    {
-     "fondu": true,
-     "texte": "Le lendemain, à l'aube",
-     "sous": "Le lendemain, à l'aube"
-    },
-    {
-     "ambiance": "aube"
-    },
-    {
-     "placer": "quraysh",
-     "en": [
-      66,
-      -88
-     ],
-     "rayon": 6
-    },
-    {
-     "teleporter": [
-      72,
-      -80,
-      160
+     "repere": "ravin",
+     "titre": "Le raccourci du ravin",
+     "consequence": "Et si vous aviez pris le raccourci : de nuit, dans un ravin escarpé, des familles entières auraient pu chuter. Selon Ibn Ishâq, Quraysh se retira dans les montagnes et les défilés pour attendre ce qu'Abraha ferait.",
+     "indice": "De nuit, avec des familles entières, mieux vaut le sentier connu que le raccourci.",
+     "suite": [
+      {
+       "type": "recit",
+       "texte": "La pente est raide et le sol se dérobe. Un enfant glisse, des pierres roulent dans le noir ; il faut redescendre en catastrophe."
+      }
      ]
-    },
-    {
-     "montrer": [
-      "armee",
-      "armee_tete",
-      "mahmud"
-     ]
-    },
-    {
-     "pause": 500
-    },
-    {
-     "fondu": false
-    },
-    {
-     "champ": 38,
-     "duree": 2
     }
    ]
+  },
+  {
+   "type": "scene",
+   "scene": "vallee"
   },
   {
    "type": "recit",
@@ -2903,45 +1014,25 @@
    "type": "faire",
    "actions": [
     {
-     "aller": "mahmud",
-     "vers": [
-      [
-       104,
-       21
+     "convoi": {
+      "type": "armee",
+      "etapes": [
+       [
+        21.405,
+        39.905
+       ],
+       [
+        21.405,
+        39.87
+       ]
       ]
-     ],
-     "vitesse": 1.2,
-     "attendre": false
+     }
     },
     {
-     "aller": "armee_tete",
-     "vers": [
-      [
-       108,
-       24
-      ]
-     ],
-     "vitesse": 1.2,
-     "attendre": false
-    },
-    {
-     "aller": "armee",
-     "vers": [
-      [
-       128,
-       28
-      ]
-     ],
-     "vitesse": 1.2,
-     "attendre": false
-    },
-    {
-     "regarder": [
-      104,
-      3,
-      21
-     ],
-     "duree": 2
+     "montrer": [
+      "elephant",
+      "mahmud"
+     ]
     },
     {
      "pause": 2500
@@ -2953,18 +1044,6 @@
    "texte": "Selon Ibn Ishâq, un homme de l'armée s'approche alors de l'éléphant et lui murmure à l'oreille : « Agenouille-toi, Mahmûd, ou retourne d'où tu viens : tu es sur la terre sacrée d'Allah. »"
   },
   {
-   "type": "faire",
-   "actions": [
-    {
-     "effet": "agenouiller",
-     "id": "mahmud"
-    },
-    {
-     "pause": 800
-    }
-   ]
-  },
-  {
    "type": "recit",
    "texte": "L'éléphant s'agenouille. On le frappe, on le pique : il refuse de se lever vers La Mecque. Tourné vers le Yémen, il se relève et part au trot ; tourné vers la Maison, il s'agenouille de nouveau."
   },
@@ -2972,45 +1051,27 @@
    "type": "faire",
    "actions": [
     {
-     "champ": 62,
-     "duree": 1.5
-    },
-    {
-     "regarder": [
-      40,
-      30,
-      0
-     ],
-     "duree": 1.5
-    },
-    {
      "effet": "oiseaux",
-     "de": [
-      -160,
-      -40
-     ],
-     "vers": [
-      125,
-      27
-     ],
-     "n": 160,
-     "duree": 10,
-     "r": 22,
+     "ou": {
+      "x": 7000,
+      "z": 1300
+     },
+     "n": 70,
+     "duree": 7,
      "attendre": false
     },
     {
+     "vue": {
+      "x": 6800,
+      "z": 1200,
+      "r": 3,
+      "cap": 80,
+      "incl": 64
+     },
+     "duree": 2400
+    },
+    {
      "pause": 3000
-    },
-    {
-     "regarder": [
-      118,
-      4,
-      25
-     ],
-     "duree": 2.5
-    },
-    {
-     "pause": 4000
     }
    ]
   },
@@ -3022,35 +1083,30 @@
    "type": "faire",
    "actions": [
     {
-     "effet": "disperser",
-     "id": "armee",
-     "vers": [
-      240,
-      60
+     "effet": "poussiere",
+     "ou": {
+      "x": 7000,
+      "z": 1300
+     },
+     "rayon": 900,
+     "duree": 3
+    },
+    {
+     "convoi": null
+    },
+    {
+     "cacher": [
+      "elephant",
+      "mahmud"
      ]
-    },
-    {
-     "effet": "disperser",
-     "id": "armee_tete",
-     "vers": [
-      240,
-      60
-     ]
-    },
-    {
-     "pause": 3500
-    },
-    {
-     "champ": 70,
-     "duree": 1.5
     }
    ]
   },
   {
    "type": "recit",
+   "texte": "« N'as-tu pas vu comment ton Seigneur a traité les gens de l'Éléphant ? N'a-t-Il pas fait échouer leur ruse ? Il envoya contre eux des oiseaux par volées, qui leur lançaient des pierres d'argile durcie, et Il les rendit semblables à de la paille mâchée. »",
    "qui": "Sourate al-Fîl (105:1-5)",
-   "sous": "traduction du sens",
-   "texte": "« N'as-tu pas vu comment ton Seigneur a traité les gens de l'Éléphant ? N'a-t-Il pas fait échouer leur ruse ? Il envoya contre eux des oiseaux par volées, qui leur lançaient des pierres d'argile durcie, et Il les rendit semblables à de la paille mâchée. »"
+   "sous": "traduction du sens"
   },
   {
    "type": "recit",

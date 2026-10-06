@@ -60,8 +60,14 @@ CHOIX_MISSIONS = []
 JAMAIS = re.compile(r"Proph|Muhammad|Mu[hḥ]ammad|Ab[uû] Bakr|'Umar|'Uthm[aâ]n|'Al[iî]\b|Kh[aâ]d[iî]ja|'[AÂ]'isha|F[aâ]tima|Bil[aâ]l|Hamza|al-'Abb[aâ]s|Ab[uû] T[aâ]lib|Ab[uû] Lahab|[AÂ]mina|Hal[iî]ma|Zayd|Ja'far|Mus'ab|Sa'd|Ab[uû] Sufy[aâ]n|Kh[aâ]lid|Suhayl|'Ikrima|Jibr[iî]l|Ibr[aâ]h[iî]m|Ism[aâ]'[iî]l")
 
 
+GENRES = {"personne", "lieu", "objet", "animal", "presence"}
+ACCESSOIRES = {"tentes", "tente", "troupeau", "elephant", "bateau", "feux", "pierres", "lumiere"}
+EMPRISE = None
+
+
 def verifier_mission(mid, lieux, ouvrages):
-    """Vérifie data/missions/<mid>.json ; renvoie le nombre d'épreuves (lumières possibles)."""
+    """Vérifie data/missions/<mid>.json (mission jouée sur la carte) ; renvoie le nombre d'épreuves (lumières possibles)."""
+    global EMPRISE
     ou = f"mission {mid}"
     chemin = DATA / "missions" / f"{mid}.json"
     if not chemin.exists():
@@ -73,26 +79,61 @@ def verifier_mission(mid, lieux, ouvrages):
             err(ou, f"champ « {champ} » manquant")
     verifier_sources(ou, M, ouvrages)
     verifier_salat(ou, M)
-    scenes = M.get("scenes", {})
+    if EMPRISE is None:
+        EMPRISE = json.loads((DATA / "relief" / "hijaz.json").read_text(encoding="utf-8"))["emprise"]
+    etapes = {k: v for k, v in lire("lieux.json").get("etapes", {}).items() if not k.startswith("_")}
+    evenements = {e["id"] for e in lire("evenements.json")["evenements"]}
+    scenes, persos = M.get("scenes", {}), M.get("personnages", {})
+
+    def point(nom):
+        l = lieux.get(nom) or etapes.get(nom)
+        return (l["lat"], l["lon"]) if l else None
+
+    def position(o, origine):
+        if o.get("lieu"):
+            return point(o["lieu"])
+        if o.get("point"):
+            return tuple(o["point"])
+        if o.get("x") is not None and origine:
+            la, lo = origine
+            return (la - o["z"] / 1000 / 110.57, lo + o["x"] / 1000 / (111.32 * __import__("math").cos(la * 3.14159265 / 180)))
+        return None
+
+    ids, accs = {}, {}
     for sid, S in scenes.items():
-        for p in S.get("pnj", []) + S.get("foules", []):
-            if p.get("nom") and JAMAIS.search(p["nom"]) and p.get("modele") in (None, "silhouette"):
-                err(ou, f"scène {sid} : « {p['nom']} » ne doit jamais être représenté")
-    ids = {}
-    for sid, S in scenes.items():
-        e = set()
-        for p in S.get("pnj", []) + S.get("foules", []) + S.get("troupeaux", []) + S.get("objets", []) + S.get("lieux", []):
-            e.add(p.get("id"))
-        for x in S.get("elements", []):
-            if x.get("id"):
-                e.add(x["id"])
-        ids[sid] = e
+        o = f"{ou}, scène {sid}"
+        org = S.get("origine")
+        origine = point(org) if isinstance(org, str) else tuple(org) if org else None
+        if org and not origine:
+            err(o, f"origine « {org} » inconnue")
+        if S.get("epoque") and S["epoque"] not in evenements:
+            err(o, f"époque « {S['epoque']} » : événement inconnu")
+        ids[sid], accs[sid] = set(), set()
+        for r in S.get("reperes", []):
+            ids[sid].add(r.get("id"))
+            g = r.get("genre", "personne")
+            if g not in GENRES:
+                err(o, f"repère « {r.get('id')} » : genre « {g} » inconnu")
+            nom = r.get("nom") or persos.get(r.get("id"), {}).get("nom") or ""
+            if g == "personne" and JAMAIS.search(nom):
+                err(o, f"« {nom} » ne doit jamais figurer comme personne sur la carte (hors champ)")
+            p = position(r, origine)
+            if not p:
+                err(o, f"repère « {r.get('id')} » sans position")
+            elif not (EMPRISE["sud"] <= p[0] <= EMPRISE["nord"] and EMPRISE["ouest"] <= p[1] <= EMPRISE["est"]):
+                err(o, f"repère « {r.get('id')} » hors de la carte")
+        for a in S.get("accessoires", []):
+            if a.get("type") not in ACCESSOIRES:
+                err(o, f"accessoire « {a.get('type')} » inconnu")
+            if a.get("id"):
+                accs[sid].add(a["id"])
+            if not position(a, origine):
+                err(o, f"accessoire « {a.get('type')} » sans position")
     epreuves = 0
-    def cible_ok(scene, c):
-        if c is None or isinstance(c, list):
-            return True
-        typ, _, i = str(c).partition(":")
+
+    def present(scene, i):
         return i in ids.get(scene, set())
+
     def parcourir(liste, scene, haut):
         nonlocal epreuves
         for k, e in enumerate(liste, 1):
@@ -105,28 +146,33 @@ def verifier_mission(mid, lieux, ouvrages):
                 scene = e.get("scene")
                 if scene not in scenes:
                     err(o, f"scène « {scene} » inconnue")
-            for champ in ("qui",):
-                if t in ("parole", "choix") and e.get(champ) and e[champ] not in ids.get(scene, set()):
-                    err(o, f"« {e[champ]} » absent de la scène {scene}")
+            if t in ("parole", "choix") and e.get("qui") and not present(scene, e["qui"]):
+                err(o, f"« {e['qui']} » : aucun repère de ce nom dans la scène {scene}")
             if t == "parole" and not e.get("qui"):
                 err(o, "parole sans « qui »")
             if t == "objectif":
-                if not cible_ok(scene, e.get("cible")):
-                    err(o, f"cible « {e.get('cible')} » absente de la scène {scene}")
                 q = e.get("quand") or {}
-                for cle in ("parler", "utiliser", "prendre", "tenir", "zone"):
-                    if cle in q and q[cle] not in ids.get(scene, set()) and not (cle == "tenir" and any(i and i.startswith(q[cle]) for i in ids.get(scene, set()))):
-                        err(o, f"quand.{cle} : « {q[cle]} » absent de la scène {scene}")
                 if not q:
                     err(o, "objectif sans « quand »")
+                for cle in ("parler", "aller", "prendre", "utiliser"):
+                    if cle in q and not present(scene, q[cle]):
+                        err(o, f"quand.{cle} : « {q[cle]} » absent de la scène {scene}")
+                if "donner" in q and not present(scene, q["donner"].get("a")):
+                    err(o, f"quand.donner : « {q['donner'].get('a')} » absent de la scène {scene}")
+                if "lancer" in q and not present(scene, q["lancer"].get("repere")):
+                    err(o, f"quand.lancer : « {q['lancer'].get('repere')} » absent de la scène {scene}")
+                if "ramasser" in q and sum(1 for i in ids.get(scene, set()) if i.startswith(q["ramasser"]["groupe"])) < q["ramasser"]["n"]:
+                    err(o, "quand.ramasser : pas assez d'objets à ramasser")
                 for i in q.get("tous", []):
-                    if i not in ids.get(scene, set()):
+                    if not present(scene, i):
                         err(o, f"quand.tous : « {i} » absent de la scène {scene}")
                     elif i not in M.get("dialogues", {}):
                         err(o, f"quand.tous : « {i} » n'a pas de « dialogues »")
                 for f in e.get("echecs", []):
                     if not f.get("consequence"):
                         err(o, "échec sans « consequence »")
+                    if f.get("repere") and not present(scene, f["repere"]):
+                        err(o, f"échec : repère « {f['repere']} » absent de la scène {scene}")
                     parcourir(f.get("suite", []), scene, False)
                 if haut and (e.get("epreuve")):
                     epreuves += 1
@@ -145,11 +191,13 @@ def verifier_mission(mid, lieux, ouvrages):
                 for a in e.get("actions", []):
                     for cle in ("montrer", "cacher"):
                         for i in ([a[cle]] if isinstance(a.get(cle), str) else a.get(cle, [])):
-                            if i not in ids.get(scene, set()):
+                            if not present(scene, i) and i not in accs.get(scene, set()):
                                 err(o, f"{cle} : « {i} » absent de la scène {scene}")
-                    for cle in ("aller", "suivre", "lacher", "tourner", "geste", "placer", "inviter"):
-                        if a.get(cle) and a[cle] not in ids.get(scene, set()):
+                    for cle in ("aller", "regarder", "renommer"):
+                        if a.get(cle) and not present(scene, a[cle]):
                             err(o, f"{cle} : « {a[cle]} » absent de la scène {scene}")
+                    if a.get("effet") and a["effet"] not in ("oiseaux", "idoles", "poussiere"):
+                        err(o, f"effet « {a['effet']} » inconnu")
         return scene
     seq = M.get("sequence", [])
     if not seq or seq[0].get("type") != "scene":
