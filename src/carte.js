@@ -172,17 +172,40 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   const cam = { cible: new THREE.Vector3(0, 0, 0), r: 1000, theta: -0.25, phi: 0.8 };
   let FIT = 1, transit = null;
   const phiMax = () => (cam.r < 3 ? 1.47 : cam.r < 30 ? 1.38 : 1.3);
-  function appliquerCamera() {
-    const sp = Math.sin(cam.phi);
-    camera.position.set(cam.cible.x + cam.r * sp * Math.sin(cam.theta), cam.cible.y + cam.r * Math.cos(cam.phi), cam.cible.z + cam.r * sp * Math.cos(cam.theta));
-    // la caméra ne passe jamais sous le relief
-    const sol = R.sol(camera.position.x, camera.position.z) + Math.max(0.012, cam.r * 0.02);
+  // Position de la caméra en orbite. Elle ne passe jamais sous le relief, ne frôle pas une pente voisine,
+  // et si une montagne se dresse entre elle et le point visé, elle se redresse (vue plus plongeante) :
+  // on voit toujours ce que l'on regarde. « lisser » : le redressement suit en douceur (boucle de rendu).
+  let leve = 0;
+  const sp3 = new THREE.Vector3();
+  function positionOrbite(phi) {
+    const sp = Math.sin(phi);
+    camera.position.set(cam.cible.x + cam.r * sp * Math.sin(cam.theta), cam.cible.y + cam.r * Math.cos(phi), cam.cible.z + cam.r * sp * Math.cos(cam.theta));
+  }
+  function masque() { // le relief coupe-t-il la ligne de visée ?
+    const marge = Math.max(0.004, cam.r * 0.012);
+    for (let k = 1; k < 16; k++) {
+      sp3.lerpVectors(cam.cible, camera.position, k / 16);
+      if (R.sol(sp3.x, sp3.z) + marge > sp3.y) return true;
+    }
+    return false;
+  }
+  function solAutour(x, z, d) { // le plus haut point du sol sous la caméra et autour d'elle
+    let m = R.sol(x, z);
+    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4; m = Math.max(m, R.sol(x + Math.cos(a) * d, z + Math.sin(a) * d)); }
+    return m;
+  }
+  function appliquerCamera(lisser = false, dt = 0) {
+    let besoin = 0;
+    for (; besoin < 10; besoin++) { positionOrbite(Math.max(0.04, cam.phi - besoin * 0.1)); if (!masque()) break; }
+    leve = lisser ? leve + (besoin * 0.1 - leve) * Math.min(1, dt * 4) : besoin * 0.1;
+    positionOrbite(Math.max(0.04, cam.phi - leve));
+    const sol = solAutour(camera.position.x, camera.position.z, Math.max(0.01, cam.r * 0.05)) + Math.max(0.012, cam.r * 0.02);
     if (camera.position.y < sol) camera.position.y = sol;
     camera.lookAt(cam.cible);
   }
   // Plans proche et lointain selon la hauteur de la caméra : bonne précision de profondeur de près comme de loin.
   function plans(vue) {
-    const h = camera.position.y - R.sol(camera.position.x, camera.position.z);
+    const h = camera.position.y - solAutour(camera.position.x, camera.position.z, Math.max(0.01, (camera.position.y - R.sol(camera.position.x, camera.position.z)) * 0.6));
     const near = Math.min(30, Math.max(0.002, h * 0.3)), far = (vue * 6 + 40) * 1.4 + 60;
     if (Math.abs(camera.near - near) > near * 0.1 || Math.abs(camera.far - far) > far * 0.1) {
       camera.near = near; camera.far = far; camera.updateProjectionMatrix();
@@ -702,7 +725,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
       if (!transit) piloterOrbite(dt);
       if (!transit && derive && !pointeurs.size) cam.theta += derive * dt * (reduit ? 0 : 1);
       cam.phi = Math.min(cam.phi, phiMax());
-      appliquerCamera();
+      appliquerCamera(true, dt);
     }
     // distance de vue équivalente (orbite : rayon ; vol : hauteur au-dessus du sol)
     const vue = libre.actif ? Math.max(0.3, infoVol.h * 2.5) : cam.r;
