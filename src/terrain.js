@@ -200,8 +200,10 @@ function texHauteurs(Rl) {
   t.needsUpdate = true;
   return t;
 }
-function texAltitudes(Rl) {
-  const g = Rl.grille(), d = new Uint16Array(g.length);
+// La copie servant aux couleurs est légèrement lissée : sur une grille de 600 m, le rivage et les teintes
+// d'altitude dessineraient sinon des carrés (cases de la grille).
+function texAltitudes(Rl, rayon) {
+  const g = flou(flou(Float32Array.from(Rl.grille()), Rl.W, Rl.H, rayon), Rl.W, Rl.H, rayon), d = new Uint16Array(g.length);
   for (let k = 0; k < g.length; k++) d[k] = THREE.DataUtils.toHalfFloat(g[k]);
   const t = new THREE.DataTexture(d, Rl.W, Rl.H, THREE.RedFormat, THREE.HalfFloatType);
   t.minFilter = t.magFilter = THREE.LinearFilter; t.generateMipmaps = false;
@@ -379,10 +381,11 @@ export async function creerTerrain(RR, { renderer, mobile = false, oasis = [], h
   const base = grilleTuile();
   const materiaux = [], habillages = [], couches = [];
 
+  const altHijaz = texAltitudes(R, 1);
   function poser(Rl, texSat, { trou, facteur }) {
     const champ = champSol(Rl, (x, z) => RR.metres(x, z), facteur);
     const uniformes = {
-      ...communs, hauteurs: { value: texHauteurs(Rl) }, altitudes: { value: texAltitudes(Rl) }, dims: { value: new THREE.Vector2(Rl.W, Rl.H) },
+      ...communs, hauteurs: { value: texHauteurs(Rl) }, altitudes: { value: Rl === R ? altHijaz : texAltitudes(Rl, 3) }, dims: { value: new THREE.Vector2(Rl.W, Rl.H) },
       geo: { value: new THREE.Vector4(Rl.ax, Rl.bx, Rl.az, Rl.bz) }, lissage: { value: Rl.lissage },
       pasTuile: { value: Math.max(Rl.bx, Rl.bz) / N },
       normales: { value: champ.texture }, dimsN: { value: champ.dims }, facteurN: { value: facteur },
@@ -443,7 +446,8 @@ export async function creerTerrain(RR, { renderer, mobile = false, oasis = [], h
           }
           #ifdef STYLE
           {
-            float m = texture2D(altitudes, (vGrille + 0.5) / dims).r; // altitude (m), négative en mer
+            float m = texture2D(altitudes, (vGrille + 0.5) / dims).r // altitude (m), négative en mer
+                    + (texture2D(grain, vMonde.xz * 0.35).r - 0.5) * 3.0;  // même rivage irrégulier que la surface de l'eau
             vec3 c;
             if (m <= 0.5) {
               c = mix(c_merHaut, c_merFond, smoothstep(0.0, 600.0, -m));
@@ -516,7 +520,22 @@ export async function creerTerrain(RR, { renderer, mobile = false, oasis = [], h
   const eauGeo = new THREE.BoxGeometry(b.x1 - b.x0 - 2 * e, -SOCLE - 0.3, b.z1 - b.z0 - 2 * e);
   eauGeo.translate((b.x0 + b.x1) / 2, (SOCLE + 0.3) / 2 - 0.004, (b.z0 + b.z1) / 2);
   const matEau = new THREE.MeshStandardMaterial({ color: 0x4FAFC6, transparent: true, opacity: 0.6, roughness: 0.2, metalness: 0.05, depthWrite: false });
-  const eau = new THREE.Mesh(eauGeo, matEau);
+  // Surface de l'eau : le rivage suit l'altitude lissée de la grille (et non l'intersection du plan d'eau avec
+  // les triangles du relief, qui dessinerait des marches), et l'eau s'éclaircit en approchant de la côte.
+  const matSurface = matEau.clone();
+  matSurface.color = matEau.color;
+  matSurface.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, { altE: { value: altHijaz }, grainE: { value: grain }, geoE: { value: new THREE.Vector4(R.ax, R.bx, R.az, R.bz) }, dimsE: { value: new THREE.Vector2(R.W, R.H) } });
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vMondeE;')
+      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvMondeE = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vMondeE; uniform sampler2D altE, grainE; uniform vec4 geoE; uniform vec2 dimsE;')
+      .replace('#include <alphamap_fragment>', `#include <alphamap_fragment>
+        float mE = texture2D(altE, (vec2((vMondeE.x - geoE.x) / geoE.y, (vMondeE.z - geoE.z) / geoE.w) + 0.5) / dimsE).r
+                 + (texture2D(grainE, vMondeE.xz * 0.35).r - 0.5) * 3.0; // rivage irrégulier
+        if (mE > 0.0) discard;
+        diffuseColor.a *= mix(0.25, 1.0, smoothstep(0.0, -25.0, mE));`);
+  };
+  const eau = new THREE.Mesh(eauGeo, [matEau, matEau, matSurface, matEau, matEau, matEau]);
   eau.renderOrder = 2;
   groupe.add(eau);
 
