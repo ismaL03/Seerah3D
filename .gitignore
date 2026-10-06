@@ -2,8 +2,12 @@
 *.pdf
 
 node_modules/
+node_modules
 dist/
 .env
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Tuiles téléchargées par tools/relief.py
+tools/cache/

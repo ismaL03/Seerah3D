@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sîra 3D</title>
+<meta name="description" content="Carte 3D interactive de la Sîra : lieux, événements et trajets sur le relief réel du Hijaz.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Reem+Kufi:wght@500;600;700&family=Amiri:wght@400;700&display=swap">
+<link rel="stylesheet" href="styles/app.css">
+<link rel="stylesheet" href="styles/histoire.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"
+} }
+</script>
+<script type="module" src="src/main.js"></script>
+</head>
+<body>
+<div id="app">
+  <canvas id="scene" aria-label="Carte 3D du Hijaz : La Mecque, Médine et les lieux de la Sîra"></canvas>
+  <div id="labels"></div>
+
+  <!-- Barre haute : marque et contexte à gauche, outils à droite -->
+  <header class="barre ui">
+    <div class="verre marque">
+      <span class="logo" data-ic="star"></span>
+      <span class="nom"><b>Sîra 3D</b><small lang="ar">السيرة النبوية</small></span>
+      <button class="brouillon" id="etatBtn" title="Fiches en brouillon : voir les sources">Brouillon</button>
+    </div>
+    <div class="verre contexte" id="contexte" aria-live="polite">
+      <span class="an" id="ctxAn">1 H</span>
+      <span id="ctxAnnee">622</span>
+      <span id="ctxAge">53 ans</span>
+      <span id="ctxPeriode">Médinoise</span>
+    </div>
+    <button class="verre histoire-btn" id="histoireBtn" aria-label="Mode histoire : vivre la Sîra chapitre par chapitre"><span data-ic="play"></span><span class="txt">Mode histoire</span></button>
+    <div class="espace"></div>
+    <div class="aller-zone">
+      <button class="verre aller-btn" id="allerBtn" aria-expanded="false" aria-controls="aller"><span class="ico" data-ic="pin"></span><span class="txt">Aller à</span><span class="fl" data-ic="chevD"></span></button>
+      <div class="aller verre" id="aller" hidden></div>
+    </div>
+    <label class="verre recherche" for="q">
+      <span data-ic="search"></span>
+      <input id="q" type="search" placeholder="Rechercher un lieu, un événement…" autocomplete="off">
+      <kbd>/</kbd>
+      <div class="resultats verre" id="resultats" hidden></div>
+    </label>
+    <nav class="verre outils" aria-label="Outils">
+      <button id="rechBtn" data-ic="search" aria-label="Rechercher"></button>
+      <button id="indexBtn" data-ic="list" aria-label="Index : événements, lieux, hadiths, sources" aria-pressed="false"></button>
+      <button id="satBtn" data-ic="globe" aria-label="Image satellite d'aujourd'hui" aria-pressed="false"></button>
+      <button id="themeBtn" aria-label="Basculer jour / nuit"></button>
+      <span class="sep"></span>
+      <button id="volBtn" data-ic="plane" aria-label="Vol libre" aria-pressed="false"></button>
+      <button id="immersifBtn" data-ic="expand" aria-label="Mode immersif (touche H)"></button>
+      <button id="aideBtn" data-ic="help" aria-label="Aide : se déplacer sur la carte"></button>
+    </nav>
+  </header>
+
+  <!-- Index : tiroir à gauche -->
+  <aside class="tiroir verre ui" id="tiroir" hidden>
+    <div class="tiroir-tete">
+      <div class="segments" role="tablist">
+        <button data-tab="ev" class="on" role="tab">Événements <span id="nEv"></span></button>
+        <button data-tab="loc" role="tab">Lieux <span id="nLoc"></span></button>
+        <button data-tab="had" role="tab">Hadiths <span id="nHad"></span></button>
+        <button data-tab="src" role="tab">Sources</button>
+      </div>
+      <button class="rond" id="tiroirFermer" data-ic="close" aria-label="Fermer l'index"></button>
+    </div>
+    <div class="tiroir-corps" id="lbody"></div>
+  </aside>
+
+  <!-- Récit de l'événement courant -->
+  <article class="recit verre ui" id="recit" aria-live="polite">
+    <header class="recit-tete">
+      <div class="recit-boutons">
+        <button class="rond" id="dLink" data-ic="link" aria-label="Copier le lien de cette fiche"></button>
+        <button class="rond" id="dFocus" data-ic="target" aria-label="Voir le lieu de près"></button>
+        <button class="rond" id="dReduire" data-ic="minimize" aria-label="Réduire la fiche"></button>
+      </div>
+      <span class="surtitre" id="dCat"></span>
+      <h2 id="dTitre"></h2>
+      <div class="titre-ar" id="dAr" lang="ar"></div>
+      <div class="meta"><span id="dDate"></span><span id="dStatut"></span></div>
+      <button class="jouer-chap" id="dJouer" hidden><span data-ic="play"></span>Vivre ce chapitre en mode histoire</button>
+    </header>
+    <nav class="segments onglets" role="tablist">
+      <button data-p="recit" class="on" role="tab" id="ongletRecit">Récit</button>
+      <button data-p="bataille" role="tab" id="ongletBataille" hidden>Déroulement</button>
+      <button data-p="reperes" role="tab">Repères</button>
+      <button data-p="sources" role="tab">Sources <span id="nDiv"></span></button>
+    </nav>
+    <div class="recit-corps">
+      <section data-p="recit" class="volet on"></section>
+      <section data-p="bataille" class="volet"></section>
+      <section data-p="reperes" class="volet"></section>
+      <section data-p="sources" class="volet"></section>
+    </div>
+    <footer class="aussi" id="dAussi"></footer>
+  </article>
+  <button class="recit-pli verre ui" id="recitPli" hidden><span data-ic="chevL"></span><span id="pliTitre"></span></button>
+
+  <!-- Mini-carte : cliquer pour s'y rendre -->
+  <div class="minicarte verre ui" id="minicarte">
+    <canvas id="miniCanvas" width="150" height="236" aria-label="Mini-carte : cliquer pour s'y rendre"></canvas>
+    <button class="rond mini-fermer" id="miniFermer" data-ic="close" aria-label="Masquer la mini-carte"></button>
+  </div>
+  <button class="verre mini-ouvrir ui" id="miniOuvrir" data-ic="map" aria-label="Afficher la mini-carte" hidden></button>
+
+  <!-- Commandes de la carte -->
+  <div class="commandes verre ui" aria-label="Commandes de la carte">
+    <button id="zIn" data-ic="plus" aria-label="Zoomer"></button>
+    <button id="zOut" data-ic="minus" aria-label="Dézoomer"></button>
+    <button id="nord" aria-label="Remettre le nord en haut"><span class="aiguille" data-ic="compass"></span></button>
+    <button id="home" data-ic="home" aria-label="Vue d'ensemble du Hijaz"></button>
+  </div>
+
+  <!-- Ruban chronologique -->
+  <footer class="ruban verre ui" id="ruban">
+    <div class="lecture">
+      <button class="rond" id="prev" data-ic="chevL" aria-label="Événement précédent"></button>
+      <button class="lire" id="play" aria-label="Lancer la visite guidée"></button>
+      <button class="rond" id="next" data-ic="chev" aria-label="Événement suivant"></button>
+    </div>
+    <div class="axe" id="axe" aria-label="Chronologie">
+      <div class="eres" id="eres"></div>
+      <div class="points" id="points"></div>
+      <div class="courant" id="courant"></div>
+    </div>
+  </footer>
+
+  <!-- Vol libre -->
+  <div class="vol-hud verre" id="volHud" hidden>
+    <b>Vol libre</b>
+    <span id="volInfo"></span>
+    <span class="aide"><kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> avancer · <kbd>Espace</kbd>/<kbd>C</kbd> monter, descendre · <kbd>Maj</kbd> vite · double-clic : s'y rendre</span>
+    <button class="rond" id="volQuitter" data-ic="close" aria-label="Quitter le vol libre"></button>
+  </div>
+  <div class="vol-pad" id="volPad" hidden>
+    <button data-v="avant" aria-label="Avancer" data-ic="chevU"></button>
+    <button data-v="arriere" aria-label="Reculer" data-ic="chevD"></button>
+    <button data-v="haut" aria-label="Monter" data-ic="plus"></button>
+    <button data-v="bas" aria-label="Descendre" data-ic="minus"></button>
+  </div>
+
+  <button class="verre sortie" id="sortieImmersif" hidden><span data-ic="shrink"></span>Afficher l'interface</button>
+  <div class="toast" id="toast" role="status" hidden></div>
+
+  <!-- Mode histoire : la Sîra en chapitres interactifs -->
+  <section class="jeu" id="jeu" hidden aria-label="Mode histoire">
+    <div class="cine haut"></div><div class="cine bas"></div>
+    <canvas class="j-sable" id="jSable" aria-hidden="true"></canvas>
+
+    <div class="j-titre" id="jTitre" hidden>
+      <div class="j-titre-bloc">
+        <div class="j-ar" lang="ar" id="jtAr"></div>
+        <h1 id="jtTitre"></h1>
+        <p class="j-sous" id="jtSous"></p>
+        <div class="j-actions" id="jtActions"></div>
+        <p class="j-stats" id="jtStats" hidden></p>
+        <p class="j-note">Vous êtes le chroniqueur : à chaque étape, retrouvez ce qui s'est réellement passé. Un mauvais choix brouille l'histoire : il faut alors remonter le temps. Dans les missions, les personnes sont de simples étiquettes sur la carte : aucun personnage n'est représenté, et le Prophète ﷺ, les prophètes, les Compagnons et sa famille restent hors champ. Textes en brouillon, à vérifier par un enseignant.</p>
+      </div>
+    </div>
+
+    <header class="j-hud" id="jHud" hidden>
+      <div class="j-pastille">
+        <button class="j-rond" id="jMenuBtn" aria-label="Menu du jeu"><span data-ic="list"></span></button>
+        <div class="j-hud-titre"><small id="jLivre"></small><b id="jChap"></b></div>
+      </div>
+      <div class="j-fil" id="jFil" aria-hidden="true"></div>
+      <div class="j-pastille">
+        <span class="j-lum" id="jLumBloc" title="Lumières : bonnes réponses du premier coup"><span class="etoile">✦</span><b id="jLum">0</b></span>
+        <button class="j-rond" id="jCarnetBtn" aria-label="Carnet de route"><span data-ic="book"></span></button>
+        <button class="j-rond" id="jVoixBtn" aria-label="Lecture à voix haute" aria-pressed="false" hidden><span data-ic="voix"></span></button>
+        <button class="j-rond" id="jSonBtn" aria-label="Son"></button>
+      </div>
+    </header>
+
+    <div class="j-chap" id="jChapCarte" hidden>
+      <small id="jcLivre"></small>
+      <div class="j-ar" lang="ar" id="jcAr"></div>
+      <h2 id="jcTitre"></h2>
+      <i class="j-trait"></i>
+      <p id="jcDate"></p>
+    </div>
+
+    <div class="j-consigne" id="jConsigne" hidden>
+      <span class="j-viseur" aria-hidden="true"></span>
+      <div><b id="jcQ"></b><small id="jcRetour"></small></div>
+      <button class="j-btn petit" id="jIndiceBtn">Indice</button>
+    </div>
+
+    <!-- missions, jouées sur la carte -->
+    <div class="j-objectif" id="jObjectif" hidden>
+      <small id="joMission"></small>
+      <b id="joTexte"></b>
+      <span class="j-compteur" id="joCompteur" hidden></span>
+      <div class="j-sac" id="joSac" hidden></div>
+      <button class="j-tenir" id="joTenir" hidden><i></i><span>Maintenir pour invoquer</span><kbd>Espace</kbd></button>
+      <button class="j-guider" id="joGuider" hidden>Me guider</button>
+    </div>
+    <div class="j-role" id="jRole" hidden>
+      <small>Vous incarnez</small>
+      <h3 id="jrNom"></h3>
+      <div class="j-ar" lang="ar" id="jrAr"></div>
+      <p id="jrTexte"></p>
+      <p class="j-regle" id="jrRegle"></p>
+      <p class="j-touches">Cliquez sur les étiquettes de la carte pour parler à une personne, vous rendre en un lieu ou prendre un objet. La caméra suit la scène ; vous pouvez aussi la tourner et zoomer.</p>
+      <button class="j-btn or" id="jrGo">Commencer</button>
+    </div>
+    <div class="j-invoc" id="jInvoc" hidden>
+      <small id="jiTitre">Invocation</small>
+      <p class="j-ar" lang="ar" id="jiAr"></p>
+      <p class="fr" id="jiFr"></p>
+      <i class="j-jauge"><i id="jiJauge"></i></i>
+      <small class="src" id="jiSrc"></small>
+    </div>
+    <div class="j-flottants" id="jFlottants" aria-hidden="true"></div>
+
+    <!-- petits jeux : remettre dans l'ordre, associer, vrai ou faux, estimer -->
+    <div class="j-mini" id="jMini" hidden></div>
+
+    <div class="j-dialogue" id="jDialogue" hidden>
+      <div class="j-tag"><span id="jdLieu"></span><span id="jdDate"></span></div>
+      <p class="j-texte" id="jdTexte"></p>
+      <div class="j-options" id="jdOptions"></div>
+      <div class="j-pied"><button class="j-suite" id="jdSuite">Continuer<kbd>Espace</kbd></button></div>
+    </div>
+
+    <div class="j-conseq" id="jConseq" role="alertdialog" aria-labelledby="jqTitre" hidden>
+      <svg class="j-casse" viewBox="0 0 220 24" aria-hidden="true"><path d="M2 12 C40 4 70 20 100 11"/><path d="M120 13 C150 4 180 20 218 12"/><path class="eclat" d="M104 6 l6 6 -6 6 M116 6 l-6 6 6 6"/></svg>
+      <small>Ce n'est pas ce qui s'est passé</small>
+      <h3 id="jqTitre"></h3>
+      <p class="j-hypo"><span>Scénario imaginaire</span><span id="jqTexte"></span></p>
+      <p class="j-indice" id="jqIndice"></p>
+      <button class="j-btn or" id="jqRetour"><span class="tourne">⟲</span>Remonter le temps</button>
+    </div>
+
+    <div class="j-retour" id="jRetour" hidden>
+      <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44"/><path class="aiguille" d="M50 50 L50 14"/><path class="aiguille petite" d="M50 50 L72 50"/></svg>
+      <span>Retour au moment du choix…</span>
+    </div>
+
+    <div class="j-bilan" id="jBilan" hidden></div>
+    <div class="j-panneau" id="jPanneau" hidden></div>
+    <div class="j-vol" id="jVol" aria-hidden="true"></div>
+  </section>
+
+  <!-- Aide à la navigation -->
+  <div class="aide-nav verre ui" id="aide" role="dialog" aria-labelledby="aideTitre" hidden>
+    <b id="aideTitre">Se déplacer sur la carte</b>
+    <dl id="aideListe"></dl>
+    <button class="principal" id="aideOk">Compris</button>
+  </div>
+
+  <div class="chargement" id="chargement">
+    <div class="verre">
+      <span class="logo" data-ic="star"></span>
+      <b>Sîra 3D</b>
+      <p id="chargementTexte">Chargement du relief du Hijaz…</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "zone": "badr",
+  "nom": "Badr",
+  "emprise": {
+    "ouest": 38.69166666666667,
+    "sud": 23.674999999999997,
+    "est": 38.84722222222222,
+    "nord": 23.80833333333333
+  },
+  "largeur": 168,
+  "hauteur": 144,
+  "resolution_arcsec": 3.3333333333333335,
+  "format": "PNG gris 16 bits, lignes du nord au sud ; altitude (m) = valeur - decalage",
+  "decalage": 1000,
+  "altitude_min": 43,
+  "altitude_max": 546,
+  "mer": null,
+  "genere_le": "2026-10-04",
+  "encart": true,
+  "grille_hijaz": {
+    "c0": 304,
+    "c1": 332,
+    "r0": 466,
+    "r1": 490
+  },
+  "encarts": [],
+  "sources": [
+    {
+      "nom": "Copernicus DEM GLO-90",
+      "attribution": "Copernicus DEM GLO-90 — © DLR e.V. 2010-2014 et © Airbus Defence and Space GmbH 2014-2018, fourni dans le cadre de COPERNICUS par l'Union européenne et l'ESA"
+    },
+    {
+      "nom": "Sentinel-2 L2A",
+      "attribution": "Contient des données Copernicus Sentinel modifiées (2024)"
+    }
+  ],
+  "satellite": {
+    "fichier": "badr-satellite.jpg",
+    "largeur": 168,
+    "hauteur": 144,
+    "scenes": [
+      "S2B_37QDG_20240104_0_L2A"
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "zone": "madinah",
+  "nom": "Médine et ses environs",
+  "emprise": {
+    "ouest": 39.49166666666667,
+    "sud": 24.352777777777774,
+    "est": 39.725,
+    "nord": 24.563888888888886
+  },
+  "largeur": 252,
+  "hauteur": 228,
+  "resolution_arcsec": 3.3333333333333335,
+  "format": "PNG gris 16 bits, lignes du nord au sud ; altitude (m) = valeur - decalage",
+  "decalage": 1000,
+  "altitude_min": 580,
+  "altitude_max": 1081,
+  "mer": null,
+  "genere_le": "2026-10-04",
+  "encart": true,
+  "grille_hijaz": {
+    "c0": 448,
+    "c1": 490,
+    "r0": 330,
+    "r1": 368
+  },
+  "encarts": [],
+  "sources": [
+    {
+      "nom": "Copernicus DEM GLO-90",
+      "attribution": "Copernicus DEM GLO-90 — © DLR e.V. 2010-2014 et © Airbus Defence and Space GmbH 2014-2018, fourni dans le cadre de COPERNICUS par l'Union européenne et l'ESA"
+    },
+    {
+      "nom": "Sentinel-2 L2A",
+      "attribution": "Contient des données Copernicus Sentinel modifiées (2024)"
+    }
+  ],
+  "satellite": {
+    "fichier": "madinah-satellite.jpg",
+    "largeur": 252,
+    "hauteur": 228,
+    "scenes": [
+      "S2B_37REH_20240101_0_L2A"
+    ]
+  }
+}

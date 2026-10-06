@@ -1,0 +1,343 @@
+{
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
+ "id": "safa",
+ "titre": "L'appel d'as-Safâ",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "bukhari",
+   "page": null,
+   "passage": "Tafsîr, sourates ash-Shu'arâ' (26:214) et al-Masad (hadith d'Ibn 'Abbâs)"
+  },
+  {
+   "ouvrage": "rahiq",
+   "page": null,
+   "passage": "La prédication publique"
+  }
+ ],
+ "role": {
+  "nom": "Un marchand de La Mecque",
+  "nom_ar": "تاجر من مكة",
+  "texte": "Vous tenez un petit étal près de la Ka'ba. Ce matin, un cri d'alarme va vous faire tout lâcher. Écoutez bien : ce que vous entendrez, vous devrez en juger par vous-même.",
+  "regle": "Le Prophète ﷺ n'est jamais montré : une lumière marque sa présence sur as-Safâ, et seules ses paroles rapportées par al-Bukhârî sont citées. Les personnes sont des étiquettes sur la carte. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "temoin1": {
+   "nom": "Un vieux marchand",
+   "qualite": "Quraysh"
+  },
+  "temoin2": {
+   "nom": "Un jeune berger",
+   "qualite": "La Mecque"
+  },
+  "temoin3": {
+   "nom": "Un notable de Quraysh",
+   "qualite": ""
+  },
+  "mecquois": {
+   "nom": "Un Mecquois",
+   "qualite": "passant"
+  },
+  "marche": {
+   "nom": "Un marchand",
+   "qualite": "marché de La Mecque"
+  },
+  "presence": {
+   "nom": "Sur as-Safâ",
+   "qualite": ""
+  }
+ },
+ "dialogues": {
+  "temoin1": [
+   "Il a raison sur un point : en quarante ans, je ne l'ai jamais entendu mentir. Pas une seule fois. On lui confiait nos biens quand on partait en voyage."
+  ],
+  "temoin2": [
+   "Abû Lahab l'a insulté devant tout le monde, et c'est son oncle ! Chez nous, on défend son neveu, même quand on n'est pas d'accord avec lui."
+  ],
+  "temoin3": [
+   "S'il dit vrai, que deviennent nos idoles, et le commerce des pèlerins qui viennent les honorer ? Mieux vaut ne pas l'écouter… même s'il n'a jamais menti."
+  ],
+  "mecquois": [
+   "Qu'est-ce que c'est que ce cri ? Une attaque, à cette heure-ci ?",
+   "On dit que c'est le petit-fils de 'Abd al-Muttalib qui appelle, du haut d'as-Safâ."
+  ],
+  "marche": [
+   "J'ai laissé mes dattes sur l'étal. Si c'est une fausse alerte, je ne serai pas content !"
+  ]
+ },
+ "scenes": {
+  "makka": {
+   "titre": "La Mecque",
+   "sous": "Vers 613, la quatrième année de la révélation",
+   "ambiance": "aube",
+   "epoque": "predication",
+   "origine": "makkah",
+   "vue": {
+    "auto": true,
+    "cap": 110,
+    "incl": 58,
+    "avec": [
+     "safa"
+    ]
+   },
+   "reperes": [
+    {
+     "id": "mecquois",
+     "genre": "personne",
+     "x": -60,
+     "z": 70
+    },
+    {
+     "id": "marche",
+     "genre": "personne",
+     "x": 40,
+     "z": 120
+    },
+    {
+     "id": "safa_pied",
+     "genre": "lieu",
+     "x": 120,
+     "z": 60,
+     "nom": "Au pied d'as-Safâ"
+    },
+    {
+     "id": "presence",
+     "genre": "presence",
+     "x": 150,
+     "z": 75,
+     "nom": "Sur as-Safâ",
+     "qualite": "un appel retentit",
+     "visible": false
+    },
+    {
+     "id": "guet",
+     "genre": "lieu",
+     "x": 520,
+     "z": -420,
+     "nom": "La colline, au nord-est",
+     "visible": false
+    },
+    {
+     "id": "temoin1",
+     "genre": "personne",
+     "x": 60,
+     "z": 40,
+     "visible": false
+    },
+    {
+     "id": "temoin2",
+     "genre": "personne",
+     "x": 95,
+     "z": 110,
+     "visible": false
+    },
+    {
+     "id": "temoin3",
+     "genre": "personne",
+     "x": 20,
+     "z": 85,
+     "visible": false
+    }
+   ],
+   "accessoires": [
+    {
+     "type": "lumiere",
+     "id": "lumiere",
+     "x": 150,
+     "z": 75,
+     "visible": false
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "makka"
+  },
+  {
+   "type": "recit",
+   "texte": "Depuis trois ans, le message se transmet en secret : quelques dizaines de croyants se retrouvent discrètement, notamment dans la maison d'al-Arqam, au pied d'as-Safâ. Puis vient l'ordre : « Et avertis les gens de ta proche famille. » (26:214)"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": [
+      "presence",
+      "lumiere"
+     ]
+    },
+    {
+     "flottant": "« Yâ sabâhâh ! »"
+    },
+    {
+     "aller": "mecquois",
+     "vers": [
+      {
+       "x": 100,
+       "z": 45
+      }
+     ],
+     "duree": 3,
+     "attendre": false
+    },
+    {
+     "aller": "marche",
+     "vers": [
+      {
+       "x": 105,
+       "z": 80
+      }
+     ],
+     "duree": 3,
+     "attendre": false
+    },
+    {
+     "regarder": "presence"
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Un cri retentit depuis le mont as-Safâ : « Yâ sabâhâh ! », l'appel qu'on lance quand une attaque menace au petit matin. Partout, on lâche ce qu'on tient pour courir voir."
+  },
+  {
+   "type": "objectif",
+   "texte": "Rendez-vous au pied du mont as-Safâ, à l'est de la Ka'ba : cliquez sur le lieu.",
+   "quand": {
+    "aller": "safa_pied"
+   }
+  },
+  {
+   "type": "recit",
+   "texte": "Du haut d'as-Safâ, il ﷺ appelle les clans de Quraysh un à un : « Ô Banû Fihr ! Ô Banû 'Adî ! » Ceux qui ne peuvent venir envoient quelqu'un voir de quoi il s'agit. Abû Lahab est là, avec les chefs.",
+   "sous": "d'après Ibn 'Abbâs, Sahîh al-Bukhârî"
+  },
+  {
+   "type": "recit",
+   "texte": "« Que diriez-vous si je vous annonçais qu'une cavalerie, dans la vallée, s'apprête à fondre sur vous : me croiriez-vous ? »",
+   "qui": "Le Prophète ﷺ",
+   "sous": "paroles rapportées par al-Bukhârî"
+  },
+  {
+   "type": "choix",
+   "question": "Toute la foule a les yeux levés vers as-Safâ. Que répond-elle, et vous avec elle ?",
+   "options": [
+    {
+     "texte": "« Oui : nous ne t'avons jamais entendu dire autre chose que la vérité. »",
+     "juste": true
+    },
+    {
+     "texte": "« Attends : envoyons d'abord quelqu'un regarder derrière la colline. »",
+     "titre": "Le doute",
+     "consequence": "Et si Quraysh avait répondu par le doute : ce jour-là, au contraire, tous reconnurent qu'il ﷺ n'avait jamais menti. C'est précisément ce qu'il voulait leur faire dire, avant de les avertir.",
+     "indice": "Depuis sa jeunesse, Quraysh le surnommait al-Amîn : le digne de confiance.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "montrer": "guet"
+        },
+        {
+         "vue": {
+          "auto": true,
+          "cap": 60,
+          "incl": 55
+         }
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Allez vérifier vous-même : montez sur la colline, au nord-est.",
+       "quand": {
+        "aller": "guet"
+       }
+      },
+      {
+       "type": "recit",
+       "texte": "Il n'y a rien. La vallée est vide, seul le vent passe sur les rochers. Le temps de redescendre, la foule s'est dispersée : vous avez manqué l'essentiel."
+      }
+     ]
+    },
+    {
+     "texte": "« Une cavalerie, ici ? Tu te trompes sûrement : personne ne nous attaque. »",
+     "titre": "La moquerie",
+     "consequence": "Et si Quraysh l'avait accusé de se tromper : personne, ce jour-là, ne le fit. Tous répondirent qu'ils ne l'avaient jamais entendu mentir, ce qui rendait son avertissement d'autant plus grave.",
+     "indice": "Depuis sa jeunesse, Quraysh le surnommait al-Amîn : le digne de confiance.",
+     "suite": [
+      {
+       "type": "recit",
+       "texte": "Quelques rires montent de la foule. Puis le silence retombe ; on n'entend plus que le vent sur la montagne."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "« Eh bien, je suis pour vous un avertisseur, devant un châtiment terrible. »",
+   "qui": "Le Prophète ﷺ",
+   "sous": "paroles rapportées par al-Bukhârî"
+  },
+  {
+   "type": "recit",
+   "texte": "Alors Abû Lahab, son propre oncle, s'écrie : « Que tu périsses tout le reste du jour ! Est-ce pour cela que tu nous as réunis ? » Et la foule commence à se disperser."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": [
+      "presence",
+      "lumiere",
+      "safa_pied"
+     ]
+    },
+    {
+     "aller": "mecquois",
+     "vers": [
+      {
+       "x": -40,
+       "z": 60
+      }
+     ],
+     "duree": 3,
+     "attendre": false
+    },
+    {
+     "montrer": [
+      "temoin1",
+      "temoin2",
+      "temoin3"
+     ]
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "C'est à son sujet que fut révélée la sourate : « Que périssent les deux mains d'Abû Lahab, et qu'il périsse lui-même ! »",
+   "qui": "Sourate al-Masad (111:1)",
+   "sous": "traduction du sens"
+  },
+  {
+   "type": "objectif",
+   "texte": "Les gens commentent ce qu'ils viennent d'entendre : écoutez trois d'entre eux.",
+   "quand": {
+    "tous": [
+     "temoin1",
+     "temoin2",
+     "temoin3"
+    ],
+    "nom": "Écoutés"
+   }
+  },
+  {
+   "type": "recit",
+   "texte": "Chacun a entendu la même chose ; chacun en tire sa propre conclusion. Ce jour-là, l'appel devint public. Les années suivantes seront celles du refus de Quraysh, et des premières persécutions."
+  }
+ ],
+ "fin": "L'appel est lancé"
+}

@@ -1,0 +1,45 @@
+{
+  "zone": "taif",
+  "nom": "Tâ'if",
+  "emprise": {
+    "ouest": 40.33611111111111,
+    "sud": 21.19722222222222,
+    "est": 40.480555555555554,
+    "nord": 21.341666666666665
+  },
+  "largeur": 156,
+  "hauteur": 156,
+  "resolution_arcsec": 3.3333333333333335,
+  "format": "PNG gris 16 bits, lignes du nord au sud ; altitude (m) = valeur - decalage",
+  "decalage": 1000,
+  "altitude_min": 1552,
+  "altitude_max": 2074,
+  "mer": null,
+  "genere_le": "2026-10-04",
+  "encart": true,
+  "grille_hijaz": {
+    "c0": 600,
+    "c1": 626,
+    "r0": 910,
+    "r1": 936
+  },
+  "encarts": [],
+  "sources": [
+    {
+      "nom": "Copernicus DEM GLO-90",
+      "attribution": "Copernicus DEM GLO-90 — © DLR e.V. 2010-2014 et © Airbus Defence and Space GmbH 2014-2018, fourni dans le cadre de COPERNICUS par l'Union européenne et l'ESA"
+    },
+    {
+      "nom": "Sentinel-2 L2A",
+      "attribution": "Contient des données Copernicus Sentinel modifiées (2024)"
+    }
+  ],
+  "satellite": {
+    "fichier": "taif-satellite.jpg",
+    "largeur": 156,
+    "hauteur": 156,
+    "scenes": [
+      "S2B_37QFD_20240121_0_L2A"
+    ]
+  }
+}

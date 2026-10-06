@@ -1,0 +1,461 @@
+{
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
+ "id": "refuge",
+ "titre": "Le jour de la sécurité",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "muslim",
+   "page": null,
+   "passage": "Livre du jihâd : la conquête de La Mecque (hadith d'Abû Hurayra)"
+  },
+  {
+   "ouvrage": "bukhari",
+   "page": null,
+   "passage": "Livre des expéditions : les idoles autour de la Ka'ba (hadith d'Ibn Mas'ûd)"
+  },
+  {
+   "ouvrage": "ibn-hisham",
+   "page": null,
+   "passage": "La conquête de La Mecque : al-Khandama"
+  }
+ ],
+ "role": {
+  "nom": "Un habitant de La Mecque",
+  "nom_ar": "رجل من أهل مكة",
+  "texte": "Vous êtes un Mecquois ordinaire, ni chef ni soldat. Ce matin, une armée de dix mille hommes entre dans votre ville. Il va falloir garder la tête froide, et protéger ceux qui comptent sur vous.",
+  "regle": "Le Prophète ﷺ, Bilâl et les Compagnons ne sont jamais montrés. Les personnes sont des étiquettes sur la carte ; les idoles sont figurées par de simples pierres dressées. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "crieur": {
+   "nom": "Un crieur",
+   "qualite": "dans les rues de La Mecque"
+  },
+  "voisine": {
+   "nom": "Votre voisine",
+   "qualite": "et ses deux enfants"
+  },
+  "affoles": {
+   "nom": "Un Mecquois",
+   "qualite": "dans la rue"
+  },
+  "armes": {
+   "nom": "Un homme armé",
+   "qualite": "à al-Khandama"
+  }
+ },
+ "dialogues": {
+  "affoles": [
+   "Dix mille hommes ! On dit qu'ils entrent par quatre côtés à la fois.",
+   "Abû Sufyân est revenu de leur camp : il dit qu'il ne faut pas combattre, que ceux qui restent chez eux seront épargnés.",
+   "Moi, je ferme ma porte et je n'en sors plus."
+  ],
+  "armes": [
+   "Nous ne laisserons pas entrer cette armée sans combattre !"
+  ]
+ },
+ "scenes": {
+  "makka": {
+   "titre": "La Mecque",
+   "sous": "20 Ramadân, an 8 de l'Hégire (janvier 630)",
+   "ambiance": "aube",
+   "epoque": "fath",
+   "origine": "makkah",
+   "vue": {
+    "auto": true,
+    "cap": 170,
+    "incl": 58
+   },
+   "reperes": [
+    {
+     "id": "crieur",
+     "genre": "personne",
+     "x": 80,
+     "z": -90
+    },
+    {
+     "id": "voisine",
+     "genre": "personne",
+     "x": -150,
+     "z": 160,
+     "nom": "Votre voisine",
+     "qualite": "et ses deux enfants"
+    },
+    {
+     "id": "affoles",
+     "genre": "personne",
+     "x": -40,
+     "z": 230
+    },
+    {
+     "id": "porte_voisine",
+     "genre": "lieu",
+     "x": -210,
+     "z": 120,
+     "nom": "La porte de votre voisine",
+     "visible": false
+    },
+    {
+     "id": "khandama",
+     "genre": "lieu",
+     "x": 250,
+     "z": 950,
+     "nom": "La colline d'al-Khandama",
+     "visible": false
+    },
+    {
+     "id": "armes",
+     "genre": "personne",
+     "x": 280,
+     "z": 990,
+     "visible": false
+    },
+    {
+     "id": "montagne",
+     "genre": "lieu",
+     "x": -950,
+     "z": -60,
+     "nom": "La montagne, à l'ouest",
+     "visible": false
+    },
+    {
+     "id": "haram",
+     "genre": "lieu",
+     "x": 12,
+     "z": 38,
+     "nom": "La Mosquée sacrée",
+     "visible": false
+    }
+   ],
+   "accessoires": [
+    {
+     "type": "pierres",
+     "id": "idoles",
+     "x": 0,
+     "z": 0,
+     "rayon": 34,
+     "n": 60
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "makka"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "convoi": {
+      "type": "armee",
+      "etapes": [
+       "marr",
+       [
+        21.5,
+        39.78
+       ],
+       "makkah"
+      ]
+     }
+    },
+    {
+     "vue": {
+      "point": [
+       21.52,
+       39.75
+      ],
+      "r": 45,
+      "cap": 200,
+      "incl": 48
+     },
+     "duree": 2000
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Cette nuit, dix mille feux brillaient sur les hauteurs de Marr az-Zahrân. Au matin, une armée immense s'avance vers La Mecque par plusieurs côtés à la fois. Dans les rues, c'est la panique : on court, on crie, on barricade les portes."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "convoi": null
+    },
+    {
+     "vue": {
+      "auto": true,
+      "cap": 170,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "crieur",
+     "vers": [
+      {
+       "x": -60,
+       "z": 120
+      }
+     ],
+     "duree": 2.5
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "crieur",
+   "texte": "Écoutez, gens de La Mecque ! Celui qui entre dans la maison d'Abû Sufyân est en sécurité. Celui qui dépose les armes est en sécurité. Celui qui ferme sa porte sur lui est en sécurité !"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "crieur",
+     "vers": [
+      {
+       "x": -40,
+       "z": 600
+      }
+     ],
+     "duree": 4,
+     "attendre": false
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Votre voisine et ses enfants sont dans la rue, affolés : allez lui parler.",
+   "quand": {
+    "parler": "voisine"
+   }
+  },
+  {
+   "type": "parole",
+   "qui": "voisine",
+   "texte": "Que va-t-il nous arriver ? Mon mari est parti avec les hommes armés, vers al-Khandama. Il dit qu'ils barreront la route à l'armée…"
+  },
+  {
+   "type": "choix",
+   "question": "Que lui conseillez-vous ?",
+   "options": [
+    {
+     "texte": "« Rentre chez toi avec les enfants et ferme ta porte : le crieur a promis la sécurité à qui reste chez soi. »",
+     "juste": true
+    },
+    {
+     "texte": "« Viens, allons rejoindre les hommes à al-Khandama : à plusieurs, nous pourrons leur barrer la route. »",
+     "titre": "Al-Khandama",
+     "consequence": "Et si vous les aviez menés au combat : à al-Khandama, une poignée d'hommes de Quraysh affronta la colonne de Khâlid ibn al-Walîd, et une douzaine y perdirent la vie. Partout ailleurs, la ville fut prise sans combat.",
+     "indice": "La sécurité était promise à ceux qui restaient chez eux, portes closes, ou entraient dans la Mosquée sacrée.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "montrer": [
+          "khandama",
+          "armes"
+         ]
+        },
+        {
+         "vue": {
+          "auto": true,
+          "cap": 170,
+          "incl": 55
+         }
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Conduisez-les vers la colline d'al-Khandama, au sud.",
+       "quand": {
+        "aller": "khandama"
+       }
+      },
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "voisine",
+         "vers": [
+          {
+           "x": 230,
+           "z": 930
+          }
+         ],
+         "duree": 3
+        }
+       ]
+      },
+      {
+       "type": "recit",
+       "texte": "Sur la colline, quelques dizaines d'hommes attendent, l'arme au poing. Une colonne approche. Quelques flèches partent… puis c'est la débandade, et des hommes tombent."
+      }
+     ]
+    },
+    {
+     "texte": "« Partons nous cacher dans la montagne, comme nos pères au temps de l'Éléphant, jusqu'à ce que tout soit fini. »",
+     "titre": "La fuite",
+     "consequence": "Et si vous aviez fui : des familles entières se seraient jetées sur les pentes sans eau ni abri, alors que la sécurité était promise à ceux qui restaient chez eux. Ce jour-là, La Mecque ne fut pas livrée au pillage.",
+     "indice": "La sécurité était promise à ceux qui restaient chez eux, portes closes, ou entraient dans la Mosquée sacrée.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "montrer": "montagne"
+        },
+        {
+         "vue": {
+          "auto": true,
+          "cap": 260,
+          "incl": 55
+         }
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Emmenez-les vers la montagne, à l'ouest de la ville.",
+       "quand": {
+        "aller": "montagne"
+       }
+      },
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "voisine",
+         "vers": [
+          {
+           "x": -900,
+           "z": -40
+          }
+         ],
+         "duree": 3
+        }
+       ]
+      },
+      {
+       "type": "recit",
+       "texte": "Sur les pentes, sous le soleil, les enfants ont soif : vous n'avez emporté ni eau ni vivres. En bas, la ville est étrangement calme."
+      }
+     ]
+    }
+   ],
+   "qui": "voisine"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": "porte_voisine"
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Raccompagnez-les jusqu'à leur porte.",
+   "quand": {
+    "aller": "porte_voisine"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "voisine",
+     "vers": [
+      {
+       "x": -205,
+       "z": 125
+      }
+     ],
+     "duree": 1.5
+    },
+    {
+     "cacher": [
+      "voisine",
+      "porte_voisine"
+     ]
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "La porte se referme. Dans les rues désertes, on n'entend plus que les pas de l'armée qui entre dans la ville. Un peu plus tard, la rumeur court : tout le monde se rend à la Mosquée sacrée."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": "haram"
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Rendez-vous à la Mosquée sacrée, près de la Ka'ba.",
+   "quand": {
+    "aller": "haram"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": [
+      "haram",
+      "crieur",
+      "affoles"
+     ]
+    },
+    {
+     "vue": {
+      "lieu": "makkah",
+      "r": 0.32,
+      "cap": 160,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Autour de la Ka'ba se dressent trois cent soixante idoles. Selon al-Bukhârî, le Prophète ﷺ les frappe une à une d'un bâton qu'il tient à la main, en récitant un verset du Coran."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "effet": "idoles",
+     "id": "idoles",
+     "intervalle": 0.06
+    },
+    {
+     "flottant": "جاء الحق وزهق الباطل",
+     "ar": true
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "« La vérité est venue, et le faux a disparu : le faux est voué à disparaître. »",
+   "qui": "Sourate al-Isrâ' (17:81)",
+   "sous": "traduction du sens"
+  },
+  {
+   "type": "recit",
+   "texte": "Puis Bilâl monte sur le toit de la Ka'ba et lance l'appel à la prière. Ce jour-là, le Prophète ﷺ accorde la sécurité à la plupart de ceux qui l'avaient combattu pendant vingt ans."
+  }
+ ],
+ "fin": "La Mecque en paix"
+}

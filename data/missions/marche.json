@@ -1,0 +1,457 @@
+{
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
+ "id": "marche",
+ "titre": "La juste mesure",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "muslim",
+   "page": null,
+   "passage": "Livre de la foi : « Celui qui trompe n'est pas des miens » (hadith d'Abû Hurayra)"
+  },
+  {
+   "ouvrage": "rahiq",
+   "page": null,
+   "passage": "L'organisation de Médine"
+  }
+ ],
+ "role": {
+  "nom": "Un marchand nabatéen",
+  "nom_ar": "تاجر نبطي",
+  "texte": "Vous venez du Shâm vendre votre orge à Médine, comme beaucoup de marchands nabatéens. Vous ne connaissez pas encore les usages de ce marché : vous allez les apprendre.",
+  "regle": "Les personnes sont des étiquettes sur la carte ; le Prophète ﷺ et les Compagnons ne sont jamais montrés. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "bedouin": {
+   "nom": "Un Bédouin",
+   "qualite": "client"
+  },
+  "client2": {
+   "nom": "Un acheteur",
+   "qualite": "client"
+  },
+  "veuve": {
+   "nom": "Une veuve",
+   "qualite": "cliente"
+  },
+  "voisin": {
+   "nom": "Le marchand voisin",
+   "qualite": "marché de Médine"
+  },
+  "clients": {
+   "nom": "Un passant",
+   "qualite": "marché de Médine"
+  },
+  "nabateens": {
+   "nom": "Un marchand nabatéen",
+   "qualite": "venu du Shâm"
+  }
+ },
+ "dialogues": {
+  "voisin": [
+   "Ici, personne ne réserve sa place : le premier arrivé s'installe. Et pas de redevance à payer sur les étals.",
+   "Un conseil : ne cache jamais un défaut. Ici, les gens se méfient de celui qui triche, et la nouvelle court vite."
+  ],
+  "clients": [
+   "Ton orge vient du Shâm ? On dit qu'elle est meilleure que celle d'ici.",
+   "Combien le sâ' ?",
+   "Je repasserai tout à l'heure, je dois d'abord vendre mes dattes."
+  ],
+  "nabateens": [
+   "Nous repartons demain pour le Shâm, avec des dattes de Médine.",
+   "Les gens d'ici disent que la tromperie est un grand péché. Drôle de marché… mais on y vend bien."
+  ]
+ },
+ "objets": {
+  "mouille": {
+   "nom": "Le grain mouillé"
+  }
+ },
+ "scenes": {
+  "souk": {
+   "titre": "Le marché de Médine",
+   "sous": "Vers l'an 2 de l'Hégire",
+   "ambiance": "jour",
+   "epoque": "masjid",
+   "origine": "souq",
+   "vue": {
+    "auto": true,
+    "cap": 200,
+    "incl": 60
+   },
+   "reperes": [
+    {
+     "id": "etal",
+     "genre": "lieu",
+     "x": 0,
+     "z": 0,
+     "nom": "Votre étal, au centre de la place"
+    },
+    {
+     "id": "voisin",
+     "genre": "personne",
+     "x": 70,
+     "z": -30
+    },
+    {
+     "id": "clients",
+     "genre": "personne",
+     "x": -80,
+     "z": 60
+    },
+    {
+     "id": "nabateens",
+     "genre": "personne",
+     "x": 140,
+     "z": 110
+    },
+    {
+     "id": "bedouin",
+     "genre": "personne",
+     "x": -260,
+     "z": 180,
+     "visible": false
+    },
+    {
+     "id": "client2",
+     "genre": "personne",
+     "x": 220,
+     "z": -150,
+     "visible": false
+    },
+    {
+     "id": "veuve",
+     "genre": "personne",
+     "x": -200,
+     "z": -120,
+     "visible": false
+    },
+    {
+     "id": "sac_mouille",
+     "genre": "objet",
+     "x": 30,
+     "z": 40,
+     "nom": "Le sac de grain mouillé",
+     "visible": false
+    }
+   ],
+   "accessoires": [
+    {
+     "type": "troupeau",
+     "x": 160,
+     "z": 130,
+     "rayon": 40,
+     "n": 6,
+     "charge": true
+    },
+    {
+     "type": "tentes",
+     "x": 0,
+     "z": 0,
+     "rayon": 90,
+     "n": 8,
+     "couleur": "#D9C7A2"
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "souk"
+  },
+  {
+   "type": "recit",
+   "texte": "Votre caravane arrive du Shâm, chargée d'orge. Sur le marché de Médine, on dit que les règles ont changé depuis l'arrivée du Prophète ﷺ : la place est ouverte à tous, sans redevance, et la tromperie n'y a pas sa place."
+  },
+  {
+   "type": "objectif",
+   "texte": "Installez-vous à votre étal, au centre de la place.",
+   "quand": {
+    "aller": "etal"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": "bedouin"
+    },
+    {
+     "aller": "bedouin",
+     "vers": [
+      {
+       "x": -40,
+       "z": 30
+      }
+     ],
+     "duree": 2.5
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "bedouin",
+   "texte": "La paix sur toi, marchand. Mesure-moi un sâ' d'orge, je te prie : j'ai une longue route à faire jusqu'à mon campement."
+  },
+  {
+   "type": "choix",
+   "question": "Comment remplissez-vous la mesure ?",
+   "options": [
+    {
+     "texte": "La remplir à ras bord et l'égaliser du plat de la main, sous les yeux de l'acheteur.",
+     "juste": true
+    },
+    {
+     "texte": "La remplir sans tasser, en la tenant un peu penchée : il n'y verra que du feu.",
+     "titre": "La mesure trichée",
+     "consequence": "Et si vous aviez triché sur la mesure : votre nom aurait couru tout le marché. Selon Ibn 'Abbâs, la sourate al-Mutaffifîn fut révélée à l'arrivée du Prophète ﷺ à Médine, dont les gens trichaient sur la mesure ; ils devinrent ensuite les plus honnêtes.",
+     "indice": "La sourate al-Mutaffifîn s'ouvre sur : « Malheur aux fraudeurs ! »",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "bedouin",
+       "texte": "Merci, marchand. Que ta journée soit bonne."
+      },
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "bedouin",
+         "vers": [
+          {
+           "x": -300,
+           "z": 220
+          }
+         ],
+         "duree": 2,
+         "attendre": false
+        },
+        {
+         "ambiance": "aube",
+         "sous": "Le soir"
+        },
+        {
+         "pause": 900
+        }
+       ]
+      },
+      {
+       "type": "recit",
+       "texte": "La journée a été bonne : à chaque mesure, vous avez gardé un peu d'orge. Le soir, un vieil homme s'arrête devant votre étal et récite à voix haute : « Malheur aux fraudeurs, qui exigent la pleine mesure quand ils achètent, et la diminuent quand ils vendent ! »"
+      }
+     ]
+    },
+    {
+     "texte": "Mesurer large pour ce premier client, puis un peu moins pour les suivants, une fois connu.",
+     "titre": "Deux poids, deux mesures",
+     "consequence": "Et si vous aviez varié la mesure selon les clients : la fraude finit toujours par se voir. Selon Ibn 'Abbâs, la sourate al-Mutaffifîn fut révélée à l'arrivée du Prophète ﷺ à Médine, dont les gens trichaient sur la mesure.",
+     "indice": "La sourate al-Mutaffifîn s'ouvre sur : « Malheur aux fraudeurs ! »",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "bedouin",
+       "texte": "Une mesure pleine ! Qu'Allah bénisse ton commerce. Je reviendrai chez toi."
+      },
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "bedouin",
+         "vers": [
+          {
+           "x": -300,
+           "z": 220
+          }
+         ],
+         "duree": 2,
+         "attendre": false
+        },
+        {
+         "montrer": "client2"
+        },
+        {
+         "aller": "client2",
+         "vers": [
+          {
+           "x": 40,
+           "z": -30
+          }
+         ],
+         "duree": 2.5
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "client2",
+       "texte": "Tiens, ta mesure est moins pleine que celle du Bédouin, tout à l'heure. Tu me prends pour un sot ?"
+      }
+     ]
+    }
+   ],
+   "qui": "bedouin"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "bedouin",
+     "vers": [
+      {
+       "x": -300,
+       "z": 220
+      }
+     ],
+     "duree": 2,
+     "attendre": false
+    },
+    {
+     "cacher": "bedouin"
+    },
+    {
+     "sous": "Le lendemain matin"
+    },
+    {
+     "montrer": "sac_mouille"
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Pendant la nuit, une averse a mouillé le fond de votre tas d'orge. Le dessus est sec et doré ; dessous, le grain est humide et commence à s'abîmer."
+  },
+  {
+   "type": "choix",
+   "question": "Que faites-vous du grain mouillé ?",
+   "options": [
+    {
+     "texte": "Le mettre bien en vue au-dessus du tas, et le vendre moins cher à qui le veut ainsi.",
+     "juste": true
+    },
+    {
+     "texte": "Le laisser au fond, sous le grain sec : personne ne remue un tas d'orge jusqu'en bas.",
+     "titre": "Le défaut caché",
+     "consequence": "Et si vous aviez caché le grain mouillé : selon Muslim, le Prophète ﷺ passa près d'un tas de grain, y plongea la main et trouva de l'humidité. Il dit : « Pourquoi ne l'as-tu pas mis au-dessus, pour que les gens le voient ? Celui qui trompe n'est pas des miens. »",
+     "indice": "Un défaut se montre ; on ne le cache pas sous la bonne marchandise.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "montrer": "client2"
+        },
+        {
+         "aller": "client2",
+         "vers": [
+          {
+           "x": 40,
+           "z": -30
+          }
+         ],
+         "duree": 2.5
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "client2",
+       "texte": "Deux mesures, s'il te plaît. Ton orge est belle, elle !"
+      },
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "client2",
+         "vers": [
+          {
+           "x": 220,
+           "z": -150
+          }
+         ],
+         "duree": 2
+        },
+        {
+         "sous": "Le lendemain"
+        },
+        {
+         "aller": "client2",
+         "vers": [
+          {
+           "x": 40,
+           "z": -30
+          }
+         ],
+         "duree": 2
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "client2",
+       "texte": "Ton orge était pourrie au fond du sac ! Rends-moi mon argent, tricheur !"
+      }
+     ]
+    },
+    {
+     "texte": "Le mélanger soigneusement au grain sec, pour que l'humidité passe inaperçue à la vente.",
+     "titre": "Tout le tas gâté",
+     "consequence": "Et si vous aviez mélangé le grain mouillé au bon : vous auriez trompé chaque acheteur, et gâté toute votre marchandise. Selon Muslim, le Prophète ﷺ dit à un vendeur qui cachait du grain mouillé : « Celui qui trompe n'est pas des miens. »",
+     "indice": "Un défaut se montre ; on ne le cache pas sous la bonne marchandise.",
+     "suite": [
+      {
+       "type": "recit",
+       "texte": "Le mélange est fait. À midi, le tas entier sent le moisi : tout le grain s'est gâté au contact de l'humidité."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Prenez le sac de grain mouillé, à côté de l'étal.",
+   "quand": {
+    "prendre": "sac_mouille",
+    "porter": "mouille"
+   }
+  },
+  {
+   "type": "objectif",
+   "texte": "Posez-le bien en vue sur l'étal : cliquez sur votre étal.",
+   "quand": {
+    "donner": {
+     "objet": "mouille",
+     "a": "etal"
+    }
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": "veuve"
+    },
+    {
+     "aller": "veuve",
+     "vers": [
+      {
+       "x": -30,
+       "z": -30
+      }
+     ],
+     "duree": 2.5
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "veuve",
+   "texte": "Du grain humide, moins cher ? C'est tout ce que je peux payer, et il fera bien l'affaire pour la bouillie de ce soir. Qu'Allah bénisse ton commerce !"
+  },
+  {
+   "type": "recit",
+   "texte": "Le soir, votre étal est vide, et votre nom circule déjà : « le Nabatéen qui ne triche pas ». Sur ce marché, la confiance vaut plus que l'or."
+  }
+ ],
+ "fin": "Un étal de confiance"
+}

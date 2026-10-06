@@ -1,0 +1,1119 @@
+{
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
+ "id": "elephant",
+ "titre": "Le maître des chameaux",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "ibn-hisham",
+   "page": null,
+   "passage": "L'affaire de l'Éléphant (d'après Ibn Ishâq)"
+  },
+  {
+   "ouvrage": "rahiq",
+   "page": null,
+   "passage": "L'année de l'Éléphant"
+  }
+ ],
+ "role": {
+  "nom": "'Abd al-Muttalib",
+  "nom_ar": "عبد المطلب",
+  "texte": "Seigneur de Quraysh et gardien du puits de Zamzam, vous êtes le grand-père de celui qui naîtra cette année. Une armée venue du Yémen campe aux portes de la ville : à vous de réclamer votre bien avec dignité, puis de protéger les vôtres.",
+  "regle": "Vous jouez un personnage réel, sans jamais le voir : les personnes sont des étiquettes sur la carte. Les paroles des personnages historiques suivent les récits d'Ibn Ishâq ; les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "hunata": {
+   "nom": "Hunâta al-Himyarî",
+   "qualite": "envoyé d'Abraha"
+  },
+  "berger": {
+   "nom": "Un berger",
+   "qualite": "La Mecque"
+  },
+  "chef": {
+   "nom": "Un chef de clan",
+   "qualite": "Quraysh"
+  },
+  "mecquois": {
+   "nom": "Un Mecquois",
+   "qualite": "passant"
+  },
+  "quraysh": {
+   "nom": "Un homme de Quraysh",
+   "qualite": ""
+  },
+  "garde1": {
+   "nom": "Un garde",
+   "qualite": "armée d'Abraha"
+  },
+  "garde2": {
+   "nom": "Un garde",
+   "qualite": "armée d'Abraha"
+  },
+  "sentinelle": {
+   "nom": "Une sentinelle",
+   "qualite": "armée d'Abraha"
+  },
+  "sentinelle2": {
+   "nom": "Une sentinelle",
+   "qualite": "armée d'Abraha"
+  },
+  "dhunafar": {
+   "nom": "Dhû Nafar",
+   "qualite": "noble himyarite, prisonnier"
+  },
+  "unays": {
+   "nom": "Unays",
+   "qualite": "cornac de l'éléphant"
+  },
+  "abraha": {
+   "nom": "Abraha",
+   "qualite": "gouverneur du Yémen"
+  },
+  "interprete": {
+   "nom": "L'interprète",
+   "qualite": "au service d'Abraha"
+  },
+  "soldats": {
+   "nom": "Un soldat",
+   "qualite": "armée d'Abraha"
+  },
+  "soldats2": {
+   "nom": "Un soldat",
+   "qualite": "armée d'Abraha"
+  },
+  "chameaux": {
+   "nom": "Vos chameaux",
+   "qualite": "deux cents bêtes"
+  },
+  "mahmud": {
+   "nom": "Mahmûd",
+   "qualite": "l'éléphant d'Abraha"
+  }
+ },
+ "dialogues": {
+  "mecquois": [
+   "On dit que l'éléphant d'Abraha est haut comme une maison. Personne ici n'en a jamais vu.",
+   "Sur la route, des tribus ont tenté de l'arrêter. Dhû Nafar a été vaincu et fait prisonnier ; Nufayl le Khath'amite aussi, qu'on force maintenant à guider l'armée.",
+   "Abraha a bâti à San'â' une église qu'il voulait plus belle que tout. Il veut que les Arabes y aillent en pèlerinage, à la place de la Ka'ba.",
+   "Que pouvons-nous contre une telle armée ? Nous sommes des marchands, pas des soldats."
+  ],
+  "soldats": [
+   "Le roi a juré de raser cette Maison de pierres et de rentrer au Yémen avant la fin du mois.",
+   "Qui es-tu, l'Arabe ? Tu as l'allure d'un roi. Va donc voir le nôtre, s'il veut bien te recevoir."
+  ],
+  "soldats2": [
+   "Nous avons marché depuis le Yémen. Les tribus du chemin se sont écartées ou ont été battues.",
+   "L'éléphant marche toujours en tête. Les Arabes n'en ont jamais vu : ils fuient en le voyant."
+  ],
+  "chameaux": [
+   "Vos bêtes, marquées à votre nom. Il faut obtenir l'accord du roi pour les reprendre."
+  ],
+  "mahmud": [
+   "Un éléphant ! Aucun Arabe n'en avait jamais vu. On dit qu'il s'appelle Mahmûd et qu'il marche en tête de l'armée."
+  ]
+ },
+ "scenes": {
+  "makka": {
+   "titre": "La Mecque",
+   "sous": "L'année de l'Éléphant · vers 570",
+   "ambiance": "jour",
+   "epoque": "naissance",
+   "origine": "makkah",
+   "vue": {
+    "auto": true,
+    "cap": 160,
+    "incl": 58
+   },
+   "reperes": [
+    {
+     "id": "berger",
+     "genre": "personne",
+     "x": -260,
+     "z": 380
+    },
+    {
+     "id": "hunata",
+     "genre": "personne",
+     "x": 70,
+     "z": -60
+    },
+    {
+     "id": "chef",
+     "genre": "personne",
+     "x": -110,
+     "z": 40,
+     "visible": false
+    },
+    {
+     "id": "mecquois",
+     "genre": "personne",
+     "x": 150,
+     "z": 140
+    },
+    {
+     "id": "quraysh",
+     "genre": "personne",
+     "x": -60,
+     "z": -150,
+     "visible": false
+    },
+    {
+     "id": "porte",
+     "genre": "lieu",
+     "x": 6,
+     "z": 6,
+     "nom": "La porte de la Ka'ba",
+     "visible": false
+    },
+    {
+     "id": "crete",
+     "genre": "lieu",
+     "x": 620,
+     "z": -260,
+     "nom": "Le sentier des crêtes",
+     "visible": false
+    },
+    {
+     "id": "ravin",
+     "genre": "lieu",
+     "x": 420,
+     "z": 120,
+     "nom": "Le raccourci du ravin",
+     "visible": false
+    }
+   ]
+  },
+  "camp": {
+   "titre": "Le camp d'Abraha",
+   "sous": "Al-Mughammas, sur la route de Tâ'if (emplacement discuté)",
+   "ambiance": "jour",
+   "epoque": "naissance",
+   "origine": [
+    21.37,
+    39.96
+   ],
+   "vue": {
+    "auto": true,
+    "cap": 20,
+    "incl": 55
+   },
+   "reperes": [
+    {
+     "id": "hunata",
+     "genre": "personne",
+     "x": -520,
+     "z": 60
+    },
+    {
+     "id": "entree",
+     "genre": "lieu",
+     "x": -330,
+     "z": 40,
+     "nom": "L'entrée du camp"
+    },
+    {
+     "id": "garde1",
+     "genre": "personne",
+     "x": -300,
+     "z": 10
+    },
+    {
+     "id": "garde2",
+     "genre": "personne",
+     "x": -300,
+     "z": 90,
+     "visible": false
+    },
+    {
+     "id": "arriere",
+     "genre": "lieu",
+     "x": 120,
+     "z": -360,
+     "nom": "L'arrière du camp",
+     "visible": false
+    },
+    {
+     "id": "sentinelle",
+     "genre": "personne",
+     "x": 160,
+     "z": -330,
+     "visible": false
+    },
+    {
+     "id": "dhunafar",
+     "genre": "personne",
+     "x": -120,
+     "z": 160
+    },
+    {
+     "id": "mahmud",
+     "genre": "animal",
+     "x": 60,
+     "z": -80,
+     "nom": "Mahmûd",
+     "qualite": "l'éléphant d'Abraha"
+    },
+    {
+     "id": "unays",
+     "genre": "personne",
+     "x": 90,
+     "z": -40
+    },
+    {
+     "id": "tente",
+     "genre": "lieu",
+     "x": 160,
+     "z": 40,
+     "nom": "La tente du roi"
+    },
+    {
+     "id": "abraha",
+     "genre": "personne",
+     "x": 190,
+     "z": 30,
+     "visible": false
+    },
+    {
+     "id": "interprete",
+     "genre": "personne",
+     "x": 150,
+     "z": 70,
+     "visible": false
+    },
+    {
+     "id": "soldats",
+     "genre": "personne",
+     "x": -150,
+     "z": -60
+    },
+    {
+     "id": "soldats2",
+     "genre": "personne",
+     "x": 0,
+     "z": 220
+    },
+    {
+     "id": "chameaux",
+     "genre": "animal",
+     "x": 320,
+     "z": 260,
+     "nom": "Vos chameaux",
+     "qualite": "deux cents bêtes",
+     "visible": false
+    }
+   ],
+   "accessoires": [
+    {
+     "type": "tentes",
+     "x": 0,
+     "z": 0,
+     "rayon": 420,
+     "n": 70,
+     "couleur": "#8C5A44"
+    },
+    {
+     "type": "tente",
+     "id": "tente_roi",
+     "x": 170,
+     "z": 40,
+     "couleur": "#9E3B2E"
+    },
+    {
+     "type": "elephant",
+     "x": 60,
+     "z": -80,
+     "cap": 250
+    },
+    {
+     "type": "troupeau",
+     "x": -200,
+     "z": -200,
+     "rayon": 120,
+     "n": 10,
+     "chevaux": true
+    },
+    {
+     "type": "troupeau",
+     "id": "chameaux",
+     "x": 320,
+     "z": 260,
+     "rayon": 90,
+     "n": 14,
+     "visible": false
+    }
+   ]
+  },
+  "vallee": {
+   "titre": "La vallée de La Mecque",
+   "sous": "Le lendemain, à l'aube",
+   "ambiance": "aube",
+   "epoque": "naissance",
+   "origine": "makkah",
+   "vue": {
+    "auto": true,
+    "cap": 100,
+    "incl": 60,
+    "avec": [
+     [
+      21.37,
+      39.96
+     ]
+    ]
+   },
+   "reperes": [
+    {
+     "id": "refuge",
+     "genre": "lieu",
+     "x": 620,
+     "z": -260,
+     "nom": "Les habitants, sur les hauteurs"
+    },
+    {
+     "id": "mahmud",
+     "genre": "animal",
+     "x": 7300,
+     "z": 1300,
+     "nom": "Mahmûd",
+     "qualite": "l'éléphant d'Abraha",
+     "visible": false
+    }
+   ],
+   "accessoires": [
+    {
+     "type": "elephant",
+     "id": "elephant",
+     "x": 7300,
+     "z": 1300,
+     "cap": 290,
+     "visible": false
+    },
+    {
+     "type": "tentes",
+     "point": [
+      21.37,
+      39.96
+     ],
+     "rayon": 420,
+     "n": 70,
+     "couleur": "#8C5A44"
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "makka"
+  },
+  {
+   "type": "recit",
+   "texte": "Depuis des jours, une rumeur court dans la vallée. Abraha, qui gouverne le Yémen au nom du roi d'Abyssinie, a fait bâtir à San'â' une église magnifique pour y détourner le pèlerinage des Arabes. Furieux qu'on l'ait profanée, il marche sur La Mecque avec une grande armée et un éléphant."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "berger",
+     "vers": [
+      {
+       "x": -60,
+       "z": 120
+      }
+     ],
+     "duree": 3
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "berger",
+   "texte": "'Abd al-Muttalib ! Des cavaliers d'Abraha ont razzié les troupeaux qui paissaient dans la vallée. Tes deux cents chameaux sont parmi les bêtes emmenées !"
+  },
+  {
+   "type": "objectif",
+   "texte": "Un envoyé d'Abraha vous attend près de la Ka'ba : cliquez sur son étiquette pour lui parler.",
+   "quand": {
+    "parler": "hunata"
+   }
+  },
+  {
+   "type": "parole",
+   "qui": "hunata",
+   "texte": "Le roi me charge de te dire ceci : il n'est pas venu vous combattre, mais détruire cette Maison. Si vous ne lui barrez pas la route, il n'a que faire de votre sang. Si tu ne veux pas la guerre, viens avec moi le trouver."
+  },
+  {
+   "type": "choix",
+   "question": "Que répondez-vous à l'envoyé d'Abraha ?",
+   "options": [
+    {
+     "texte": "« Nous ne voulons pas le combattre et n'en avons pas la force. Cette Maison est celle d'Allah : s'Il la protège, c'est Sa Maison. »",
+     "juste": true,
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "hunata",
+       "texte": "Alors suis-moi jusqu'au camp du roi."
+      }
+     ]
+    },
+    {
+     "texte": "« Dis à ton roi que Quraysh défendra la Maison par les armes. Nous l'attendrons dans la vallée, jusqu'au dernier homme. »",
+     "titre": "Une bataille perdue d'avance",
+     "consequence": "Et si Quraysh avait pris les armes : face à cette armée, la ville aurait été écrasée et la Maison livrée malgré tout. Selon Ibn Ishâq, 'Abd al-Muttalib refusa ce combat impossible et laissa la Maison à son Maître.",
+     "indice": "'Abd al-Muttalib savait qu'il n'avait pas la force de combattre l'armée : il s'en remit au Maître de la Maison.",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "hunata",
+       "texte": "Comme tu voudras. Le roi entrera demain."
+      },
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "hunata",
+         "vers": [
+          {
+           "x": 200,
+           "z": 600
+          }
+         ],
+         "duree": 3,
+         "attendre": false
+        },
+        {
+         "montrer": "chef"
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Rassemblez les hommes : allez convaincre le chef de clan, près de la Ka'ba.",
+       "quand": {
+        "parler": "chef"
+       }
+      },
+      {
+       "type": "parole",
+       "qui": "chef",
+       "texte": "Combattre ? Ils sont des milliers, avec des chevaux, des cottes de mailles et un éléphant. Nous sommes quelques centaines de marchands et de bergers…"
+      },
+      {
+       "type": "recit",
+       "texte": "Un à un, les hommes baissent les yeux et s'éloignent. À la nuit tombée, vous êtes presque seul devant la Maison."
+      }
+     ]
+    },
+    {
+     "texte": "« Proposons au roi le tiers de toutes les richesses de la Tihâma, s'il accepte de rebrousser chemin et de laisser la Maison. »",
+     "titre": "Une offre refusée",
+     "consequence": "Et si 'Abd al-Muttalib avait marchandé la Maison : selon Ibn Ishâq, des chefs de tribus venus avec lui firent réellement cette offre, et Abraha la refusa. La Maison n'était pas à vendre.",
+     "indice": "'Abd al-Muttalib savait qu'il n'avait pas la force de combattre l'armée : il s'en remit au Maître de la Maison.",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "hunata",
+       "texte": "Je porterai ton offre au roi. Attends ma réponse ici."
+      },
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "cacher": "hunata"
+        },
+        {
+         "ambiance": "aube",
+         "sous": "Le soir"
+        },
+        {
+         "pause": 1200
+        },
+        {
+         "montrer": "hunata"
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "hunata",
+       "texte": "Le roi a ri de ton offre. Il ne veut ni or ni bétail : il veut la Maison. Et tes chameaux restent au camp."
+      }
+     ]
+    }
+   ],
+   "qui": "hunata"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "convoi": {
+      "type": "caravane",
+      "etapes": [
+       "makkah",
+       [
+        21.37,
+        39.96
+       ]
+      ]
+     }
+    },
+    {
+     "vue": {
+      "point": [
+       21.396,
+       39.893
+      ],
+      "r": 14,
+      "cap": 110,
+      "incl": 50
+     },
+     "duree": 2600
+    },
+    {
+     "pause": 2600
+    },
+    {
+     "convoi": null
+    }
+   ]
+  },
+  {
+   "type": "scene",
+   "scene": "camp"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "hunata",
+     "vers": [
+      {
+       "x": -360,
+       "z": 50
+      }
+     ],
+     "duree": 2.5,
+     "attendre": false
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Suivez Hunâta jusqu'à l'entrée du camp : cliquez sur « L'entrée du camp ».",
+   "quand": {
+    "aller": "entree"
+   }
+  },
+  {
+   "type": "parole",
+   "qui": "hunata",
+   "texte": "Attends ici. Personne n'entre sans l'accord du roi ; je vais lui annoncer ta venue."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "hunata",
+     "vers": [
+      {
+       "x": 140,
+       "z": 50
+      }
+     ],
+     "duree": 3,
+     "attendre": false
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Dans ce camp, vous connaissez un homme : Dhû Nafar, un noble himyarite qui a combattu Abraha sur la route et qu'il retient prisonnier. Il pourrait vous ouvrir la porte du roi."
+  },
+  {
+   "type": "choix",
+   "question": "Le garde vous barre le passage, la lance en travers. Que faites-vous ?",
+   "options": [
+    {
+     "texte": "Le saluer avec calme : « Je suis le seigneur de La Mecque. Je viens voir Dhû Nafar, puis le roi, au sujet de mes biens. »",
+     "juste": true
+    },
+    {
+     "texte": "Faire mine de repartir, puis contourner le camp par l'arrière, là où la haie d'épines semble moins gardée.",
+     "titre": "Pris pour un espion",
+     "consequence": "Et si 'Abd al-Muttalib s'était glissé dans le camp comme un voleur : saisi par les sentinelles, il n'aurait jamais été reçu comme un chef. Selon les récits, il se présenta ouvertement, et Abraha l'honora.",
+     "indice": "Un chef se présente à visage découvert, avec calme et franchise.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "montrer": [
+          "arriere",
+          "sentinelle"
+         ]
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Faites le tour : rendez-vous à l'arrière du camp, là où la haie d'épines semble plus basse.",
+       "quand": {
+        "aller": "arriere"
+       }
+      },
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "sentinelle",
+         "vers": [
+          {
+           "x": 130,
+           "z": -350
+          }
+         ],
+         "duree": 1.5
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "sentinelle",
+       "texte": "Halte ! Que fais-tu à rôder derrière les tentes du roi ?"
+      }
+     ]
+    },
+    {
+     "texte": "Écarter la lance d'un revers de main et entrer de force : le seigneur de La Mecque n'a pas à attendre un soldat.",
+     "titre": "La force contre la force",
+     "consequence": "Et si 'Abd al-Muttalib avait forcé l'entrée : les gardes l'auraient jeté hors du camp, et ses chameaux seraient restés aux mains de l'armée.",
+     "indice": "Un chef se présente à visage découvert, avec calme et franchise.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "montrer": "garde2"
+        },
+        {
+         "aller": "garde2",
+         "vers": [
+          {
+           "x": -315,
+           "z": 40
+          }
+         ],
+         "duree": 1.2
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "garde2",
+       "texte": "Saisissez-le ! Qu'on le jette hors du camp !"
+      }
+     ]
+    }
+   ],
+   "qui": "garde1"
+  },
+  {
+   "type": "objectif",
+   "texte": "Trouvez Dhû Nafar, le prisonnier himyarite : cliquez sur son étiquette.",
+   "quand": {
+    "parler": "dhunafar"
+   }
+  },
+  {
+   "type": "parole",
+   "qui": "dhunafar",
+   "texte": "'Abd al-Muttalib… Que peut faire pour toi un prisonnier qui attend la mort, matin et soir ? Mais Unays, le cornac de l'éléphant, est mon ami. Va le trouver de ma part : il parlera de toi au roi."
+  },
+  {
+   "type": "objectif",
+   "texte": "Allez trouver Unays, le cornac, près de l'éléphant.",
+   "quand": {
+    "parler": "unays"
+   }
+  },
+  {
+   "type": "parole",
+   "qui": "unays",
+   "texte": "Dhû Nafar m'a parlé de toi. Je dirai au roi : voici le seigneur de Quraysh, le maître de la caravane de La Mecque, qui nourrit les gens dans la plaine et les bêtes sauvages sur les montagnes."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "unays",
+     "vers": [
+      {
+       "x": 140,
+       "z": 20
+      }
+     ],
+     "duree": 2
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Présentez-vous devant le roi : rendez-vous à sa tente.",
+   "quand": {
+    "aller": "tente"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": [
+      "abraha",
+      "interprete"
+     ]
+    },
+    {
+     "regarder": "abraha"
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Selon Ibn Ishâq, 'Abd al-Muttalib était un homme d'une grande prestance. En le voyant, Abraha l'honore : il descend de son trône, qu'il ne veut pas partager devant les Abyssins, et vient s'asseoir près de lui sur le tapis."
+  },
+  {
+   "type": "parole",
+   "qui": "interprete",
+   "texte": "Le roi te demande ce que tu désires."
+  },
+  {
+   "type": "recit",
+   "texte": "Vous répondez : « Que le roi me rende les deux cents chameaux qu'on m'a pris. »"
+  },
+  {
+   "type": "parole",
+   "qui": "interprete",
+   "texte": "Le roi dit : « Tu m'as plu quand je t'ai vu, puis tu m'as déçu quand tu as parlé. Tu me parles de deux cents chameaux, et tu délaisses une Maison qui est ta religion et celle de tes pères, que je suis venu détruire ? »"
+  },
+  {
+   "type": "choix",
+   "question": "Que répondez-vous au roi ?",
+   "options": [
+    {
+     "texte": "« Je suis le maître des chameaux. La Maison, elle, a un Maître qui la protégera. »",
+     "juste": true
+    },
+    {
+     "texte": "« Épargne la Maison, ô roi, et je marcherai devant ton armée pour lui montrer les puits et les chemins. »",
+     "titre": "Le guide de l'armée",
+     "consequence": "Et si 'Abd al-Muttalib avait guidé l'armée : un homme tint réellement ce rôle, Abû Righâl. Selon Ibn Ishâq, il conduisit Abraha jusqu'à al-Mughammas et y mourut, et les Arabes lapidèrent longtemps sa tombe.",
+     "indice": "Selon Ibn Ishâq, 'Abd al-Muttalib ne réclama que ses chameaux : la Maison, dit-il, a un Maître qui la protégera.",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "interprete",
+       "texte": "Le roi dit : « Marché conclu. Demain, à l'aube, tu marcheras devant mon éléphant. »"
+      },
+      {
+       "type": "recit",
+       "texte": "Vous sortez de la tente. Les soldats vous regardent passer : voici celui qui conduira l'armée vers la Maison."
+      }
+     ]
+    },
+    {
+     "texte": "« Cette Maison n'est qu'un bâtiment de pierres. Fais-en ce que tu voudras, mais rends-moi mes chameaux. »",
+     "titre": "La Maison reniée",
+     "consequence": "Et si 'Abd al-Muttalib avait renié la Ka'ba : il aurait récupéré ses bêtes, mais perdu son rang et la confiance des siens. Selon les récits, il affirma au contraire que la Maison avait un Maître qui la protégerait.",
+     "indice": "Selon Ibn Ishâq, 'Abd al-Muttalib ne réclama que ses chameaux : la Maison, dit-il, a un Maître qui la protégera.",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "interprete",
+       "texte": "Le roi dit : « Voilà donc ce que vaut votre Maison à vos yeux. » Il fait rendre les chameaux, en riant."
+      },
+      {
+       "type": "recit",
+       "texte": "Sur le chemin du retour, la nouvelle vous précède : le seigneur de Quraysh a renié la Maison de ses pères. À l'entrée de la vallée, on vous tourne le dos."
+      }
+     ]
+    }
+   ],
+   "qui": "abraha"
+  },
+  {
+   "type": "parole",
+   "qui": "interprete",
+   "texte": "Le roi dit : « Qu'on lui rende ses chameaux. »"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": "chameaux"
+    },
+    {
+     "regarder": "chameaux"
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Reprenez vos chameaux : cliquez sur votre troupeau.",
+   "quand": {
+    "parler": "chameaux"
+   },
+   "reussite": "Deux cents chameaux"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": "chameaux"
+    },
+    {
+     "convoi": {
+      "type": "caravane",
+      "etapes": [
+       [
+        21.37,
+        39.96
+       ],
+       "makkah"
+      ]
+     }
+    },
+    {
+     "vue": {
+      "point": [
+       21.396,
+       39.893
+      ],
+      "r": 14,
+      "cap": 290,
+      "incl": 50
+     },
+     "duree": 2600
+    },
+    {
+     "pause": 2600
+    },
+    {
+     "convoi": null
+    }
+   ]
+  },
+  {
+   "type": "scene",
+   "scene": "makka",
+   "sous": "Le soir même",
+   "ambiance": "aube"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": "quraysh"
+    },
+    {
+     "cacher": [
+      "hunata",
+      "berger"
+     ]
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Vos chameaux rendus à leurs bergers, vous réunissez Quraysh : « Quittez la ville. Réfugiez-vous dans les vallons et sur les hauteurs, de peur que l'armée ne vous fasse du mal. »"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": "porte"
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Avant de partir, rendez-vous à la porte de la Ka'ba.",
+   "quand": {
+    "aller": "porte"
+   }
+  },
+  {
+   "type": "objectif",
+   "texte": "Tenez l'anneau de la porte et invoquez Allah : maintenez le bouton (ou la barre d'espace).",
+   "quand": {
+    "tenir": {
+     "bouton": "Maintenir l'anneau et invoquer",
+     "duree": 4,
+     "invocation": {
+      "titre": "L'invocation de 'Abd al-Muttalib",
+      "ar": "لاهُمَّ إنَّ العَبْدَ يَمْنَعُ رَحْلَهُ فامْنَعْ حِلالَكْ ۞ لا يَغْلِبَنَّ صَلِيبُهُمْ ومِحالُهُمْ غَدْوًا مِحالَكْ",
+      "fr": "« Ô Allah, l'homme défend sa demeure : défends donc la Tienne. Que leur croix et leur force ne l'emportent jamais, demain, sur Ta force. »",
+      "source": "Ibn Hishâm, as-Sîra an-Nabawiyya, d'après Ibn Ishâq · traduction du sens, à vérifier"
+     }
+    }
+   },
+   "epreuve": true
+  },
+  {
+   "type": "recit",
+   "texte": "Puis vous lâchez l'anneau. Il faut maintenant conduire les vôtres sur les hauteurs, à l'est de la vallée, avant que la nuit ne tombe tout à fait."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": [
+      "crete",
+      "ravin"
+     ]
+    },
+    {
+     "vue": {
+      "lieu": "makkah",
+      "r": 1.8,
+      "cap": 95,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Conduisez les habitants sur les hauteurs, à l'est : choisissez votre chemin.",
+   "quand": {
+    "aller": "crete"
+   },
+   "echecs": [
+    {
+     "repere": "ravin",
+     "titre": "Le raccourci du ravin",
+     "consequence": "Et si vous aviez pris le raccourci : de nuit, dans un ravin escarpé, des familles entières auraient pu chuter. Selon Ibn Ishâq, Quraysh se retira dans les montagnes et les défilés pour attendre ce qu'Abraha ferait.",
+     "indice": "De nuit, avec des familles entières, mieux vaut le sentier connu que le raccourci.",
+     "suite": [
+      {
+       "type": "recit",
+       "texte": "La pente est raide et le sol se dérobe. Un enfant glisse, des pierres roulent dans le noir ; il faut redescendre en catastrophe."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "scene",
+   "scene": "vallee"
+  },
+  {
+   "type": "recit",
+   "texte": "Au matin, Abraha range son armée pour entrer dans La Mecque. L'éléphant, Mahmûd, marche en tête."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "convoi": {
+      "type": "armee",
+      "etapes": [
+       [
+        21.37,
+        39.96
+       ],
+       [
+        21.405,
+        39.87
+       ]
+      ]
+     }
+    },
+    {
+     "montrer": [
+      "elephant",
+      "mahmud"
+     ]
+    },
+    {
+     "pause": 2500
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Selon Ibn Ishâq, un homme de l'armée s'approche alors de l'éléphant et lui murmure à l'oreille : « Agenouille-toi, Mahmûd, ou retourne d'où tu viens : tu es sur la terre sacrée d'Allah. »"
+  },
+  {
+   "type": "recit",
+   "texte": "L'éléphant s'agenouille. On le frappe, on le pique : il refuse de se lever vers La Mecque. Tourné vers le Yémen, il se relève et part au trot ; tourné vers la Maison, il s'agenouille de nouveau."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "effet": "oiseaux",
+     "ou": {
+      "x": 7000,
+      "z": 1300
+     },
+     "n": 70,
+     "duree": 7,
+     "attendre": false
+    },
+    {
+     "vue": {
+      "x": 6800,
+      "z": 1200,
+      "r": 3,
+      "cap": 80,
+      "incl": 64
+     },
+     "duree": 2400
+    },
+    {
+     "pause": 3000
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Alors arrivent de la mer des nuées d'oiseaux. Chacun porte trois pierres, une dans le bec et deux dans les pattes, de la taille d'un pois chiche ou d'une lentille."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "effet": "poussiere",
+     "ou": {
+      "x": 7000,
+      "z": 1300
+     },
+     "rayon": 900,
+     "duree": 3
+    },
+    {
+     "convoi": null
+    },
+    {
+     "cacher": [
+      "elephant",
+      "mahmud"
+     ]
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "« N'as-tu pas vu comment ton Seigneur a traité les gens de l'Éléphant ? N'a-t-Il pas fait échouer leur ruse ? Il envoya contre eux des oiseaux par volées, qui leur lançaient des pierres d'argile durcie, et Il les rendit semblables à de la paille mâchée. »",
+   "qui": "Sourate al-Fîl (105:1-5)",
+   "sous": "traduction du sens"
+  },
+  {
+   "type": "recit",
+   "texte": "L'armée reflue dans le désordre. Abraha, atteint, est ramené vers le Yémen et meurt en chemin, selon Ibn Ishâq. Il avait voulu détruire la Maison : il n'y est jamais parvenu. Cette même année, dans cette vallée, naîtra Muhammad ﷺ."
+  }
+ ],
+ "fin": "La Maison est sauve"
+}

@@ -1,0 +1,342 @@
+{
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
+ "id": "eclaireur",
+ "titre": "Le regard de l'éclaireur",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "ibn-hisham",
+   "page": null,
+   "passage": "Al-Hudaybiya : la mission d'al-Hulays ibn 'Alqama (d'après Ibn Ishâq)"
+  },
+  {
+   "ouvrage": "bukhari",
+   "page": null,
+   "passage": "Livre des conditions : le récit d'al-Hudaybiya"
+  }
+ ],
+ "role": {
+  "nom": "Un éclaireur des Ahâbîsh",
+  "nom_ar": "طليعة من الأحابيش",
+  "texte": "Votre tribu, alliée de Quraysh, a juré de défendre La Mecque. Mais vous êtes un homme qui ne ment pas : on vous envoie voir, vous direz ce que vous avez vu.",
+  "regle": "Le Prophète ﷺ et les Compagnons ne sont jamais montrés : leur camp n'est figuré que par des tentes. Les personnes sont des étiquettes sur la carte. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "chef": {
+   "nom": "Un chef de Quraysh",
+   "qualite": "au conseil"
+  },
+  "chef2": {
+   "nom": "Un chef de Quraysh",
+   "qualite": "au conseil"
+  },
+  "chef3": {
+   "nom": "Un chef de Quraysh",
+   "qualite": "au conseil"
+  },
+  "ahabish": {
+   "nom": "Un homme des Ahâbîsh",
+   "qualite": "allié de Quraysh"
+  },
+  "hady": {
+   "nom": "Bêtes du sacrifice",
+   "qualite": ""
+  },
+  "camp": {
+   "nom": "Le camp des pèlerins",
+   "qualite": ""
+  }
+ },
+ "dialogues": {
+  "ahabish": [
+   "Notre chef, al-Hulays, n'aime pas les menteurs. Rapporte-lui exactement ce que tu as vu.",
+   "S'ils viennent pour la Maison, de quel droit les en empêcherait-on ? Elle n'appartient pas qu'à Quraysh."
+  ],
+  "hady": [
+   "Des colliers au cou, une entaille sur la bosse : ces bêtes sont destinées au sacrifice. Personne n'y touche."
+  ]
+ },
+ "scenes": {
+  "hudaybiya": {
+   "titre": "Al-Hudaybiya",
+   "sous": "Dhû al-Qa'da, an 6 de l'Hégire",
+   "ambiance": "jour",
+   "epoque": "hudaybiya",
+   "origine": "hudaybiya",
+   "vue": {
+    "auto": true,
+    "cap": 0,
+    "incl": 55
+   },
+   "reperes": [
+    {
+     "id": "ahabish",
+     "genre": "personne",
+     "x": -200,
+     "z": 1300
+    },
+    {
+     "id": "colline",
+     "genre": "lieu",
+     "x": -700,
+     "z": 300,
+     "nom": "La colline, au nord-ouest du camp"
+    },
+    {
+     "id": "wadi",
+     "genre": "lieu",
+     "x": 450,
+     "z": 200,
+     "nom": "Les chamelles, dans le wadi"
+    },
+    {
+     "id": "camp",
+     "genre": "lieu",
+     "x": 0,
+     "z": -200,
+     "nom": "Le camp des pèlerins"
+    },
+    {
+     "id": "hady",
+     "genre": "animal",
+     "x": 450,
+     "z": 200,
+     "nom": "Bêtes du sacrifice",
+     "qualite": "colliers au cou",
+     "visible": false
+    },
+    {
+     "id": "conseil",
+     "genre": "lieu",
+     "x": 300,
+     "z": 1500,
+     "nom": "Le conseil de Quraysh"
+    },
+    {
+     "id": "chef",
+     "genre": "personne",
+     "x": 380,
+     "z": 1550,
+     "visible": false
+    },
+    {
+     "id": "chef2",
+     "genre": "personne",
+     "x": 240,
+     "z": 1560,
+     "visible": false
+    }
+   ],
+   "accessoires": [
+    {
+     "type": "tentes",
+     "x": 0,
+     "z": -200,
+     "rayon": 450,
+     "n": 70,
+     "couleur": "#F4EEE2"
+    },
+    {
+     "type": "troupeau",
+     "x": 450,
+     "z": 200,
+     "rayon": 120,
+     "n": 18
+    },
+    {
+     "type": "tentes",
+     "x": 300,
+     "z": 1550,
+     "rayon": 80,
+     "n": 5,
+     "couleur": "#8C5A44"
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "hudaybiya"
+  },
+  {
+   "type": "recit",
+   "texte": "On annonce à Quraysh que les gens de Médine approchent, nombreux, et campent à al-Hudaybiya, aux limites du territoire sacré. Viennent-ils faire la guerre ? Votre chef, allié de Quraysh, vous envoie voir de vos yeux avant de décider."
+  },
+  {
+   "type": "objectif",
+   "texte": "Montez sur la colline pour observer le camp de loin.",
+   "quand": {
+    "aller": "colline"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "vue": {
+      "auto": true,
+      "cap": 100,
+      "incl": 50
+     }
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "D'en haut, vous voyez le camp : des tentes, et des hommes vêtus de deux simples pièces de tissu blanc, sans armure. Une rumeur monte jusqu'à vous : « Labbayka Allâhumma labbayk… » Dans le lit du wadi, des chamelles sont rassemblées."
+  },
+  {
+   "type": "objectif",
+   "texte": "Descendez voir de plus près les chamelles rassemblées dans le wadi.",
+   "quand": {
+    "aller": "wadi"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": "hady"
+    },
+    {
+     "vue": {
+      "x": 450,
+      "z": 200,
+      "r": 0.7,
+      "cap": 30,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Ces bêtes portent des colliers au cou et une entaille à la bosse : ce sont des offrandes destinées au sacrifice, à La Mecque. Chez les Arabes, on ne touche pas à de tels animaux. Ceux qui les mènent viennent en pèlerins."
+  },
+  {
+   "type": "objectif",
+   "texte": "Retournez au conseil de Quraysh, au sud, pour rendre compte de ce que vous avez vu.",
+   "quand": {
+    "aller": "conseil"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": [
+      "chef",
+      "chef2"
+     ]
+    },
+    {
+     "vue": {
+      "x": 300,
+      "z": 1520,
+      "r": 0.6,
+      "cap": 340,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "chef",
+   "texte": "Alors, l'éclaireur ? Qu'as-tu vu ? Une armée qui vient nous prendre la ville ?"
+  },
+  {
+   "type": "choix",
+   "question": "Que rapportez-vous au conseil ?",
+   "options": [
+    {
+     "texte": "« Ils viennent en pèlerins, avec des bêtes de sacrifice parées. On n'écarte pas de la Maison ceux qui viennent l'honorer. »",
+     "juste": true
+    },
+    {
+     "texte": "« Une armée, sans aucun doute : ils sont très nombreux. Attaquons-les avant qu'ils ne soient à nos portes. »",
+     "titre": "Le faux rapport",
+     "consequence": "Et si l'éclaireur avait menti : Quraysh aurait attaqué des pèlerins au mois sacré. Selon Ibn Ishâq, le chef des Ahâbîsh, al-Hulays, vit les bêtes du sacrifice et revint dire à Quraysh qu'on ne pouvait pas écarter de la Maison ceux qui venaient l'honorer.",
+     "indice": "Chez les Arabes, on n'écartait pas de la Maison ceux qui venaient l'honorer avec leurs bêtes de sacrifice.",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "chef",
+       "texte": "Je le savais ! Qu'on prépare les chevaux et les armes."
+      },
+      {
+       "type": "recit",
+       "texte": "Les hommes courent aux armes. Au mois sacré, à deux pas du territoire sacré, le sang va couler…"
+      }
+     ]
+    },
+    {
+     "texte": "« Je n'ai pas bien vu : il faisait trop chaud, et c'était trop loin. Décidez sans moi, je ne veux pas d'histoires. »",
+     "titre": "Le témoin qui se tait",
+     "consequence": "Et si l'éclaireur s'était dérobé : faute de témoin, la méfiance l'aurait emporté. Selon Ibn Ishâq, al-Hulays rapporta au contraire fidèlement ce qu'il avait vu, et prit la défense des pèlerins.",
+     "indice": "Chez les Arabes, on n'écartait pas de la Maison ceux qui venaient l'honorer avec leurs bêtes de sacrifice.",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "chef",
+       "texte": "À quoi sert un éclaireur qui n'a rien vu ? Nous déciderons donc seuls : ils n'entreront pas."
+      }
+     ]
+    }
+   ],
+   "qui": "chef"
+  },
+  {
+   "type": "parole",
+   "qui": "chef",
+   "texte": "Assieds-toi ! Tu n'es qu'un Bédouin : tu n'y connais rien."
+  },
+  {
+   "type": "choix",
+   "question": "Le chef vous méprise devant tous. Que répondez-vous ?",
+   "options": [
+    {
+     "texte": "« Ce n'est pas pour cela que nous nous sommes alliés à vous : laissez-les accomplir ce pour quoi ils sont venus. »",
+     "juste": true
+    },
+    {
+     "texte": "« Tu as raison, je ne suis qu'un Bédouin : faites comme vous l'entendez, ce n'est pas mon affaire. »",
+     "titre": "La vérité abandonnée",
+     "consequence": "Et si les alliés de Quraysh s'étaient tus : la voix de la raison aurait manqué ce jour-là. Selon Ibn Ishâq, al-Hulays menaça au contraire de se retirer avec tous les Ahâbîsh si l'on empêchait les pèlerins d'honorer la Maison.",
+     "indice": "Dire la vérité, c'est aussi la défendre quand on la conteste.",
+     "suite": [
+      {
+       "type": "recit",
+       "texte": "Vous vous rasseyez en silence. Le conseil décide de barrer la route aux pèlerins, par la force s'il le faut."
+      }
+     ]
+    },
+    {
+     "texte": "Tirer votre épée : on n'insulte pas un homme des Ahâbîsh impunément, chef de Quraysh ou pas.",
+     "titre": "L'épée tirée",
+     "consequence": "Et si l'éclaireur avait répondu par l'épée : une querelle entre alliés aurait éclaté, au lieu de faire entendre la vérité. Selon Ibn Ishâq, al-Hulays répondit par des paroles fermes, sans violence.",
+     "indice": "Dire la vérité, c'est aussi la défendre quand on la conteste.",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "chef2",
+       "texte": "Une épée tirée sous la tente du conseil ? Qu'on le désarme !"
+      }
+     ]
+    }
+   ],
+   "qui": "chef"
+  },
+  {
+   "type": "parole",
+   "qui": "chef",
+   "texte": "Calme-toi, calme-toi… Laisse-nous le temps de trouver ce qui nous convient."
+  },
+  {
+   "type": "recit",
+   "texte": "Inquiets de perdre leurs alliés, les chefs de Quraysh cherchent un accord. Quelques jours plus tard, ils enverront Suhayl ibn 'Amr négocier : ce sera la trêve d'al-Hudaybiya."
+  }
+ ],
+ "fin": "Vers la trêve"
+}

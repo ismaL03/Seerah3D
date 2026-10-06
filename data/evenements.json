@@ -1,0 +1,368 @@
+{
+  "_lisez_moi": "Une fiche par événement, dans l'ordre chronologique. statut : à vérifier / validé. Chaque fiche cite au moins une source (ouvrage + page). Une page null signifie « à compléter ». Les divergences (dates, effectifs, lieux) sont signalées, jamais tranchées en silence. trajet.type : caravane, armee, mer ou nuit ; trajet.etapes : identifiants de lieux ou d'étapes, ou [lat, lon].",
+  "categories": {
+    "vie": { "nom": "Vie", "icone": "star" },
+    "revelation": { "nom": "Révélation", "icone": "book" },
+    "epreuve": { "nom": "Épreuve", "icone": "hourglass" },
+    "hijra": { "nom": "Hijra", "icone": "route" },
+    "expedition": { "nom": "Expédition", "icone": "flag" },
+    "traite": { "nom": "Traité", "icone": "scroll" },
+    "pelerinage": { "nom": "Pèlerinage", "icone": "cube" }
+  },
+  "jalons": [
+    { "evenement": "naissance", "nom": "Naissance" },
+    { "evenement": "revelation", "nom": "Révélation" },
+    { "evenement": "hijra", "nom": "Hijra" },
+    { "evenement": "badr", "nom": "Badr" },
+    { "evenement": "fath", "nom": "Conquête" },
+    { "evenement": "wafat", "nom": "Wafât" }
+  ],
+  "evenements": [
+    {
+      "id": "naissance", "categorie": "vie",
+      "titre": "Naissance du Prophète ﷺ", "titre_ar": "المولد النبوي",
+      "lieu": "mawlid",
+      "date": "Rabî' al-Awwal, année de l'Éléphant", "annee_hegire": null, "annee_ap_jc": "≈ 570", "age": 0,
+      "periode": "avant", "periode_detail": "",
+      "faits": [["Père", "'Abd Allâh, décédé avant sa naissance"], ["Mère", "Âmina bint Wahb"], ["Nourrice", "Halîma as-Sa'diyya"]],
+      "resume": "Né à La Mecque dans le clan des Banû Hâshim, de la tribu de Quraysh, l'année où Abraha, venu du Yémen avec une armée et un éléphant, voulut détruire la Ka'ba sans y parvenir. Il passe ses premières années dans le désert, chez les Banû Sa'd, auprès de sa nourrice Halîma.",
+      "coran": "al-Fîl (105)",
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La naissance" }],
+      "divergences": [
+        { "sujet": "Jour", "texte": "Le 12 Rabî' al-Awwal est la date la plus répandue ; al-Mubârakfûrî retient le lundi 9 Rabî' al-Awwal, d'après un calcul astronomique." },
+        { "sujet": "Année", "texte": "570 ou 571 apr. J.-C. selon les conversions." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "kaba", "categorie": "vie",
+      "titre": "Reconstruction de la Ka'ba", "titre_ar": "بناء الكعبة",
+      "lieu": "makkah",
+      "date": "35 ans", "annee_hegire": null, "annee_ap_jc": "≈ 605", "age": 35,
+      "periode": "avant", "periode_detail": "",
+      "faits": [["Rôle", "Arbitre du différend sur la Pierre noire"], ["Surnom", "al-Amîn, le digne de confiance"]],
+      "resume": "Quraysh rebâtit la Ka'ba et les clans se disputent l'honneur de replacer la Pierre noire. Il ﷺ la pose sur un manteau, fait soulever chaque coin par un chef de clan, puis la remet en place de sa propre main.",
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La reconstruction de la Ka'ba et l'arbitrage" }],
+      "divergences": [],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "revelation", "categorie": "revelation",
+      "titre": "Première révélation", "titre_ar": "بدء الوحي",
+      "lieu": "hira",
+      "date": "Ramadan, an 1 de la prophétie", "annee_hegire": null, "annee_ap_jc": "610", "age": 40,
+      "periode": "mecquoise", "periode_detail": "an 1 de la prophétie",
+      "faits": [["Ange", "Jibrîl"], ["Premiers versets", "« Iqra' » (Lis !)"], ["Soutien", "Khadîja, première croyante"]],
+      "resume": "Pendant ses retraites dans la grotte de Hirâ', sur le Jabal an-Nûr, l'ange Jibrîl lui apparaît et lui ordonne : « Lis ! ». Il rentre bouleversé auprès de Khadîja, qui le rassure et devient la première à croire en lui.",
+      "coran": "al-'Alaq 96:1-5",
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Dans la grotte de Hirâ' ; Jibrîl apporte la révélation" }],
+      "divergences": [
+        { "sujet": "Jour", "texte": "Plusieurs nuits de Ramadan sont avancées (17, 21, 24…) ; al-Mubârakfûrî retient le 21 Ramadan." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "predication", "categorie": "revelation",
+      "titre": "Appel public", "titre_ar": "الجهر بالدعوة",
+      "lieu": "safa",
+      "date": "an 4 de la prophétie", "annee_hegire": null, "annee_ap_jc": "≈ 613", "age": 43,
+      "periode": "mecquoise", "periode_detail": "an 4 de la prophétie",
+      "faits": [["Lieu", "Mont as-Safâ"], ["Auparavant", "≈ 3 ans de prédication discrète"]],
+      "resume": "Après environ trois années d'appel discret, il monte sur le mont as-Safâ et appelle les clans de Quraysh à l'unicité d'Allah. Commence alors une opposition de plus en plus dure contre les croyants.",
+      "coran": "ash-Shu'arâ' 26:214",
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'appel public" }],
+      "divergences": [],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "habasha", "categorie": "hijra",
+      "titre": "Émigration en Abyssinie", "titre_ar": "الهجرة إلى الحبشة",
+      "lieu": "habasha",
+      "date": "Rajab, an 5 de la prophétie", "annee_hegire": null, "annee_ap_jc": "≈ 615", "age": 45,
+      "periode": "mecquoise", "periode_detail": "an 5 de la prophétie",
+      "faits": [["Souverain", "an-Najâshî (le Négus)"], ["Porte-parole", "Ja'far ibn Abî Tâlib"], ["1re émigration", "12 hommes et 4 femmes"], ["2de émigration", "plus de 80 hommes"]],
+      "resume": "Face aux persécutions, des croyants traversent la mer Rouge pour trouver refuge auprès du Négus, roi chrétien réputé juste. Devant lui, Ja'far ibn Abî Tâlib récite le début de la sourate Maryam.",
+      "coran": "Maryam (19)",
+      "trajet": { "type": "mer", "etapes": ["makkah", "shuayba", [20.80, 38.60], "habasha"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La première émigration en Abyssinie" }],
+      "divergences": [
+        { "sujet": "Effectifs", "texte": "Le nombre de femmes de la seconde émigration varie selon les récits (18 ou 19)." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "boycott", "categorie": "epreuve",
+      "titre": "Boycott de Shi'b Abî Tâlib", "titre_ar": "حصار الشعب",
+      "lieu": "shib",
+      "date": "an 7 à 10 de la prophétie", "annee_hegire": null, "annee_ap_jc": "≈ 616 – 619", "age": 46,
+      "periode": "mecquoise", "periode_detail": "an 7 de la prophétie",
+      "faits": [["Durée", "≈ 3 ans"], ["Visés", "Banû Hâshim et Banû al-Muttalib"]],
+      "resume": "Quraysh suspend dans la Ka'ba un pacte interdisant tout commerce et tout mariage avec les Banû Hâshim. Le Prophète ﷺ et les siens vivent reclus dans le vallon d'Abû Tâlib, dans la faim, jusqu'à la rupture du pacte.",
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le boycott général" }],
+      "divergences": [
+        { "sujet": "Durée", "texte": "Trois ans selon la plupart des récits ; deux ans selon d'autres." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "tristesse", "categorie": "epreuve",
+      "titre": "L'année de la tristesse", "titre_ar": "عام الحزن",
+      "lieu": "makkah",
+      "date": "an 10 de la prophétie", "annee_hegire": null, "annee_ap_jc": "≈ 619", "age": 49,
+      "periode": "mecquoise", "periode_detail": "an 10 de la prophétie",
+      "faits": [["Décès", "Abû Tâlib, son oncle protecteur"], ["Décès", "Khadîja, son épouse"]],
+      "resume": "En peu de temps, il perd son oncle Abû Tâlib, qui le protégeait, et son épouse Khadîja, son premier soutien. La pression de Quraysh redouble.",
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'année de la tristesse" }],
+      "divergences": [
+        { "sujet": "Chronologie", "texte": "L'ordre des deux décès et l'écart entre eux (de quelques jours à quelques mois) sont diversement rapportés." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "taif", "categorie": "epreuve",
+      "titre": "Voyage à Tâ'if", "titre_ar": "رحلة الطائف",
+      "lieu": "taif",
+      "date": "Shawwâl, an 10 de la prophétie", "annee_hegire": null, "annee_ap_jc": "≈ 619", "age": 50,
+      "periode": "mecquoise", "periode_detail": "an 10 de la prophétie",
+      "faits": [["Compagnon", "Zayd ibn Hâritha"], ["Accueil", "Rejet et jets de pierres"]],
+      "resume": "Il part chercher un soutien auprès de la tribu de Thaqîf. Repoussé et poursuivi à coups de pierres, il s'abrite dans un verger, où il invoque Allah et rencontre 'Addâs, un serviteur chrétien qui croit en lui.",
+      "trajet": { "type": "caravane", "etapes": ["makkah", [21.40, 40.05], [21.31, 40.26], "taif"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le Prophète ﷺ à Tâ'if" }],
+      "divergences": [],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "isra", "categorie": "revelation",
+      "titre": "al-Isrâ' wal-Mi'râj", "titre_ar": "الإسراء والمعراج",
+      "lieu": "makkah",
+      "date": "Avant la Hijra (date discutée)", "annee_hegire": null, "annee_ap_jc": "≈ 621", "age": 51,
+      "periode": "mecquoise", "periode_detail": "fin de la période",
+      "faits": [["Trajet", "La Mecque → al-Quds, puis ascension"], ["Prescription", "Les cinq prières quotidiennes"]],
+      "resume": "En une nuit, il ﷺ est transporté de la Mosquée sacrée à la mosquée al-Aqsâ, puis élevé à travers les cieux. Les cinq prières quotidiennes sont prescrites lors de ce voyage.",
+      "coran": "al-Isrâ' 17:1",
+      "trajet": { "type": "nuit", "etapes": ["makkah", "quds"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "al-Isrâ' et al-Mi'râj" }],
+      "divergences": [
+        { "sujet": "Date", "texte": "Plusieurs datations sont rapportées, de l'année de la prophétie à un an avant la Hijra ; la date du 27 Rajab, répandue, n'est pas établie." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "aqaba", "categorie": "hijra",
+      "titre": "Serments d'al-'Aqaba", "titre_ar": "بيعة العقبة",
+      "lieu": "aqaba",
+      "date": "Dhû al-Hijja, an 12 et 13", "annee_hegire": null, "annee_ap_jc": "621 – 622", "age": 52,
+      "periode": "mecquoise", "periode_detail": "an 12 et 13 de la prophétie",
+      "faits": [["1er serment", "12 hommes de Yathrib"], ["2d serment", "73 hommes et 2 femmes"], ["Envoyé", "Mus'ab ibn 'Umayr"]],
+      "resume": "Pendant la saison du pèlerinage, des habitants de Yathrib, des Aws et des Khazraj, le rencontrent de nuit à al-'Aqaba, près de Minâ. Ils lui prêtent allégeance et s'engagent à le protéger : la voie de la Hijra s'ouvre.",
+      "trajet": { "type": "caravane", "etapes": ["makkah", "aqaba"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le premier et le second serment d'al-'Aqaba" }],
+      "divergences": [],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "hijra", "categorie": "hijra",
+      "titre": "La Hijra", "titre_ar": "الهجرة النبوية",
+      "lieu": "quba",
+      "date": "Rabî' al-Awwal, an 1 H", "annee_hegire": 1, "annee_ap_jc": "622", "age": 53,
+      "periode": "medinoise", "periode_detail": "an 1 sur 10",
+      "faits": [["Compagnon", "Abû Bakr as-Siddîq"], ["Refuge", "3 nuits dans la grotte de Thawr"], ["Guide", "'Abd Allâh ibn Urayqit"], ["Arrivée", "Qubâ', puis Médine"]],
+      "resume": "Il quitte La Mecque de nuit avec Abû Bakr et se cache trois nuits dans la grotte de Thawr, au sud, avant de remonter par la route côtière. Accueilli à Qubâ', il y fonde une mosquée puis entre à Yathrib, qui devient Médine.",
+      "coran": "at-Tawba 9:40",
+      "hadiths": ["u1"],
+      "trajet": { "type": "caravane", "etapes": ["makkah", "thawr", [21.40, 39.55], "usfan", [22.36, 39.32], [22.80, 39.08], [23.35, 38.98], [23.85, 39.18], [24.20, 39.42], "quba", "madinah"], "note": "Tracé approximatif par la route côtière ; étapes à reprendre d'après al-Bilâdî." },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'émigration du Prophète ﷺ" }],
+      "divergences": [
+        { "sujet": "Séjour à Qubâ'", "texte": "Quatre jours selon Ibn Ishâq ; quatorze nuits dans un récit d'Anas rapporté par al-Bukhârî." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "masjid", "categorie": "hijra",
+      "titre": "La mosquée et la fraternité", "titre_ar": "المسجد والمؤاخاة",
+      "lieu": "madinah",
+      "date": "an 1 H", "annee_hegire": 1, "annee_ap_jc": "622 – 623", "age": 53,
+      "periode": "medinoise", "periode_detail": "an 1 sur 10",
+      "faits": [["Construction", "Briques crues, troncs de palmiers"], ["Fraternisation", "Muhâjirûn et Ansâr"], ["Organisation", "Pacte de Médine"]],
+      "resume": "Il ﷺ participe lui-même à la construction de sa mosquée, en briques crues, troncs et palmes. Il unit chaque émigré mecquois (Muhâjir) à un Ansârî de Médine par un lien de fraternité.",
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La construction de la mosquée ; la fraternité" }],
+      "divergences": [],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "badr", "categorie": "expedition",
+      "titre": "Bataille de Badr", "titre_ar": "غزوة بدر",
+      "lieu": "badr",
+      "date": "17 Ramadan 2 H", "annee_hegire": 2, "annee_ap_jc": "624", "age": 54,
+      "periode": "medinoise", "periode_detail": "an 2 sur 10",
+      "faits": [["Musulmans", "≈ 313"], ["Quraysh", "≈ 950 à 1 000"], ["Issue", "Victoire décisive"], ["Martyrs", "14"]],
+      "resume": "Parti intercepter une caravane de Quraysh, le petit groupe de croyants se retrouve face à l'armée mecquoise, trois fois plus nombreuse, près des puits de Badr. Allah leur accorde la victoire : c'est le « Jour du Discernement ».",
+      "coran": "al-Anfâl (8)",
+      "trajet": { "type": "armee", "etapes": ["madinah", [24.30, 39.35], [24.05, 39.10], [23.85, 38.90], "badr"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La grande bataille de Badr" }],
+      "divergences": [
+        { "sujet": "Effectif musulman", "texte": "313, 314 ou 317 selon les récits." },
+        { "sujet": "Effectif mecquois", "texte": "Environ 1 300 au départ de La Mecque, 950 à 1 000 à Badr après le retour d'une partie." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "uhud", "categorie": "expedition",
+      "titre": "Bataille d'Uhud", "titre_ar": "غزوة أحد",
+      "lieu": "uhud",
+      "date": "Shawwâl 3 H", "annee_hegire": 3, "annee_ap_jc": "625", "age": 55,
+      "periode": "medinoise", "periode_detail": "an 3 sur 10",
+      "faits": [["Musulmans", "≈ 700"], ["Quraysh", "≈ 3 000"], ["Archers", "50, sur le mont 'Aynayn"], ["Martyrs", "≈ 70, dont Hamza"]],
+      "resume": "Au pied du mont Uhud, les musulmans prennent d'abord l'avantage. Mais la plupart des archers quittent leur colline ; la cavalerie de Khâlid ibn al-Walîd, alors dans le camp adverse, contourne et retourne la situation. Hamza tombe en martyr.",
+      "coran": "Âl 'Imrân (3)",
+      "hadiths": ["u7"],
+      "trajet": { "type": "armee", "etapes": ["madinah", "uhud"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La bataille d'Uhud" }],
+      "divergences": [
+        { "sujet": "Jour", "texte": "7 ou 15 Shawwâl selon les récits." },
+        { "sujet": "Effectif", "texte": "Environ 1 000 au départ ; quelque 300 se retirent avec 'Abd Allâh ibn Ubayy avant la bataille." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "nadir", "categorie": "expedition",
+      "titre": "Départ des Banû an-Nadîr", "titre_ar": "إجلاء بني النضير",
+      "lieu": "nadir",
+      "date": "Rabî' al-Awwal 4 H", "annee_hegire": 4, "annee_ap_jc": "625", "age": 56,
+      "periode": "medinoise", "periode_detail": "an 4 sur 10",
+      "faits": [["Motif", "Complot contre le Prophète ﷺ"], ["Issue", "Départ de la tribu, sans bataille"]],
+      "resume": "Après la découverte d'un complot visant la vie du Prophète ﷺ, la tribu juive des Banû an-Nadîr, liée par pacte, est assiégée puis quitte Médine. Ses biens, obtenus sans combat, deviennent du fay'.",
+      "coran": "al-Hashr (59)",
+      "hadiths": ["u6"],
+      "trajet": { "type": "armee", "etapes": ["madinah", "nadir"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'expédition des Banû an-Nadîr" }],
+      "divergences": [
+        { "sujet": "Date", "texte": "Rabî' al-Awwal 4 H selon Ibn Ishâq ; az-Zuhrî, d'après 'Urwa, la place six mois après Badr, avant Uhud." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "khandaq", "categorie": "expedition",
+      "titre": "Bataille du Fossé", "titre_ar": "غزوة الخندق",
+      "lieu": "khandaq",
+      "date": "Shawwâl 5 H", "annee_hegire": 5, "annee_ap_jc": "627", "age": 57,
+      "periode": "medinoise", "periode_detail": "an 5 sur 10",
+      "faits": [["Musulmans", "≈ 3 000"], ["Coalition (al-Ahzâb)", "≈ 10 000"], ["Idée du fossé", "Salmân al-Fârisî"], ["Fin", "Vent glacial, retrait des coalisés"]],
+      "resume": "Une coalition de tribus marche sur Médine. Sur le conseil de Salmân al-Fârisî, les musulmans creusent un fossé au nord de la ville, seul côté que ne protègent ni les champs de lave ni les palmeraies. Après un long siège, un vent glacial disperse les assaillants.",
+      "coran": "al-Ahzâb 33:9-27",
+      "hadiths": ["u7"],
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La bataille des Coalisés (al-Ahzâb)" }],
+      "divergences": [
+        { "sujet": "Année", "texte": "5 H selon la majorité (Ibn Ishâq) ; 4 H selon Mûsâ ibn 'Uqba. Le hadith d'Ibn 'Umar (14 ans à Uhud, 15 ans au Fossé) est cité dans cette discussion." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "hudaybiya", "categorie": "traite",
+      "titre": "Traité d'al-Hudaybiya", "titre_ar": "صلح الحديبية",
+      "lieu": "hudaybiya",
+      "date": "Dhû al-Qa'da 6 H", "annee_hegire": 6, "annee_ap_jc": "628", "age": 58,
+      "periode": "medinoise", "periode_detail": "an 6 sur 10",
+      "faits": [["Pèlerins", "≈ 1 400"], ["Serment", "Bay'at ar-Ridwân, sous l'arbre"], ["Trêve", "10 ans"]],
+      "resume": "Venus pour la 'umra, les musulmans sont arrêtés aux abords du territoire sacré. Après le serment sous l'arbre, une trêve est conclue avec Quraysh. Ses clauses semblent défavorables, mais le Coran la nomme « une victoire éclatante ».",
+      "coran": "al-Fath (48)",
+      "trajet": { "type": "caravane", "etapes": ["madinah", "dhul-hulayfa", [24.00, 39.25], [23.40, 39.05], "juhfa", "usfan", [21.62, 39.56], "hudaybiya"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le traité d'al-Hudaybiya" }],
+      "divergences": [
+        { "sujet": "Effectif", "texte": "1 300, 1 400 ou 1 500 selon les récits rapportés par al-Bukhârî ; 1 400 est le plus cité." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "khaybar", "categorie": "expedition",
+      "titre": "Conquête de Khaybar", "titre_ar": "غزوة خيبر",
+      "lieu": "khaybar",
+      "date": "Muharram 7 H", "annee_hegire": 7, "annee_ap_jc": "628", "age": 58,
+      "periode": "medinoise", "periode_detail": "an 7 sur 10",
+      "faits": [["Défenses", "Fortins sur les hauteurs"], ["Étendard", "Confié à 'Alî ibn Abî Tâlib"], ["Issue", "Accord sur les palmeraies"]],
+      "resume": "L'armée marche sur l'oasis fortifiée de Khaybar, au nord de Médine. Les fortins tombent un à un ; l'étendard est remis à 'Alî. Les habitants restent cultiver les palmeraies contre la moitié de la récolte.",
+      "trajet": { "type": "armee", "etapes": ["madinah", [24.85, 39.55], [25.30, 39.42], "khaybar"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La conquête de Khaybar" }],
+      "divergences": [
+        { "sujet": "Date", "texte": "Muharram 7 H selon Ibn Ishâq ; certains récits la placent à la fin de l'an 6 H." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "fath", "categorie": "expedition",
+      "titre": "Conquête de La Mecque", "titre_ar": "فتح مكة",
+      "lieu": "makkah",
+      "date": "Ramadan 8 H", "annee_hegire": 8, "annee_ap_jc": "630", "age": 60,
+      "periode": "medinoise", "periode_detail": "an 8 sur 10",
+      "faits": [["Armée", "≈ 10 000"], ["Combats", "Presque aucun"], ["Ka'ba", "Purifiée de ses idoles"], ["Annonce", "Pardon accordé aux Mecquois"]],
+      "resume": "Quraysh ayant rompu la trêve, il ﷺ entre à La Mecque presque sans combat. Il purifie la Ka'ba de ses idoles, Bilâl lance l'appel à la prière depuis son toit, et il pardonne à ceux qui l'avaient combattu.",
+      "coran": "an-Nasr (110)",
+      "hadiths": ["u2", "u3"],
+      "trajet": { "type": "armee", "etapes": ["madinah", "dhul-hulayfa", [24.00, 39.25], [23.40, 39.05], "juhfa", "usfan", "marr", "makkah"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La conquête de La Mecque" }],
+      "divergences": [],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "hunayn", "categorie": "expedition",
+      "titre": "Hunayn et siège de Tâ'if", "titre_ar": "غزوة حنين",
+      "lieu": "hunayn",
+      "date": "Shawwâl 8 H", "annee_hegire": 8, "annee_ap_jc": "630", "age": 60,
+      "periode": "medinoise", "periode_detail": "an 8 sur 10",
+      "faits": [["Musulmans", "≈ 12 000"], ["Adversaires", "Hawâzin et Thaqîf"], ["Issue", "Victoire après un repli"]],
+      "resume": "Surpris par une embuscade dans la vallée de Hunayn, les rangs musulmans reculent, tandis que le Prophète ﷺ tient bon. Ils se regroupent et l'emportent ; l'armée assiège ensuite Tâ'if.",
+      "coran": "at-Tawba 9:25-26",
+      "hadiths": ["u5"],
+      "trajet": { "type": "armee", "etapes": ["makkah", "hunayn", [21.40, 40.20], "taif"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "La bataille de Hunayn ; le siège de Tâ'if" }],
+      "divergences": [],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "tabuk", "categorie": "expedition",
+      "titre": "Expédition de Tabûk", "titre_ar": "غزوة تبوك",
+      "lieu": "tabuk",
+      "date": "Rajab 9 H", "annee_hegire": 9, "annee_ap_jc": "630", "age": 61,
+      "periode": "medinoise", "periode_detail": "an 9 sur 10",
+      "faits": [["Armée", "≈ 30 000"], ["Contexte", "Chaleur et disette"], ["Issue", "Aucun combat ; accords avec les tribus du nord"]],
+      "resume": "Dans la chaleur et la pénurie, il conduit sa plus grande armée vers le nord, face à la menace byzantine. Aucun affrontement n'a lieu ; plusieurs tribus frontalières concluent des accords.",
+      "coran": "at-Tawba (9)",
+      "trajet": { "type": "armee", "etapes": ["madinah", [25.00, 39.20], [25.80, 38.70], "tabuk"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "L'expédition de Tabûk" }],
+      "divergences": [],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "hajj", "categorie": "pelerinage",
+      "titre": "Pèlerinage d'adieu", "titre_ar": "حجة الوداع",
+      "lieu": "arafat",
+      "date": "Dhû al-Hijja 10 H", "annee_hegire": 10, "annee_ap_jc": "632", "age": 62,
+      "periode": "medinoise", "periode_detail": "an 10 sur 10",
+      "faits": [["Pèlerins", "Plus de 100 000 selon les récits"], ["Sermon", "À 'Arafa"], ["Révélation", "« Aujourd'hui, J'ai parachevé votre religion »"]],
+      "resume": "Son unique pèlerinage après la Hijra. À 'Arafa, il prononce un sermon sur la sacralité de la vie, des biens et de l'honneur. Le verset annonçant l'achèvement de la religion y est révélé.",
+      "coran": "al-Mâ'ida 5:3",
+      "hadiths": ["u8", "u9"],
+      "trajet": { "type": "caravane", "etapes": ["madinah", "dhul-hulayfa", [24.00, 39.25], [23.40, 39.05], "juhfa", "usfan", "marr", "makkah", "mina", "arafat"] },
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Le pèlerinage d'adieu" }, { "ouvrage": "muslim", "page": null, "passage": "Hadith de Jâbir sur le Hajj du Prophète ﷺ" }],
+      "divergences": [
+        { "sujet": "Nombre de pèlerins", "texte": "Les chiffres rapportés varient selon les sources." }
+      ],
+      "statut": "à vérifier"
+    },
+    {
+      "id": "wafat", "categorie": "vie",
+      "titre": "Décès du Prophète ﷺ", "titre_ar": "الوفاة النبوية",
+      "lieu": "hujurat",
+      "date": "Rabî' al-Awwal 11 H", "annee_hegire": 11, "annee_ap_jc": "632", "age": 63,
+      "periode": "medinoise", "periode_detail": "an 11",
+      "faits": [["Lieu", "Chambre de 'Â'isha, à Médine"], ["Successeur", "Abû Bakr as-Siddîq"]],
+      "resume": "Après quelques jours de maladie, il ﷺ s'éteint à Médine, dans la chambre de 'Â'isha, où il est enterré. Abû Bakr rappelle aux croyants qu'Allah est Vivant et ne meurt pas.",
+      "coran": "Âl 'Imrân 3:144",
+      "sources": [{ "ouvrage": "rahiq", "page": null, "passage": "Vers le Compagnon suprême" }],
+      "divergences": [
+        { "sujet": "Jour", "texte": "Lundi 12 Rabî' al-Awwal selon l'opinion la plus répandue ; d'autres récits donnent le 1er ou le 2." }
+      ],
+      "statut": "à vérifier"
+    }
+  ]
+}

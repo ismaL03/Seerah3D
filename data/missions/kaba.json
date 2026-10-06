@@ -1,0 +1,568 @@
+{
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
+ "id": "kaba",
+ "titre": "La part des clans",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "ibn-hisham",
+   "page": null,
+   "passage": "La reconstruction de la Ka'ba (d'après Ibn Ishâq)"
+  },
+  {
+   "ouvrage": "bukhari",
+   "page": null,
+   "passage": "Livre du Hajj : le Hijr (hadith de 'Â'isha)"
+  },
+  {
+   "ouvrage": "rahiq",
+   "page": null,
+   "passage": "La reconstruction de la Ka'ba"
+  }
+ ],
+ "role": {
+  "nom": "Un homme de Quraysh",
+  "nom_ar": "رجل من قريش",
+  "texte": "Vous êtes un Mecquois parmi d'autres, membre d'un des clans qui gardent la Maison. La Ka'ba doit être rebâtie : à vous d'y apporter votre part, et de garder la tête froide quand les clans s'affronteront.",
+  "regle": "Le Prophète ﷺ n'est jamais montré : une lumière marque sa présence, et seules les paroles rapportées par les sources sont citées. Les personnes sont des étiquettes sur la carte. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "walid": {
+   "nom": "al-Walîd ibn al-Mughîra",
+   "qualite": "notable de Quraysh"
+  },
+  "ancien": {
+   "nom": "Un ancien de Quraysh",
+   "qualite": "chef des bâtisseurs"
+  },
+  "preteur": {
+   "nom": "Un prêteur",
+   "qualite": "marché de La Mecque"
+  },
+  "tanneur": {
+   "nom": "Un marchand de cuir",
+   "qualite": "marché de La Mecque"
+  },
+  "fort": {
+   "nom": "Un homme puissant",
+   "qualite": "marché de La Mecque"
+  },
+  "clan1": {
+   "nom": "Un homme des Banû 'Abd ad-Dâr",
+   "qualite": "Quraysh"
+  },
+  "passants": {
+   "nom": "Un Mecquois",
+   "qualite": "passant"
+  },
+  "presence": {
+   "nom": "Porte des Banû Shayba",
+   "qualite": ""
+  }
+ },
+ "dialogues": {
+  "preteur": [
+   "Je prête aux pèlerins et aux marchands : pour dix pièces prêtées, on m'en rend vingt à la saison suivante. Mon argent est à ta disposition pour la Maison !"
+  ],
+  "tanneur": [
+   "Je tanne des peaux et je les vends au juste prix, à la foire de 'Ukâz. Ce n'est pas une fortune, mais elle est honnête. Prends-en une part pour la Maison, si tu veux."
+  ],
+  "fort": [
+   "Mon voisin était trop faible pour garder sa récolte : je l'ai prise. Qui viendrait me la réclamer ? Prends cet or pour la Maison, il y en a bien assez."
+  ],
+  "passants": [
+   "On dit qu'un navire des Rûm s'est échoué sur la côte, à Shu'ayba : son bois servira pour le toit de la Ka'ba.",
+   "Al-Walîd a donné le premier coup de pioche. S'il est encore vivant demain matin, c'est que la Maison accepte qu'on la rebâtisse.",
+   "Chaque clan a reçu une partie des murs à construire. Gare à qui voudra la part d'un autre !"
+  ]
+ },
+ "objets": {
+  "usure": {
+   "nom": "L'argent du prêteur"
+  },
+  "or": {
+   "nom": "L'or de l'homme puissant"
+  },
+  "pierre": {
+   "nom": "Une pierre"
+  }
+ },
+ "scenes": {
+  "makka": {
+   "titre": "La Mecque",
+   "sous": "Vers 605, cinq ans avant la révélation",
+   "ambiance": "jour",
+   "epoque": "kaba",
+   "origine": "makkah",
+   "vue": {
+    "auto": true,
+    "cap": 200,
+    "incl": 58
+   },
+   "reperes": [
+    {
+     "id": "walid",
+     "genre": "personne",
+     "x": 25,
+     "z": 30
+    },
+    {
+     "id": "ancien",
+     "genre": "personne",
+     "x": -45,
+     "z": 40,
+     "nom": "Un ancien de Quraysh",
+     "qualite": "chef des bâtisseurs",
+     "visible": false
+    },
+    {
+     "id": "chantier",
+     "genre": "lieu",
+     "x": 0,
+     "z": 18,
+     "nom": "Le chantier de la Ka'ba",
+     "visible": false
+    },
+    {
+     "id": "preteur",
+     "genre": "personne",
+     "x": 40,
+     "z": 240,
+     "visible": false
+    },
+    {
+     "id": "tanneur",
+     "genre": "personne",
+     "x": 230,
+     "z": 190,
+     "visible": false
+    },
+    {
+     "id": "fort",
+     "genre": "personne",
+     "x": 420,
+     "z": 250,
+     "visible": false
+    },
+    {
+     "id": "pierre1",
+     "genre": "objet",
+     "x": 520,
+     "z": -120,
+     "nom": "Une pierre de la carrière",
+     "visible": false
+    },
+    {
+     "id": "clan1",
+     "genre": "personne",
+     "x": -60,
+     "z": -50,
+     "visible": false
+    },
+    {
+     "id": "clan2",
+     "genre": "personne",
+     "x": 70,
+     "z": -60,
+     "nom": "Un autre clan",
+     "qualite": "Quraysh",
+     "visible": false
+    },
+    {
+     "id": "passants",
+     "genre": "personne",
+     "x": 150,
+     "z": 90
+    },
+    {
+     "id": "presence",
+     "genre": "presence",
+     "x": -30,
+     "z": -95,
+     "nom": "Porte des Banû Shayba",
+     "qualite": "un homme entre…",
+     "visible": false
+    },
+    {
+     "id": "pan",
+     "genre": "objet",
+     "x": 15,
+     "z": -25,
+     "nom": "Votre pan du manteau",
+     "visible": false
+    }
+   ],
+   "accessoires": [
+    {
+     "type": "lumiere",
+     "id": "lumiere",
+     "x": -30,
+     "z": -95,
+     "visible": false
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "makka"
+  },
+  {
+   "type": "recit",
+   "texte": "Un torrent a dévalé la vallée et fissuré les murs de la Ka'ba, déjà affaiblis par un incendie. Quraysh décide de la rebâtir, plus haute et couverte d'un toit. Mais personne n'ose porter le premier coup à la Maison."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "regarder": "walid"
+    }
+   ]
+  },
+  {
+   "type": "parole",
+   "qui": "walid",
+   "texte": "« Ô Allah, nous ne voulons que le bien. »"
+  },
+  {
+   "type": "recit",
+   "texte": "Les gens attendent toute la nuit : s'il ne lui arrive rien, ils démoliront eux aussi. Au matin, al-Walîd est indemne. On abat les murs jusqu'aux fondations d'Ibrâhîm : de grosses pierres verdâtres, serrées comme des bosses de chameaux."
+  },
+  {
+   "type": "recit",
+   "texte": "Selon Ibn Ishâq, Abû Wahb ibn 'Amr lance alors un avertissement : « Ô Quraysh, ne faites entrer dans sa construction que des biens purs : ni gain de prostitution, ni usure, ni bien arraché à quelqu'un. »"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": [
+      "preteur",
+      "tanneur",
+      "fort"
+     ]
+    },
+    {
+     "vue": {
+      "auto": true,
+      "cap": 200,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Votre clan doit fournir sa part. Au marché, trois hommes proposent leur argent : écoutez chacun d'eux (cliquez sur leurs étiquettes).",
+   "quand": {
+    "tous": [
+     "preteur",
+     "tanneur",
+     "fort"
+    ],
+    "nom": "Écoutés"
+   }
+  },
+  {
+   "type": "choix",
+   "question": "Quel argent acceptez-vous pour la part de votre clan ?",
+   "options": [
+    {
+     "texte": "Celui du marchand de cuir : un gain modeste, fait en vendant ses peaux au juste prix.",
+     "juste": true
+    },
+    {
+     "texte": "Celui du prêteur : son argent a doublé grâce aux intérêts réclamés aux pèlerins.",
+     "titre": "Un bien impur",
+     "consequence": "Et si l'on avait bâti la Maison avec l'argent de l'usure : Quraysh s'y était interdit. Faute de réunir assez de biens purs, les bâtisseurs laissèrent même une partie de l'ancienne Ka'ba hors des murs : le Hijr.",
+     "indice": "Selon Ibn Ishâq, Quraysh s'était engagé à ne bâtir la Maison qu'avec des biens purs.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "porter": "usure"
+        },
+        {
+         "montrer": [
+          "ancien",
+          "chantier"
+         ]
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Portez l'argent du prêteur aux bâtisseurs : remettez-le à l'ancien, près de la Ka'ba.",
+       "quand": {
+        "donner": {
+         "objet": "usure",
+         "a": "ancien"
+        }
+       }
+      },
+      {
+       "type": "parole",
+       "qui": "ancien",
+       "texte": "D'où vient cet argent ? De l'usure ? Nous avons juré de ne bâtir la Maison qu'avec des biens purs. Remporte-le."
+      }
+     ]
+    },
+    {
+     "texte": "Celui de l'homme puissant : il a pris la récolte d'un voisin trop faible pour la défendre.",
+     "titre": "Un bien arraché",
+     "consequence": "Et si l'on avait bâti la Maison avec un bien volé : même avant l'islam, Quraysh refusa d'y employer un bien pris par la force. La Maison ne se construit pas avec l'injustice.",
+     "indice": "Selon Ibn Ishâq, Quraysh s'était engagé à ne bâtir la Maison qu'avec des biens purs.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "porter": "or"
+        },
+        {
+         "montrer": [
+          "ancien",
+          "chantier"
+         ]
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Portez l'or de l'homme puissant aux bâtisseurs : remettez-le à l'ancien, près de la Ka'ba.",
+       "quand": {
+        "donner": {
+         "objet": "or",
+         "a": "ancien"
+        }
+       }
+      },
+      {
+       "type": "parole",
+       "qui": "ancien",
+       "texte": "Cet or a été arraché à un faible. Il ne touchera pas une seule pierre de la Maison. Rends-le à celui qu'on a dépouillé."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": [
+      "preteur",
+      "tanneur",
+      "fort"
+     ]
+    },
+    {
+     "montrer": [
+      "ancien",
+      "chantier",
+      "pierre1"
+     ]
+    },
+    {
+     "vue": {
+      "auto": true,
+      "cap": 250,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Les bâtisseurs manquent de pierres : prenez-en une à la carrière, au pied de la montagne.",
+   "quand": {
+    "prendre": "pierre1",
+    "porter": "pierre"
+   }
+  },
+  {
+   "type": "objectif",
+   "texte": "Portez la pierre au chantier : remettez-la à l'ancien qui dirige les bâtisseurs.",
+   "quand": {
+    "donner": {
+     "objet": "pierre",
+     "a": "ancien",
+     "sans": "Il nous faut des pierres : va d'abord à la carrière."
+    }
+   },
+   "reussite": "Une pierre de plus"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": [
+      "pierre1"
+     ]
+    },
+    {
+     "montrer": [
+      "clan1",
+      "clan2"
+     ]
+    },
+    {
+     "vue": {
+      "lieu": "makkah",
+      "r": 0.5,
+      "cap": 350,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Les murs s'élèvent jusqu'à l'emplacement de la Pierre noire. Alors la dispute éclate : chaque clan veut l'honneur de la remettre en place. Les Banû 'Abd ad-Dâr apportent un bol rempli de sang ; avec les Banû 'Adî, ils y plongent la main et jurent de mourir plutôt que de céder."
+  },
+  {
+   "type": "parole",
+   "qui": "clan1",
+   "texte": "Par nos mains trempées dans ce sang : cet honneur nous revient. Que le clan qui veut nous le prendre vienne le chercher !"
+  },
+  {
+   "type": "recit",
+   "texte": "Quatre ou cinq nuits passent ainsi. Au pied même de la Maison, les épées sont prêtes à sortir des fourreaux."
+  },
+  {
+   "type": "choix",
+   "question": "Que faites-vous ?",
+   "options": [
+    {
+     "texte": "Soutenir l'idée du plus âgé de Quraysh : que le premier à franchir la porte des Banû Shayba départage les clans.",
+     "juste": true
+    },
+    {
+     "texte": "Plonger vous aussi la main dans le bol de sang, et jurer avec votre clan de ne jamais céder la Pierre.",
+     "titre": "Le sang au pied de la Maison",
+     "consequence": "Et si la dispute avait tourné au combat : une guerre entre clans, au pied de la Maison qu'on venait de rebâtir. Selon Ibn Ishâq, ce fut le conseil d'un ancien qui évita le sang.",
+     "indice": "Selon Ibn Ishâq, un ancien proposa de s'en remettre à un arbitre : le premier qui franchirait la porte.",
+     "suite": [
+      {
+       "type": "recit",
+       "texte": "Les clans se font face devant la Maison inachevée, la main sur la garde de l'épée. Un cri, une bousculade…"
+      }
+     ]
+    },
+    {
+     "texte": "Profiter de la nuit pour poser vous-même la Pierre à sa place, avant que les autres clans ne s'éveillent.",
+     "titre": "L'honneur volé",
+     "consequence": "Et si un clan avait pris l'honneur par la ruse : les autres y auraient vu une trahison, et la guerre aurait éclaté. Ce fut au contraire un arbitrage accepté de tous.",
+     "indice": "Selon Ibn Ishâq, un ancien proposa de s'en remettre à un arbitre : le premier qui franchirait la porte.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "ambiance": "nuit"
+        }
+       ]
+      },
+      {
+       "type": "objectif",
+       "texte": "Approchez du chantier dans l'obscurité.",
+       "quand": {
+        "aller": "chantier"
+       }
+      },
+      {
+       "type": "recit",
+       "texte": "Au matin, la Pierre est en place… Mais tout le monde a compris. Les autres clans crient à la trahison et l'arrachent du mur."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": [
+      "presence",
+      "lumiere"
+     ]
+    },
+    {
+     "regarder": "presence"
+    },
+    {
+     "pause": 1200
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Le premier à entrer est Muhammad ﷺ. « C'est al-Amîn ! s'écrient-ils. Nous l'acceptons : c'est Muhammad ! »",
+   "qui": "Quraysh"
+  },
+  {
+   "type": "recit",
+   "texte": "Il ﷺ a environ trente-cinq ans. Quand on lui expose l'affaire, il dit : « Apportez-moi un manteau. » Il y pose la Pierre de ses mains, puis : « Que chaque clan prenne un pan du manteau, et soulevez-le tous ensemble. »"
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": "pan"
+    },
+    {
+     "regarder": "pan"
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Chaque clan tient un pan du manteau : maintenez le bouton pour soulever la Pierre en même temps que les autres.",
+   "quand": {
+    "tenir": {
+     "bouton": "Soulever votre pan du manteau",
+     "duree": 3.5,
+     "invocation": {
+      "titre": "Tous ensemble",
+      "fr": "Chaque clan tient un pan : personne ne porte la Pierre seul, et personne n'en est privé."
+     }
+    }
+   },
+   "epreuve": true
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": [
+      "pan",
+      "clan1",
+      "clan2"
+     ]
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Arrivés à la bonne hauteur, il ﷺ prend la Pierre de ses mains et la pose à sa place. Les clans se séparent sans qu'une goutte de sang n'ait coulé."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": [
+      "presence",
+      "lumiere"
+     ]
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "La Ka'ba est achevée : plus haute, couverte d'un toit, la porte surélevée. Faute de biens purs suffisants, une partie de l'ancienne Maison est restée hors des murs : c'est le Hijr, entouré d'un muret en arc de cercle."
+  }
+ ],
+ "fin": "La Pierre est à sa place"
+}

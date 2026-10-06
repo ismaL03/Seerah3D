@@ -1,0 +1,45 @@
+{
+  "zone": "hudaybiya",
+  "nom": "al-Hudaybiya",
+  "emprise": {
+    "ouest": 39.55833333333334,
+    "sud": 21.39722222222222,
+    "est": 39.68055555555556,
+    "nord": 21.48611111111111
+  },
+  "largeur": 132,
+  "hauteur": 96,
+  "resolution_arcsec": 3.3333333333333335,
+  "format": "PNG gris 16 bits, lignes du nord au sud ; altitude (m) = valeur - decalage",
+  "decalage": 1000,
+  "altitude_min": 116,
+  "altitude_max": 411,
+  "mer": null,
+  "genere_le": "2026-10-04",
+  "encart": true,
+  "grille_hijaz": {
+    "c0": 460,
+    "c1": 482,
+    "r0": 884,
+    "r1": 900
+  },
+  "encarts": [],
+  "sources": [
+    {
+      "nom": "Copernicus DEM GLO-90",
+      "attribution": "Copernicus DEM GLO-90 — © DLR e.V. 2010-2014 et © Airbus Defence and Space GmbH 2014-2018, fourni dans le cadre de COPERNICUS par l'Union européenne et l'ESA"
+    },
+    {
+      "nom": "Sentinel-2 L2A",
+      "attribution": "Contient des données Copernicus Sentinel modifiées (2024)"
+    }
+  ],
+  "satellite": {
+    "fichier": "hudaybiya-satellite.jpg",
+    "largeur": 132,
+    "hauteur": 96,
+    "scenes": [
+      "S2B_37QED_20240121_0_L2A"
+    ]
+  }
+}

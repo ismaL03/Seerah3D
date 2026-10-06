@@ -1,0 +1,45 @@
+{
+  "zone": "khaybar",
+  "nom": "Khaybar",
+  "emprise": {
+    "ouest": 39.19166666666667,
+    "sud": 25.619444444444444,
+    "est": 39.38055555555555,
+    "nord": 25.78611111111111
+  },
+  "largeur": 204,
+  "hauteur": 180,
+  "resolution_arcsec": 3.3333333333333335,
+  "format": "PNG gris 16 bits, lignes du nord au sud ; altitude (m) = valeur - decalage",
+  "decalage": 1000,
+  "altitude_min": 640,
+  "altitude_max": 1033,
+  "mer": null,
+  "genere_le": "2026-10-04",
+  "encart": true,
+  "grille_hijaz": {
+    "c0": 394,
+    "c1": 428,
+    "r0": 110,
+    "r1": 140
+  },
+  "encarts": [],
+  "sources": [
+    {
+      "nom": "Copernicus DEM GLO-90",
+      "attribution": "Copernicus DEM GLO-90 — © DLR e.V. 2010-2014 et © Airbus Defence and Space GmbH 2014-2018, fourni dans le cadre de COPERNICUS par l'Union européenne et l'ESA"
+    },
+    {
+      "nom": "Sentinel-2 L2A",
+      "attribution": "Contient des données Copernicus Sentinel modifiées (2024)"
+    }
+  ],
+  "satellite": {
+    "fichier": "khaybar-satellite.jpg",
+    "largeur": 204,
+    "hauteur": 180,
+    "scenes": [
+      "S2B_37REJ_20240124_0_L2A"
+    ]
+  }
+}

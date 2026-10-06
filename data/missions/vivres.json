@@ -1,0 +1,496 @@
+{
+ "_lisez_moi": "Mission jouée sur la carte (interprète src/mission.js) : la caméra cadre chaque scène, le joueur clique sur les repères (personnes, lieux, objets), sans vue subjective ni déplacement. Positions : « lieu » (fiche de la carte), « point » [lat, lon] ou « x » (vers l'est) et « z » (vers le sud) en mètres depuis l'origine de la scène. Aucune silhouette : les personnes sont des étiquettes ; le Prophète ﷺ et les Compagnons restent hors champ. Brouillon à vérifier ; aucune page citée n'est encore vérifiée.",
+ "id": "vivres",
+ "titre": "Le blé de la nuit",
+ "statut": "à vérifier",
+ "sources": [
+  {
+   "ouvrage": "ibn-hisham",
+   "page": null,
+   "passage": "Le blocus du vallon d'Abû Tâlib et l'annulation du pacte (d'après Ibn Ishâq)"
+  },
+  {
+   "ouvrage": "rahiq",
+   "page": null,
+   "passage": "Le boycott"
+  }
+ ],
+ "role": {
+  "nom": "Un homme de Quraysh",
+  "nom_ar": "رجل من قريش",
+  "texte": "Vous n'êtes pas de leur clan, mais vous ne supportez pas que des familles entières meurent de faim dans le vallon. Cette nuit, vous allez y porter du blé, au risque d'être dénoncé.",
+  "regle": "Les assiégés du vallon, la famille du Prophète ﷺ, ne sont jamais montrés. Les personnes sont des étiquettes sur la carte. Les mauvais choix mènent à des scénarios imaginaires, présentés comme tels."
+ },
+ "personnages": {
+  "chameau": {
+   "nom": "Votre chameau",
+   "qualite": ""
+  },
+  "abujahl": {
+   "nom": "Abû Jahl",
+   "qualite": "chef de l'opposition à La Mecque"
+  },
+  "abujahl_jour": {
+   "nom": "Abû Jahl",
+   "qualite": "chef de l'opposition à La Mecque"
+  },
+  "guetteur1": {
+   "nom": "Un guetteur",
+   "qualite": "homme d'Abû Jahl"
+  },
+  "guetteur2": {
+   "nom": "Un guetteur",
+   "qualite": "homme d'Abû Jahl"
+  },
+  "assemblee": {
+   "nom": "Un homme de Quraysh",
+   "qualite": "près de la Ka'ba"
+  }
+ },
+ "dialogues": {
+  "assemblee": [
+   "Trois ans de blocus… Nos propres cousins, dans ce vallon. Quelle honte pour Quraysh.",
+   "Les termites ont tout mangé, sauf le nom d'Allah ? Comment pouvait-il le savoir ?",
+   "Abû Jahl peut crier tant qu'il veut : cette fois, beaucoup sont contre lui."
+  ]
+ },
+ "objets": {
+  "ble": {
+   "nom": "Un sac de blé"
+  }
+ },
+ "scenes": {
+  "makka": {
+   "titre": "La Mecque",
+   "sous": "La nuit, vers l'an 8 de la mission (618)",
+   "ambiance": "nuit",
+   "epoque": "boycott",
+   "origine": "makkah",
+   "vue": {
+    "auto": true,
+    "cap": 95,
+    "incl": 56
+   },
+   "reperes": [
+    {
+     "id": "sac",
+     "genre": "objet",
+     "x": -170,
+     "z": 90,
+     "nom": "Votre sac de blé"
+    },
+    {
+     "id": "chameau",
+     "genre": "animal",
+     "x": -230,
+     "z": 40,
+     "nom": "Votre chameau",
+     "qualite": "dans l'enclos"
+    },
+    {
+     "id": "abujahl",
+     "genre": "personne",
+     "x": 250,
+     "z": 0
+    },
+    {
+     "id": "guetteur1",
+     "genre": "personne",
+     "x": 350,
+     "z": -40
+    },
+    {
+     "id": "guetteur2",
+     "genre": "personne",
+     "x": 300,
+     "z": 70
+    },
+    {
+     "id": "ruelle",
+     "genre": "lieu",
+     "x": 300,
+     "z": 30,
+     "nom": "Par la grande rue, sous les lanternes",
+     "visible": false
+    },
+    {
+     "id": "colline",
+     "genre": "lieu",
+     "x": 240,
+     "z": -280,
+     "nom": "Par la colline du nord, derrière les guetteurs",
+     "visible": false
+    },
+    {
+     "id": "chib",
+     "genre": "lieu",
+     "x": 550,
+     "z": -80,
+     "nom": "L'entrée du vallon d'Abû Tâlib",
+     "visible": false
+    },
+    {
+     "id": "assemblee",
+     "genre": "personne",
+     "x": -70,
+     "z": 50,
+     "visible": false
+    },
+    {
+     "id": "abujahl_jour",
+     "genre": "personne",
+     "x": 70,
+     "z": -35,
+     "visible": false
+    },
+    {
+     "id": "sahifa",
+     "genre": "objet",
+     "x": 8,
+     "z": 6,
+     "nom": "Le pacte, accroché dans la Ka'ba",
+     "visible": false
+    }
+   ],
+   "accessoires": [
+    {
+     "type": "troupeau",
+     "id": "chameau",
+     "x": -230,
+     "z": 40,
+     "rayon": 5,
+     "n": 1
+    },
+    {
+     "type": "feux",
+     "id": "lanternes",
+     "x": 300,
+     "z": 10,
+     "rayon": 90,
+     "n": 4
+    }
+   ]
+  }
+ },
+ "sequence": [
+  {
+   "type": "scene",
+   "scene": "makka"
+  },
+  {
+   "type": "recit",
+   "texte": "Depuis des mois, les Banû Hâshim et les Banû al-Muttalib sont enfermés dans le vallon d'Abû Tâlib. Quraysh a juré de ne plus rien leur vendre, ni leur acheter, ni s'allier à eux par le mariage. Le pacte est accroché dans la Ka'ba. La nuit, on entend pleurer les enfants affamés."
+  },
+  {
+   "type": "objectif",
+   "texte": "Prenez le sac de blé que vous avez mis de côté, devant votre maison.",
+   "quand": {
+    "prendre": "sac",
+    "porter": "ble"
+   }
+  },
+  {
+   "type": "objectif",
+   "texte": "Chargez-le sur votre chameau, dans l'enclos voisin.",
+   "quand": {
+    "donner": {
+     "objet": "ble",
+     "a": "chameau"
+    }
+   }
+  },
+  {
+   "type": "recit",
+   "texte": "Abû Jahl et ses hommes surveillent la ville avec des lanternes : quiconque porte des vivres au vallon sera dénoncé. Le défilé s'ouvre à l'est, au pied du mont."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "montrer": [
+      "ruelle",
+      "colline",
+      "chib"
+     ]
+    },
+    {
+     "vue": {
+      "auto": true,
+      "cap": 95,
+      "incl": 56
+     }
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Menez le chameau vers le vallon, à l'est, sans être vu : choisissez votre passage.",
+   "quand": {
+    "aller": "colline"
+   },
+   "echecs": [
+    {
+     "repere": "ruelle",
+     "titre": "Pris sur le fait",
+     "consequence": "Et si vous aviez été pris : le blé confisqué, et vous dénoncé à toute la ville. Selon Ibn Ishâq, Abû Jahl arrêta ainsi Hakîm ibn Hizâm qui portait du blé à sa tante Khadîja ; il fallut l'intervention d'Abû al-Bakhtarî pour qu'il passe.",
+     "indice": "Les lanternes éclairent un cône devant les guetteurs : passez derrière eux, par la colline du nord.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "abujahl",
+         "vers": [
+          {
+           "x": 300,
+           "z": 25
+          }
+         ],
+         "duree": 1.5
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "abujahl",
+       "texte": "Tu portes des vivres aux Banû Hâshim ? Par Allah, tu n'iras pas plus loin avec ce blé avant que je t'aie dénoncé à toute La Mecque !"
+      }
+     ]
+    },
+    {
+     "repere": "abujahl",
+     "titre": "Pris sur le fait",
+     "consequence": "Et si vous aviez été pris : le blé confisqué, et vous dénoncé à toute la ville. Selon Ibn Ishâq, Abû Jahl arrêta ainsi Hakîm ibn Hizâm qui portait du blé à sa tante Khadîja ; il fallut l'intervention d'Abû al-Bakhtarî pour qu'il passe.",
+     "indice": "Les lanternes éclairent un cône devant les guetteurs : passez derrière eux, par la colline du nord.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "abujahl",
+         "vers": [
+          {
+           "x": 300,
+           "z": 25
+          }
+         ],
+         "duree": 1.5
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "abujahl",
+       "texte": "Tu portes des vivres aux Banû Hâshim ? Par Allah, tu n'iras pas plus loin avec ce blé avant que je t'aie dénoncé à toute La Mecque !"
+      }
+     ]
+    },
+    {
+     "repere": "guetteur1",
+     "titre": "Pris sur le fait",
+     "consequence": "Et si vous aviez été pris : le blé confisqué, et vous dénoncé à toute la ville. Selon Ibn Ishâq, Abû Jahl arrêta ainsi Hakîm ibn Hizâm qui portait du blé à sa tante Khadîja ; il fallut l'intervention d'Abû al-Bakhtarî pour qu'il passe.",
+     "indice": "Les lanternes éclairent un cône devant les guetteurs : passez derrière eux, par la colline du nord.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "abujahl",
+         "vers": [
+          {
+           "x": 300,
+           "z": 25
+          }
+         ],
+         "duree": 1.5
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "abujahl",
+       "texte": "Tu portes des vivres aux Banû Hâshim ? Par Allah, tu n'iras pas plus loin avec ce blé avant que je t'aie dénoncé à toute La Mecque !"
+      }
+     ]
+    },
+    {
+     "repere": "guetteur2",
+     "titre": "Pris sur le fait",
+     "consequence": "Et si vous aviez été pris : le blé confisqué, et vous dénoncé à toute la ville. Selon Ibn Ishâq, Abû Jahl arrêta ainsi Hakîm ibn Hizâm qui portait du blé à sa tante Khadîja ; il fallut l'intervention d'Abû al-Bakhtarî pour qu'il passe.",
+     "indice": "Les lanternes éclairent un cône devant les guetteurs : passez derrière eux, par la colline du nord.",
+     "suite": [
+      {
+       "type": "faire",
+       "actions": [
+        {
+         "aller": "abujahl",
+         "vers": [
+          {
+           "x": 300,
+           "z": 25
+          }
+         ],
+         "duree": 1.5
+        }
+       ]
+      },
+      {
+       "type": "parole",
+       "qui": "abujahl",
+       "texte": "Tu portes des vivres aux Banû Hâshim ? Par Allah, tu n'iras pas plus loin avec ce blé avant que je t'aie dénoncé à toute La Mecque !"
+      }
+     ]
+    }
+   ],
+   "epreuve": true
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "cacher": [
+      "ruelle",
+      "colline"
+     ]
+    }
+   ]
+  },
+  {
+   "type": "objectif",
+   "texte": "Le chemin est libre : conduisez le chameau jusqu'à l'entrée du vallon.",
+   "quand": {
+    "aller": "chib"
+   }
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "aller": "chameau",
+     "vers": [
+      {
+       "x": 560,
+       "z": -90
+      },
+      {
+       "x": 640,
+       "z": -110
+      }
+     ],
+     "duree": 2.5,
+     "attendre": false
+    },
+    {
+     "cacher": "chameau"
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "À l'entrée du défilé, vous lâchez la bride et frappez la croupe du chameau : il entre seul dans le vallon, chargé de blé. On rapporte qu'un homme de Quraysh, Hishâm ibn 'Amr, faisait ainsi entrer de nuit des chameaux chargés de vivres."
+  },
+  {
+   "type": "faire",
+   "actions": [
+    {
+     "ambiance": "jour",
+     "sous": "Près de trois ans plus tard"
+    },
+    {
+     "cacher": [
+      "abujahl",
+      "guetteur1",
+      "guetteur2",
+      "chib",
+      "lanternes",
+      "sac"
+     ]
+    },
+    {
+     "montrer": [
+      "assemblee",
+      "abujahl_jour",
+      "sahifa"
+     ]
+    },
+    {
+     "vue": {
+      "lieu": "makkah",
+      "r": 0.5,
+      "cap": 200,
+      "incl": 58
+     }
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Près de trois ans ont passé. Plusieurs hommes de Quraysh ont honte de ce pacte ; cinq d'entre eux ont décidé de le dénoncer devant tous. Abû Tâlib arrive alors : son neveu ﷺ lui a dit que les termites ont dévoré le document, à l'exception du nom d'Allah."
+  },
+  {
+   "type": "objectif",
+   "texte": "Allez voir le document accroché dans la Ka'ba.",
+   "quand": {
+    "aller": "sahifa"
+   }
+  },
+  {
+   "type": "recit",
+   "texte": "On décroche le parchemin. Il tombe en miettes : les termites l'ont rongé. Seule demeure la formule par laquelle on commençait alors les écrits : « Bismika Allâhumma », « En Ton nom, ô Allah »."
+  },
+  {
+   "type": "parole",
+   "qui": "abujahl_jour",
+   "texte": "Ce pacte tient toujours ! Personne n'y touchera, termites ou pas."
+  },
+  {
+   "type": "choix",
+   "question": "Toute l'assemblée vous regarde. Que dites-vous ?",
+   "options": [
+    {
+     "texte": "« Ce pacte est injuste et brise les liens du sang. Je ne l'accepte plus : qu'on le déchire ! »",
+     "juste": true
+    },
+    {
+     "texte": "« Ce n'est pas mon affaire : que les chefs en décident. Je ne veux pas d'ennuis avec Abû Jahl. »",
+     "titre": "Le silence",
+     "consequence": "Et si personne n'avait parlé : le silence face à l'injustice la prolonge. Selon Ibn Ishâq, cinq hommes de Quraysh se levèrent au contraire ensemble pour dénoncer le pacte, malgré Abû Jahl.",
+     "indice": "Face à une injustice, se taire, c'est la laisser durer.",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "abujahl_jour",
+       "texte": "Vous voyez ? Personne n'ose. Le pacte tient !"
+      },
+      {
+       "type": "recit",
+       "texte": "Les mois passent encore. Dans le vallon, les enfants ont faim."
+      }
+     ]
+    },
+    {
+     "texte": "« Recopions vite le pacte sur un parchemin neuf, avant que la nouvelle ne se répande en ville. »",
+     "titre": "Le pacte recopié",
+     "consequence": "Et si l'on avait recopié le pacte : on aurait prolongé une injustice que beaucoup reconnaissaient déjà. Selon Ibn Ishâq, le document rongé fut au contraire l'occasion de mettre fin au blocus.",
+     "indice": "Face à une injustice, se taire, c'est la laisser durer.",
+     "suite": [
+      {
+       "type": "parole",
+       "qui": "abujahl_jour",
+       "texte": "Bonne idée ! Qu'on apporte un parchemin neuf."
+      },
+      {
+       "type": "recit",
+       "texte": "Le nouveau document est accroché… mais toute la ville sait déjà ce que les termites ont laissé."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "recit",
+   "texte": "Le blocus est levé. Les familles sortent du vallon, amaigries, après près de trois ans de privations. Quelques mois plus tard viendra ce qu'on appellera « l'année de la tristesse »."
+  }
+ ],
+ "fin": "Le blocus est levé"
+}
