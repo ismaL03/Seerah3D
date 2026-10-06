@@ -137,8 +137,8 @@
     {
      "id": "chamelles",
      "genre": "animal",
-     "x": -350,
-     "z": -900,
+     "x": -150,
+     "z": -950,
      "nom": "Les deux chamelles",
      "qualite": ""
     },
@@ -146,56 +146,56 @@
      "id": "pied_thawr",
      "genre": "lieu",
      "x": 0,
-     "z": -220,
+     "z": -200,
      "nom": "Le pied du sentier de Thawr"
     },
     {
      "id": "wadi",
      "genre": "lieu",
-     "x": -260,
+     "x": -480,
      "z": -520,
      "nom": "Le lit du wadi, dans l'ombre des rochers"
     },
     {
      "id": "lanternes",
      "genre": "lieu",
-     "x": 120,
+     "x": 380,
      "z": -560,
      "nom": "Le chemin des lanternes"
     },
     {
      "id": "chercheur1",
      "genre": "personne",
-     "x": 200,
-     "z": -600
+     "x": 560,
+     "z": -680
     },
     {
      "id": "chercheur2",
      "genre": "personne",
-     "x": 60,
-     "z": -420
+     "x": 250,
+     "z": -400
     },
     {
      "id": "guetteur",
      "genre": "personne",
-     "x": 260,
-     "z": -380
+     "x": 640,
+     "z": -360
     }
    ],
    "accessoires": [
     {
      "type": "troupeau",
      "id": "betes",
-     "x": -350,
-     "z": -900,
+     "x": -150,
+     "z": -950,
      "rayon": 12,
      "n": 2
     },
     {
      "type": "feux",
-     "x": 160,
-     "z": -500,
-     "rayon": 160,
+     "x": 450,
+     "z": -520,
+     "rayon": 180,
      "n": 4
     }
    ]
@@ -218,8 +218,8 @@
     {
      "id": "chamelles",
      "genre": "animal",
-     "x": -350,
-     "z": -900,
+     "x": -150,
+     "z": -950,
      "nom": "Les deux chamelles",
      "qualite": ""
     },
@@ -227,28 +227,28 @@
      "id": "pied_thawr",
      "genre": "lieu",
      "x": 0,
-     "z": -220,
+     "z": -200,
      "nom": "Le pied du sentier de Thawr"
     },
     {
      "id": "chercheur1",
      "genre": "personne",
-     "x": -120,
-     "z": -500
+     "x": -380,
+     "z": -520
     },
     {
      "id": "guetteur",
      "genre": "personne",
-     "x": 160,
-     "z": -380
+     "x": 420,
+     "z": -400
     }
    ],
    "accessoires": [
     {
      "type": "troupeau",
      "id": "betes",
-     "x": -350,
-     "z": -900,
+     "x": -150,
+     "z": -950,
      "rayon": 12,
      "n": 2
     }
@@ -260,13 +260,13 @@
    "ambiance": "jour",
    "epoque": "hijra",
    "origine": [
-    21.7,
-    39.5
+    21.75,
+    39.17
    ],
    "vue": {
     "auto": true,
-    "cap": 340,
-    "incl": 52
+    "cap": 10,
+    "incl": 62
    },
    "reperes": [
     {
@@ -280,29 +280,29 @@
     {
      "id": "grande_route",
      "genre": "lieu",
-     "x": 3200,
-     "z": -4200,
+     "x": 11000,
+     "z": -5500,
      "nom": "La grande route de Yathrib"
     },
     {
      "id": "ravin",
      "genre": "lieu",
-     "x": 800,
-     "z": -3000,
+     "x": 5000,
+     "z": -3500,
      "nom": "Le raccourci par le ravin"
     },
     {
      "id": "piste",
      "genre": "lieu",
-     "x": -2600,
-     "z": -4400,
+     "x": -3500,
+     "z": -5000,
      "nom": "La piste du littoral"
     },
     {
      "id": "cavalier_chef",
      "genre": "personne",
-     "x": 3300,
-     "z": -3900,
+     "x": 11300,
+     "z": -5200,
      "visible": false
     }
    ],
@@ -422,7 +422,7 @@
          "aller": "chercheur1",
          "vers": [
           {
-           "x": -40,
+           "x": -60,
            "z": -260
           }
          ],
@@ -467,8 +467,8 @@
          "aller": "chercheur1",
          "vers": [
           {
-           "x": 130,
-           "z": -540
+           "x": 400,
+           "z": -580
           }
          ],
          "duree": 1.5
@@ -537,8 +537,8 @@
      "aller": "chamelles",
      "vers": [
       {
-       "x": -260,
-       "z": -520
+       "x": -470,
+       "z": -540
       }
      ],
      "duree": 2
@@ -587,8 +587,8 @@
         39.55
        ],
        [
-        21.7,
-        39.5
+        21.75,
+        39.17
        ]
       ]
      }
@@ -672,8 +672,8 @@
       "type": "caravane",
       "etapes": [
        [
-        21.7,
-        39.5
+        21.75,
+        39.17
        ],
        [
         22.36,

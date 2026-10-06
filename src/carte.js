@@ -508,7 +508,7 @@ export async function creerCarte({ canvas, etiquettes, R, D, mobile, reduit, sur
   // ---------- thème ----------
   // ciel : horizon (et brume) ; zenith, sous : haut et bas du dôme ; halo : autour du soleil
   const JOUR = { ciel: 0xEDE3D0, zenith: 0x8FB6D3, sous: 0xE3D6BE, halo: 0xFFF1D6, hs: 0xDCE8F2, hg: 0xC9A57C, hi: 1.15, sol: 0xFFF0D8, si: 3.7, amb: 0.12, ter: 0xffffff, paroi: 0xB79770, eau: 0x4FAFC6 };
-  const NUIT = { ciel: 0x1A2438, zenith: 0x060B16, sous: 0x141A28, halo: 0x3A4C78, hs: 0x6478A8, hg: 0x2A2A34, hi: 1.6, sol: 0xB4C6FF, si: 1.4, amb: 0.2, ter: 0xAEB6D0, paroi: 0x4A4552, eau: 0x1E4E69 };
+  const NUIT = { ciel: 0x1A2438, zenith: 0x060B16, sous: 0x141A28, halo: 0x3A4C78, hs: 0x5A6C98, hg: 0x2A2A34, hi: 1.15, sol: 0xB4C6FF, si: 1.15, amb: 0.16, ter: 0x8E93A6, paroi: 0x4A4552, eau: 0x1E4E69 };
   // Aube (ou crépuscule) : soleil bas à l'ouest, lumière chaude, ombres longues.
   const AUBE = { ciel: 0xF2CDA4, zenith: 0x7C93B4, sous: 0xD9B892, halo: 0xFFC488, hs: 0xFFE4C8, hg: 0xA7805E, hi: 1.1, sol: 0xFFC490, si: 3.7, amb: 0.12, ter: 0xFFEEDD, paroi: 0xB08462, eau: 0x5C9FB5, dir: [-0.78, 0.3, 0.3] };
   const AMBIANCES = { jour: JOUR, nuit: NUIT, aube: AUBE };
