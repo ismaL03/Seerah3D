@@ -126,22 +126,22 @@
     {
      "id": "preteur",
      "genre": "personne",
-     "x": 180,
-     "z": 210,
+     "x": 40,
+     "z": 240,
      "visible": false
     },
     {
      "id": "tanneur",
      "genre": "personne",
-     "x": 240,
-     "z": 160,
+     "x": 230,
+     "z": 190,
      "visible": false
     },
     {
      "id": "fort",
      "genre": "personne",
-     "x": 130,
-     "z": 260,
+     "x": 420,
+     "z": 250,
      "visible": false
     },
     {
